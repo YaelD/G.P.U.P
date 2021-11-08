@@ -4,14 +4,17 @@ import java.util.Map;
 public class Graph {
 
     private Map<String, Target> targetGraph;
+    private String name;
 
-
+    public String getName() {
+        return name;
+    }
 
     public Collection<Target> getTargets(){
-        return null;
+        return targetGraph.values();
     }
 
     public Target getTarget(String name){
-        return null;
+        return targetGraph.get(name);
     }
 }
