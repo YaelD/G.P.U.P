@@ -57,18 +57,38 @@ public class GraphDTO {
     }
 
     public int getNumOfFails(){
-        return 0;
+        int counter = 0;
+        for(TargetDTO target: targets){
+            if(target.getRunResult() == RunResults.FAILURE)
+                counter++;
+        }
+        return counter;
     }
 
     public int getNumOfSuccess(){
-        return 0;
+        int counter = 0;
+        for(TargetDTO target: targets){
+            if(target.getRunResult() == RunResults.SUCCESS)
+                counter++;
+        }
+        return counter;
     }
 
     public int getNumOfWarnings(){
-        return 0;
+        int counter = 0;
+        for(TargetDTO target: targets){
+            if(target.getRunResult() == RunResults.WARNING)
+                counter++;
+        }
+        return counter;
     }
 
     public int getNumOfFrozen(){
-        return 0;
+        int counter = 0;
+        for(TargetDTO target: targets){
+            if(target.getRunResult() == RunResults.FROZEN)
+                counter++;
+        }
+        return counter;
     }
 }
