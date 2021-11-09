@@ -17,34 +17,7 @@ public class Target {
     public Target(GPUPTarget target) {
         this.name = target.getName();
         this.info = target.getGPUPUserData();
-        for(GPUPTargetDependencies.GPUGDependency currDependency: target.getGPUPTargetDependencies().getGPUGDependency())
-        {
-            if(currDependency.getType().equals("requiredFor"))
-            {
-                //TODO: talk with Yael about this
-                this.requiredFor.add(new Target(currDependency.getValue()));
-            }
-            if(currDependency.equals("dependsOn"))
-            {
-                this.dependsOn.add(new Target(currDependency.getValue()));
-            }
-            if(this.requiredFor.isEmpty() && this.dependsOn.isEmpty())
-            {
-                this.place = PlaceInGraph.INDEPENDENT;
-            }
-            else if(this.requiredFor.isEmpty())
-            {
-                this.place = PlaceInGraph.ROOT;
-            }
-            else if(this.dependsOn.isEmpty())
-            {
-                this.place = PlaceInGraph.LEAF;
-            }
-            else
-            {
-                this.place = PlaceInGraph.MIDDLE;
-            }
-        }
+
     }
 
     public Target(String name)

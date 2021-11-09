@@ -1,3 +1,5 @@
+import schema.generated.GPUPTargets;
+
 import java.util.Collection;
 import java.util.Map;
 
@@ -8,6 +10,10 @@ public class Graph {
 
     public String getName() {
         return name;
+    }
+
+    public Graph() {
+
     }
 
     public Collection<Target> getTargets(){
