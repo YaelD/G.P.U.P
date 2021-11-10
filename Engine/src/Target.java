@@ -19,18 +19,6 @@ public class Target {
         this.info = target.getGPUPUserData();
     }
 
-    public void fillDependencies(GPUPTargetDependencies targetDependencies, Graph graph) {
-        for(GPUPTargetDependencies.GPUGDependency dependency: targetDependencies.getGPUGDependency()){
-
-        }
-    }
-
-    //public Target(String name)
-    {
-        this.name = name;
-    }
-
-
     public String getName() {
         return name;
     }
@@ -49,6 +37,10 @@ public class Target {
 
     public String getInfo() {
         return info;
+    }
+
+    public void setPlace(PlaceInGraph place) {
+        this.place = place;
     }
 
     @Override

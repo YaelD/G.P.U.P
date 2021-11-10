@@ -1,18 +1,33 @@
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 public class GraphDTO {
 
     private int numOfTargets;
-    private Collection<TargetDTO> targets;
+    private Map<String, TargetDTO> targets = new HashMap<>();
     private SimpleDateFormat runTime;
+
+
+    public GraphDTO(Graph graph) {
+        this.numOfTargets = graph.getTargets().size();
+        for(Target target: graph.getTargets()) {
+            this.targets.put(target.getName(), new TargetDTO(target));
+        }
+        for(TargetDTO targetDTO: this.targets.values()) {
+            targetDTO.dependencyTargetDTO(graph.getTarget(targetDTO.getName()), this.targets);
+        }
+    }
+
 
 
     public int getNumOfTargets() {
         return numOfTargets;
     }
 
-    public Collection<TargetDTO> getTargets() {
+    public Map<String, TargetDTO> getTargets() {
         return targets;
     }
 
@@ -20,75 +35,22 @@ public class GraphDTO {
         return runTime;
     }
 
-    public int getNumOfLeaves(){
+    public int getNumOfTargetsInPlace(PlaceInGraph place){
         int counter = 0;
-        for(TargetDTO target: targets){
-            if(target.getPlace() == PlaceInGraph.LEAF)
+        for(TargetDTO target: targets.values()){
+            if(target.getPlace() == place)
                 counter++;
         }
         return counter;
     }
 
-    public int getNumOfMiddles(){
+    public int getNumOfTargetsRunResult(RunResults runResult){
         int counter = 0;
-        for(TargetDTO target: targets){
-            if(target.getPlace() == PlaceInGraph.MIDDLE)
+        for(TargetDTO target: targets.values()){
+            if(target.getRunResult() == runResult)
                 counter++;
         }
         return counter;
     }
 
-    public int getNumOfRoots(){
-        int counter = 0;
-        for(TargetDTO target: targets){
-            if(target.getPlace() == PlaceInGraph.ROOT)
-                counter++;
-        }
-        return counter;
-    }
-
-    public int getNumOfIndependents(){
-        int counter = 0;
-        for(TargetDTO target: targets){
-            if(target.getPlace() == PlaceInGraph.INDEPENDENT)
-                counter++;
-        }
-        return counter;
-    }
-
-    public int getNumOfFails(){
-        int counter = 0;
-        for(TargetDTO target: targets){
-            if(target.getRunResult() == RunResults.FAILURE)
-                counter++;
-        }
-        return counter;
-    }
-
-    public int getNumOfSuccess(){
-        int counter = 0;
-        for(TargetDTO target: targets){
-            if(target.getRunResult() == RunResults.SUCCESS)
-                counter++;
-        }
-        return counter;
-    }
-
-    public int getNumOfWarnings(){
-        int counter = 0;
-        for(TargetDTO target: targets){
-            if(target.getRunResult() == RunResults.WARNING)
-                counter++;
-        }
-        return counter;
-    }
-
-    public int getNumOfFrozen(){
-        int counter = 0;
-        for(TargetDTO target: targets){
-            if(target.getRunResult() == RunResults.FROZEN)
-                counter++;
-        }
-        return counter;
-    }
 }
