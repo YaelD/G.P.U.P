@@ -17,10 +17,15 @@ public class Target {
     public Target(GPUPTarget target) {
         this.name = target.getName();
         this.info = target.getGPUPUserData();
-
     }
 
-    public Target(String name)
+    public void fillDependencies(GPUPTargetDependencies targetDependencies, Graph graph) {
+        for(GPUPTargetDependencies.GPUGDependency dependency: targetDependencies.getGPUGDependency()){
+
+        }
+    }
+
+    //public Target(String name)
     {
         this.name = name;
     }
