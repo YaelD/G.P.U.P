@@ -5,7 +5,7 @@ import java.util.List;
 
 public interface Engine {
 
-    public boolean readFile() throws InvalidFileException, DependencyConflictException, DuplicateTargetsException, InvalidDependencyException, TargetNotExistException;
+    public boolean readFile(String path) throws InvalidFileException, DependencyConflictException, DuplicateTargetsException, InvalidDependencyException, TargetNotExistException;
 
     public GraphDTO getGraphDTO() throws NoFileInSystemException;
 

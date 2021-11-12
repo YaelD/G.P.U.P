@@ -43,6 +43,15 @@ public class Target {
         this.place = place;
     }
 
+    public Set<Target> getDependencies(String dependency){
+        if(dependency.equals("requiredFor")){
+            return this.getRequiredFor();
+        }
+        else{
+            return this.getDependsOn();
+        }
+    }
+
     @Override
     public String toString() {
         return "Target{" +

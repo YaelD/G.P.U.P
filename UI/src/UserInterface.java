@@ -1,5 +1,6 @@
 import exceptions.*;
 
+import java.util.Collection;
 import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
@@ -27,7 +28,7 @@ public class UserInterface {
                 int choice = in.nextInt();
                 switch (choice){
                     case 1:
-                        engine.readFile();
+                        loadFile();
                         break;
                     case 2:
                         printGraphInfo();
@@ -36,8 +37,8 @@ public class UserInterface {
                         printTarget();
                         break;
                     case 4:
+                        findPaths();
                         //TODO: input target Name
-                        engine.getPaths("A", "B", "x");
                         break;
                     case 5:
                         engine.activateTask();
@@ -70,6 +71,52 @@ public class UserInterface {
         }
     }
 
+    private void findPaths(){
+        Scanner in = new Scanner(System.in);
+        System.out.println("Please enter first Target's name:");
+        String firstTargetName = in.next();
+        System.out.println("Please enter second Target's name:");
+        String secondTargetName = in.next();
+        System.out.println("Please enter the relation between the targets:");
+        String relation = in.next();
+        Collection<List<TargetDTO>> paths = null;
+        try {
+            paths = engine.getPaths(firstTargetName, secondTargetName, relation);
+            if(paths.isEmpty()){
+                System.out.println("There are not paths from target "+firstTargetName+ " to target " +secondTargetName);
+            }
+            else{
+                printPaths(paths);
+            }
+            //todo: write exception messages to the console
+        } catch (NoFileInSystemException e) {
+            e.printStackTrace();
+        } catch (TargetNotExistException e) {
+            e.printStackTrace();
+        } catch (InvalidDependencyException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void printPaths(Collection<List<TargetDTO>> paths) {
+        for(List<TargetDTO> path : paths){
+            String currPath = "Path: ";
+            for(int i = 0; i < path.size()-1 ; ++i){
+                currPath += (path.get(i).getName() + "->");
+            }
+            currPath += path.get(path.size()-1).getName();
+            System.out.println(currPath);
+        }
+    }
+
+    //TODO: insert catch exceptions to functions
+    private void loadFile() throws DuplicateTargetsException, InvalidFileException, InvalidDependencyException, TargetNotExistException, DependencyConflictException {
+        System.out.println("Please enter the full path of file:");
+        Scanner in = new Scanner(System.in);
+        String path = in.next();
+        engine.readFile(path);
+    }
+
 
     private void printGraphInfo() throws NoFileInSystemException {
         GraphDTO graphDTO= engine.getGraphDTO();
@@ -80,9 +127,7 @@ public class UserInterface {
                 "Number of Independents:" +graphDTO.getNumOfTargetsInPlace(PlaceInGraph.INDEPENDENT));
     }
 
-    private void readFile() {
-        System.out.println("Please enter the file full path: (to return to main menu, type '0'");
-    }
+
 
     private void printTarget() throws NoFileInSystemException {
         GraphDTO graphDTO = engine.getGraphDTO();

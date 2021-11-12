@@ -98,6 +98,10 @@ public class Graph {
         return name;
     }
 
+    public Map<String, Target> getTargetGraph() {
+        return targetGraph;
+    }
+
     public Collection<Target> getTargets(){
         return targetGraph.values();
     }
