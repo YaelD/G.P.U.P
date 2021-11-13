@@ -5,6 +5,10 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.*;
 
 public class SystemEngine implements Engine{
@@ -14,12 +18,12 @@ public class SystemEngine implements Engine{
     private boolean isFileLoaded = false;
 
     @Override
-    public boolean readFile(String path) throws DuplicateTargetsException, TargetNotExistException, InvalidDependencyException, DependencyConflictException {
+    public boolean readFile(String path) throws
+            DuplicateTargetsException, TargetNotExistException, InvalidDependencyException, DependencyConflictException, InvalidFileException{
         try {
-            //todo: check the path
-            File file = new File(path);
+            fileValidation(path);
+            File file = new File(path.trim());
             JAXBContext jaxbContext = JAXBContext.newInstance(GPUPDescriptor.class);
-
             Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
             GPUPDescriptor gpupDescriptor = (GPUPDescriptor) jaxbUnmarshaller.unmarshal(file);
             String graphName = gpupDescriptor.getGPUPConfiguration().getGPUPGraphName();
@@ -30,8 +34,20 @@ public class SystemEngine implements Engine{
 
         } catch (JAXBException e) {
             e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
         return false;
+    }
+
+    private void fileValidation(String path) throws InvalidFileException, IOException {
+        Path directory = Paths.get(path.trim());
+        if(!Files.exists(directory)){
+            throw new InvalidFileException(path,"There is no file in this path");
+        }
+        if(!Files.probeContentType(directory).equals("xml")){
+            throw new InvalidFileException(path,"The file in the current path is not an XML file");
+        }
     }
 
     @Override
@@ -39,7 +55,8 @@ public class SystemEngine implements Engine{
         if(!this.isFileLoaded){
             throw new NoFileInSystemException();
         }
-        return null;
+        GraphDTO graphDTO = new GraphDTO(this.graph);
+        return graphDTO;
     }
 
     @Override
@@ -47,7 +64,11 @@ public class SystemEngine implements Engine{
         if(!this.isFileLoaded){
             throw new NoFileInSystemException();
         }
-        return null;
+        if(!this.graph.getTargetGraph().containsKey(name)){
+            throw new TargetNotExistException(name);
+        }
+        TargetDTO targetDTO = new TargetDTO(this.graph.getTarget(name));
+        return targetDTO;
     }
 
     @Override
@@ -62,7 +83,7 @@ public class SystemEngine implements Engine{
             if(!this.graph.getTargetGraph().containsKey(secondTargetName)){
                 throw new TargetNotExistException(secondTargetName);
             }
-            if((!relation.equals("requiredFor"))&&(!relation.equals("dependsOn"))){
+            if((!relation.equals(Dependency.REQUIRED_FOR))&&(!relation.equals(Dependency.DEPENDS_ON))){
                 throw new InvalidDependencyException(relation);
             }
             Collection<List<String>> paths = new ArrayList<>();
@@ -72,27 +93,27 @@ public class SystemEngine implements Engine{
     }
 
     private void findPaths(String currTargetName, String destinationTargetName, String relation, Collection<List<String>> paths) {
-
-        /*
-
-        Set<Target> dependencies = this.graph.getTarget(firstTargetName).getDependencies(relation);
+        Set<Target> dependencies = this.graph.getTarget(currTargetName).getDependencies(relation);
         if(dependencies.isEmpty()){
             return;
         }
         else{
             for(Target target: dependencies){
-                if(target.getName().equals(secondTargetName)){
+                if(target.getName().equals(destinationTargetName)){
                     List<String> path = new ArrayList<>();
-                    path.add(target.getName());
+                    path.add(0,target.getName());
+                    path.add(0,currTargetName);
                     paths.add(path);
-                    return;
-                }
-                else{
-                    findPaths(target.getName(), secondTargetName, relation, paths);
+                } else{
+                    findPaths(target.getName(), destinationTargetName, relation, paths);
+                    if(!paths.isEmpty()){
+                        for(List<String> path : paths){
+                            path.add(0,currTargetName);
+                        }
+                    }
                 }
             }
         }
-         */
     }
 
     @Override
