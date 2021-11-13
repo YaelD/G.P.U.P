@@ -72,7 +72,8 @@ public class SystemEngine implements Engine{
     }
 
     @Override
-    public Collection<List<TargetDTO>> getPaths(String firstTargetName, String secondTargetName, String relation) throws NoFileInSystemException, TargetNotExistException, InvalidDependencyException {
+    public Collection<List<String>> getPaths(String firstTargetName, String secondTargetName, String relation) throws NoFileInSystemException, TargetNotExistException, InvalidDependencyException {
+        Collection<List<String>> paths = new ArrayList<>();
         if(!this.isFileLoaded){
             throw new NoFileInSystemException();
         }
@@ -86,10 +87,9 @@ public class SystemEngine implements Engine{
             if((!relation.equals(Dependency.REQUIRED_FOR))&&(!relation.equals(Dependency.DEPENDS_ON))){
                 throw new InvalidDependencyException(relation);
             }
-            Collection<List<String>> paths = new ArrayList<>();
             findPaths(firstTargetName, secondTargetName, relation, paths);
         }
-        return null;
+        return paths;
     }
 
     private void findPaths(String currTargetName, String destinationTargetName, String relation, Collection<List<String>> paths) {
@@ -104,13 +104,13 @@ public class SystemEngine implements Engine{
                     path.add(0,target.getName());
                     path.add(0,currTargetName);
                     paths.add(path);
-                } else{
+                }
+                else{
                     findPaths(target.getName(), destinationTargetName, relation, paths);
-                    if(!paths.isEmpty()){
-                        for(List<String> path : paths){
-                            path.add(0,currTargetName);
-                        }
+                    for(List<String> path : paths){
+                        path.add(0,currTargetName);
                     }
+
                 }
             }
         }

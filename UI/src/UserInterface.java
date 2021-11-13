@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Scanner;
 
 public class UserInterface {
-    Engine engine;
+    private Engine engine;
 
     public UserInterface() {
         this.engine = new SystemEngine();
@@ -52,21 +52,6 @@ public class UserInterface {
             } catch (InputMismatchException e) {
                 System.out.println("Invalid Input: " + e.getMessage());
             }
-//            catch (NoFileInSystemException e) {
-//                e.printStackTrace();
-//            } catch (TargetNotExistException e) {
-//                e.printStackTrace();
-//            } catch (DuplicateTargetsException e) {
-//                e.printStackTrace();
-//            } catch (InvalidDependencyException e) {
-//                e.printStackTrace();
-//            } catch (InvalidFileException e) {
-//                e.printStackTrace();
-//            } catch (DependencyConflictException e) {
-//                e.printStackTrace();
-//            }
-
-
         }
     }
 
@@ -78,7 +63,7 @@ public class UserInterface {
         String secondTargetName = in.next();
         System.out.println("Please enter the relation between the targets:");
         String relation = in.next();
-        Collection<List<TargetDTO>> paths = null;
+        Collection<List<String>> paths = null;
         try {
             paths = engine.getPaths(firstTargetName, secondTargetName, relation);
             if (paths.isEmpty()) {
@@ -95,13 +80,13 @@ public class UserInterface {
         }
     }
 
-    private void printPaths(Collection<List<TargetDTO>> paths) {
-        for (List<TargetDTO> path : paths) {
+    private void printPaths(Collection<List<String>> paths) {
+        for (List<String> path : paths) {
             String currPath = "Path: ";
             for (int i = 0; i < path.size() - 1; ++i) {
-                currPath += (path.get(i).getName() + "->");
+                currPath += (path.get(i) + "->");
             }
-            currPath += path.get(path.size() - 1).getName();
+            currPath += path.get(path.size() - 1);
             System.out.println(currPath);
         }
     }

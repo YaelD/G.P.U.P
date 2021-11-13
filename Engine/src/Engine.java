@@ -11,7 +11,9 @@ public interface Engine {
 
     public TargetDTO getTarget(String name) throws TargetNotExistException, NoFileInSystemException;
 
-    public Collection<List<TargetDTO>> getPaths(String firstTargetName, String secondTargetName, String relation) throws NoFileInSystemException, TargetNotExistException, InvalidDependencyException;
+    public Collection<List<String>> getPaths(String firstTargetName, String secondTargetName, String relation) throws NoFileInSystemException, TargetNotExistException, InvalidDependencyException;
 
     public GraphDTO activateTask() throws NoFileInSystemException;
+
+
 }
