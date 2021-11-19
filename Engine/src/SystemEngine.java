@@ -42,10 +42,11 @@ public class SystemEngine implements Engine{
 
     private void fileValidation(String path) throws InvalidFileException, IOException {
         Path directory = Paths.get(path.trim());
-        if(!Files.exists(directory)){
-            throw new InvalidFileException(path,"There is no file in this path");
+        if(!Files.exists(directory)) {
+            throw new InvalidFileException(path, "There is no file in this path");
         }
-        if(!Files.probeContentType(directory).equals("xml")){
+        //System.out.println(Files.probeContentType(directory));
+        if(!Files.probeContentType(directory).equals("text/xml")){
             throw new InvalidFileException(path,"The file in the current path is not an XML file");
         }
     }
@@ -84,7 +85,7 @@ public class SystemEngine implements Engine{
             if(!this.graph.getTargetGraph().containsKey(secondTargetName)){
                 throw new TargetNotExistException(secondTargetName);
             }
-            if((!relation.equals(Dependency.REQUIRED_FOR))&&(!relation.equals(Dependency.DEPENDS_ON))){
+            if((!relation.equals(Dependency.REQUIRED_FOR.getDependency()))&&(!relation.equals(Dependency.DEPENDS_ON.getDependency()))){
                 throw new InvalidDependencyException(relation);
             }
             findPaths(firstTargetName, secondTargetName, relation, paths);
@@ -104,13 +105,15 @@ public class SystemEngine implements Engine{
                     path.add(0,target.getName());
                     path.add(0,currTargetName);
                     paths.add(path);
-                }
-                else{
+                } else{
                     findPaths(target.getName(), destinationTargetName, relation, paths);
-                    for(List<String> path : paths){
-                        path.add(0,currTargetName);
+                    if(!paths.isEmpty()){
+                        for(List<String> path : paths){
+                            if(!path.get(0).equals(currTargetName)){
+                                path.add(0,currTargetName);
+                            }
+                        }
                     }
-
                 }
             }
         }

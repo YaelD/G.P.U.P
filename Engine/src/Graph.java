@@ -39,15 +39,17 @@ public class Graph {
     private static void checkDuplicateTargets(GPUPTargets gpupTargets, Map<String, Target> graph)
             throws TargetNotExistException, DependencyConflictException, InvalidDependencyException {
         for(GPUPTarget gpupTarget : gpupTargets.getGPUPTarget()){
-            for(GPUPTargetDependencies.GPUGDependency dependency:
-                    gpupTarget.getGPUPTargetDependencies().getGPUGDependency()){
-                if(!graph.containsKey(dependency.getValue())){
-                    throw new TargetNotExistException(dependency.getValue());
+            if(gpupTarget.getGPUPTargetDependencies() != null){
+                for(GPUPTargetDependencies.GPUGDependency dependency:
+                        gpupTarget.getGPUPTargetDependencies().getGPUGDependency()){
+                    if(!graph.containsKey(dependency.getValue())){
+                        throw new TargetNotExistException(dependency.getValue());
+                    }
+                    Target currTarget = graph.get(gpupTarget.getName());
+                    Target checkTarget = graph.get(dependency.getValue());
+                    String currDependency = dependency.getType();//requiredFor, DependsOn
+                    checkDependencies(currTarget, checkTarget, currDependency);
                 }
-                Target currTarget = graph.get(gpupTarget.getName());
-                Target checkTarget = graph.get(dependency.getValue());
-                String currDependency = dependency.getType();//requiredFor, DependsOn
-                checkDependencies(currTarget, checkTarget, currDependency);
             }
         }
     }

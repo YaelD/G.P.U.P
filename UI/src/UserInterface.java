@@ -12,17 +12,18 @@ public class UserInterface {
         this.engine = new SystemEngine();
     }
 
+    //TODO: check invalid input (like: ss s)
     public void getInputFromUser() {
         boolean exit = false;
         Scanner in = new Scanner(System.in);
         while (!exit) {
             System.out.println("Please choose a number between 1-6:" +
-                    "1. Read File." +
-                    "2. Get information about Targets graph." +
-                    "3. Get information about Target." +
-                    "4. Find Path between two Targets." +
-                    "5. Active task." +
-                    "6. Exit");
+                    "\n1. Read File." +
+                    "\n2. Get information about Targets graph." +
+                    "\n3. Get information about Target." +
+                    "\n4. Find Path between two Targets." +
+                    "\n5. Active task." +
+                    "\n6. Exit");
             try {
                 int choice = in.nextInt();
                 switch (choice) {
@@ -52,6 +53,21 @@ public class UserInterface {
             } catch (InputMismatchException e) {
                 System.out.println("Invalid Input: " + e.getMessage());
             }
+//            catch (NoFileInSystemException e) {
+//                e.printStackTrace();
+//            } catch (TargetNotExistException e) {
+//                e.printStackTrace();
+//            } catch (DuplicateTargetsException e) {
+//                e.printStackTrace();
+//            } catch (InvalidDependencyException e) {
+//                e.printStackTrace();
+//            } catch (InvalidFileException e) {
+//                e.printStackTrace();
+//            } catch (DependencyConflictException e) {
+//                e.printStackTrace();
+//            }
+
+
         }
     }
 
@@ -178,7 +194,7 @@ public class UserInterface {
         } else {
             System.out.println("There is no targets this target is required for");
         }
-        if (!target.getInfo().isEmpty()) {
+        if (target.getInfo()!= null) {
             System.out.println("Target-info: " + target.getInfo());
         } else {
             System.out.println("There is not Target-info in this target");

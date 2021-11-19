@@ -1,7 +1,8 @@
 public class Main {
 
     public static void main(String[] args) {
-        UserInterface userInterface = new UserInterface();
-        userInterface.getInputFromUser();
+        //System.out.println("Hello Yaelushhhhhhhh");
+        UserInterface ui = new UserInterface();
+        ui.getInputFromUser();
     }
 }
