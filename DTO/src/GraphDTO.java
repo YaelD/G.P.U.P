@@ -7,21 +7,27 @@ import java.util.Map;
 public class GraphDTO {
 
     private int numOfTargets;
+    private String name;
     private Map<String, TargetDTO> targets = new HashMap<>();
     private SimpleDateFormat runTime;
 
 
     public GraphDTO(Graph graph) {
+        this.name = graph.getName();
         this.numOfTargets = graph.getTargets().size();
         for(Target target: graph.getTargets()) {
             this.targets.put(target.getName(), new TargetDTO(target));
         }
+        /*
         for(TargetDTO targetDTO: this.targets.values()) {
             targetDTO.dependencyTargetDTO(graph.getTarget(targetDTO.getName()), this.targets);
         }
+         */
     }
 
-
+    public String getName() {
+        return name;
+    }
 
     public int getNumOfTargets() {
         return numOfTargets;

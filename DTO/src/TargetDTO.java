@@ -5,8 +5,10 @@ public class TargetDTO {
 
     private String name;
     private PlaceInGraph place;
-    private Set<TargetDTO> requiredFor = new HashSet<>();
-    private Set<TargetDTO> dependsOn = new HashSet<>();
+    //private Set<TargetDTO> requiredFor = new HashSet<>();
+    //private Set<TargetDTO> dependsOn = new HashSet<>();
+    private Set<String> requiredFor = new HashSet<>();
+    private Set<String> dependsOn = new HashSet<>();
     private String info;
     private RunResults runResult;
     private SimpleDateFormat runTime;
@@ -15,9 +17,16 @@ public class TargetDTO {
         this.name = target.getName();
         this.place = target.getPlace();
         this.info = target.getInfo();
-        //TODO: complete sets
-
+        for(Target currTarget: target.getRequiredFor())
+        {
+            this.requiredFor.add(currTarget.getName());
+        }
+        for (Target currTarget: target.getDependsOn())
+        {
+            this.dependsOn.add(currTarget.getName());
+        }
     }
+    /*
 
     public void dependencyTargetDTO(Target target, Map<String, TargetDTO> targets){
         for(Target currTarget: target.getRequiredFor()){
@@ -28,6 +37,8 @@ public class TargetDTO {
         }
     }
 
+ */
+
     public String getName() {
         return name;
     }
@@ -36,11 +47,11 @@ public class TargetDTO {
         return place;
     }
 
-    public Set<TargetDTO> getRequiredFor() {
+    public Set<String> getRequiredFor() {
         return requiredFor;
     }
 
-    public Set<TargetDTO> getDependsOn() {
+    public Set<String> getDependsOn() {
         return dependsOn;
     }
 

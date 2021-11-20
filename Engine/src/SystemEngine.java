@@ -52,19 +52,13 @@ public class SystemEngine implements Engine{
     }
 
     @Override
-    public GraphDTO getGraphDTO() throws NoFileInSystemException {
-        if(!this.isFileLoaded){
-            throw new NoFileInSystemException();
-        }
+    public GraphDTO getGraphDTO() {
         GraphDTO graphDTO = new GraphDTO(this.graph);
         return graphDTO;
     }
 
     @Override
-    public TargetDTO getTarget(String name) throws TargetNotExistException, NoFileInSystemException {
-        if(!this.isFileLoaded){
-            throw new NoFileInSystemException();
-        }
+    public TargetDTO getTarget(String name) throws TargetNotExistException {
         if(!this.graph.getTargetGraph().containsKey(name)){
             throw new TargetNotExistException(name);
         }
@@ -73,23 +67,18 @@ public class SystemEngine implements Engine{
     }
 
     @Override
-    public Collection<List<String>> getPaths(String firstTargetName, String secondTargetName, String relation) throws NoFileInSystemException, TargetNotExistException, InvalidDependencyException {
+    public Collection<List<String>> getPaths(String firstTargetName, String secondTargetName, String relation) throws TargetNotExistException, InvalidDependencyException {
         Collection<List<String>> paths = new ArrayList<>();
-        if(!this.isFileLoaded){
-            throw new NoFileInSystemException();
+        if(!this.graph.getTargetGraph().containsKey(firstTargetName)){
+            throw new TargetNotExistException(firstTargetName);
         }
-        else{
-            if(!this.graph.getTargetGraph().containsKey(firstTargetName)){
-                throw new TargetNotExistException(firstTargetName);
-            }
-            if(!this.graph.getTargetGraph().containsKey(secondTargetName)){
-                throw new TargetNotExistException(secondTargetName);
-            }
-            if((!relation.equals(Dependency.REQUIRED_FOR.getDependency()))&&(!relation.equals(Dependency.DEPENDS_ON.getDependency()))){
-                throw new InvalidDependencyException(relation);
-            }
-            findPaths(firstTargetName, secondTargetName, relation, paths);
+        if(!this.graph.getTargetGraph().containsKey(secondTargetName)){
+            throw new TargetNotExistException(secondTargetName);
         }
+        if((!relation.equals(Dependency.REQUIRED_FOR.getDependency()))&&(!relation.equals(Dependency.DEPENDS_ON.getDependency()))){
+            throw new InvalidDependencyException(relation);
+        }
+        findPaths(firstTargetName, secondTargetName, relation, paths);
         return paths;
     }
 
@@ -120,11 +109,13 @@ public class SystemEngine implements Engine{
     }
 
     @Override
-    public GraphDTO activateTask() throws NoFileInSystemException {
-        if(!this.isFileLoaded){
-            throw new NoFileInSystemException();
-        }
+    public GraphDTO activateTask() {
         return null;
+    }
+
+    @Override
+    public boolean isFileLoaded() {
+        return this.isFileLoaded;
     }
 
     @Override

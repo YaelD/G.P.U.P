@@ -8,15 +8,16 @@ import java.util.Scanner;
 public class UserInterface {
     private Engine engine;
 
+    private final String PRINT_DELIMETER = "------------------------------------------------------------\n";
+
     public UserInterface() {
         this.engine = new SystemEngine();
     }
-
-    //TODO: check invalid input (like: ss s)
     public void getInputFromUser() {
         boolean exit = false;
         Scanner in = new Scanner(System.in);
         while (!exit) {
+            System.out.println(PRINT_DELIMETER);
             System.out.println("Please choose a number between 1-6:" +
                     "\n1. Read File." +
                     "\n2. Get information about Targets graph." +
@@ -25,23 +26,24 @@ public class UserInterface {
                     "\n5. Active task." +
                     "\n6. Exit");
             try {
+                System.out.print("Please enter your choice: ");
                 int choice = in.nextInt();
+                System.out.println(PRINT_DELIMETER);
                 switch (choice) {
                     case 1:
-                        loadFile();
+                        this.loadFile();
                         break;
                     case 2:
-                        printGraphInfo();
+                        this.printGraphInfo();
                         break;
                     case 3:
-                        printTarget();
+                        this.printTarget();
                         break;
                     case 4:
-                        findPaths();
-
+                        this.findPaths();
                         break;
                     case 5:
-                        //engine.activateTask();
+                        this.activeTask();
                         break;
                     case 6:
                         exit = true;
@@ -51,27 +53,18 @@ public class UserInterface {
                         break;
                 }
             } catch (InputMismatchException e) {
-                System.out.println("Invalid Input: " + e.getMessage());
+                System.out.println("Invalid Input: " + in.nextLine());
             }
-//            catch (NoFileInSystemException e) {
-//                e.printStackTrace();
-//            } catch (TargetNotExistException e) {
-//                e.printStackTrace();
-//            } catch (DuplicateTargetsException e) {
-//                e.printStackTrace();
-//            } catch (InvalidDependencyException e) {
-//                e.printStackTrace();
-//            } catch (InvalidFileException e) {
-//                e.printStackTrace();
-//            } catch (DependencyConflictException e) {
-//                e.printStackTrace();
-//            }
-
-
         }
     }
 
     private void findPaths() {
+        if(!engine.isFileLoaded())
+        {
+            System.out.println("A file was not loaded to the system yet");
+            return;
+        }
+        System.out.println(PRINT_DELIMETER);
         Scanner in = new Scanner(System.in);
         System.out.println("Please enter first Target's name:");
         String firstTargetName = in.next();
@@ -87,8 +80,6 @@ public class UserInterface {
             } else {
                 printPaths(paths);
             }
-        } catch (NoFileInSystemException e) {
-            System.out.println("A file is not loaded to the system yet");
         } catch (TargetNotExistException e) {
             System.out.println("The target" + e.getName() + " does not exist");
         } catch (InvalidDependencyException e) {
@@ -108,6 +99,7 @@ public class UserInterface {
     }
 
     private void loadFile() {
+        System.out.println(PRINT_DELIMETER);
         boolean finish = false;
         while (!finish) {
             System.out.println("Please enter the full path of file:(for return please press '0')");
@@ -138,23 +130,31 @@ public class UserInterface {
 
 
     private void printGraphInfo() {
-        GraphDTO graphDTO = null;
-        try {
-            graphDTO = engine.getGraphDTO();
-            System.out.println("Number of targets:" + graphDTO.getNumOfTargets());
-            System.out.println("Number of Leaves:" + graphDTO.getNumOfTargetsInPlace(PlaceInGraph.LEAF) +
-                    "Number of Middles:" + graphDTO.getNumOfTargetsInPlace(PlaceInGraph.MIDDLE) +
-                    "Number of Roots:" + graphDTO.getNumOfTargetsInPlace(PlaceInGraph.ROOT) +
-                    "Number of Independents:" + graphDTO.getNumOfTargetsInPlace(PlaceInGraph.INDEPENDENT));
-        } catch (NoFileInSystemException e) {
-            System.out.println("There is no file in the system");
+        if(!engine.isFileLoaded())
+        {
+            System.out.println("A file was not loaded to the system yet");
+            return;
         }
+        System.out.println(PRINT_DELIMETER);
+        GraphDTO graphDTO = null;
+        graphDTO = engine.getGraphDTO();
+        System.out.println("The name of the Graph: " + graphDTO.getName());
+        System.out.println("Number of targets: " + graphDTO.getNumOfTargets());
+        System.out.println("Number of Leaves: " + graphDTO.getNumOfTargetsInPlace(PlaceInGraph.LEAF) +
+                "\nNumber of Middles: " + graphDTO.getNumOfTargetsInPlace(PlaceInGraph.MIDDLE) +
+                "\nNumber of Roots: " + graphDTO.getNumOfTargetsInPlace(PlaceInGraph.ROOT) +
+                "\nNumber of Independents: " + graphDTO.getNumOfTargetsInPlace(PlaceInGraph.INDEPENDENT));
+
     }
 
 
     private void printTarget() {
-        //TODO: ask Yael
-        //GraphDTO graphDTO = engine.getGraphDTO();
+        if(!engine.isFileLoaded())
+        {
+            System.out.println("A file was not loaded to the system yet");
+            return;
+        }
+        System.out.println(PRINT_DELIMETER);
         boolean finish = false;
         while (!finish) {
             System.out.println("Please enter the target's name:(to return to main menu, type '0')");
@@ -162,34 +162,35 @@ public class UserInterface {
             String targetName = in.next();
             if (targetName.equals("0")) {
                 finish = true;
-            } else {
+            }
+            else {
                 try {
                     TargetDTO target = engine.getTarget(targetName);
                     printTargetDetails(target);
+                    finish = true;
                 } catch (TargetNotExistException e) {
                     System.out.println("Target with name: " + e.getName() + "does not exist");
-                } catch (NoFileInSystemException e) {
-                    System.out.println("There is no file in the system");
                 }
             }
         }
     }
 
     private void printTargetDetails(TargetDTO target) {
-        System.out.println("Target's name:" + target.getName());
-        System.out.println("Target's place" + target.getPlace());
+        System.out.println(PRINT_DELIMETER);
+        System.out.println("Target's name: " + target.getName());
+        System.out.println("Target's place: " + target.getPlace());
         if (!target.getDependsOn().isEmpty()) {
             System.out.println("dependsOn: ");
-            for (TargetDTO targetDTO : target.getDependsOn()) {
-                System.out.println("        " + targetDTO.getName());
+            for (String targetName : target.getDependsOn()) {
+                System.out.println("        " + targetName);
             }
         } else {
             System.out.println("There is no targets this target is depends on");
         }
         if (!target.getRequiredFor().isEmpty()) {
             System.out.println("requiredFor: ");
-            for (TargetDTO targetDTO : target.getRequiredFor()) {
-                System.out.println("        " + targetDTO.getName());
+            for (String targetName : target.getRequiredFor()) {
+                System.out.println("        " + targetName);
             }
         } else {
             System.out.println("There is no targets this target is required for");
@@ -199,6 +200,18 @@ public class UserInterface {
         } else {
             System.out.println("There is not Target-info in this target");
         }
+
+    }
+
+
+    private void activeTask(){
+        if(!engine.isFileLoaded())
+        {
+            System.out.println("A file was not loaded to the system yet");
+            return;
+        }
+        System.out.println(PRINT_DELIMETER);
+
 
     }
 

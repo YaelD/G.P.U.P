@@ -7,13 +7,15 @@ public interface Engine {
 
     public boolean readFile(String path) throws InvalidFileException, DependencyConflictException, DuplicateTargetsException, InvalidDependencyException, TargetNotExistException;
 
-    public GraphDTO getGraphDTO() throws NoFileInSystemException;
+    public GraphDTO getGraphDTO();
 
-    public TargetDTO getTarget(String name) throws TargetNotExistException, NoFileInSystemException;
+    public TargetDTO getTarget(String name) throws TargetNotExistException;
 
-    public Collection<List<String>> getPaths(String firstTargetName, String secondTargetName, String relation) throws NoFileInSystemException, TargetNotExistException, InvalidDependencyException;
+    public Collection<List<String>> getPaths(String firstTargetName, String secondTargetName, String relation) throws TargetNotExistException, InvalidDependencyException;
 
-    public GraphDTO activateTask() throws NoFileInSystemException;
+    public GraphDTO activateTask();
+
+    public boolean isFileLoaded();
 
 
 }
