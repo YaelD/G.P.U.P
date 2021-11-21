@@ -9,8 +9,8 @@ public class Target {
 
     private String name;
     private PlaceInGraph place;
-    private Set<Target> requiredFor = new HashSet<>();
-    private Set<Target> dependsOn = new HashSet<>();
+    private Set<Target> requiredFor = new HashSet<>(); //This Target requiredFor the Set's Targets
+    private Set<Target> dependsOn = new HashSet<>();// This Target is dependsOn the Set's targets
     private String info;
 
 

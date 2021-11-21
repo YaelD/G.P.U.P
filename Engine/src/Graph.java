@@ -54,7 +54,6 @@ public class Graph {
         }
     }
 
-    //TODO: add place in graph
     private static void checkDependencies(Target currTarget, Target checkTarget, String currDependency)
     throws DependencyConflictException, InvalidDependencyException{
         if(currDependency.equals(Dependency.REQUIRED_FOR.getDependency()))
@@ -64,6 +63,7 @@ public class Graph {
                 throw new DependencyConflictException(currTarget.getName(), checkTarget.getName(),currDependency);
             }
             currTarget.getRequiredFor().add(checkTarget);
+            checkTarget.getDependsOn().add(currTarget);
         }
         else if(currDependency.equals(Dependency.DEPENDS_ON.getDependency()))
         {
@@ -72,6 +72,7 @@ public class Graph {
                 throw new DependencyConflictException(currTarget.getName(), checkTarget.getName(),currDependency);
             }
             currTarget.getDependsOn().add(checkTarget);
+            checkTarget.getRequiredFor().add(currTarget);
         }
         else
         {

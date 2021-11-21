@@ -84,6 +84,7 @@ public class SystemEngine implements Engine{
 
     private void findPaths(String currTargetName, String destinationTargetName, String relation, Collection<List<String>> paths) {
         Set<Target> dependencies = this.graph.getTarget(currTargetName).getDependencies(relation);
+
         if(dependencies.isEmpty()){
             return;
         }
