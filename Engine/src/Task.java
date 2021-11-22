@@ -1,4 +1,5 @@
 import java.util.*;
+import java.util.function.Consumer;
 
 public abstract class Task {
 
@@ -49,12 +50,19 @@ public abstract class Task {
         return targetsInDegree;
     }
 
-    protected abstract void executeTaskOnTarget(Target target);
+    protected abstract TargetDTO executeTaskOnTarget(Target target,Consumer<String> consumerString);
 
-    public void executeTaskOnGraph(){
+
+
+
+    public void executeTaskOnGraph(Consumer<String> consumerString, Consumer<List<TargetDTO>> fileWriteConsumer){
         List<Target> sortedTargets = topologicalSort();
+        List<TargetDTO> runResults = new ArrayList<>();
         for(Target target : sortedTargets){
-            executeTaskOnTarget(target);
+            TargetDTO targetResult = executeTaskOnTarget(target, consumerString);
+            runResults.add(targetResult);
         }
+        fileWriteConsumer.accept(runResults);
+
     }
 }

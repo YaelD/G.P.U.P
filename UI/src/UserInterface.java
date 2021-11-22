@@ -4,8 +4,11 @@ import java.util.Collection;
 import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
+import java.util.function.Consumer;
 
 public class UserInterface {
+
+
     private Engine engine;
 
     private final String PRINT_DELIMETER = "------------------------------------------------------------\n";
@@ -13,6 +16,8 @@ public class UserInterface {
     public UserInterface() {
         this.engine = new SystemEngine();
     }
+
+
     public void getInputFromUser() {
         boolean exit = false;
         Scanner in = new Scanner(System.in);
@@ -211,8 +216,31 @@ public class UserInterface {
             return;
         }
         System.out.println(PRINT_DELIMETER);
+        System.out.println("Please enter the type of the task: ");
+        Scanner in = new Scanner(System.in);
+        int taskType = in.nextInt();
+        if(taskType == 1){
+            SimulationTaskParamsDTO simulationTaskParams = getParamsOfSimulationTask();
+            engine.activateTask(new Consumer<String>() {
+                @Override
+                public void accept(String s) {
+                    System.out.println(s);
+                }
+            }, simulationTaskParams, TaskType.SIMULATION_TASK);
+        }
 
 
+    }
+
+    private SimulationTaskParamsDTO getParamsOfSimulationTask() {
+        System.out.println("Please enter the params...");
+        Scanner in = new Scanner(System.in);
+        int processTime = in.nextInt();
+        boolean isRandom = in.nextBoolean();
+        double successRate = in.nextDouble();
+        double successWithWarnings = in.nextDouble();
+        SimulationTaskParamsDTO simulationTaskDTO = new SimulationTaskParamsDTO(processTime, isRandom, successRate, successWithWarnings);
+        return simulationTaskDTO;
     }
 
 }

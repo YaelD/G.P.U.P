@@ -11,7 +11,7 @@ public class TargetDTO {
     private Set<String> dependsOn = new HashSet<>();
     private String info;
     private RunResults runResult;
-    private SimpleDateFormat runTime;
+    private long runTime;
 
     public TargetDTO(Target target) {
         this.name = target.getName();
@@ -26,6 +26,13 @@ public class TargetDTO {
             this.dependsOn.add(currTarget.getName());
         }
     }
+
+    public TargetDTO(Target target ,RunResults runResult, long runTime) {
+        this(target);
+        this.runResult = runResult;
+        this.runTime = runTime;
+    }
+
     /*
 
     public void dependencyTargetDTO(Target target, Map<String, TargetDTO> targets){
@@ -63,7 +70,7 @@ public class TargetDTO {
         return runResult;
     }
 
-    public SimpleDateFormat getRunTime() {
+    public long getRunTime() {
         return runTime;
     }
 }

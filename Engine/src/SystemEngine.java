@@ -10,6 +10,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
+import java.util.function.Consumer;
 
 public class SystemEngine implements Engine{
 
@@ -110,7 +111,16 @@ public class SystemEngine implements Engine{
     }
 
     @Override
-    public GraphDTO activateTask() {
+    public GraphDTO activateTask(Consumer<String> consumerString, TaskParamsDTO taskParams, TaskType taskType) {
+        if(taskType.equals(TaskType.SIMULATION_TASK)){
+            if(taskParams instanceof SimulationTaskParamsDTO){
+                SimulationTask simulationTask = new SimulationTask(this.graph, (SimulationTaskParamsDTO) taskParams);
+                Consumer<List<TargetDTO>> fileWriteConsumer = list ->{/*TODO: WRITE TO FILE*/};
+                simulationTask.executeTaskOnGraph(consumerString, fileWriteConsumer);
+            }
+        }
+
+
         return null;
     }
 

@@ -1,7 +1,8 @@
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
+import java.text.SimpleDateFormat;
+import java.time.Duration;
+import java.time.Instant;
+import java.util.*;
+import java.util.function.Consumer;
 
 public class SimulationTask extends Task{
 
@@ -10,22 +11,51 @@ public class SimulationTask extends Task{
     private double successRate;
     private double successWithWarningsRate;
 
-    public SimulationTask(Graph graph, int processTime, boolean isRandom, double successRate, double successWithWarningsRate) {
+    public SimulationTask(Graph graph, SimulationTaskParamsDTO simulationTaskDTO) {
         super(graph);
-        this.processTime = processTime;
-        this.isRandom = isRandom;
-        this.successRate = successRate;
-        this.successWithWarningsRate = successWithWarningsRate;
+        this.processTime = simulationTaskDTO.getProcessTime();
+        this.isRandom = simulationTaskDTO.isRandom();
+        this.successRate = simulationTaskDTO.getSuccessRate();
+        this.successWithWarningsRate = simulationTaskDTO.getSuccessWithWarningsRate();
     }
-    // Map<String, TargetParams> map = new HashMap<>();
+
+
 
     @Override
-    protected void executeTaskOnTarget(Target target) {
+    protected TargetDTO executeTaskOnTarget(Target target, Consumer<String> consumerString) {
+        List<String> taskResults = new ArrayList<>();
+        TargetDTO targetDTO = null;
         int currTargetProcessTime = this.processTime;
         if(this.isRandom){
             currTargetProcessTime = getRandomProcessTime();
         }
+        try {
+            Instant startTime = Instant.now();
+            RunResults runResult;
+            consumerString.accept("Start processing on Target: " + target.getName());
+            Thread.sleep(currTargetProcessTime);
+            Instant endTime = Instant.now();
+            consumerString.accept("Finish processing on Target: " + target.getName());
+            if(getRandomNumber() <= this.successRate){
+                if(getRandomNumber() <= this.successWithWarningsRate){
+                    consumerString.accept("The Target finished with success with warnings");
+                    runResult = RunResults.WARNING;
+                } else{
+                    consumerString.accept("The Target finished with success");
+                    runResult = RunResults.SUCCESS;
+                }
+            }else {
+                consumerString.accept("The Target finished with failure");
+                runResult = RunResults.FAILURE;
+            }
+            Duration diffTime = Duration.between(startTime, endTime);
+            targetDTO = new TargetDTO(target, runResult,diffTime.toMillis());
 
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        return targetDTO;
     }
 
     private int getRandomProcessTime(){
@@ -33,16 +63,9 @@ public class SimulationTask extends Task{
         return random.nextInt(this.processTime + 1);
     }
 
+    private double getRandomNumber(){
+        Random random = new Random();
+        return random.nextDouble();
+    }
 
-//    public class TargetParams{
-//        private String name;
-//
-//        public TargetParams(String name) {
-//            this.name = name;
-//        }
-//
-//        public String getName() {
-//            return name;
-//        }
-//    }
 }
