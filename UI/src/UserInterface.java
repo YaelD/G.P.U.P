@@ -221,12 +221,17 @@ public class UserInterface {
         int taskType = in.nextInt();
         if(taskType == 1){
             SimulationTaskParamsDTO simulationTaskParams = getParamsOfSimulationTask();
-            engine.activateTask(new Consumer<String>() {
-                @Override
-                public void accept(String s) {
-                    System.out.println(s);
+            Consumer<TargetDTO> printStrConsumer = targetDTO -> {
+                if(targetDTO.getEndingTime() != null){
+                    System.out.println("Finish processing on Target: " + targetDTO.getName());
+                    System.out.println("The Target finished with: " + targetDTO.getRunResult().getStatus());
+                    //TODO: need to print the targets that were depends on the current target.
                 }
-            }, simulationTaskParams, TaskType.SIMULATION_TASK);
+                else{
+                    System.out.println("Start processing on Target: " + targetDTO.getName());
+                }
+            };
+            GraphDTO graphDTO = engine.activateTask(printStrConsumer, simulationTaskParams, TaskType.SIMULATION_TASK);
         }
 
 

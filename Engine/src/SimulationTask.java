@@ -1,6 +1,8 @@
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.Duration;
 import java.time.Instant;
+import java.time.LocalTime;
 import java.util.*;
 import java.util.function.Consumer;
 
@@ -22,39 +24,34 @@ public class SimulationTask extends Task{
 
 
     @Override
-    protected TargetDTO executeTaskOnTarget(Target target, Consumer<String> consumerString) {
-        List<String> taskResults = new ArrayList<>();
+    protected TargetDTO executeTaskOnTarget(Target target) {
         TargetDTO targetDTO = null;
+        LocalTime startTime, endTime;
         int currTargetProcessTime = this.processTime;
+
         if(this.isRandom){
             currTargetProcessTime = getRandomProcessTime();
         }
         try {
-            Instant startTime = Instant.now();
-            RunResults runResult;
-            consumerString.accept("Start processing on Target: " + target.getName());
+            startTime = LocalTime.now();
             Thread.sleep(currTargetProcessTime);
-            Instant endTime = Instant.now();
-            consumerString.accept("Finish processing on Target: " + target.getName());
+            endTime = LocalTime.now();
             if(getRandomNumber() <= this.successRate){
                 if(getRandomNumber() <= this.successWithWarningsRate){
-                    consumerString.accept("The Target finished with success with warnings");
-                    runResult = RunResults.WARNING;
-                } else{
-                    consumerString.accept("The Target finished with success");
-                    runResult = RunResults.SUCCESS;
+                    target.setRunResult(RunResults.WARNING);
+                }else{
+                    target.setRunResult(RunResults.SUCCESS);
                 }
-            }else {
-                consumerString.accept("The Target finished with failure");
-                runResult = RunResults.FAILURE;
+            }else{
+                target.setRunResult(RunResults.FAILURE);
             }
-            Duration diffTime = Duration.between(startTime, endTime);
-            targetDTO = new TargetDTO(target, runResult,diffTime.toMillis());
+            target.setRunningTime(Duration.between(startTime, endTime).toMillis());
+
+            targetDTO = new TargetDTO(target, startTime, endTime);
 
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-
         return targetDTO;
     }
 

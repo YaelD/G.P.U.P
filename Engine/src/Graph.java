@@ -10,7 +10,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Graph {
+public class Graph implements Cloneable {
 
     private Map<String, Target> targetGraph = new HashMap<>();
     private String name;
@@ -18,6 +18,20 @@ public class Graph {
     public Graph(Map<String, Target> targetGraph, String name) {
         this.name = name;
         this.targetGraph = targetGraph;
+    }
+
+    @Override
+    public Graph clone(){
+        try{
+            Graph newGraph = (Graph) super.clone();
+            newGraph.name = this.name;
+            for(Map.Entry<String, Target> entry: this.targetGraph.entrySet()){
+                newGraph.targetGraph.put(entry.getKey(), entry.getValue());
+            }
+            return newGraph;
+        } catch (CloneNotSupportedException e) {
+            return null;
+        }
     }
 
     public static Map<String, Target> buildTargetGraph(GPUPTargets gpupTargets)

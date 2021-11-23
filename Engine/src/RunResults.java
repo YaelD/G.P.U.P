@@ -3,7 +3,7 @@ public enum RunResults {
     SUCCESS("success"),
     WARNING("warning"),
     FAILURE("failure"),
-    FROZEN("frozen");
+    SKIPPED("skipped");
 
     private String status;
 

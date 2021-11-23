@@ -15,6 +15,8 @@ import java.util.function.Consumer;
 public class SystemEngine implements Engine{
 
     private Graph graph;
+    private Map<TaskType, Task> tasksInSystem = new HashMap<>();
+    private Task task;
     private String workingDirectory;
     private boolean isFileLoaded = false;
 
@@ -111,17 +113,29 @@ public class SystemEngine implements Engine{
     }
 
     @Override
-    public GraphDTO activateTask(Consumer<String> consumerString, TaskParamsDTO taskParams, TaskType taskType) {
-        if(taskType.equals(TaskType.SIMULATION_TASK)){
-            if(taskParams instanceof SimulationTaskParamsDTO){
-                SimulationTask simulationTask = new SimulationTask(this.graph, (SimulationTaskParamsDTO) taskParams);
-                Consumer<List<TargetDTO>> fileWriteConsumer = list ->{/*TODO: WRITE TO FILE*/};
-                simulationTask.executeTaskOnGraph(consumerString, fileWriteConsumer);
+    public GraphDTO activateTask(Consumer<TargetDTO> consumerString, TaskParamsDTO taskParams, TaskType taskType) {
+        List<Consumer<TargetDTO>> outputConsumers = new ArrayList<>();
+        if(this.tasksInSystem.containsKey(taskType)){
+            if(this.tasksInSystem.get(taskType).getGraph().getTargets().isEmpty()){
+                this.tasksInSystem.get(taskType).setGraph(this.graph.clone());
             }
         }
-
-
-        return null;
+        else{
+            switch (taskType){
+                case SIMULATION_TASK:
+                    if(taskParams instanceof SimulationTaskParamsDTO){
+                        this.tasksInSystem.put(taskType, new SimulationTask(this.graph.clone(), (SimulationTaskParamsDTO) taskParams));
+                    }
+                    break;
+            }
+        }
+        outputConsumers.add(consumerString);
+        //TODO: open the file here
+        Consumer<TargetDTO> fileWriterConsumer = targetDTO -> {/*TODO: WRITE TO FILE*/ };
+        outputConsumers.add(fileWriterConsumer);
+        GraphDTO runResult = this.tasksInSystem.get(taskType).executeTaskOnGraph(outputConsumers);
+        //TODO: close the file here
+        return runResult;
     }
 
     @Override

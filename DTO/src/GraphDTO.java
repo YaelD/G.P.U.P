@@ -9,7 +9,7 @@ public class GraphDTO {
     private int numOfTargets;
     private String name;
     private Map<String, TargetDTO> targets = new HashMap<>();
-    private SimpleDateFormat runTime;
+    private long runTime;
 
 
     public GraphDTO(Graph graph) {
@@ -18,11 +18,11 @@ public class GraphDTO {
         for(Target target: graph.getTargets()) {
             this.targets.put(target.getName(), new TargetDTO(target));
         }
-        /*
-        for(TargetDTO targetDTO: this.targets.values()) {
-            targetDTO.dependencyTargetDTO(graph.getTarget(targetDTO.getName()), this.targets);
-        }
-         */
+    }
+
+    public GraphDTO(Graph graph,long runTime) {
+        this(graph);
+        this.runTime = runTime;
     }
 
     public String getName() {
@@ -37,7 +37,7 @@ public class GraphDTO {
         return targets;
     }
 
-    public SimpleDateFormat getRunTime() {
+    public long getRunTime() {
         return runTime;
     }
 

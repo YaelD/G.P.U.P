@@ -1,6 +1,7 @@
 import schema.generated.GPUPTarget;
 import schema.generated.GPUPTargetDependencies;
 
+import java.time.LocalTime;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -12,11 +13,15 @@ public class Target {
     private Set<Target> requiredFor = new HashSet<>(); //This Target requiredFor the Set's Targets
     private Set<Target> dependsOn = new HashSet<>();// This Target is dependsOn the Set's targets
     private String info;
+    private RunResults runResult;
+    private long runningTime;
+    private RunStatus runStatus;
 
 
     public Target(GPUPTarget target) {
         this.name = target.getName();
         this.info = target.getGPUPUserData();
+        this.runStatus = RunStatus.FROZEN;
     }
 
     public String getName() {
@@ -50,6 +55,30 @@ public class Target {
         else{
             return this.getDependsOn();
         }
+    }
+
+    public RunResults getRunResult() {
+        return runResult;
+    }
+
+    public void setRunResult(RunResults runResult) {
+        this.runResult = runResult;
+    }
+
+    public long getRunningTime() {
+        return runningTime;
+    }
+
+    public void setRunningTime(long runningTime) {
+        this.runningTime = runningTime;
+    }
+
+    public RunStatus getRunStatus() {
+        return runStatus;
+    }
+
+    public void setRunStatus(RunStatus runStatus) {
+        this.runStatus = runStatus;
     }
 
     @Override

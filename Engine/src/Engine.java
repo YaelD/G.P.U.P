@@ -14,7 +14,7 @@ public interface Engine {
 
     public Collection<List<String>> getPaths(String firstTargetName, String secondTargetName, String relation) throws TargetNotExistException, InvalidDependencyException;
 
-    public GraphDTO activateTask(Consumer<String> consumerString, TaskParamsDTO taskParams, TaskType taskType);
+    public GraphDTO activateTask(Consumer<TargetDTO> consumerString, TaskParamsDTO taskParams, TaskType taskType);
 
     public boolean isFileLoaded();
 
