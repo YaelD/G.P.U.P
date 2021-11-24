@@ -226,18 +226,28 @@ public class UserInterface {
                 return;
             }
             Consumer<TargetDTO> printStrConsumer = targetDTO -> {
-                System.out.println("Process result: " + targetDTO.getRunResult().getStatus());
+                System.out.println(PRINT_DELIMETER);
+                System.out.println("Target name: " + targetDTO.getName()+ "\n") ;
+                System.out.println("Process result: " + targetDTO.getRunResult().getStatus() + "\n");
                 if(targetDTO.getInfo() != null){
                     System.out.println("Target info:" + targetDTO.getInfo() + "\n");
                 }
                 if(!targetDTO.getRunResult().equals(RunResults.SKIPPED)){
                     System.out.println("Process Start time:" + targetDTO.getStartingTime().format(DateTimeFormatter.ofPattern("HH:mm:ss")) + "\n");
                     System.out.println("Process End time:" + targetDTO.getEndingTime().format(DateTimeFormatter.ofPattern("HH:mm:ss")) + "\n");
-                    System.out.println("The dependent Targets that were opened:\n" + targetDTO.getTargetsThatCanBeRun());
+                    if(!targetDTO.getTargetsThatCanBeRun().isEmpty()){
+                        System.out.println("The dependent Targets that were opened:\n" + targetDTO.getTargetsThatCanBeRun() + "\n");
+                    }
                     if(targetDTO.getRunResult().equals(RunResults.FAILURE)){
-                        System.out.println("The targets that won't be able to process are: \n" + targetDTO.getSkippedFathers());
+                        if(targetDTO.getSkippedFathers().isEmpty()){
+                            System.out.println("The targets that won't be able to process are: \n \t" + targetDTO.getSkippedFathers() + "\n");
+                        }
                     }
                 }
+                else{
+
+                }
+                System.out.println(PRINT_DELIMETER);
             };
             GraphDTO graphDTO = engine.activateTask(printStrConsumer, simulationTaskParams, TaskType.SIMULATION_TASK);
         }
