@@ -207,7 +207,7 @@ public class UserInterface {
             System.out.println("There is no targets this target is required for");
         }
         if (target.getInfo()!= null) {
-            System.out.println("target.Target-info: " + target.getInfo());
+            System.out.println("Target-info: " + target.getInfo());
         } else {
             System.out.println("There is not target.Target-info in this target");
         }
@@ -233,10 +233,10 @@ public class UserInterface {
             }
             Consumer<TargetDTO> printStrConsumer = targetDTO -> {
                 System.out.println(PRINT_DELIMETER);
-                System.out.println("target.Target name: " + targetDTO.getName()+ "\n") ;
+                System.out.println("Target name: " + targetDTO.getName()+ "\n") ;
                 System.out.println("Process result: " + targetDTO.getRunResult().getStatus() + "\n");
                 if(targetDTO.getInfo() != null){
-                    System.out.println("target.Target info:" + targetDTO.getInfo() + "\n");
+                    System.out.println("Target info:" + targetDTO.getInfo() + "\n");
                 }
                 if(!targetDTO.getRunResult().equals(RunResults.SKIPPED)){
                     System.out.println("Process Start time:" + targetDTO.getStartingTime().format(DateTimeFormatter.ofPattern("HH:mm:ss")) + "\n");
