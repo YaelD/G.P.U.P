@@ -240,12 +240,9 @@ public class UserInterface {
                     }
                     if(targetDTO.getRunResult().equals(RunResults.FAILURE)){
                         if(!targetDTO.getSkippedFathers().isEmpty()){
-                            System.out.println("The targets that won't be able to process are: \n \t" + targetDTO.getSkippedFathers() + "\n");
+                            System.out.println("The targets that won't be able to process are: \n" + targetDTO.getSkippedFathers() + "\n");
                         }
                     }
-                }
-                else{
-
                 }
                 System.out.println(PRINT_DELIMETER);
             };

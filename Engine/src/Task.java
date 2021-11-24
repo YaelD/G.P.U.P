@@ -23,10 +23,10 @@ public abstract class Task {
         TargetDTO targetResult;
         LocalTime startTime, endTime;
         Map<String, Integer> targetsInDegree = getTargetsInDegree();
-        Queue<Target> sourceTargets = initSourceQueue(this.graph.getTargets());
+        List<Target> sourceTargets = initSourceQueue(this.graph.getTargets());
         startTime = LocalTime.now();
         while(!sourceTargets.isEmpty()){
-            Target currTarget = sourceTargets.remove();
+            Target currTarget = sourceTargets.remove(0);
             if(!currTarget.getRunStatus().equals(RunStatus.SKIPPED)) {
                 targetResult = executeTaskOnTarget(currTarget);
             }
@@ -80,11 +80,15 @@ public abstract class Task {
         }
     }
 
-    private void updateNeighborTargets(Target currTarget, Queue<Target> sourceTargets, Map<String, Integer> targetsInDegree, TargetDTO targetResult) {
-        for(Target neighborTarget : currTarget.getDependsOn()){
+    private void updateNeighborTargets(Target currTarget, List<Target> sourceTargets, Map<String, Integer> targetsInDegree, TargetDTO targetResult) {
+        for(Target neighborTarget : currTarget.getRequiredFor()){
             targetsInDegree.put(neighborTarget.getName(), (targetsInDegree.get(neighborTarget.getName())-1));
             if((targetsInDegree.get(neighborTarget.getName())) == 0){
-                neighborTarget.setRunStatus(RunStatus.WAITING);
+                if(currTarget.getRunResult() != RunResults.SKIPPED && currTarget.getRunResult() != RunResults.FAILURE){
+                    if(neighborTarget.getRunStatus() != RunStatus.SKIPPED){
+                        neighborTarget.setRunStatus(RunStatus.WAITING);
+                    }
+                }
                 sourceTargets.add(neighborTarget);
                 if(!currTarget.getRunStatus().equals(RunStatus.SKIPPED)){
                     targetResult.getTargetsThatCanBeRun().add(neighborTarget.getName());
@@ -93,8 +97,8 @@ public abstract class Task {
         }
     }
 
-    private Queue<Target> initSourceQueue(Collection<Target> targets) {
-        Queue<Target> sourceTargets = new LinkedList<>();
+    private List<Target> initSourceQueue(Collection<Target> targets) {
+        List<Target> sourceTargets = new LinkedList<>();
         for(Target target : targets){
             if(target.getDependsOn().isEmpty()){
                 target.setRunStatus(RunStatus.WAITING);

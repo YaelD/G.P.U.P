@@ -161,17 +161,21 @@ public class SystemEngine implements Engine{
             out = new BufferedWriter(
                     new OutputStreamWriter(
                             new FileOutputStream(path+"\\" + targetDTO.getName() + ".log")));
-
-            out.write("Process result: " + targetDTO.getRunResult().getStatus());
+            out.write("Target name: " + targetDTO.getName()+ "\n"); ;
+            out.write("Process result: " + targetDTO.getRunResult().getStatus() + "\n");
             if(targetDTO.getInfo() != null){
-                out.write("Target info:" + targetDTO.getInfo() + "\r\n");
+                out.write("Target info:" + targetDTO.getInfo() + "\n");
             }
             if(!targetDTO.getRunResult().equals(RunResults.SKIPPED)){
-                out.write("Process Start time:" + targetDTO.getStartingTime().format(DateTimeFormatter.ofPattern("HH:mm:ss")) + "\r\n");
-                out.write("Process End time:" + targetDTO.getEndingTime().format(DateTimeFormatter.ofPattern("HH:mm:ss")) + "\r\n");
-                out.write("The dependent Targets that were opened:\r\n" + targetDTO.getTargetsThatCanBeRun() + "\r\n");
+                out.write("Process Start time:" + targetDTO.getStartingTime().format(DateTimeFormatter.ofPattern("HH:mm:ss")) + "\n");
+                out.write("Process End time:" + targetDTO.getEndingTime().format(DateTimeFormatter.ofPattern("HH:mm:ss")) + "\n");
+                if(!targetDTO.getTargetsThatCanBeRun().isEmpty()){
+                    out.write("The dependent Targets that were opened:\n" + targetDTO.getTargetsThatCanBeRun() + "\n");
+                }
                 if(targetDTO.getRunResult().equals(RunResults.FAILURE)){
-                    out.write("The targets that won't be able to process are: \r\n" + targetDTO.getSkippedFathers() + "\r\n");
+                    if(!targetDTO.getSkippedFathers().isEmpty()){
+                        out.write("The targets that won't be able to process are: \n" + targetDTO.getSkippedFathers() + "\n");
+                    }
                 }
             }
         } catch (IOException e) {

@@ -72,7 +72,7 @@ public class Graph implements Cloneable {
     throws DependencyConflictException, InvalidDependencyException{
         if(currDependency.equals(Dependency.REQUIRED_FOR.getDependency()))
         {
-            if(currTarget.getRequiredFor().contains(checkTarget))
+            if(checkTarget.getRequiredFor().contains(currTarget))
             {
                 throw new DependencyConflictException(currTarget.getName(), checkTarget.getName(),currDependency);
             }
@@ -81,7 +81,7 @@ public class Graph implements Cloneable {
         }
         else if(currDependency.equals(Dependency.DEPENDS_ON.getDependency()))
         {
-            if(currTarget.getDependsOn().contains(checkTarget))
+            if(checkTarget.getDependsOn().contains(currTarget))
             {
                 throw new DependencyConflictException(currTarget.getName(), checkTarget.getName(),currDependency);
             }

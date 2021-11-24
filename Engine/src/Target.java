@@ -81,14 +81,11 @@ public class Target implements Cloneable {
         this.runStatus = runStatus;
     }
 
+
     @Override
     public String toString() {
         return "Target{" +
                 "name='" + name + '\'' +
-                ", place=" + place +
-                ", requiredFor=" + requiredFor +
-                ", dependsOn=" + dependsOn +
-                ", info='" + info + '\'' +
                 '}';
     }
 
