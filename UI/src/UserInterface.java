@@ -1,9 +1,6 @@
 import exceptions.*;
 
-import java.util.Collection;
-import java.util.InputMismatchException;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 import java.util.function.Consumer;
 
 public class UserInterface {
@@ -238,12 +235,48 @@ public class UserInterface {
     }
 
     private SimulationTaskParamsDTO getParamsOfSimulationTask() {
+        boolean finish = false;
+        boolean isRandom = false;
+        int processTime = 0;
+        double successRate = 0,successWithWarnings = 0;
         System.out.println("Please enter the params...");
+        System.out.println("Please enter the simulation task parameters in the next format:" +
+                "\n [Process time(whole number)]--[1 to randomize the process time, else- 0]--" +
+                "[success rate]--[success with warnings rate]");
         Scanner in = new Scanner(System.in);
-        int processTime = in.nextInt();
-        boolean isRandom = in.nextBoolean();
-        double successRate = in.nextDouble();
-        double successWithWarnings = in.nextDouble();
+
+        while(!finish) {
+            try{
+                System.out.println("Please enter the process time in MilliSeconds: ");
+                processTime = Integer.parseInt(in.next());
+                finish = true;
+            }
+            catch(NumberFormatException e){
+                System.out.println("Invalid process time");
+            }
+        }
+        finish = false;
+        while(!finish) {
+            System.out.println("Do you want the process time to be randomized? Y/N");
+            String ans = in.next();
+            if(ans.toLowerCase(Locale.ROOT).equals("y")){
+                isRandom = true;
+                finish = true;
+            }
+            else if(ans.toLowerCase(Locale.ROOT).equals("n")){
+                isRandom = false;
+                finish = true;
+            }
+            else{
+                System.out.println("Invalid Input, you should enter Y for yes or N for No");
+            }
+        }
+        finish = false;
+        while(!finish){
+
+        }
+
+
         SimulationTaskParamsDTO simulationTaskDTO = new SimulationTaskParamsDTO(processTime, isRandom, successRate, successWithWarnings);
         return simulationTaskDTO;
     }

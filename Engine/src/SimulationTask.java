@@ -33,6 +33,7 @@ public class SimulationTask extends Task{
             currTargetProcessTime = getRandomProcessTime();
         }
         try {
+            target.setRunStatus(RunStatus.IN_PROCESS);
             startTime = LocalTime.now();
             Thread.sleep(currTargetProcessTime);
             endTime = LocalTime.now();
@@ -46,7 +47,7 @@ public class SimulationTask extends Task{
                 target.setRunResult(RunResults.FAILURE);
             }
             target.setRunningTime(Duration.between(startTime, endTime).toMillis());
-
+            target.setRunStatus(RunStatus.FINISHED);
             targetDTO = new TargetDTO(target, startTime, endTime);
 
         } catch (InterruptedException e) {

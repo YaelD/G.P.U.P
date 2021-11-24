@@ -36,7 +36,6 @@ public abstract class Task {
             if(currTarget.getRunStatus().equals(RunStatus.FINISHED)){
                 if(currTarget.getRunResult().equals(RunResults.FAILURE)){
                     updateParentsStatus(currTarget.getRequiredFor());
-                    //todo: create a method that will make all the child targets "skipped"- exe 5
                 }
             }
             updateNeighborTargets(currTarget,sourceTargets, targetsInDegree,targetResult);
@@ -46,11 +45,29 @@ public abstract class Task {
         endTime = LocalTime.now();
         Duration.between(startTime, endTime).toMillis();
         GraphDTO graphRunResult = new GraphDTO(this.graph,Duration.between(startTime, endTime).toMillis());
+        createGraphOfFailedTargets();
         return graphRunResult;
     }
 
-    private void updateParentsStatus(Set<Target> requiredFor) {
+    private void createGraphOfFailedTargets() {
+        for(Target currTarget : this.graph.getTargets()){
+            if(currTarget.getRunResult().equals(RunResults.SUCCESS) ||
+                    currTarget.getRunResult().equals(RunResults.WARNING)){
+                this.graph.getTargetGraph().remove(currTarget.getName());
+            }
+        }
+    }
 
+    private void updateParentsStatus(Set<Target> requiredFor) {
+        if(requiredFor.isEmpty())
+            return;
+        else{
+            for(Target currTarget : requiredFor){
+                currTarget.setRunStatus(RunStatus.SKIPPED);
+                currTarget.setRunResult(RunResults.SKIPPED);
+                updateParentsStatus(currTarget.getRequiredFor());
+            }
+        }
     }
 
     private void outputTargetResult(List<Consumer<TargetDTO>> outputConsumers, TargetDTO targetResult) {
