@@ -49,7 +49,6 @@ public class SystemEngine implements Engine{
             this.graph = new Graph(map, graphName);
             this.workingDirectory = gpupDescriptor.getGPUPConfiguration().getGPUPWorkingDirectory();
             this.isFileLoaded = true;
-
         } catch (JAXBException e) {
             e.printStackTrace();
         } catch (IOException e) {

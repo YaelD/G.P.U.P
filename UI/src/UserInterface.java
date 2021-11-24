@@ -32,7 +32,7 @@ public class UserInterface {
             System.out.println("Please choose a number between 1-6:" +
                     "\n1. Read File." +
                     "\n2. Get information about Targets graph." +
-                    "\n3. Get information about target.Target." +
+                    "\n3. Get information about target." +
                     "\n4. Find Path between two Targets." +
                     "\n5. Active task." +
                     "\n6. Exit");
@@ -231,6 +231,7 @@ public class UserInterface {
                 System.out.println("Returning to main menu");
                 return;
             }
+            System.out.println("Do you want to ");
             Consumer<TargetDTO> printStrConsumer = targetDTO -> {
                 System.out.println(PRINT_DELIMETER);
                 System.out.println("Target name: " + targetDTO.getName()+ "\n") ;
@@ -254,8 +255,6 @@ public class UserInterface {
             };
             GraphDTO graphDTO = engine.activateTask(printStrConsumer, simulationTaskParams, TaskType.SIMULATION_TASK);
         }
-
-
     }
 
     private SimulationTaskParamsDTO getParamsOfSimulationTask() {
