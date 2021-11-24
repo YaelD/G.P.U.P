@@ -1,7 +1,7 @@
-import schema.generated.GPUPTarget;
-import schema.generated.GPUPTargetDependencies;
+package target;
 
-import java.time.LocalTime;
+import schema.generated.GPUPTarget;
+
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -10,8 +10,8 @@ public class Target implements Cloneable {
 
     private String name;
     private PlaceInGraph place;
-    private Set<Target> requiredFor = new HashSet<>(); //This Target requiredFor the Set's Targets
-    private Set<Target> dependsOn = new HashSet<>();// This Target is dependsOn the Set's targets
+    private Set<Target> requiredFor = new HashSet<>(); //This target.Target requiredFor the Set's Targets
+    private Set<Target> dependsOn = new HashSet<>();// This target.Target is dependsOn the Set's targets
     private String info;
     private RunResults runResult;
     private long runningTime;
@@ -84,7 +84,7 @@ public class Target implements Cloneable {
 
     @Override
     public String toString() {
-        return "Target{" +
+        return "target.Target{" +
                 "name='" + name + '\'' +
                 '}';
     }

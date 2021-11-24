@@ -1,3 +1,5 @@
+package target;
+
 public enum RunStatus {
 
     FROZEN,

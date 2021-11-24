@@ -1,3 +1,5 @@
+package graph;
+
 public enum Dependency {
 
     REQUIRED_FOR("requiredFor"),

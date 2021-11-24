@@ -1,4 +1,10 @@
+package engine;
+
+import dto.GraphDTO;
+import dto.TargetDTO;
+import dto.TaskParamsDTO;
 import exceptions.*;
+import task.TaskType;
 
 import java.util.Collection;
 import java.util.List;

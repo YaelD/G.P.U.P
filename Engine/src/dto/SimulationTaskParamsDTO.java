@@ -1,3 +1,5 @@
+package dto;
+
 public class SimulationTaskParamsDTO implements TaskParamsDTO {
 
     private int processTime;

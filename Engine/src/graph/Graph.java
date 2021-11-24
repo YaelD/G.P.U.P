@@ -1,3 +1,5 @@
+package graph;
+
 import exceptions.DependencyConflictException;
 import exceptions.DuplicateTargetsException;
 import exceptions.InvalidDependencyException;
@@ -5,6 +7,8 @@ import exceptions.TargetNotExistException;
 import schema.generated.GPUPTarget;
 import schema.generated.GPUPTargetDependencies;
 import schema.generated.GPUPTargets;
+import target.PlaceInGraph;
+import target.Target;
 
 import java.util.Collection;
 import java.util.HashMap;

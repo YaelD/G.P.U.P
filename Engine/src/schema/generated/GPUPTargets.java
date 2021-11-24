@@ -27,7 +27,7 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;complexContent>
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
- *         &lt;element ref="{}GPUP-Target" maxOccurs="unbounded"/>
+ *         &lt;element ref="{}GPUP-target.Target" maxOccurs="unbounded"/>
  *       &lt;/sequence>
  *     &lt;/restriction>
  *   &lt;/complexContent>
@@ -43,7 +43,7 @@ import javax.xml.bind.annotation.XmlType;
 @XmlRootElement(name = "GPUP-Targets")
 public class GPUPTargets {
 
-    @XmlElement(name = "GPUP-Target", required = true)
+    @XmlElement(name = "GPUP-target.Target", required = true)
     protected List<GPUPTarget> gpupTarget;
 
     /**

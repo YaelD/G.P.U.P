@@ -29,7 +29,7 @@ import javax.xml.bind.annotation.XmlValue;
  *   &lt;complexContent>
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
- *         &lt;element name="GPUG-Dependency" maxOccurs="unbounded">
+ *         &lt;element name="GPUG-graph.Dependency" maxOccurs="unbounded">
  *           &lt;complexType>
  *             &lt;simpleContent>
  *               &lt;extension base="&lt;http://www.w3.org/2001/XMLSchema>string">
@@ -57,10 +57,10 @@ import javax.xml.bind.annotation.XmlValue;
 @XmlType(name = "", propOrder = {
     "gpugDependency"
 })
-@XmlRootElement(name = "GPUP-Target-Dependencies")
+@XmlRootElement(name = "GPUP-target.Target-Dependencies")
 public class GPUPTargetDependencies {
 
-    @XmlElement(name = "GPUG-Dependency", required = true)
+    @XmlElement(name = "GPUG-graph.Dependency", required = true)
     protected List<GPUPTargetDependencies.GPUGDependency> gpugDependency;
 
     /**

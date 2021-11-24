@@ -1,6 +1,10 @@
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Collection;
+package dto;
+
+import graph.Graph;
+import target.PlaceInGraph;
+import target.RunResults;
+import target.Target;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -20,7 +24,7 @@ public class GraphDTO {
         }
     }
 
-    public GraphDTO(Graph graph,long runTime) {
+    public GraphDTO(Graph graph, long runTime) {
         this(graph);
         this.runTime = runTime;
     }

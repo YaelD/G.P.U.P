@@ -1,7 +1,18 @@
+package task;
+
+import dto.GraphDTO;
+import dto.TargetDTO;
+import graph.Graph;
+import target.RunResults;
+import target.RunStatus;
+import target.Target;
+
 import java.time.Duration;
 import java.time.LocalTime;
 import java.util.*;
 import java.util.function.Consumer;
+
+
 
 public abstract class Task {
 
@@ -19,7 +30,7 @@ public abstract class Task {
         this.graph = graph;
     }
 
-    protected GraphDTO executeTaskOnGraph(List<Consumer<TargetDTO>> outputConsumers){
+    public GraphDTO executeTaskOnGraph(List<Consumer<TargetDTO>> outputConsumers){
         TargetDTO targetResult;
         LocalTime startTime, endTime;
         Map<String, Integer> targetsInDegree = getTargetsInDegree();
@@ -118,7 +129,7 @@ public abstract class Task {
 
     private Map<String, Integer> getTargetsInDegree(){
         Map<String, Integer> targetsInDegree = new HashMap<>();
-        for(Map.Entry<String,Target> targetEntry : this.graph.getTargetGraph().entrySet()){
+        for(Map.Entry<String, Target> targetEntry : this.graph.getTargetGraph().entrySet()){
             targetsInDegree.put(targetEntry.getKey(), targetEntry.getValue().getDependsOn().size());
         }
         return targetsInDegree;

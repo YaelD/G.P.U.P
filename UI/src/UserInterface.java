@@ -1,6 +1,13 @@
+import dto.GraphDTO;
+import dto.SimulationTaskParamsDTO;
+import dto.TargetDTO;
+import engine.Engine;
+import engine.SystemEngine;
 import exceptions.*;
+import target.PlaceInGraph;
+import target.RunResults;
+import task.TaskType;
 
-import javax.swing.plaf.synth.SynthOptionPaneUI;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.function.Consumer;
@@ -25,7 +32,7 @@ public class UserInterface {
             System.out.println("Please choose a number between 1-6:" +
                     "\n1. Read File." +
                     "\n2. Get information about Targets graph." +
-                    "\n3. Get information about Target." +
+                    "\n3. Get information about target.Target." +
                     "\n4. Find Path between two Targets." +
                     "\n5. Active task." +
                     "\n6. Exit");
@@ -70,9 +77,9 @@ public class UserInterface {
         }
         System.out.println(PRINT_DELIMETER);
         Scanner in = new Scanner(System.in);
-        System.out.println("Please enter first Target's name:");
+        System.out.println("Please enter first target.Target's name:");
         String firstTargetName = in.next();
-        System.out.println("Please enter second Target's name:");
+        System.out.println("Please enter second target.Target's name:");
         String secondTargetName = in.next();
         System.out.println("Please enter the relation between the targets:");
         String relation = in.next();
@@ -142,7 +149,7 @@ public class UserInterface {
         System.out.println(PRINT_DELIMETER);
         GraphDTO graphDTO = null;
         graphDTO = engine.getGraphDTO();
-        System.out.println("The name of the Graph: " + graphDTO.getName());
+        System.out.println("The name of the graph.Graph: " + graphDTO.getName());
         System.out.println("Number of targets: " + graphDTO.getNumOfTargets());
         System.out.println("Number of Leaves: " + graphDTO.getNumOfTargetsInPlace(PlaceInGraph.LEAF) +
                 "\nNumber of Middles: " + graphDTO.getNumOfTargetsInPlace(PlaceInGraph.MIDDLE) +
@@ -174,7 +181,7 @@ public class UserInterface {
                     printTargetDetails(target);
                     finish = true;
                 } catch (TargetNotExistException e) {
-                    System.out.println("Target with name: " + e.getName() + "does not exist");
+                    System.out.println("target.Target with name: " + e.getName() + "does not exist");
                 }
             }
         }
@@ -182,8 +189,8 @@ public class UserInterface {
 
     private void printTargetDetails(TargetDTO target) {
         System.out.println(PRINT_DELIMETER);
-        System.out.println("Target's name: " + target.getName());
-        System.out.println("Target's place: " + target.getPlace());
+        System.out.println("target.Target's name: " + target.getName());
+        System.out.println("target.Target's place: " + target.getPlace());
         if (!target.getDependsOn().isEmpty()) {
             System.out.println("dependsOn: ");
             for (String targetName : target.getDependsOn()) {
@@ -201,9 +208,9 @@ public class UserInterface {
             System.out.println("There is no targets this target is required for");
         }
         if (target.getInfo()!= null) {
-            System.out.println("Target-info: " + target.getInfo());
+            System.out.println("target.Target-info: " + target.getInfo());
         } else {
-            System.out.println("There is not Target-info in this target");
+            System.out.println("There is not target.Target-info in this target");
         }
 
     }
@@ -227,10 +234,10 @@ public class UserInterface {
             }
             Consumer<TargetDTO> printStrConsumer = targetDTO -> {
                 System.out.println(PRINT_DELIMETER);
-                System.out.println("Target name: " + targetDTO.getName()+ "\n") ;
+                System.out.println("target.Target name: " + targetDTO.getName()+ "\n") ;
                 System.out.println("Process result: " + targetDTO.getRunResult().getStatus() + "\n");
                 if(targetDTO.getInfo() != null){
-                    System.out.println("Target info:" + targetDTO.getInfo() + "\n");
+                    System.out.println("target.Target info:" + targetDTO.getInfo() + "\n");
                 }
                 if(!targetDTO.getRunResult().equals(RunResults.SKIPPED)){
                     System.out.println("Process Start time:" + targetDTO.getStartingTime().format(DateTimeFormatter.ofPattern("HH:mm:ss")) + "\n");

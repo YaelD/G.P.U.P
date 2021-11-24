@@ -1,5 +1,18 @@
+package engine;
+
+import dto.GraphDTO;
+import dto.SimulationTaskParamsDTO;
+import dto.TargetDTO;
+import dto.TaskParamsDTO;
 import exceptions.*;
+import graph.Dependency;
+import graph.Graph;
 import schema.generated.GPUPDescriptor;
+import target.RunResults;
+import target.Target;
+import task.SimulationTask;
+import task.Task;
+import task.TaskType;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -161,10 +174,10 @@ public class SystemEngine implements Engine{
             out = new BufferedWriter(
                     new OutputStreamWriter(
                             new FileOutputStream(path+"\\" + targetDTO.getName() + ".log")));
-            out.write("Target name: " + targetDTO.getName()+ "\n"); ;
+            out.write("target.Target name: " + targetDTO.getName()+ "\n"); ;
             out.write("Process result: " + targetDTO.getRunResult().getStatus() + "\n");
             if(targetDTO.getInfo() != null){
-                out.write("Target info:" + targetDTO.getInfo() + "\n");
+                out.write("target.Target info:" + targetDTO.getInfo() + "\n");
             }
             if(!targetDTO.getRunResult().equals(RunResults.SKIPPED)){
                 out.write("Process Start time:" + targetDTO.getStartingTime().format(DateTimeFormatter.ofPattern("HH:mm:ss")) + "\n");
@@ -197,7 +210,7 @@ public class SystemEngine implements Engine{
 
     @Override
     public String toString() {
-        return "SystemEngine{" +
+        return "engine.SystemEngine{" +
                 "graph=" + graph +
                 '}';
     }

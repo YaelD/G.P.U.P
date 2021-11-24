@@ -25,7 +25,7 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;complexContent>
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;all>
- *         &lt;element ref="{}GPUP-Graph-Name"/>
+ *         &lt;element ref="{}GPUP-graph.Graph-Name"/>
  *         &lt;element ref="{}GPUP-Working-Directory"/>
  *       &lt;/all>
  *     &lt;/restriction>
@@ -42,7 +42,7 @@ import javax.xml.bind.annotation.XmlType;
 @XmlRootElement(name = "GPUP-Configuration")
 public class GPUPConfiguration {
 
-    @XmlElement(name = "GPUP-Graph-Name", required = true)
+    @XmlElement(name = "GPUP-graph.Graph-Name", required = true)
     protected String gpupGraphName;
     @XmlElement(name = "GPUP-Working-Directory", required = true)
     protected String gpupWorkingDirectory;
