@@ -1,5 +1,7 @@
 import exceptions.*;
 
+import javax.swing.plaf.synth.SynthOptionPaneUI;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.function.Consumer;
 
@@ -224,13 +226,17 @@ public class UserInterface {
                 return;
             }
             Consumer<TargetDTO> printStrConsumer = targetDTO -> {
-                if(targetDTO.getEndingTime() != null){
-                    System.out.println("Finish processing on Target: " + targetDTO.getName());
-                    System.out.println("The Target finished with: " + targetDTO.getRunResult().getStatus());
-                    //TODO: need to print the targets that were depends on the current target.
+                System.out.println("Process result: " + targetDTO.getRunResult().getStatus());
+                if(targetDTO.getInfo() != null){
+                    System.out.println("Target info:" + targetDTO.getInfo() + "\n");
                 }
-                else{
-                    System.out.println("Start processing on Target: " + targetDTO.getName());
+                if(!targetDTO.getRunResult().equals(RunResults.SKIPPED)){
+                    System.out.println("Process Start time:" + targetDTO.getStartingTime().format(DateTimeFormatter.ofPattern("HH:mm:ss")) + "\n");
+                    System.out.println("Process End time:" + targetDTO.getEndingTime().format(DateTimeFormatter.ofPattern("HH:mm:ss")) + "\n");
+                    System.out.println("The dependent Targets that were opened:\n" + targetDTO.getTargetsThatCanBeRun());
+                    if(targetDTO.getRunResult().equals(RunResults.FAILURE)){
+                        System.out.println("The targets that won't be able to process are: \n" + targetDTO.getSkippedFathers());
+                    }
                 }
             };
             GraphDTO graphDTO = engine.activateTask(printStrConsumer, simulationTaskParams, TaskType.SIMULATION_TASK);

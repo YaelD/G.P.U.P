@@ -16,7 +16,7 @@ public class TargetDTO {
     private LocalTime startingTime = null;
     private LocalTime endingTime = null;
     private Set<String> targetsThatCanBeRun = new HashSet<>();
-    private String failedFatherTarget;
+    private Set<String> skippedFathers = new HashSet<>();
 
 
     public TargetDTO(Target target) {
@@ -40,19 +40,9 @@ public class TargetDTO {
         this.startingTime = startingTime;
         this.endingTime = endingTime;
     }
-
-    /*
-
-    public void dependencyTargetDTO(Target target, Map<String, TargetDTO> targets){
-        for(Target currTarget: target.getRequiredFor()){
-            this.requiredFor.add(targets.get(currTarget.getName()));
-        }
-        for(Target currTarget: target.getDependsOn()){
-            this.dependsOn.add(targets.get(currTarget.getName()));
-        }
+    public Set<String> getSkippedFathers() {
+        return skippedFathers;
     }
-
- */
 
     public String getName() {
         return name;
