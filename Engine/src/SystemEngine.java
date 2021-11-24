@@ -4,11 +4,12 @@ import schema.generated.GPUPDescriptor;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.text.FieldPosition;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.function.Consumer;
 
@@ -130,12 +131,44 @@ public class SystemEngine implements Engine{
             }
         }
         outputConsumers.add(consumerString);
-        //TODO: open the file here
-        Consumer<TargetDTO> fileWriterConsumer = targetDTO -> {/*TODO: WRITE TO FILE*/ };
+        String path = openDirectoryAndFiles(taskType);
+        Consumer<TargetDTO> fileWriterConsumer = targetDTO -> { writeToFile(targetDTO, path); };
         outputConsumers.add(fileWriterConsumer);
         GraphDTO runResult = this.tasksInSystem.get(taskType).executeTaskOnGraph(outputConsumers);
-        //TODO: close the file here
         return runResult;
+    }
+
+    private String openDirectoryAndFiles(TaskType taskType) {
+        StringBuffer stringBuffer = new StringBuffer();
+        Date now = new Date();
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+        simpleDateFormat.format(now, stringBuffer, new FieldPosition(0));
+        String path = this.workingDirectory+ "\\" + taskType.getTaskType() + "-" +
+                simpleDateFormat.format(now, stringBuffer, new FieldPosition(0));
+        File directory = new File(path);
+        directory.mkdir();
+        return path;
+    }
+
+
+    private void writeToFile(TargetDTO targetDTO, String path) {
+        Writer out = null;
+        try {
+            out = new BufferedWriter(
+                    new OutputStreamWriter(
+                            new FileOutputStream(path+"\\" + targetDTO.getName() + ".log")));
+            out.write("Hello\r\n");
+            out.write("שלום\r\n");
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (out != null) {
+                try {
+                    out.close();
+                } catch (IOException ignored){
+                }
+            }
+        }
     }
 
     @Override
