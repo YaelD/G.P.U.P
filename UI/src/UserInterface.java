@@ -147,6 +147,7 @@ public class UserInterface {
                 "\nNumber of Roots: " + graphDTO.getNumOfTargetsInPlace(PlaceInGraph.ROOT) +
                 "\nNumber of Independents: " + graphDTO.getNumOfTargetsInPlace(PlaceInGraph.INDEPENDENT));
 
+
     }
 
 
@@ -218,6 +219,10 @@ public class UserInterface {
         int taskType = in.nextInt();
         if(taskType == 1){
             SimulationTaskParamsDTO simulationTaskParams = getParamsOfSimulationTask();
+            if(simulationTaskParams == null){
+                System.out.println("Returning to main menu");
+                return;
+            }
             Consumer<TargetDTO> printStrConsumer = targetDTO -> {
                 if(targetDTO.getEndingTime() != null){
                     System.out.println("Finish processing on Target: " + targetDTO.getName());
@@ -235,50 +240,99 @@ public class UserInterface {
     }
 
     private SimulationTaskParamsDTO getParamsOfSimulationTask() {
-        boolean finish = false;
         boolean isRandom = false;
         int processTime = 0;
         double successRate = 0,successWithWarnings = 0;
-        System.out.println("Please enter the params...");
-        System.out.println("Please enter the simulation task parameters in the next format:" +
-                "\n [Process time(whole number)]--[1 to randomize the process time, else- 0]--" +
-                "[success rate]--[success with warnings rate]");
-        Scanner in = new Scanner(System.in);
-
-        while(!finish) {
-            try{
-                System.out.println("Please enter the process time in MilliSeconds: ");
-                processTime = Integer.parseInt(in.next());
-                finish = true;
-            }
-            catch(NumberFormatException e){
-                System.out.println("Invalid process time");
-            }
+        System.out.println("Please enter the next Simulation task parameters: ");
+        processTime = getInputInt("Please enter the process time in MilliSeconds: (whole positive number)",
+                "Invalid input, The input should be a positive number",
+                "Invalid input, The input should be a whole positive number", 1,Integer.MAX_VALUE);
+        if(processTime == -1){
+            return null;
         }
-        finish = false;
-        while(!finish) {
-            System.out.println("Do you want the process time to be randomized? Y/N");
-            String ans = in.next();
-            if(ans.toLowerCase(Locale.ROOT).equals("y")){
-                isRandom = true;
-                finish = true;
-            }
-            else if(ans.toLowerCase(Locale.ROOT).equals("n")){
-                isRandom = false;
-                finish = true;
-            }
-            else{
-                System.out.println("Invalid Input, you should enter Y for yes or N for No");
-            }
+        int random = getInputInt("Do you want the process time to be randomized? 1-Yes, 0-No",
+                "Invalid Input, you should enter 1 for yes or 0 for No",
+                "Invalid input, The input should be a number", 0,1);
+        if(random == 1){
+            isRandom = true;
         }
-        finish = false;
-        while(!finish){
-
+        else if(random == 0){
+            isRandom = false;
         }
-
+        else{
+            return null;
+        }
+        successRate = this.getInputDouble("\"Please enter process's success rate:(a positive number between 0 to 1)",
+                "Invalid input, The input should be between 0 to 1","Invalid input, The input should be a number",
+                0,1);
+        if(successRate == -1){
+            return null;
+        }
+        successWithWarnings = getInputDouble("Please enter process's success with warnings rate:(a positive number between 0 to 1)",
+                "Invalid input, The input should be a positive number between 0 to 1","Invalid input, The input should be a number between 0 to 1",
+                0, 1);
+        if(successWithWarnings == -1){
+            return null;
+        }
 
         SimulationTaskParamsDTO simulationTaskDTO = new SimulationTaskParamsDTO(processTime, isRandom, successRate, successWithWarnings);
         return simulationTaskDTO;
     }
 
+    private double getInputDouble(String inputMessage, String invalidInputMessage, String exceptionMessage, double minVal, double maxVal){
+        double res = 0;
+        boolean finish = false;
+        System.out.println(inputMessage);
+        System.out.println("To return please press '-'.");
+        Scanner in = new Scanner(System.in);
+        while(!finish){
+            String ans = in.next();
+            if(ans.equals("-")){
+                finish = true;
+                res = -1;
+            }
+            else{
+                try {
+                        res = Double.parseDouble(ans);
+                        finish = true;
+                        if (res < minVal || res > maxVal) {
+                            System.out.println(invalidInputMessage);
+                            finish = false;
+                        }
+                    }catch (NumberFormatException e) {
+                        System.out.println(exceptionMessage);
+                    }
+            }
+        }
+        return res;
+    }
+
+
+    private int getInputInt(String inputMessage, String invalidInputMessage, String exceptionMessage, double minVal, double maxVal){
+        int res = 0;
+        boolean finish = false;
+        System.out.println(inputMessage);
+        System.out.println("To return please press '-'.");
+        Scanner in = new Scanner(System.in);
+        while(!finish){
+            String ans = in.next();
+            if(ans.equals("-")){
+                finish = true;
+                res = -1;
+            }
+            else{
+                try {
+                    res = Integer.parseInt(ans);
+                    finish = true;
+                    if (res < minVal || res > maxVal) {
+                        System.out.println(invalidInputMessage);
+                        finish = false;
+                    }
+                }catch (NumberFormatException e) {
+                    System.out.println(exceptionMessage);
+                }
+            }
+        }
+        return res;
+    }
 }
