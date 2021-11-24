@@ -147,9 +147,8 @@ public class UserInterface {
             return;
         }
         System.out.println(PRINT_DELIMETER);
-        GraphDTO graphDTO = null;
-        graphDTO = engine.getGraphDTO();
-        System.out.println("The name of the graph.Graph: " + graphDTO.getName());
+        GraphDTO graphDTO = engine.getGraphDTO();
+        System.out.println("The name of the graph: " + graphDTO.getName());
         System.out.println("Number of targets: " + graphDTO.getNumOfTargets());
         System.out.println("Number of Leaves: " + graphDTO.getNumOfTargetsInPlace(PlaceInGraph.LEAF) +
                 "\nNumber of Middles: " + graphDTO.getNumOfTargetsInPlace(PlaceInGraph.MIDDLE) +
