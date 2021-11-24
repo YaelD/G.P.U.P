@@ -10,6 +10,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.FieldPosition;
 import java.text.SimpleDateFormat;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.function.Consumer;
 
@@ -141,12 +142,15 @@ public class SystemEngine implements Engine{
     private String openDirectoryAndFiles(TaskType taskType) {
         StringBuffer stringBuffer = new StringBuffer();
         Date now = new Date();
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+        //File workDirectory = new File(this.workingDirectory);
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MM-yyyy HH-mm-ss");
         simpleDateFormat.format(now, stringBuffer, new FieldPosition(0));
         String path = this.workingDirectory+ "\\" + taskType.getTaskType() + "-" +
-                simpleDateFormat.format(now, stringBuffer, new FieldPosition(0));
+                simpleDateFormat.format(now);
         File directory = new File(path);
-        directory.mkdir();
+        if(!directory.exists()){
+            directory.mkdirs();
+        }
         return path;
     }
 
@@ -157,8 +161,19 @@ public class SystemEngine implements Engine{
             out = new BufferedWriter(
                     new OutputStreamWriter(
                             new FileOutputStream(path+"\\" + targetDTO.getName() + ".log")));
-            out.write("Hello\r\n");
-            out.write("שלום\r\n");
+
+            out.write("Process result: " + targetDTO.getRunResult().getStatus());
+            if(targetDTO.getInfo() != null){
+                out.write("Target info:" + targetDTO.getInfo() + "\r\n");
+            }
+            if(!targetDTO.getRunResult().equals(RunResults.SKIPPED)){
+                out.write("Process Start time:" + targetDTO.getStartingTime().format(DateTimeFormatter.ofPattern("HH:mm:ss")) + "\r\n");
+                out.write("Process End time:" + targetDTO.getEndingTime().format(DateTimeFormatter.ofPattern("HH:mm:ss")) + "\r\n");
+                out.write("The dependent Targets that were opened:\r\n" + targetDTO.getTargetsThatCanBeRun() + "\r\n");
+                if(targetDTO.getRunResult().equals(RunResults.FAILURE)){
+                    out.write("The targets that won't be able to process are: \r\n" + targetDTO.getSkippedFathers() + "\r\n");
+                }
+            }
         } catch (IOException e) {
             e.printStackTrace();
         } finally {

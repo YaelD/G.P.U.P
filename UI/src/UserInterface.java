@@ -239,7 +239,7 @@ public class UserInterface {
                         System.out.println("The dependent Targets that were opened:\n" + targetDTO.getTargetsThatCanBeRun() + "\n");
                     }
                     if(targetDTO.getRunResult().equals(RunResults.FAILURE)){
-                        if(targetDTO.getSkippedFathers().isEmpty()){
+                        if(!targetDTO.getSkippedFathers().isEmpty()){
                             System.out.println("The targets that won't be able to process are: \n \t" + targetDTO.getSkippedFathers() + "\n");
                         }
                     }

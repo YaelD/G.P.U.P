@@ -6,8 +6,6 @@ public class TargetDTO {
 
     private String name;
     private PlaceInGraph place;
-    //private Set<TargetDTO> requiredFor = new HashSet<>();
-    //private Set<TargetDTO> dependsOn = new HashSet<>();
     private Set<String> requiredFor = new HashSet<>();
     private Set<String> dependsOn = new HashSet<>();
     private String info = null;

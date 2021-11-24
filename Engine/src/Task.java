@@ -35,7 +35,7 @@ public abstract class Task {
             }
             if(currTarget.getRunStatus().equals(RunStatus.FINISHED)){
                 if(currTarget.getRunResult().equals(RunResults.FAILURE)){
-                    updateParentsStatus(currTarget.getRequiredFor());
+                    updateParentsStatus(currTarget.getRequiredFor(), targetResult.getSkippedFathers());
                 }
             }
             updateNeighborTargets(currTarget,sourceTargets, targetsInDegree,targetResult);
@@ -50,22 +50,26 @@ public abstract class Task {
     }
 
     private void createGraphOfFailedTargets() {
+        Graph failedTargetsGraph = new Graph(new HashMap<>(), this.graph.getName());
+        Map<String, Target> newGraph = failedTargetsGraph.getTargetGraph();
         for(Target currTarget : this.graph.getTargets()){
-            if(currTarget.getRunResult().equals(RunResults.SUCCESS) ||
-                    currTarget.getRunResult().equals(RunResults.WARNING)){
-                this.graph.getTargetGraph().remove(currTarget.getName());
+            if(currTarget.getRunResult().equals(RunResults.FAILURE) ||
+                    currTarget.getRunResult().equals(RunResults.SKIPPED)){
+                newGraph.put(currTarget.getName(), currTarget);
             }
         }
+        this.graph = failedTargetsGraph;
     }
 
-    private void updateParentsStatus(Set<Target> requiredFor) {
+    private void updateParentsStatus(Set<Target> requiredFor, Set<String> skippedFathers) {
         if(requiredFor.isEmpty())
             return;
         else{
             for(Target currTarget : requiredFor){
                 currTarget.setRunStatus(RunStatus.SKIPPED);
                 currTarget.setRunResult(RunResults.SKIPPED);
-                updateParentsStatus(currTarget.getRequiredFor());
+                skippedFathers.add(currTarget.getName());
+                updateParentsStatus(currTarget.getRequiredFor(), skippedFathers);
             }
         }
     }

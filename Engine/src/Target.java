@@ -6,7 +6,7 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
-public class Target {
+public class Target implements Cloneable {
 
     private String name;
     private PlaceInGraph place;
@@ -100,8 +100,15 @@ public class Target {
         return Objects.equals(name, target.name) && place == target.place && Objects.equals(requiredFor, target.requiredFor) && Objects.equals(dependsOn, target.dependsOn) && Objects.equals(info, target.info);
     }
 
+
+//    @Override
+//    public int hashCode() {
+//        return Objects.hash(name, place, requiredFor, dependsOn, info);
+//    }
+
+
     @Override
-    public int hashCode() {
-        return Objects.hash(name, place, requiredFor, dependsOn, info);
+    protected Object clone() throws CloneNotSupportedException {
+        return super.clone();
     }
 }
