@@ -2,6 +2,7 @@ package task;
 
 import dto.GraphDTO;
 import dto.TargetDTO;
+import dto.TaskParamsDTO;
 import graph.Graph;
 import target.RunResults;
 import target.RunStatus;
@@ -136,6 +137,8 @@ public abstract class Task {
     }
 
     protected abstract TargetDTO executeTaskOnTarget(Target target);
+
+    public abstract void updateParameters(TaskParamsDTO taskParamsDTO);
 
 
 

@@ -127,10 +127,17 @@ public class SystemEngine implements Engine{
     }
 
     @Override
-    public GraphDTO activateTask(Consumer<TargetDTO> consumerString, TaskParamsDTO taskParams, TaskType taskType) {
+    public GraphDTO activateTask(Consumer<TargetDTO> consumerString, TaskParamsDTO taskParams, TaskType taskType, boolean isIncremental) {
         List<Consumer<TargetDTO>> outputConsumers = new ArrayList<>();
+
         if(this.tasksInSystem.containsKey(taskType)){
-            if(this.tasksInSystem.get(taskType).getGraph().getTargets().isEmpty()){
+            this.tasksInSystem.get(taskType).updateParameters(taskParams);
+            if(isIncremental){
+                if(this.tasksInSystem.get(taskType).getGraph().getTargets().isEmpty()){
+                    this.tasksInSystem.get(taskType).setGraph(this.graph.clone());
+                }
+            }
+            else{
                 this.tasksInSystem.get(taskType).setGraph(this.graph.clone());
             }
         }
@@ -205,6 +212,18 @@ public class SystemEngine implements Engine{
     @Override
     public boolean isFileLoaded() {
         return this.isFileLoaded;
+    }
+
+    @Override
+    public boolean isRunInIncrementalMode(TaskType taskType) {
+        if(!this.tasksInSystem.containsKey(taskType)){
+            return false;
+        }
+        if(this.tasksInSystem.get(taskType).getGraph().getTargets().isEmpty()){
+            return false;
+        }
+
+        return true;
     }
 
     @Override

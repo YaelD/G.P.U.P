@@ -253,12 +253,32 @@ public class UserInterface {
 
     private void runSimulationTask(){
 
+        boolean isIncremental = false;
         SimulationTaskParamsDTO simulationTaskParams = getParamsOfSimulationTask();
         if(simulationTaskParams == null){
             System.out.println("Returning to main menu");
             return;
         }
-
+        int incremental = getInputInt("Do you want to run the task incrementally?" +
+                "\n1. Yes" +
+                "\n2. No", "Invalid input, please enter 1 or 2", "Invalid input, please enter a number", 1,2);
+        switch (incremental){
+            case 1:
+                if(engine.isRunInIncrementalMode(TaskType.SIMULATION_TASK)){
+                    isIncremental = true;
+                }
+                else{
+                    System.out.println("The Simulation task cannot run incrementally." +
+                            "The run from Scratch by default");
+                }
+                break;
+            case 2:
+                isIncremental = false;
+                break;
+            case -1:
+                System.out.println("Returning to main menu");
+                return;
+        }
 
         Consumer<TargetDTO> printStrConsumer = targetDTO -> {
             System.out.println(PRINT_DELIMETER);
@@ -281,8 +301,8 @@ public class UserInterface {
             }
             System.out.println(PRINT_DELIMETER);
         };
-        GraphDTO graphDTO = engine.activateTask(printStrConsumer, simulationTaskParams, TaskType.SIMULATION_TASK);
-
+        GraphDTO graphDTO = engine.activateTask(printStrConsumer, simulationTaskParams, TaskType.SIMULATION_TASK, isIncremental);
+        //TODO: Print all the information about the run task
     }
 
 

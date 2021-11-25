@@ -2,6 +2,7 @@ package task;
 
 import dto.SimulationTaskParamsDTO;
 import dto.TargetDTO;
+import dto.TaskParamsDTO;
 import graph.Graph;
 import target.RunResults;
 import target.RunStatus;
@@ -27,6 +28,16 @@ public class SimulationTask extends Task{
     }
 
 
+    @Override
+    public void updateParameters(TaskParamsDTO taskParamsDTO) {
+        if(taskParamsDTO instanceof SimulationTaskParamsDTO){
+            SimulationTaskParamsDTO simulationTaskParamsDTO = (SimulationTaskParamsDTO) taskParamsDTO;
+            this.processTime = simulationTaskParamsDTO.getProcessTime();
+            this.isRandom = simulationTaskParamsDTO.isRandom();
+            this.successRate = simulationTaskParamsDTO.getSuccessRate();
+            this.successWithWarningsRate = simulationTaskParamsDTO.getSuccessWithWarningsRate();
+        }
+    }
 
     @Override
     protected TargetDTO executeTaskOnTarget(Target target) {
