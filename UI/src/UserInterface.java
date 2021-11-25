@@ -214,48 +214,77 @@ public class UserInterface {
 
     }
 
-
     private void activeTask(){
+        boolean finish = false;
+        Scanner in = new Scanner(System.in);
         if(!engine.isFileLoaded())
         {
             System.out.println("A file was not loaded to the system yet");
             return;
         }
         System.out.println(PRINT_DELIMETER);
-        System.out.println("Please enter the type of the task: ");
-        Scanner in = new Scanner(System.in);
-        int taskType = in.nextInt();
-        if(taskType == 1){
-            SimulationTaskParamsDTO simulationTaskParams = getParamsOfSimulationTask();
-            if(simulationTaskParams == null){
-                System.out.println("Returning to main menu");
-                return;
-            }
-            System.out.println("Do you want to ");
-            Consumer<TargetDTO> printStrConsumer = targetDTO -> {
-                System.out.println(PRINT_DELIMETER);
-                System.out.println("Target name: " + targetDTO.getName()+ "\n") ;
-                System.out.println("Process result: " + targetDTO.getRunResult().getStatus() + "\n");
-                if(targetDTO.getInfo() != null){
-                    System.out.println("Target info:" + targetDTO.getInfo() + "\n");
+        while(!finish){
+                int taskType = getInputInt("Please enter the type of the task: " +
+                        "\n1. Simulation task " +
+                        "\n2. Compilation task(Coming soon)",
+                        "Invalid input, please choose a number between 1 to 2",
+                        "Invalid input, The input should be a number", 1, 2);
+                switch (taskType){
+                    case -1:
+                        System.out.println("Returning to main menu");
+                        finish = true;
+                        break;
+                    case 1:
+                        runSimulationTask();
+                        finish = true;
+                        break;
+                    case 2:
+                        System.out.println("Soon....");
+                        break;
+                    default:
+                        System.out.println("Invalid input, please try again");
+                        break;
                 }
-                if(!targetDTO.getRunResult().equals(RunResults.SKIPPED)){
-                    System.out.println("Process Start time:" + targetDTO.getStartingTime().format(DateTimeFormatter.ofPattern("HH:mm:ss")) + "\n");
-                    System.out.println("Process End time:" + targetDTO.getEndingTime().format(DateTimeFormatter.ofPattern("HH:mm:ss")) + "\n");
-                    if(!targetDTO.getTargetsThatCanBeRun().isEmpty()){
-                        System.out.println("The dependent Targets that were opened:\n" + targetDTO.getTargetsThatCanBeRun() + "\n");
-                    }
-                    if(targetDTO.getRunResult().equals(RunResults.FAILURE)){
-                        if(!targetDTO.getSkippedFathers().isEmpty()){
-                            System.out.println("The targets that won't be able to process are: \n" + targetDTO.getSkippedFathers() + "\n");
-                        }
-                    }
-                }
-                System.out.println(PRINT_DELIMETER);
-            };
-            GraphDTO graphDTO = engine.activateTask(printStrConsumer, simulationTaskParams, TaskType.SIMULATION_TASK);
+
+
         }
     }
+
+
+    private void runSimulationTask(){
+
+        SimulationTaskParamsDTO simulationTaskParams = getParamsOfSimulationTask();
+        if(simulationTaskParams == null){
+            System.out.println("Returning to main menu");
+            return;
+        }
+
+
+        Consumer<TargetDTO> printStrConsumer = targetDTO -> {
+            System.out.println(PRINT_DELIMETER);
+            System.out.println("Target name: " + targetDTO.getName()+ "\n") ;
+            System.out.println("Process result: " + targetDTO.getRunResult().getStatus() + "\n");
+            if(targetDTO.getInfo() != null){
+                System.out.println("Target info:" + targetDTO.getInfo() + "\n");
+            }
+            if(!targetDTO.getRunResult().equals(RunResults.SKIPPED)){
+                System.out.println("Process Start time:" + targetDTO.getStartingTime().format(DateTimeFormatter.ofPattern("HH:mm:ss")) + "\n");
+                System.out.println("Process End time:" + targetDTO.getEndingTime().format(DateTimeFormatter.ofPattern("HH:mm:ss")) + "\n");
+                if(!targetDTO.getTargetsThatCanBeRun().isEmpty()){
+                    System.out.println("The dependent Targets that were opened:\n" + targetDTO.getTargetsThatCanBeRun() + "\n");
+                }
+                if(targetDTO.getRunResult().equals(RunResults.FAILURE)){
+                    if(!targetDTO.getSkippedFathers().isEmpty()){
+                        System.out.println("The targets that won't be able to process are: \n" + targetDTO.getSkippedFathers() + "\n");
+                    }
+                }
+            }
+            System.out.println(PRINT_DELIMETER);
+        };
+        GraphDTO graphDTO = engine.activateTask(printStrConsumer, simulationTaskParams, TaskType.SIMULATION_TASK);
+
+    }
+
 
     private SimulationTaskParamsDTO getParamsOfSimulationTask() {
         boolean isRandom = false;
