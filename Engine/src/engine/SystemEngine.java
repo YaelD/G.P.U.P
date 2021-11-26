@@ -69,6 +69,25 @@ public class SystemEngine implements Engine{
     }
 
     @Override
+    public List<String> findCycle(String targetName) {
+        try {
+            List<Target> lst = Task.topologicalSort(this.graph);
+            return null;
+        } catch (CycleException e) {
+            Collection<List<String>> cycles = new ArrayList<>();
+            findPaths(e.getSourceTargetName(), e.getSourceTargetName(),
+                    Dependency.DEPENDS_ON.getDependency(), cycles);
+            if(cycles.isEmpty()){
+                return null;
+            }
+            else{
+                return cycles.iterator().next();
+            }
+        }
+
+    }
+
+    @Override
     public GraphDTO getGraphDTO() {
         GraphDTO graphDTO = new GraphDTO(this.graph);
         return graphDTO;
@@ -127,7 +146,7 @@ public class SystemEngine implements Engine{
     }
 
     @Override
-    public GraphDTO activateTask(Consumer<TargetDTO> consumerString, TaskParamsDTO taskParams, TaskType taskType, boolean isIncremental) throws CycleException {
+    public GraphDTO activateTask(Consumer<TargetDTO> consumerString, TaskParamsDTO taskParams, TaskType taskType, boolean isIncremental) {
         List<Consumer<TargetDTO>> outputConsumers = new ArrayList<>();
 
         if(this.tasksInSystem.containsKey(taskType)){
@@ -155,8 +174,13 @@ public class SystemEngine implements Engine{
         Consumer<TargetDTO> fileWriterConsumer = targetDTO -> { writeToFile(targetDTO, path); };
         outputConsumers.add(fileWriterConsumer);
         GraphDTO runResult = null;
-        runResult = this.tasksInSystem.get(taskType).executeTaskOnGraph(outputConsumers);
-        return runResult;
+
+        try {
+            runResult = this.tasksInSystem.get(taskType).executeTaskOnGraph(outputConsumers);
+            return runResult;
+        } catch (CycleException e) {
+            return null;
+        }
     }
 
     private String openDirectoryAndFiles(TaskType taskType) {
@@ -225,6 +249,17 @@ public class SystemEngine implements Engine{
         }
 
         return true;
+    }
+
+    @Override
+    public boolean isCycleInGraph() {
+        try {
+            List<Target> lst = Task.topologicalSort(graph);
+            return false;
+        } catch (CycleException e) {
+            return true;
+
+        }
     }
 
     @Override

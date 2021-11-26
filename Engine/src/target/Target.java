@@ -2,6 +2,7 @@ package target;
 
 import schema.generated.GPUPTarget;
 
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -97,15 +98,32 @@ public class Target implements Cloneable {
         return Objects.equals(name, target.name) && place == target.place && Objects.equals(requiredFor, target.requiredFor) && Objects.equals(dependsOn, target.dependsOn) && Objects.equals(info, target.info);
     }
 
+    public void setRequiredFor(Set<Target> requiredFor) {
+        this.requiredFor = requiredFor;
+    }
 
-//    @Override
+    public void setDependsOn(Set<Target> dependsOn) {
+        this.dependsOn = dependsOn;
+    }
+
+    //    @Override
 //    public int hashCode() {
 //        return Objects.hash(name, place, requiredFor, dependsOn, info);
 //    }
 
 
+
+
     @Override
-    protected Object clone() throws CloneNotSupportedException {
-        return super.clone();
+    public Target clone()  {
+        try {
+            Target newTarget = (Target) super.clone();
+            //newTarget.requiredFor = new HashSet<>(this.requiredFor);
+            //newTarget.dependsOn = new HashSet<>(this.dependsOn);
+            return newTarget;
+        } catch (CloneNotSupportedException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 }

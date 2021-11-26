@@ -2,7 +2,8 @@ package task;
 
 public enum TaskType {
 
-    SIMULATION_TASK ("Simulation");
+    SIMULATION_TASK ("Simulation"),
+    COMPILATION_TASK("Compilation");
 
     private String taskType;
 

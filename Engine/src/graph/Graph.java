@@ -30,8 +30,9 @@ public class Graph implements Cloneable {
             Graph newGraph = (Graph) super.clone();
             newGraph.name = this.name;
             for(Map.Entry<String, Target> entry: this.targetGraph.entrySet()){
-                newGraph.targetGraph.put(entry.getKey(), entry.getValue());
+                newGraph.targetGraph.put(entry.getKey(), entry.getValue().clone());
             }
+
             return newGraph;
         } catch (CloneNotSupportedException e) {
             return null;
@@ -76,17 +77,14 @@ public class Graph implements Cloneable {
     throws DependencyConflictException, InvalidDependencyException{
         if(currDependency.equals(Dependency.REQUIRED_FOR.getDependency()))
         {
-            if(checkTarget.getRequiredFor().contains(currTarget))
-            {
+            if(checkTarget.getRequiredFor().contains(currTarget)) {
                 throw new DependencyConflictException(currTarget.getName(), checkTarget.getName(),currDependency);
             }
             currTarget.getRequiredFor().add(checkTarget);
             checkTarget.getDependsOn().add(currTarget);
         }
-        else if(currDependency.equals(Dependency.DEPENDS_ON.getDependency()))
-        {
-            if(checkTarget.getDependsOn().contains(currTarget))
-            {
+        else if(currDependency.equals(Dependency.DEPENDS_ON.getDependency())) {
+            if(checkTarget.getDependsOn().contains(currTarget)) {
                 throw new DependencyConflictException(currTarget.getName(), checkTarget.getName(),currDependency);
             }
             currTarget.getDependsOn().add(checkTarget);

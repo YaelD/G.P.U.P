@@ -1,6 +1,7 @@
 import dto.GraphDTO;
 import dto.SimulationTaskParamsDTO;
 import dto.TargetDTO;
+import dto.TaskParamsDTO;
 import engine.Engine;
 import engine.SystemEngine;
 import exceptions.*;
@@ -8,6 +9,7 @@ import target.PlaceInGraph;
 import target.RunResults;
 import task.TaskType;
 
+import java.time.Duration;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.function.Consumer;
@@ -17,46 +19,55 @@ public class UserInterface {
 
     private Engine engine;
 
-    private final String PRINT_DELIMETER = "------------------------------------------------------------\n";
+    private final String PRINT_LINE = "------------------------------------------------------------\n";
 
     public UserInterface() {
         this.engine = new SystemEngine();
     }
 
 
-    public void getInputFromUser() {
+    private void printMenu(){
+        System.out.println("Please choose a number between 1-6:" +
+                "\n1. Read File." +
+                "\n2. Get information about Targets graph." +
+                "\n3. Get information about target." +
+                "\n4. Find Path between two Targets." +
+                "\n5. Active task." +
+                "\n6. Check for cycle." +
+                "\n7. Exit");
+    }
+
+
+    public void RunUI() {
         boolean exit = false;
         Scanner in = new Scanner(System.in);
         while (!exit) {
-            System.out.println(PRINT_DELIMETER);
-            System.out.println("Please choose a number between 1-6:" +
-                    "\n1. Read File." +
-                    "\n2. Get information about Targets graph." +
-                    "\n3. Get information about target." +
-                    "\n4. Find Path between two Targets." +
-                    "\n5. Active task." +
-                    "\n6. Exit");
+            System.out.println(PRINT_LINE);
+            printMenu();
             try {
                 System.out.print("Please enter your choice: ");
                 int choice = in.nextInt();
-                System.out.println(PRINT_DELIMETER);
+                System.out.println(PRINT_LINE);
                 switch (choice) {
                     case 1:
-                        this.loadFile();
+                        this.loadFileToSystem();
                         break;
                     case 2:
                         this.printGraphInfo();
                         break;
                     case 3:
-                        this.printTarget();
+                        this.getTargetInfo();
                         break;
                     case 4:
-                        this.findPaths();
+                        this.findPathsBetweenTargets();
                         break;
                     case 5:
-                        this.activeTask();
+                        this.activeSystemTask();
                         break;
                     case 6:
+                        this.checkForCycleInGraph();
+                        break;
+                    case 7:
                         exit = true;
                         break;
                     default:
@@ -69,13 +80,36 @@ public class UserInterface {
         }
     }
 
-    private void findPaths() {
+    private void checkForCycleInGraph() {
+        if(!engine.isFileLoaded()){
+            System.out.println("A file was not loaded to the system yet");
+            return;
+        }
+        Scanner in = new Scanner(System.in);
+        System.out.println("Please enter the Name of the target to search for cycle: ");
+        String targetName = in.next();
+
+        try {
+            List<String> cycle = engine.findCycle(targetName);
+            if(cycle == null){
+                System.out.println("There is no cycle including " + targetName);
+            }
+            else{
+                System.out.println("Found cycle: ");
+                System.out.println(printAPath(cycle));
+            }
+        } catch (TargetNotExistException e) {
+            System.out.println("The target is not exist in the graph");
+        }
+    }
+
+    private void findPathsBetweenTargets() {
         if(!engine.isFileLoaded())
         {
             System.out.println("A file was not loaded to the system yet");
             return;
         }
-        System.out.println(PRINT_DELIMETER);
+        System.out.println(PRINT_LINE);
         Scanner in = new Scanner(System.in);
         System.out.println("Please enter first target.Target's name:");
         String firstTargetName = in.next();
@@ -100,17 +134,22 @@ public class UserInterface {
 
     private void printPaths(Collection<List<String>> paths) {
         for (List<String> path : paths) {
-            String currPath = "Path: ";
-            for (int i = 0; i < path.size() - 1; ++i) {
-                currPath += (path.get(i) + "->");
-            }
-            currPath += path.get(path.size() - 1);
+            String currPath = printAPath(path);
             System.out.println(currPath);
         }
     }
 
-    private void loadFile() {
-        System.out.println(PRINT_DELIMETER);
+    private String printAPath(List<String> path){
+        String currPath = "";
+        for (int i = 0; i < path.size() - 1; ++i) {
+            currPath += (path.get(i) + "->");
+        }
+        currPath += path.get(path.size() - 1);
+        return currPath;
+    }
+
+    private void loadFileToSystem() {
+        System.out.println(PRINT_LINE);
         boolean finish = false;
         while (!finish) {
             System.out.println("Please enter the full path of file:(for return please press '0')");
@@ -122,16 +161,16 @@ public class UserInterface {
                     System.out.println("File loaded successfully!");
                     finish = true;
                 } catch (InvalidFileException e) {
-                    System.out.println("The file in: " + e.getPath() + "is invalid because" + e.getReason());
+                    System.out.println("The file in: " + e.getPath() + " is invalid because " + e.getReason());
                 } catch (DependencyConflictException e) {
-                    System.out.println("There is a dependency conflict between Targets:"
-                            + e.getFirstTarget() + "," + e.getSecondTarget() + "dependency:" + e.getDependencyType());
+                    System.out.println("There is a dependency conflict between Targets: "
+                            + e.getFirstTarget() + ", " + e.getSecondTarget() + " dependency: " + e.getDependencyType());
                 } catch (DuplicateTargetsException e) {
-                    System.out.println("The target " + e.getTargetName() + "appears several times in the graph");
+                    System.out.println("The target " + e.getTargetName() + " appears several times in the graph");
                 } catch (InvalidDependencyException e) {
                     System.out.println("The dependency: " + e.getDependency() + " is not supported in the system");
                 } catch (TargetNotExistException e) {
-                    System.out.println("The target" + e.getName() + " does not exist");
+                    System.out.println("The target " + e.getName() + " does not exist");
                 }
             } else {
                 finish = true;
@@ -146,7 +185,7 @@ public class UserInterface {
             System.out.println("A file was not loaded to the system yet");
             return;
         }
-        System.out.println(PRINT_DELIMETER);
+        System.out.println(PRINT_LINE);
         GraphDTO graphDTO = engine.getGraphDTO();
         System.out.println("The name of the graph: " + graphDTO.getName());
         System.out.println("Number of targets: " + graphDTO.getNumOfTargets());
@@ -159,13 +198,12 @@ public class UserInterface {
     }
 
 
-    private void printTarget() {
-        if(!engine.isFileLoaded())
-        {
+    private void getTargetInfo() {
+        if(!engine.isFileLoaded()) {
             System.out.println("A file was not loaded to the system yet");
             return;
         }
-        System.out.println(PRINT_DELIMETER);
+        System.out.println(PRINT_LINE);
         boolean finish = false;
         while (!finish) {
             System.out.println("Please enter the target's name:(to return to main menu, type '0')");
@@ -187,7 +225,7 @@ public class UserInterface {
     }
 
     private void printTargetDetails(TargetDTO target) {
-        System.out.println(PRINT_DELIMETER);
+        System.out.println(PRINT_LINE);
         System.out.println("target.Target's name: " + target.getName());
         System.out.println("target.Target's place: " + target.getPlace());
         if (!target.getDependsOn().isEmpty()) {
@@ -214,95 +252,136 @@ public class UserInterface {
 
     }
 
-    private void activeTask(){
-        boolean finish = false;
-        Scanner in = new Scanner(System.in);
+    private void activeSystemTask(){
+        boolean isIncremental = false;
+        TaskType taskType = TaskType.SIMULATION_TASK;
         if(!engine.isFileLoaded())
         {
             System.out.println("A file was not loaded to the system yet");
             return;
         }
-        System.out.println(PRINT_DELIMETER);
-        while(!finish){
-                int taskType = getInputInt("Please enter the type of the task: " +
-                        "\n1. Simulation task " +
-                        "\n2. Compilation task(Coming soon)",
-                        "Invalid input, please choose a number between 1 to 2",
-                        "Invalid input, The input should be a number", 1, 2);
-                switch (taskType){
+        if(engine.isCycleInGraph()){
+            System.out.println("There is a cycle in the graph");
+            return;
+        }
+        System.out.println(PRINT_LINE);
+                int inputTaskType = getInputInt("Please enter the type of the task: " +
+                        "\n1. Simulation task ",
+                        "Invalid input, please choose a number between 1 to 1",
+                        "Invalid input, The input should be a number", 1, 1);
+                switch (inputTaskType){
                     case -1:
                         System.out.println("Returning to main menu");
-                        finish = true;
-                        break;
+                        return;
                     case 1:
-                        runSimulationTask();
-                        finish = true;
+                        taskType = TaskType.SIMULATION_TASK;
                         break;
-                    case 2:
-                        System.out.println("Soon....");
-                        break;
-                    default:
-                        System.out.println("Invalid input, please try again");
-                        break;
+                    //case 2:
+                        //System.out.println("Soon....");
+                        //break;
                 }
+            int incrementalInput = getInputInt("Do you want to run the task incrementally?" +
+                    "\n1. Yes" +
+                    "\n2. No", "Invalid input, please enter 1 or 2", "Invalid input, please enter a number", 1,2);
+            switch (incrementalInput){
+                case -1:
+                    System.out.println("Returning to main menu");
+                    return;
+                case 1:
+                    if(engine.isRunInIncrementalMode(taskType)){
+                        isIncremental = true;
+                    }
+                    else{
+                        isIncremental = false;
+                        System.out.println("The task cannot run incrementally." +
+                                "The "+ taskType.getTaskType() + " task run from Scratch by default");
+                    }
+                    break;
+                case 2:
+                    isIncremental = false;
+                    break;
+            }
+            runSystemTask(isIncremental, taskType);
 
-
-        }
     }
 
 
-    private void runSimulationTask(){
+    private void runSystemTask(boolean isIncremental, TaskType taskType){
 
-        boolean isIncremental = false;
-        SimulationTaskParamsDTO simulationTaskParams = getParamsOfSimulationTask();
-        if(simulationTaskParams == null){
+        TaskParamsDTO taskParams = null;
+        switch (taskType){
+            case SIMULATION_TASK:
+                taskParams = getParamsOfSimulationTask();
+                break;
+            case COMPILATION_TASK:
+                break;
+        }
+
+        if(taskParams == null){
             System.out.println("Returning to main menu");
             return;
         }
-        int incremental = getInputInt("Do you want to run the task incrementally?" +
-                "\n1. Yes" +
-                "\n2. No", "Invalid input, please enter 1 or 2", "Invalid input, please enter a number", 1,2);
-        switch (incremental){
-            case 1:
-                if(engine.isRunInIncrementalMode(TaskType.SIMULATION_TASK)){
-                    isIncremental = true;
-                }
-                else{
-                    System.out.println("The Simulation task cannot run incrementally." +
-                            "The run from Scratch by default");
-                }
-                break;
-            case 2:
-                isIncremental = false;
-                break;
-            case -1:
-                System.out.println("Returning to main menu");
-                return;
-        }
 
         Consumer<TargetDTO> printStrConsumer = targetDTO -> {
-            System.out.println(PRINT_DELIMETER);
-            System.out.println("Target name: " + targetDTO.getName()+ "\n") ;
-            System.out.println("Process result: " + targetDTO.getRunResult().getStatus() + "\n");
-            if(targetDTO.getInfo() != null){
-                System.out.println("Target info:" + targetDTO.getInfo() + "\n");
-            }
-            if(!targetDTO.getRunResult().equals(RunResults.SKIPPED)){
-                System.out.println("Process Start time:" + targetDTO.getStartingTime().format(DateTimeFormatter.ofPattern("HH:mm:ss")) + "\n");
-                System.out.println("Process End time:" + targetDTO.getEndingTime().format(DateTimeFormatter.ofPattern("HH:mm:ss")) + "\n");
-                if(!targetDTO.getTargetsThatCanBeRun().isEmpty()){
-                    System.out.println("The dependent Targets that were opened:\n" + targetDTO.getTargetsThatCanBeRun() + "\n");
-                }
-                if(targetDTO.getRunResult().equals(RunResults.FAILURE)){
-                    if(!targetDTO.getSkippedFathers().isEmpty()){
-                        System.out.println("The targets that won't be able to process are: \n" + targetDTO.getSkippedFathers() + "\n");
-                    }
-                }
-            }
-            System.out.println(PRINT_DELIMETER);
+            printTargetRunResult(targetDTO);
         };
-        GraphDTO graphDTO = engine.activateTask(printStrConsumer, simulationTaskParams, TaskType.SIMULATION_TASK, isIncremental);
-        //TODO: Print all the information about the run task
+        GraphDTO taskResults = null;
+        taskResults = engine.activateTask(printStrConsumer, taskParams, taskType, isIncremental);
+        printTaskRunResults(taskResults);
+
+    }
+
+    private void printTargetRunResult(TargetDTO targetDTO) {
+        System.out.println(PRINT_LINE);
+        System.out.println("Target name: " + targetDTO.getName()+ "\n") ;
+        System.out.println("Process result: " + targetDTO.getRunResult().getStatus() + "\n");
+        if(targetDTO.getInfo() != null){
+            System.out.println("Target info:" + targetDTO.getInfo() + "\n");
+        }
+        if(!targetDTO.getRunResult().equals(RunResults.SKIPPED)){
+            System.out.println("Process Start time:" + targetDTO.getStartingTime().format(DateTimeFormatter.ofPattern("HH:mm:ss")) + "\n");
+            System.out.println("Process End time:" + targetDTO.getEndingTime().format(DateTimeFormatter.ofPattern("HH:mm:ss")) + "\n");
+            if(!targetDTO.getTargetsThatCanBeRun().isEmpty()){
+                System.out.println("The dependent Targets that were opened:\n" + targetDTO.getTargetsThatCanBeRun() + "\n");
+            }
+            if(targetDTO.getRunResult().equals(RunResults.FAILURE)){
+                if(!targetDTO.getSkippedFathers().isEmpty()){
+                    System.out.println("The targets that won't be able to process are: \n" + targetDTO.getSkippedFathers() + "\n");
+                }
+            }
+        }
+        System.out.println(PRINT_LINE);
+
+
+    }
+
+    private void printTaskRunResults(GraphDTO taskResults) {
+        Duration duration = Duration.ofMillis(taskResults.getRunTime());
+        long seconds = duration.getSeconds();
+        long HH = seconds / 3600;
+        long MM = (seconds % 3600) / 60;
+        long SS = seconds % 60;
+        String runTime = String.format("%02d:%02d:%02d", HH, MM, SS);
+        System.out.println("Task's run time: " + runTime);
+        System.out.println("There are " + taskResults.getNumOfTargetsRunResult(RunResults.SUCCESS) + " Targets that finished with Success");
+        System.out.println("There are " + taskResults.getNumOfTargetsRunResult(RunResults.WARNING) + " Targets that finished with Warning");
+        System.out.println("There are " + taskResults.getNumOfTargetsRunResult(RunResults.FAILURE) + " Targets that failed");
+        System.out.println("There are " + taskResults.getNumOfTargetsRunResult(RunResults.SKIPPED) + " Targets that skipped");
+        System.out.println("The graph targets are: ");
+        for(TargetDTO target: taskResults.getTargets().values()){
+            System.out.println("    Target: " + target.getName());
+            System.out.println("    Run result: " +target.getRunResult().getStatus());
+            if(target.getRunResult().equals(RunResults.SUCCESS) || target.getRunResult().equals(RunResults.WARNING)){
+                duration = Duration.ofMillis(target.getRunTime());
+                seconds = duration.getSeconds();
+                HH = seconds / 3600;
+                MM = (seconds % 3600) / 60;
+                SS = seconds % 60;
+                runTime = String.format("%02d:%02d:%02d", HH, MM, SS);
+                System.out.println("    Runtime: " + runTime);
+            }
+        }
+
     }
 
 
@@ -345,6 +424,10 @@ public class UserInterface {
         SimulationTaskParamsDTO simulationTaskDTO = new SimulationTaskParamsDTO(processTime, isRandom, successRate, successWithWarnings);
         return simulationTaskDTO;
     }
+
+
+
+
 
     private double getInputDouble(String inputMessage, String invalidInputMessage, String exceptionMessage, double minVal, double maxVal){
         double res = 0;

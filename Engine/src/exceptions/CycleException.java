@@ -2,13 +2,16 @@ package exceptions;
 
 public class CycleException extends Exception{
 
-    String targetName;
+    private String sourceTargetName;
 
     public CycleException(String targetName) {
-        this.targetName = targetName;
+        this.sourceTargetName = targetName;
     }
 
-    public String getTargetName() {
-        return targetName;
+    public String getSourceTargetName() {
+        return sourceTargetName;
     }
+
+
+
 }
