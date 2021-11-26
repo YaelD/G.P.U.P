@@ -127,7 +127,7 @@ public class SystemEngine implements Engine{
     }
 
     @Override
-    public GraphDTO activateTask(Consumer<TargetDTO> consumerString, TaskParamsDTO taskParams, TaskType taskType, boolean isIncremental) {
+    public GraphDTO activateTask(Consumer<TargetDTO> consumerString, TaskParamsDTO taskParams, TaskType taskType, boolean isIncremental) throws CycleException {
         List<Consumer<TargetDTO>> outputConsumers = new ArrayList<>();
 
         if(this.tasksInSystem.containsKey(taskType)){
@@ -154,7 +154,8 @@ public class SystemEngine implements Engine{
         String path = openDirectoryAndFiles(taskType);
         Consumer<TargetDTO> fileWriterConsumer = targetDTO -> { writeToFile(targetDTO, path); };
         outputConsumers.add(fileWriterConsumer);
-        GraphDTO runResult = this.tasksInSystem.get(taskType).executeTaskOnGraph(outputConsumers);
+        GraphDTO runResult = null;
+        runResult = this.tasksInSystem.get(taskType).executeTaskOnGraph(outputConsumers);
         return runResult;
     }
 
