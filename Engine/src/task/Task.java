@@ -77,7 +77,6 @@ public abstract class Task {
         boolean isOpenedToRun = true;
         for(Target currTarget : target.getRequiredFor()){
             for(Target currTargetFather : currTarget.getDependsOn()){
-
                 if(currTargetFather.getRunStatus().equals(RunStatus.FROZEN)){
                     isOpenedToRun = false;
                 }

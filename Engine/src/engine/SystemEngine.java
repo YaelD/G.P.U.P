@@ -48,6 +48,7 @@ public class SystemEngine implements Engine{
             Map<String, Target> map = Graph.buildTargetGraph(gpupDescriptor.getGPUPTargets());
             this.graph = new Graph(map, graphName);
             this.workingDirectory = gpupDescriptor.getGPUPConfiguration().getGPUPWorkingDirectory();
+            this.tasksInSystem = new HashMap<>();
             this.isFileLoaded = true;
         } catch (JAXBException e) {
             e.printStackTrace();
@@ -69,22 +70,21 @@ public class SystemEngine implements Engine{
     }
 
     @Override
-    public List<String> findCycle(String targetName) {
+    public List<String> findCycle(String targetName) throws TargetNotExistException{
         try {
+            getTarget(targetName);
             List<Target> lst = Task.topologicalSort(this.graph);
             return null;
         } catch (CycleException e) {
-            Collection<List<String>> cycles = new ArrayList<>();
-            findPaths(e.getSourceTargetName(), e.getSourceTargetName(),
+            List<List<String>> cycles = new ArrayList<>();
+            findPaths(targetName, targetName,
                     Dependency.DEPENDS_ON, cycles);
-            if(cycles.isEmpty()){
+            if (cycles.isEmpty()) {
                 return null;
-            }
-            else{
+            } else {
                 return cycles.iterator().next();
             }
         }
-
     }
 
     @Override
@@ -124,7 +124,7 @@ public class SystemEngine implements Engine{
 
     @Override
     public Collection<List<String>> getPaths(String firstTargetName, String secondTargetName, Dependency dependency) throws TargetNotExistException, InvalidDependencyException {
-        Collection<List<String>> paths = new ArrayList<>();
+        List<List<String>> paths = new ArrayList<>();
         if(!this.graph.getTargetGraph().containsKey(firstTargetName)){
             throw new TargetNotExistException(firstTargetName);
         }
@@ -136,7 +136,7 @@ public class SystemEngine implements Engine{
 
     }
 
-    private void findPaths(String currTargetName, String destinationTargetName, Dependency dependency, Collection<List<String>> paths) {
+    private void findPaths(String currTargetName, String destinationTargetName, Dependency dependency, List<List<String>> paths) {
         Set<Target> dependencies = this.graph.getTarget(currTargetName).getDependencies(dependency);
 
         if(dependencies.isEmpty()){
@@ -150,14 +150,19 @@ public class SystemEngine implements Engine{
                     path.add(0,currTargetName);
                     paths.add(path);
                 } else{
+                    int currPathsSize = paths.size();
                     findPaths(target.getName(), destinationTargetName, dependency, paths);
-                    if(!paths.isEmpty()){
-                        for(List<String> path : paths){
-                            if(!path.get(0).equals(currTargetName)){
-                                path.add(0,currTargetName);
-                            }
-                        }
+                    int newSize = paths.size();
+                    for(int i = currPathsSize;i< newSize; ++i){
+                        paths.get(i).add(0,currTargetName);
                     }
+//                    if(!paths.isEmpty()){
+//                        for(List<String> path : paths){
+//                            if(!path.get(0).equals(currTargetName)){
+//                                path.add(0,currTargetName);
+//                            }
+//                        }
+//                    }
                 }
             }
         }
@@ -254,10 +259,10 @@ public class SystemEngine implements Engine{
             out = new BufferedWriter(
                     new OutputStreamWriter(
                             new FileOutputStream(path+"\\" + targetDTO.getName() + ".log")));
-            out.write("target.Target name: " + targetDTO.getName()+ "\n"); ;
+            out.write("Target name: " + targetDTO.getName()+ "\n"); ;
             out.write("Process result: " + targetDTO.getRunResult().getStatus() + "\n");
             if(targetDTO.getInfo() != null){
-                out.write("target.Target info:" + targetDTO.getInfo() + "\n");
+                out.write("Target info:" + targetDTO.getInfo() + "\n");
             }
             if(!targetDTO.getRunResult().equals(RunResults.SKIPPED)){
                 out.write("Process Start time:" + targetDTO.getStartingTime().format(DateTimeFormatter.ofPattern("HH:mm:ss")) + "\n");

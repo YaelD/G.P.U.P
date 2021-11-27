@@ -113,9 +113,9 @@ public class UserInterface {
         Dependency dependency = Dependency.REQUIRED_FOR;
         System.out.println(PRINT_LINE);
         Scanner in = new Scanner(System.in);
-        System.out.println("Please enter first target.Target's name:");
+        System.out.println("Please enter first Target's name:");
         String firstTargetName = in.next();
-        System.out.println("Please enter second target.Target's name:");
+        System.out.println("Please enter second Target's name:");
         String secondTargetName = in.next();
         //System.out.println("Please enter the relation between the targets:");
         int dependencyChoice = getInputInt("Please enter the relation between the targets:" +
@@ -144,7 +144,7 @@ public class UserInterface {
                 printPaths(paths);
             }
         } catch (TargetNotExistException e) {
-            System.out.println("The target" + e.getName() + " does not exist");
+            System.out.println("The target " + e.getName() + " does not exist");
         } catch (InvalidDependencyException e) {
             System.out.println("The dependency: " + e.getDependency() + " is not supported in the system");
         }
@@ -279,7 +279,7 @@ public class UserInterface {
             return;
         }
         if(engine.isCycleInGraph()){
-            System.out.println("There is a cycle in the graph");
+            System.out.println("There is a cycle in the graph, cannot active task");
             return;
         }
         System.out.println(PRINT_LINE);
@@ -343,6 +343,8 @@ public class UserInterface {
             printTargetRunResult(targetDTO);
         };
         GraphDTO taskResults = null;
+        System.out.println(PRINT_LINE);
+        System.out.println("Initiating task......");
         taskResults = engine.activateTask(printStrConsumer, taskParams, taskType, isIncremental);
         printTaskRunResults(taskResults);
 
@@ -388,7 +390,8 @@ public class UserInterface {
         for(TargetDTO target: taskResults.getTargets().values()){
             System.out.println("    Target: " + target.getName());
             System.out.println("    Run result: " +target.getRunResult().getStatus());
-            if(target.getRunResult().equals(RunResults.SUCCESS) || target.getRunResult().equals(RunResults.WARNING)){
+            if(target.getRunResult().equals(RunResults.SUCCESS) || target.getRunResult().equals(RunResults.WARNING)
+            || target.getRunResult().equals(RunResults.FAILURE)){
                 duration = Duration.ofMillis(target.getRunTime());
                 seconds = duration.getSeconds();
                 HH = seconds / 3600;
@@ -396,12 +399,11 @@ public class UserInterface {
                 SS = seconds % 60;
                 runTime = String.format("%02d:%02d:%02d", HH, MM, SS);
                 System.out.println("    Runtime: " + runTime);
-                System.out.println("----------------------");
             }
+            System.out.println("----------------------");
         }
 
     }
-
 
     private SimulationTaskParamsDTO getParamsOfSimulationTask() {
         boolean isRandom = false;
@@ -426,7 +428,7 @@ public class UserInterface {
         else{
             return null;
         }
-        successRate = this.getInputDouble("\"Please enter process's success rate:(a positive number between 0 to 1)",
+        successRate = this.getInputDouble("Please enter process's success rate:(a positive number between 0 to 1)",
                 "Invalid input, The input should be between 0 to 1","Invalid input, The input should be a number",
                 0,1);
         if(successRate == -1){
@@ -442,10 +444,6 @@ public class UserInterface {
         SimulationTaskParamsDTO simulationTaskDTO = new SimulationTaskParamsDTO(processTime, isRandom, successRate, successWithWarnings);
         return simulationTaskDTO;
     }
-
-
-
-
 
     private double getInputDouble(String inputMessage, String invalidInputMessage, String exceptionMessage, double minVal, double maxVal){
         double res = 0;
