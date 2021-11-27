@@ -63,7 +63,9 @@ public class SystemEngine implements Engine{
         if(!Files.exists(directory)) {
             throw new InvalidFileException(path, "There is no file in this path");
         }
-        //System.out.println(Files.probeContentType(directory));
+        if(Files.probeContentType(directory) == null){
+            throw new InvalidFileException(path, "The file type is not recognized");
+        }
         if(!Files.probeContentType(directory).equals("text/xml")){
             throw new InvalidFileException(path,"The file in the current path is not an XML file");
         }
