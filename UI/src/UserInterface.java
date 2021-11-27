@@ -172,7 +172,7 @@ public class UserInterface {
         while (!finish) {
             System.out.println("Please enter the full path of file:(for return please press '0')");
             Scanner in = new Scanner(System.in);
-            String path = in.next();
+            String path = in.nextLine();
             if (!path.equals("0")) {
                 try {
                     engine.readFile(path);
@@ -416,17 +416,20 @@ public class UserInterface {
         if(processTime == -1){
             return null;
         }
-        int random = getInputInt("Do you want the process time to be randomized? 1-Yes, 0-No",
-                "Invalid Input, you should enter 1 for yes or 0 for No",
-                "Invalid input, The input should be a number", 0,1);
-        if(random == 1){
-            isRandom = true;
-        }
-        else if(random == 0){
-            isRandom = false;
-        }
-        else{
-            return null;
+        int random = getInputInt("Do you want the process time to be randomized?" +
+                        "\n1. Yes" +
+                        "\n2. No",
+                "Invalid Input, you should enter 1 for yes or 2 for No",
+                "Invalid input, The input should be a number", 1,2);
+        switch (random){
+            case 1:
+                isRandom = true;
+                break;
+            case 2:
+                isRandom = false;
+                break;
+            default:
+                return null;
         }
         successRate = this.getInputDouble("Please enter process's success rate:(a positive number between 0 to 1)",
                 "Invalid input, The input should be between 0 to 1","Invalid input, The input should be a number",
