@@ -4,6 +4,7 @@ import dto.GraphDTO;
 import dto.TargetDTO;
 import dto.TaskParamsDTO;
 import exceptions.*;
+import graph.Dependency;
 import task.TaskType;
 
 import java.util.Collection;
@@ -18,7 +19,8 @@ public interface Engine {
 
     public TargetDTO getTarget(String name) throws TargetNotExistException;
 
-    public Collection<List<String>> getPaths(String firstTargetName, String secondTargetName, String relation) throws TargetNotExistException, InvalidDependencyException;
+    //public Collection<List<String>> getPaths(String firstTargetName, String secondTargetName, String relation) throws TargetNotExistException, InvalidDependencyException;
+    public Collection<List<String>> getPaths(String firstTargetName, String secondTargetName, Dependency dependency) throws TargetNotExistException, InvalidDependencyException;
 
     public GraphDTO activateTask(Consumer<TargetDTO> consumerString, TaskParamsDTO taskParams, TaskType taskType, boolean isIncremental);
 

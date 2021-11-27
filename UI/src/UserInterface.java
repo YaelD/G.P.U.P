@@ -5,6 +5,7 @@ import dto.TaskParamsDTO;
 import engine.Engine;
 import engine.SystemEngine;
 import exceptions.*;
+import graph.Dependency;
 import target.PlaceInGraph;
 import target.RunResults;
 import task.TaskType;
@@ -109,17 +110,34 @@ public class UserInterface {
             System.out.println("A file was not loaded to the system yet");
             return;
         }
+        Dependency dependency = Dependency.REQUIRED_FOR;
         System.out.println(PRINT_LINE);
         Scanner in = new Scanner(System.in);
         System.out.println("Please enter first target.Target's name:");
         String firstTargetName = in.next();
         System.out.println("Please enter second target.Target's name:");
         String secondTargetName = in.next();
-        System.out.println("Please enter the relation between the targets:");
-        String relation = in.next();
+        //System.out.println("Please enter the relation between the targets:");
+        int dependencyChoice = getInputInt("Please enter the relation between the targets:" +
+                "\n1. RequiredFor" +
+                "\n2. DependsOn", "Invalid input, please try again",
+                "You should enter a whole number", 1, 2);
+        switch (dependencyChoice){
+            case 1:
+                dependency = Dependency.REQUIRED_FOR;
+                break;
+            case 2:
+                dependency = Dependency.DEPENDS_ON;
+                break;
+            case -1:
+                System.out.println("Returning to main menu");
+                return;
+        }
+        //String relation = in.next();
         Collection<List<String>> paths = null;
         try {
-            paths = engine.getPaths(firstTargetName, secondTargetName, relation);
+            //paths = engine.getPaths(firstTargetName, secondTargetName, relation);
+            paths = engine.getPaths(firstTargetName, secondTargetName, dependency);
             if (paths.isEmpty()) {
                 System.out.println("There are not paths from target " + firstTargetName + " to target " + secondTargetName);
             } else {
@@ -276,9 +294,8 @@ public class UserInterface {
                     case 1:
                         taskType = TaskType.SIMULATION_TASK;
                         break;
-                    //case 2:
-                        //System.out.println("Soon....");
-                        //break;
+                    case 2:
+                        break;
                 }
             int incrementalInput = getInputInt("Do you want to run the task incrementally?" +
                     "\n1. Yes" +
@@ -379,6 +396,7 @@ public class UserInterface {
                 SS = seconds % 60;
                 runTime = String.format("%02d:%02d:%02d", HH, MM, SS);
                 System.out.println("    Runtime: " + runTime);
+                System.out.println("----------------------");
             }
         }
 

@@ -10,9 +10,7 @@ import schema.generated.GPUPTargets;
 import target.PlaceInGraph;
 import target.Target;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class Graph implements Cloneable {
 
@@ -29,14 +27,36 @@ public class Graph implements Cloneable {
         try{
             Graph newGraph = (Graph) super.clone();
             newGraph.name = this.name;
+            newGraph.targetGraph = new HashMap<>();
             for(Map.Entry<String, Target> entry: this.targetGraph.entrySet()){
                 newGraph.targetGraph.put(entry.getKey(), entry.getValue().clone());
             }
-
+            updateGraphTargets(newGraph);
             return newGraph;
         } catch (CloneNotSupportedException e) {
             return null;
         }
+    }
+
+    public static void updateGraphTargets(Graph newGraph){
+        for(Target currTarget: newGraph.getTargets()) {
+            Set<Target> newRequiredFor = new HashSet<>();
+            for (Target requiredTarget : currTarget.getRequiredFor()) {
+                if(newGraph.targetGraph.containsKey(requiredTarget.getName())){
+                    newRequiredFor.add(newGraph.getTarget(requiredTarget.getName()));
+                }
+            }
+            currTarget.setRequiredFor(newRequiredFor);
+
+            Set<Target> newDependsOn = new HashSet<>();
+            for (Target dependTarget : currTarget.getDependsOn()) {
+                if(newGraph.targetGraph.containsKey(dependTarget.getName())){
+                    newDependsOn.add(newGraph.getTarget(dependTarget.getName()));
+                }
+            }
+            currTarget.setDependsOn(newDependsOn);
+        }
+
     }
 
     public static Map<String, Target> buildTargetGraph(GPUPTargets gpupTargets)

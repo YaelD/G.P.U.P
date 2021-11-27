@@ -76,7 +76,7 @@ public class SystemEngine implements Engine{
         } catch (CycleException e) {
             Collection<List<String>> cycles = new ArrayList<>();
             findPaths(e.getSourceTargetName(), e.getSourceTargetName(),
-                    Dependency.DEPENDS_ON.getDependency(), cycles);
+                    Dependency.DEPENDS_ON, cycles);
             if(cycles.isEmpty()){
                 return null;
             }
@@ -102,6 +102,7 @@ public class SystemEngine implements Engine{
         return targetDTO;
     }
 
+    /*
     @Override
     public Collection<List<String>> getPaths(String firstTargetName, String secondTargetName, String relation) throws TargetNotExistException, InvalidDependencyException {
         Collection<List<String>> paths = new ArrayList<>();
@@ -118,7 +119,53 @@ public class SystemEngine implements Engine{
         return paths;
     }
 
-    private void findPaths(String currTargetName, String destinationTargetName, String relation, Collection<List<String>> paths) {
+
+     */
+
+    @Override
+    public Collection<List<String>> getPaths(String firstTargetName, String secondTargetName, Dependency dependency) throws TargetNotExistException, InvalidDependencyException {
+        Collection<List<String>> paths = new ArrayList<>();
+        if(!this.graph.getTargetGraph().containsKey(firstTargetName)){
+            throw new TargetNotExistException(firstTargetName);
+        }
+        if(!this.graph.getTargetGraph().containsKey(secondTargetName)){
+            throw new TargetNotExistException(secondTargetName);
+        }
+        findPaths(firstTargetName, secondTargetName, dependency, paths);
+        return paths;
+
+    }
+
+    private void findPaths(String currTargetName, String destinationTargetName, Dependency dependency, Collection<List<String>> paths) {
+        Set<Target> dependencies = this.graph.getTarget(currTargetName).getDependencies(dependency);
+
+        if(dependencies.isEmpty()){
+            return;
+        }
+        else{
+            for(Target target: dependencies){
+                if(target.getName().equals(destinationTargetName)){
+                    List<String> path = new ArrayList<>();
+                    path.add(0,target.getName());
+                    path.add(0,currTargetName);
+                    paths.add(path);
+                } else{
+                    findPaths(target.getName(), destinationTargetName, dependency, paths);
+                    if(!paths.isEmpty()){
+                        for(List<String> path : paths){
+                            if(!path.get(0).equals(currTargetName)){
+                                path.add(0,currTargetName);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+
+    /*
+        private void findPaths(String currTargetName, String destinationTargetName, String relation, Collection<List<String>> paths) {
         Set<Target> dependencies = this.graph.getTarget(currTargetName).getDependencies(relation);
 
         if(dependencies.isEmpty()){
@@ -144,6 +191,8 @@ public class SystemEngine implements Engine{
             }
         }
     }
+
+     */
 
     @Override
     public GraphDTO activateTask(Consumer<TargetDTO> consumerString, TaskParamsDTO taskParams, TaskType taskType, boolean isIncremental) {

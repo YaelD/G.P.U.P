@@ -1,5 +1,7 @@
 package target;
 
+import graph.Dependency;
+import graph.Graph;
 import schema.generated.GPUPTarget;
 
 import java.util.Collections;
@@ -49,8 +51,8 @@ public class Target implements Cloneable {
         this.place = place;
     }
 
-    public Set<Target> getDependencies(String dependency){
-        if(dependency.equals("requiredFor")){
+    public Set<Target> getDependencies(Dependency dependency){
+        if(dependency.equals(Dependency.REQUIRED_FOR)){
             return this.getRequiredFor();
         }
         else{
@@ -118,8 +120,6 @@ public class Target implements Cloneable {
     public Target clone()  {
         try {
             Target newTarget = (Target) super.clone();
-            //newTarget.requiredFor = new HashSet<>(this.requiredFor);
-            //newTarget.dependsOn = new HashSet<>(this.dependsOn);
             return newTarget;
         } catch (CloneNotSupportedException e) {
             e.printStackTrace();

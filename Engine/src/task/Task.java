@@ -51,14 +51,20 @@ public abstract class Task {
     }
 
     public GraphDTO executeTaskOnGraph(List<Consumer<TargetDTO>> outputConsumers) throws CycleException {
+        TargetDTO targetResult;
         List<Target> sortedTargets = topologicalSort(this.graph);
         LocalTime startTime = LocalTime.now();
         for(Target currTarget : sortedTargets){
-            TargetDTO targetResult = executeTaskOnTarget(currTarget);
-            getOpenedTargetsToRun(targetResult, currTarget);
-            if(targetResult.getRunResult().equals(RunResults.FAILURE)){
-                updateParentsStatus(currTarget.getRequiredFor(), targetResult.getSkippedFathers());
+            if(currTarget.getRunStatus().equals(RunStatus.WAITING)){
+                targetResult = executeTaskOnTarget(currTarget);
             }
+            else{
+                targetResult = new TargetDTO(currTarget);
+            }
+            if(targetResult.getRunResult().equals(RunResults.FAILURE)){
+                updateParentsStatus(currTarget, targetResult.getSkippedFathers());
+            }
+            getOpenedTargetsToRun(targetResult, currTarget);
             outputTargetResult(outputConsumers, targetResult);
         }
         LocalTime endTime = LocalTime.now();
@@ -71,11 +77,15 @@ public abstract class Task {
         boolean isOpenedToRun = true;
         for(Target currTarget : target.getRequiredFor()){
             for(Target currTargetFather : currTarget.getDependsOn()){
+
                 if(currTargetFather.getRunStatus().equals(RunStatus.FROZEN)){
                     isOpenedToRun = false;
                 }
             }
             if (isOpenedToRun) {
+                if(!currTarget.getRunStatus().equals(RunStatus.SKIPPED)){
+                    currTarget.setRunStatus(RunStatus.WAITING);
+                }
                 targetResult.getTargetsThatCanBeRun().add(currTarget.getName());
             }
             else{
@@ -84,15 +94,17 @@ public abstract class Task {
         }
     }
 
-    private void updateParentsStatus(Set<Target> requiredFor, Set<String> skippedFathers) {
-    if(requiredFor.isEmpty())
-        return;
-    else{
-            for(Target currTarget : requiredFor){
+    private void updateParentsStatus(Target target, Set<String> skippedFathers) {
+
+        if(target.getRequiredFor().isEmpty()){
+            return;
+        }
+        else{
+            for(Target currTarget : target.getRequiredFor()){
                 currTarget.setRunStatus(RunStatus.SKIPPED);
                 currTarget.setRunResult(RunResults.SKIPPED);
                 skippedFathers.add(currTarget.getName());
-                updateParentsStatus(currTarget.getRequiredFor(), skippedFathers);
+                updateParentsStatus(currTarget, skippedFathers);
             }
         }
     }
@@ -101,32 +113,17 @@ public abstract class Task {
 
     private void createGraphOfFailedTargets() {
         String graphName = this.graph.getName();
-        Set<Target> newDependsOn = new HashSet<>();
-        Set<Target> newRequiredFor = new HashSet<>();
-        Map<String, Target> newGraph = new HashMap<>();
+        Graph newGraph = new Graph(new HashMap<>(), graphName);
         for(Target currTarget : this.graph.getTargets()){
             if(currTarget.getRunResult().equals(RunResults.FAILURE) ||
                     currTarget.getRunResult().equals(RunResults.SKIPPED)){
-                newGraph.put(currTarget.getName(), currTarget.clone());
+                currTarget.setRunResult(null);
+                currTarget.setRunStatus(RunStatus.FROZEN);
+                newGraph.getTargetGraph().put(currTarget.getName(), currTarget.clone());
             }
         }
-        for(Target currTarget: newGraph.values()){
-            for(Target dependentTarget: currTarget.getDependsOn()){
-                if(newGraph.containsKey(dependentTarget.getName())){
-                    newDependsOn.add(newGraph.get(dependentTarget.getName()));
-                }
-            }
-            currTarget.setDependsOn(newDependsOn);
-            newDependsOn = new HashSet<>();
-            for(Target requiredTarget: currTarget.getRequiredFor()){
-                if(newGraph.containsKey(requiredTarget.getName())){
-                    newRequiredFor.add(newGraph.get(requiredTarget.getName()));
-                }
-            }
-            currTarget.setRequiredFor(newRequiredFor);
-            newRequiredFor = new HashSet<>();
-        }
-        this.graph = new Graph(newGraph, graphName);
+        Graph.updateGraphTargets(newGraph);
+        this.graph = newGraph;
     }
 
     private void outputTargetResult(List<Consumer<TargetDTO>> outputConsumers, TargetDTO targetResult) {
