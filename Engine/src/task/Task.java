@@ -5,6 +5,8 @@ import dto.TargetDTO;
 import dto.TaskParamsDTO;
 import exceptions.CycleException;
 import graph.Graph;
+import graph.SerialSet;
+import graph.SerialSets;
 import target.RunResults;
 import target.RunStatus;
 import target.Target;
@@ -12,16 +14,21 @@ import target.Target;
 import java.time.Duration;
 import java.time.LocalTime;
 import java.util.*;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.function.Consumer;
 
 
 
-public abstract class Task {
+public abstract class Task{
 
     protected Graph graph;
 
-    protected Task(Graph graph) {
+    protected SerialSets serialSets;
+
+    public Task(Graph graph, SerialSets serialSets) {
         this.graph = graph;
+        this.serialSets = serialSets;
     }
 
     public Graph getGraph() {
@@ -49,27 +56,55 @@ public abstract class Task {
         checkingForCycle(targetsInDegree);
         return sortedTargets;
     }
+    /*
+
+    @Override
+    public void run() {
+        try {
+            this.executeTaskOnGraph(this.outputConsumers);
+        } catch (CycleException e) {
+            e.printStackTrace();
+        }
+    }
+
+     */
+
 
     public GraphDTO executeTaskOnGraph(List<Consumer<TargetDTO>> outputConsumers) throws CycleException {
-        TargetDTO targetResult;
+
         List<Target> sortedTargets = topologicalSort(this.graph);
+        ExecutorService threadPool = Executors.newFixedThreadPool(3);
         LocalTime startTime = LocalTime.now();
         for(Target currTarget : sortedTargets){
-            if(currTarget.getRunStatus().equals(RunStatus.WAITING)){
-                targetResult = executeTaskOnTarget(currTarget);
-            }
-            else{
-                targetResult = new TargetDTO(currTarget);
-            }
-            if(targetResult.getRunResult().equals(RunResults.FAILURE)){
-                updateParentsStatus(currTarget, targetResult.getSkippedFathers());
-            }
-            getOpenedTargetsToRun(targetResult, currTarget);
-            outputTargetResult(outputConsumers, targetResult);
+            threadPool.execute(new Runnable() {
+                @Override
+                public void run() {
+                    TargetDTO targetResult;
+                    SerialSet serialSet = null;
+                    if(currTarget.getRunStatus().equals(RunStatus.WAITING)){
+                        if(serialSets.isTargetInSerialSet(currTarget, serialSet)){
+                            synchronized (serialSet){
+                                targetResult = executeTaskOnTarget(currTarget);
+                            }
+                        }
+                        else{
+                            targetResult = executeTaskOnTarget(currTarget);
+                        }
+                    }
+                    else {
+                        targetResult = new TargetDTO(currTarget);
+                    }
+                    if(targetResult.getRunResult().equals(RunResults.FAILURE)){
+                         currTarget.updateParentsStatus(targetResult.getSkippedFathers());
+                    }
+                    getOpenedTargetsToRun(targetResult, currTarget);
+                    outputTargetResult(outputConsumers, targetResult);
+                }
+            });
         }
         LocalTime endTime = LocalTime.now();
         GraphDTO graphRunResult = new GraphDTO(this.graph, Duration.between(startTime, endTime).toMillis());
-        createGraphOfFailedTargets();
+        //createGraphOfFailedTargets();
         return graphRunResult;
     }
 
@@ -77,36 +112,28 @@ public abstract class Task {
         boolean isOpenedToRun = true;
         for(Target currTarget : target.getRequiredFor()){
             for(Target currTargetFather : currTarget.getDependsOn()){
-                if(currTargetFather.getRunStatus().equals(RunStatus.FROZEN)){
-                    isOpenedToRun = false;
+                synchronized (currTargetFather) {
+                    if (currTargetFather.getRunStatus().equals(RunStatus.FROZEN)) {
+                        isOpenedToRun = false;
+                    }
                 }
             }
             if (isOpenedToRun) {
-                if(!currTarget.getRunStatus().equals(RunStatus.SKIPPED)){
-                    currTarget.setRunStatus(RunStatus.WAITING);
+                synchronized (currTarget){
+                    if(!currTarget.getRunStatus().equals(RunStatus.SKIPPED)){
+                        currTarget.setRunStatus(RunStatus.WAITING);
+                    }
                 }
                 targetResult.getTargetsThatCanBeRun().add(currTarget.getName());
             }
             else{
                 isOpenedToRun = true;
             }
+
         }
     }
 
-    private void updateParentsStatus(Target target, Set<String> skippedFathers) {
 
-        if(target.getRequiredFor().isEmpty()){
-            return;
-        }
-        else{
-            for(Target currTarget : target.getRequiredFor()){
-                currTarget.setRunStatus(RunStatus.SKIPPED);
-                currTarget.setRunResult(RunResults.SKIPPED);
-                skippedFathers.add(currTarget.getName());
-                updateParentsStatus(currTarget, skippedFathers);
-            }
-        }
-    }
 
     protected abstract TargetDTO executeTaskOnTarget(Target currTarget);
 
@@ -125,7 +152,7 @@ public abstract class Task {
         this.graph = newGraph;
     }
 
-    private void outputTargetResult(List<Consumer<TargetDTO>> outputConsumers, TargetDTO targetResult) {
+    private synchronized void outputTargetResult(List<Consumer<TargetDTO>> outputConsumers, TargetDTO targetResult) {
         for(Consumer<TargetDTO> currConsumer: outputConsumers){
             currConsumer.accept(targetResult);
         }

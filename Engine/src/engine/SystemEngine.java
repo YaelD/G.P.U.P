@@ -7,6 +7,7 @@ import dto.TaskParamsDTO;
 import exceptions.*;
 import graph.Dependency;
 import graph.Graph;
+import graph.SerialSet;
 import schema.generated.GPUPDescriptor;
 import target.RunResults;
 import target.Target;
@@ -31,9 +32,10 @@ public class SystemEngine implements Engine{
 
     private Graph graph;
     private Map<TaskType, Task> tasksInSystem = new HashMap<>();
-    private Task task;
     private String workingDirectory;
     private boolean isFileLoaded = false;
+    private int maxThreadNum;
+    private List<SerialSet> serialSets = new ArrayList<>();
 
     @Override
     public boolean readFile(String path) throws
@@ -48,11 +50,15 @@ public class SystemEngine implements Engine{
             Map<String, Target> map = Graph.buildTargetGraph(gpupDescriptor.getGPUPTargets());
             this.graph = new Graph(map, graphName);
             this.workingDirectory = gpupDescriptor.getGPUPConfiguration().getGPUPWorkingDirectory();
+            this.maxThreadNum = gpupDescriptor.getGPUPConfiguration().getGPUPMaxParallelism();
+            for(GPUPDescriptor.GPUPSerialSets.GPUPSerialSet gpupSerialSet : gpupDescriptor.getGPUPSerialSets().getGPUPSerialSet()){
+                List<String> targets = Arrays.asList(gpupSerialSet.getTargets().toUpperCase().split(","));
+                SerialSet.checkTargetsInSet(targets, this.graph);
+                this.serialSets.add(new SerialSet(gpupSerialSet.getName(), targets));
+            }
             this.tasksInSystem = new HashMap<>();
             this.isFileLoaded = true;
-        } catch (JAXBException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
+        } catch (JAXBException | IOException e) {
             e.printStackTrace();
         }
         return false;
@@ -104,26 +110,6 @@ public class SystemEngine implements Engine{
         return targetDTO;
     }
 
-    /*
-    @Override
-    public Collection<List<String>> getPaths(String firstTargetName, String secondTargetName, String relation) throws TargetNotExistException, InvalidDependencyException {
-        Collection<List<String>> paths = new ArrayList<>();
-        if(!this.graph.getTargetGraph().containsKey(firstTargetName)){
-            throw new TargetNotExistException(firstTargetName);
-        }
-        if(!this.graph.getTargetGraph().containsKey(secondTargetName)){
-            throw new TargetNotExistException(secondTargetName);
-        }
-        if((!relation.equals(Dependency.REQUIRED_FOR.getDependency()))&&(!relation.equals(Dependency.DEPENDS_ON.getDependency()))){
-            throw new InvalidDependencyException(relation);
-        }
-        findPaths(firstTargetName, secondTargetName, relation, paths);
-        return paths;
-    }
-
-
-     */
-
     @Override
     public Collection<List<String>> getPaths(String firstTargetName, String secondTargetName, Dependency dependency) throws TargetNotExistException, InvalidDependencyException {
         List<List<String>> paths = new ArrayList<>();
@@ -158,51 +144,14 @@ public class SystemEngine implements Engine{
                     for(int i = currPathsSize;i< newSize; ++i){
                         paths.get(i).add(0,currTargetName);
                     }
-//                    if(!paths.isEmpty()){
-//                        for(List<String> path : paths){
-//                            if(!path.get(0).equals(currTargetName)){
-//                                path.add(0,currTargetName);
-//                            }
-//                        }
-//                    }
                 }
             }
         }
     }
-
-
-    /*
-        private void findPaths(String currTargetName, String destinationTargetName, String relation, Collection<List<String>> paths) {
-        Set<Target> dependencies = this.graph.getTarget(currTargetName).getDependencies(relation);
-
-        if(dependencies.isEmpty()){
-            return;
-        }
-        else{
-            for(Target target: dependencies){
-                if(target.getName().equals(destinationTargetName)){
-                    List<String> path = new ArrayList<>();
-                    path.add(0,target.getName());
-                    path.add(0,currTargetName);
-                    paths.add(path);
-                } else{
-                    findPaths(target.getName(), destinationTargetName, relation, paths);
-                    if(!paths.isEmpty()){
-                        for(List<String> path : paths){
-                            if(!path.get(0).equals(currTargetName)){
-                                path.add(0,currTargetName);
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-     */
 
     @Override
     public GraphDTO activateTask(Consumer<TargetDTO> consumerString, TaskParamsDTO taskParams, TaskType taskType, boolean isIncremental) {
+
         List<Consumer<TargetDTO>> outputConsumers = new ArrayList<>();
 
         if(this.tasksInSystem.containsKey(taskType)){
@@ -230,13 +179,27 @@ public class SystemEngine implements Engine{
         Consumer<TargetDTO> fileWriterConsumer = targetDTO -> { writeToFile(targetDTO, path); };
         outputConsumers.add(fileWriterConsumer);
         GraphDTO runResult = null;
+//        Thread thread = new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+//                try {
+//                    tasksInSystem.get(taskType).executeTaskOnGraph(outputConsumers);
+//                } catch (CycleException e) {
+//
+//                }
+//            }
+//        });
+//        thread.start();
 
         try {
             runResult = this.tasksInSystem.get(taskType).executeTaskOnGraph(outputConsumers);
-            return runResult;
+            return null;
         } catch (CycleException e) {
             return null;
         }
+
+
+        //return null;
     }
 
     private String openDirectoryAndFiles(TaskType taskType) {

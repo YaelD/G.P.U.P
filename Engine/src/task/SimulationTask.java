@@ -49,21 +49,21 @@ public class SimulationTask extends Task{
             currTargetProcessTime = getRandomProcessTime();
         }
         try {
-            target.setRunStatus(RunStatus.IN_PROCESS);
+            target.setRunStatus(RunStatus.IN_PROCESS); //todo: block
             startTime = LocalTime.now();
             Thread.sleep(currTargetProcessTime);
             endTime = LocalTime.now();
             if(getRandomNumber() <= this.successRate){
                 if(getRandomNumber() <= this.successWithWarningsRate){
-                    target.setRunResult(RunResults.WARNING);
+                    target.setRunResult(RunResults.WARNING);//todo: block
                 }else{
-                    target.setRunResult(RunResults.SUCCESS);
+                    target.setRunResult(RunResults.SUCCESS);//todo: block
                 }
             }else{
-                target.setRunResult(RunResults.FAILURE);
+                target.setRunResult(RunResults.FAILURE);//todo: block
             }
-            target.setRunningTime(Duration.between(startTime, endTime).toMillis());
-            target.setRunStatus(RunStatus.FINISHED);
+            target.setRunningTime(Duration.between(startTime, endTime).toMillis()); //todo: block
+            target.setRunStatus(RunStatus.FINISHED); //todo: block
             targetDTO = new TargetDTO(target, startTime, endTime);
 
         } catch (InterruptedException e) {

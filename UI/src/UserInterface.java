@@ -346,7 +346,7 @@ public class UserInterface {
         System.out.println(PRINT_LINE);
         System.out.println("Initiating task......");
         taskResults = engine.activateTask(printStrConsumer, taskParams, taskType, isIncremental);
-        printTaskRunResults(taskResults);
+        //printTaskRunResults(taskResults);
 
     }
 

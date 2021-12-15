@@ -64,7 +64,7 @@ public class Target implements Cloneable {
         return runResult;
     }
 
-    public void setRunResult(RunResults runResult) {
+    public synchronized void setRunResult(RunResults runResult) {
         this.runResult = runResult;
     }
 
@@ -72,7 +72,7 @@ public class Target implements Cloneable {
         return runningTime;
     }
 
-    public void setRunningTime(long runningTime) {
+    public synchronized void setRunningTime(long runningTime) {
         this.runningTime = runningTime;
     }
 
@@ -80,7 +80,7 @@ public class Target implements Cloneable {
         return runStatus;
     }
 
-    public void setRunStatus(RunStatus runStatus) {
+    public synchronized void setRunStatus(RunStatus runStatus) {
         this.runStatus = runStatus;
     }
 
@@ -114,6 +114,20 @@ public class Target implements Cloneable {
 //    }
 
 
+
+    public void updateParentsStatus(Set<String> skippedFathers) {
+        if(this.getRequiredFor().isEmpty()){
+            return;
+        }
+        else{
+            for(Target currTarget : this.getRequiredFor()){
+                currTarget.setRunStatus(RunStatus.SKIPPED);
+                currTarget.setRunResult(RunResults.SKIPPED);
+                skippedFathers.add(currTarget.getName());
+                currTarget.updateParentsStatus(skippedFathers);
+            }
+        }
+    }
 
 
     @Override
