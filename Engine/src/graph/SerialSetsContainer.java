@@ -1,15 +1,16 @@
 package graph;
 
+import target.RunStatus;
 import target.Target;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class SerialSets {
+public class SerialSetsContainer {
 
     private List<SerialSet> serialSetList = new ArrayList<>();
 
-    public SerialSets(List<SerialSet> serialSetList) {
+    public SerialSetsContainer(List<SerialSet> serialSetList) {
         this.serialSetList = serialSetList;
     }
 
@@ -17,13 +18,15 @@ public class SerialSets {
         return serialSetList;
     }
 
-    public boolean isTargetInSerialSet (Target target, SerialSet serialSet){
+    public synchronized boolean isTargetInSerialSet (Target target){
         for(SerialSet currSerialSet: this.serialSetList){
-            if(currSerialSet.getTargetsName().contains(target.getName())){
-                serialSet = currSerialSet;
+            if(currSerialSet.getTargetsSet().contains(target)){
+                currSerialSet.updateTargetsRunStatus(target);
                 return true;
             }
         }
         return false;
     }
+
+
 }

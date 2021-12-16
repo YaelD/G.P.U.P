@@ -6,7 +6,7 @@ import dto.TaskParamsDTO;
 import exceptions.CycleException;
 import graph.Graph;
 import graph.SerialSet;
-import graph.SerialSets;
+import graph.SerialSetsContainer;
 import target.RunResults;
 import target.RunStatus;
 import target.Target;
@@ -24,11 +24,11 @@ public abstract class Task{
 
     protected Graph graph;
 
-    protected SerialSets serialSets;
+    protected SerialSetsContainer serialSetsContainer;
 
-    public Task(Graph graph, SerialSets serialSets) {
+    public Task(Graph graph, SerialSetsContainer serialSetsContainer) {
         this.graph = graph;
-        this.serialSets = serialSets;
+        this.serialSetsContainer = serialSetsContainer;
     }
 
     public Graph getGraph() {
@@ -56,19 +56,6 @@ public abstract class Task{
         checkingForCycle(targetsInDegree);
         return sortedTargets;
     }
-    /*
-
-    @Override
-    public void run() {
-        try {
-            this.executeTaskOnGraph(this.outputConsumers);
-        } catch (CycleException e) {
-            e.printStackTrace();
-        }
-    }
-
-     */
-
 
     public GraphDTO executeTaskOnGraph(List<Consumer<TargetDTO>> outputConsumers) throws CycleException {
 
@@ -80,12 +67,9 @@ public abstract class Task{
                 @Override
                 public void run() {
                     TargetDTO targetResult;
-                    SerialSet serialSet = null;
                     if(currTarget.getRunStatus().equals(RunStatus.WAITING)){
-                        if(serialSets.isTargetInSerialSet(currTarget, serialSet)){
-                            synchronized (serialSet){
-                                targetResult = executeTaskOnTarget(currTarget);
-                            }
+                        if(serialSetsContainer.isTargetInSerialSet(currTarget)){
+                            targetResult = executeTaskOnTarget(currTarget);
                         }
                         else{
                             targetResult = executeTaskOnTarget(currTarget);

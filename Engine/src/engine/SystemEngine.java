@@ -8,6 +8,7 @@ import exceptions.*;
 import graph.Dependency;
 import graph.Graph;
 import graph.SerialSet;
+import graph.SerialSetsContainer;
 import schema.generated.GPUPDescriptor;
 import target.RunResults;
 import target.Target;
@@ -35,33 +36,46 @@ public class SystemEngine implements Engine{
     private String workingDirectory;
     private boolean isFileLoaded = false;
     private int maxThreadNum;
-    private List<SerialSet> serialSets = new ArrayList<>();
+    private SerialSetsContainer serialSetsContainer;
 
     @Override
     public boolean readFile(String path) throws
-            DuplicateTargetsException, TargetNotExistException, InvalidDependencyException, DependencyConflictException, InvalidFileException{
+            DuplicateTargetsException, TargetNotExistException, InvalidDependencyException, DependencyConflictException, InvalidFileException, SerialSetException {
         try {
             fileValidation(path);
             File file = new File(path.trim());
             JAXBContext jaxbContext = JAXBContext.newInstance(GPUPDescriptor.class);
             Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
             GPUPDescriptor gpupDescriptor = (GPUPDescriptor) jaxbUnmarshaller.unmarshal(file);
-            String graphName = gpupDescriptor.getGPUPConfiguration().getGPUPGraphName();
-            Map<String, Target> map = Graph.buildTargetGraph(gpupDescriptor.getGPUPTargets());
-            this.graph = new Graph(map, graphName);
-            this.workingDirectory = gpupDescriptor.getGPUPConfiguration().getGPUPWorkingDirectory();
-            this.maxThreadNum = gpupDescriptor.getGPUPConfiguration().getGPUPMaxParallelism();
-            for(GPUPDescriptor.GPUPSerialSets.GPUPSerialSet gpupSerialSet : gpupDescriptor.getGPUPSerialSets().getGPUPSerialSet()){
-                List<String> targets = Arrays.asList(gpupSerialSet.getTargets().toUpperCase().split(","));
-                SerialSet.checkTargetsInSet(targets, this.graph);
-                this.serialSets.add(new SerialSet(gpupSerialSet.getName(), targets));
-            }
-            this.tasksInSystem = new HashMap<>();
-            this.isFileLoaded = true;
+            initializeSystem(gpupDescriptor);
+
         } catch (JAXBException | IOException e) {
             e.printStackTrace();
         }
         return false;
+    }
+
+    private void initializeSystem(GPUPDescriptor gpupDescriptor) throws DuplicateTargetsException, TargetNotExistException, InvalidDependencyException, DependencyConflictException, SerialSetException {
+        Map<String, Target> map = Graph.buildTargetGraph(gpupDescriptor.getGPUPTargets());
+        String graphName = gpupDescriptor.getGPUPConfiguration().getGPUPGraphName();
+        this.graph = new Graph(map, graphName);
+        this.workingDirectory = gpupDescriptor.getGPUPConfiguration().getGPUPWorkingDirectory();
+        this.maxThreadNum = gpupDescriptor.getGPUPConfiguration().getGPUPMaxParallelism();
+        this.tasksInSystem = new HashMap<>();
+        this.isFileLoaded = true;
+        initializeSerialSets(gpupDescriptor);
+    }
+
+    private void initializeSerialSets(GPUPDescriptor gpupDescriptor) throws SerialSetException {
+        List<SerialSet> serialSetList = new ArrayList<>();
+        for(GPUPDescriptor.GPUPSerialSets.GPUPSerialSet gpupSerialSet : gpupDescriptor.getGPUPSerialSets().getGPUPSerialSet()){
+            String serialSetName = gpupSerialSet.getName();
+            Set<Target> targetSet = new HashSet<>();
+            List<String> targets = Arrays.asList(gpupSerialSet.getTargets().toUpperCase().split(","));
+            SerialSet.checkTargetsInSet(targets, this.graph, targetSet, serialSetName );
+            serialSetList.add(new SerialSet(serialSetName,targetSet));
+        }
+        this.serialSetsContainer = new SerialSetsContainer(serialSetList);
     }
 
     private void fileValidation(String path) throws InvalidFileException, IOException {
@@ -169,7 +183,7 @@ public class SystemEngine implements Engine{
             switch (taskType){
                 case SIMULATION_TASK:
                     if(taskParams instanceof SimulationTaskParamsDTO){
-                        this.tasksInSystem.put(taskType, new SimulationTask(this.graph.clone(), (SimulationTaskParamsDTO) taskParams));
+                        this.tasksInSystem.put(taskType, new SimulationTask(this.graph.clone(), (SimulationTaskParamsDTO) taskParams,this.serialSetsContainer));
                     }
                     break;
             }
