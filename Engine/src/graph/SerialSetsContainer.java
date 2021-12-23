@@ -14,6 +14,7 @@ public class SerialSetsContainer {
         this.serialSetList = serialSetList;
     }
 
+
     public List<SerialSet> getSerialSetList() {
         return serialSetList;
     }
@@ -21,7 +22,8 @@ public class SerialSetsContainer {
     public synchronized boolean isTargetInSerialSet (Target target){
         for(SerialSet currSerialSet: this.serialSetList){
             if(currSerialSet.getTargetsSet().contains(target)){
-                currSerialSet.updateTargetsRunStatus(target);
+                //TODO: function in serial-set that get the monitor
+                //currSerialSet.updateTargetsRunStatus(target);
                 return true;
             }
         }

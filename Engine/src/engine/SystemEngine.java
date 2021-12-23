@@ -55,7 +55,8 @@ public class SystemEngine implements Engine{
         return false;
     }
 
-    private void initializeSystem(GPUPDescriptor gpupDescriptor) throws DuplicateTargetsException, TargetNotExistException, InvalidDependencyException, DependencyConflictException, SerialSetException {
+    private void initializeSystem(GPUPDescriptor gpupDescriptor) throws DuplicateTargetsException,
+            TargetNotExistException, InvalidDependencyException, DependencyConflictException, SerialSetException {
         Map<String, Target> map = Graph.buildTargetGraph(gpupDescriptor.getGPUPTargets());
         String graphName = gpupDescriptor.getGPUPConfiguration().getGPUPGraphName();
         this.graph = new Graph(map, graphName);
@@ -70,10 +71,10 @@ public class SystemEngine implements Engine{
         List<SerialSet> serialSetList = new ArrayList<>();
         for(GPUPDescriptor.GPUPSerialSets.GPUPSerialSet gpupSerialSet : gpupDescriptor.getGPUPSerialSets().getGPUPSerialSet()){
             String serialSetName = gpupSerialSet.getName();
-            Set<Target> targetSet = new HashSet<>();
+            List<Target> targetList = new ArrayList<>();
             List<String> targets = Arrays.asList(gpupSerialSet.getTargets().toUpperCase().split(","));
-            SerialSet.checkTargetsInSet(targets, this.graph, targetSet, serialSetName );
-            serialSetList.add(new SerialSet(serialSetName,targetSet));
+            SerialSet.checkIfSetTargetExistInGraph(targets, this.graph, targetList, serialSetName );
+            serialSetList.add(new SerialSet(serialSetName,targetList));
         }
         this.serialSetsContainer = new SerialSetsContainer(serialSetList);
     }

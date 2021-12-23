@@ -1,13 +1,10 @@
 package target;
 
 import graph.Dependency;
-import graph.Graph;
+import graph.SerialSetsContainer;
 import schema.generated.GPUPTarget;
 
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 public class Target implements Cloneable {
 
@@ -19,13 +16,20 @@ public class Target implements Cloneable {
     private RunResults runResult;
     private long runningTime;
     private RunStatus runStatus;
+    private SerialSetsContainer serialSetsContainer;
 
 
     public Target(GPUPTarget target) {
         this.name = target.getName();
         this.info = target.getGPUPUserData();
         this.runStatus = RunStatus.FROZEN;
+        this.serialSetsContainer = new SerialSetsContainer(new ArrayList<>());
     }
+
+    public SerialSetsContainer getSerialSetsContainer() {
+        return serialSetsContainer;
+    }
+
 
     public String getName() {
         return name;
