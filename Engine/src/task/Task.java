@@ -68,12 +68,10 @@ public abstract class Task{
                 public void run() {
                     TargetDTO targetResult;
                     if(currTarget.getRunStatus().equals(RunStatus.WAITING)){
-                        if(serialSetsContainer.isTargetInSerialSet(currTarget)){
-                            targetResult = executeTaskOnTarget(currTarget);
+                        for(SerialSet currSerialSet : currTarget.getSerialSetsContainer().getSerialSetList()){
+                            currSerialSet.getSerialSetMonitor();
                         }
-                        else{
-                            targetResult = executeTaskOnTarget(currTarget);
-                        }
+                        targetResult = executeTaskOnTarget(currTarget);
                     }
                     else {
                         targetResult = new TargetDTO(currTarget);
@@ -82,6 +80,9 @@ public abstract class Task{
                          currTarget.updateParentsStatus(targetResult.getSkippedFathers());
                     }
                     getOpenedTargetsToRun(targetResult, currTarget);
+                    for(SerialSet currSerialSet : currTarget.getSerialSetsContainer().getSerialSetList()){
+                        currSerialSet.freeMonitor();
+                    }
                     outputTargetResult(outputConsumers, targetResult);
                 }
             });
@@ -91,6 +92,8 @@ public abstract class Task{
         //createGraphOfFailedTargets();
         return graphRunResult;
     }
+
+
 
     private void getOpenedTargetsToRun(TargetDTO targetResult, Target target) {
         boolean isOpenedToRun = true;

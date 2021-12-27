@@ -1,19 +1,17 @@
 package graph;
 
 import exceptions.SerialSetException;
-import exceptions.TargetNotExistException;
-import target.RunStatus;
 
 import target.Target;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
+
 public class SerialSet {
 
     private String name;
     private List<Target> targetList = new ArrayList<>();
-    private boolean isMonitorFree = false;
+    private boolean canGetMonitor = false;
 
     public SerialSet(String name, List<Target> targetList) {
         this.name = name;
@@ -41,17 +39,24 @@ public class SerialSet {
     }
 
     public synchronized void getSerialSetMonitor(){
-        while (!isMonitorFree){
+        //Thread A got the lock!!!
+        while (!canGetMonitor){  //
             try{
                 System.out.println(Thread.currentThread().getName() + "going to wait for " + this.name + " SerialSet monitor");
-                this.wait();
+                this.wait(); //wait and release the lock
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
         }
         System.out.println(Thread.currentThread().getName() + ": got: " + this.name + " SerialSet monitor");
-        isMonitorFree = false;
+        canGetMonitor = false;
         return;
+        //Free the lock!
+    }
+
+
+    public synchronized void freeMonitor(){
+        canGetMonitor = true;
     }
 
 //    public synchronized void updateTargetsRunStatus(Target target) {
