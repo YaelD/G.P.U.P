@@ -3,6 +3,7 @@ package graph;
 import exceptions.SerialSetException;
 
 import target.Target;
+import task.Task;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,11 +12,13 @@ public class SerialSet {
 
     private String name;
     private List<Target> targetList = new ArrayList<>();
-    private boolean canGetMonitor = false;
+    private boolean canGetMonitor = true;
 
     public SerialSet(String name, List<Target> targetList) {
         this.name = name;
         this.targetList = targetList;
+        this.canGetMonitor = true;
+
     }
 
     public String getName() {
@@ -42,14 +45,18 @@ public class SerialSet {
         //Thread A got the lock!!!
         while (!canGetMonitor){  //
             try{
-                System.out.println(Thread.currentThread().getName() + "going to wait for " + this.name + " SerialSet monitor");
+                synchronized (Task.printDummy){
+                    System.out.println(Thread.currentThread().getName() + " going to wait for " + this.name + " SerialSet monitor");
+                }
                 this.wait(); //wait and release the lock
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
         }
-        System.out.println(Thread.currentThread().getName() + ": got: " + this.name + " SerialSet monitor");
         canGetMonitor = false;
+        synchronized (Task.printDummy){
+            System.out.println(Thread.currentThread().getName() + ": got: " + this.name + " SerialSet monitor");
+        }
         return;
         //Free the lock!
     }
@@ -57,15 +64,11 @@ public class SerialSet {
 
     public synchronized void freeMonitor(){
         canGetMonitor = true;
+        this.notifyAll();
+        synchronized (Task.printDummy){
+            System.out.println(Thread.currentThread().getName() + ": release " + this.name + " SerialSet monitor");
+        }
+
     }
 
-//    public synchronized void updateTargetsRunStatus(Target target) {
-//        for(Target currTarget : this.getTargetsSet()){
-//            if(!currTarget.getName().equals(target.getName())){
-//                if(currTarget.getRunStatus().equals(RunStatus.WAITING)) {
-//                    currTarget.setRunStatus(RunStatus.FROZEN);
-//                }
-//            }
-//        }
-//    }
 }

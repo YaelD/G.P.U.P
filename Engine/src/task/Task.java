@@ -23,7 +23,7 @@ import java.util.function.Consumer;
 public abstract class Task{
 
     protected Graph graph;
-
+    public static Object printDummy = new Object();
     protected SerialSetsContainer serialSetsContainer;
 
     public Task(Graph graph, SerialSetsContainer serialSetsContainer) {
@@ -59,31 +59,12 @@ public abstract class Task{
 
     public GraphDTO executeTaskOnGraph(List<Consumer<TargetDTO>> outputConsumers) throws CycleException {
         List<Target> sortedTargets = topologicalSort(this.graph);
-        ExecutorService threadPool = Executors.newFixedThreadPool(1);
+        ExecutorService threadPool = Executors.newFixedThreadPool(10);
         LocalTime startTime = LocalTime.now();
         for(Target currTarget : sortedTargets){
-            threadPool.execute(new Runnable() {
-                @Override
-                public void run() {
-                    System.out.println("In Thread "+ Thread.currentThread().getName());
-                    TargetDTO targetResult;
-                    if(currTarget.getRunStatus().equals(RunStatus.WAITING)){
-                        System.out.println("In Thread of Target: " + currTarget.getName());
-                        Thread.currentThread().setName(currTarget.getName());
-                        currTarget.getSerialSetsMonitors();
-                        targetResult = executeTaskOnTarget(currTarget);
-                    }
-                    else {
-                        targetResult = new TargetDTO(currTarget);
-                    }
-                    if(targetResult.getRunResult().equals(RunResults.FAILURE)){
-                         currTarget.updateParentsStatus(targetResult.getSkippedFathers());
-                    }
-                    getOpenedTargetsToRun(targetResult, currTarget);
-                    currTarget.freeSerialSetsMonitors();
-                    outputTargetResult(outputConsumers, targetResult);
-                }
-            });
+            TaskRunner taskRunner = new TaskRunner(outputConsumers);
+            taskRunner.setCurrTarget(currTarget);
+            threadPool.execute(taskRunner);
         }
         LocalTime endTime = LocalTime.now();
         GraphDTO graphRunResult = new GraphDTO(this.graph, Duration.between(startTime, endTime).toMillis());
@@ -93,19 +74,21 @@ public abstract class Task{
 
 
 
+
+
     private void getOpenedTargetsToRun(TargetDTO targetResult, Target target) {
         boolean isOpenedToRun = true;
-        for(Target currTarget : target.getRequiredFor()){
-            for(Target currTargetFather : currTarget.getDependsOn()){
-                if (currTargetFather.getRunStatus().equals(RunStatus.FROZEN)) {
+        for(Target currParent : target.getRequiredFor()){
+            for(Target childOfTheCurrParent : currParent.getDependsOn()){
+                if (childOfTheCurrParent.getRunStatus().equals(RunStatus.FROZEN)) {
                     isOpenedToRun = false;
                 }
             }
             if (isOpenedToRun) {
-                if(!currTarget.getRunStatus().equals(RunStatus.SKIPPED)){
-                    currTarget.setRunStatus(RunStatus.WAITING);
+                if(!currParent.getRunStatus().equals(RunStatus.SKIPPED)){
+                    currParent.setRunStatus(RunStatus.WAITING);
                 }
-                targetResult.getTargetsThatCanBeRun().add(currTarget.getName());
+                targetResult.getTargetsThatCanBeRun().add(currParent.getName());
             }
             else{
                 isOpenedToRun = true;
@@ -167,6 +150,65 @@ public abstract class Task{
     }
     public abstract void updateParameters(TaskParamsDTO taskParamsDTO);
 
+    private class TaskRunner implements Runnable{
+        List<Consumer<TargetDTO>> outputConsumers;
+        Target currTarget;
 
+        public TaskRunner(List<Consumer<TargetDTO>> outputConsumers) {
+            this.outputConsumers = outputConsumers;
+        }
+
+        public void setCurrTarget(Target currTarget) {
+            this.currTarget = currTarget;
+        }
+
+        @Override
+        public void run() {
+            //System.out.println("In Thread "+ Thread.currentThread().getName());
+
+            TargetDTO targetResult;
+            synchronized (currTarget){
+                while(currTarget.getRunStatus().equals(RunStatus.FROZEN)){
+                    try {
+                        synchronized (Task.printDummy){
+                            System.out.println(Thread.currentThread().getName() + ": Going to wait on Target: " + currTarget.getName());
+                        }
+                        currTarget.wait();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+                if(currTarget.getRunStatus().equals(RunStatus.WAITING)){
+                    //Thread.currentThread().setName(currTarget.getName());
+                    currTarget.getSerialSetsMonitors();
+                    synchronized (Task.printDummy){
+                        System.out.println(Thread.currentThread().getName() + ": working on Target: " + currTarget.getName());
+                    }
+                    targetResult = executeTaskOnTarget(currTarget);
+                    synchronized (Task.printDummy){
+                        System.out.println(Thread.currentThread().getName() + ": finished on Target: " + currTarget.getName());
+                    }
+                    if(targetResult.getRunResult().equals(RunResults.FAILURE)){
+                        currTarget.updateParentsStatus(targetResult.getSkippedFathers());
+                    }
+                    getOpenedTargetsToRun(targetResult, currTarget);
+                }
+                else {  //currTarget.RunStatus = Skipped
+                    synchronized (Task.printDummy){
+                        System.out.println(Thread.currentThread().getName() + ": working on Target: " + currTarget.getName());
+                    }
+                    targetResult = new TargetDTO(currTarget);
+                    synchronized (Task.printDummy){
+                        System.out.println(Thread.currentThread().getName() + ": finished on Target: " + currTarget.getName());
+                    }
+                }
+                currTarget.freeSerialSetsMonitors();
+                synchronized (Task.printDummy){
+                    outputTargetResult(outputConsumers, targetResult);
+                }
+
+        }
+    }
 
 }

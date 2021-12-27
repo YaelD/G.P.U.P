@@ -87,13 +87,12 @@ public class Target implements Cloneable {
 
     public synchronized void setRunStatus(RunStatus runStatus) {
         this.runStatus = runStatus;
+        notifyAll();
     }
 
     public void getSerialSetsMonitors(){
         for(SerialSet currSerialSet : this.getSerialSetsContainer().getSerialSetList()){
             currSerialSet.getSerialSetMonitor();
-            System.out.println("In Thread: " + Thread.currentThread().getName() + " Got monitor of "
-                    + currSerialSet.getName());
         }
     }
 
