@@ -28,13 +28,14 @@ public class SerialSet {
         return targetList;
     }
 
-    public static void checkIfSetTargetExistInGraph(List<String> targetsName, Graph graph, List<Target> targetList, String serialSetName) throws SerialSetException {
+    public static void checkIfSetTargetExistInGraph(List<String> targetsName, Graph graph, SerialSet currSerialSet, String serialSetName) throws SerialSetException {
         for(String currTarget : targetsName){
             if(!graph.getTargetGraph().containsKey(currTarget)){
                 throw new SerialSetException(currTarget, serialSetName);
             }
             else{
-                targetList.add(graph.getTargetGraph().get(currTarget));
+                currSerialSet.getTargetsSet().add(graph.getTarget(currTarget));
+                graph.getTarget(currTarget).getSerialSetsContainer().getSerialSetList().add(currSerialSet);
             }
         }
     }

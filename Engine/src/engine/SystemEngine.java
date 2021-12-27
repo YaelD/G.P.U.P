@@ -72,9 +72,11 @@ public class SystemEngine implements Engine{
         for(GPUPDescriptor.GPUPSerialSets.GPUPSerialSet gpupSerialSet : gpupDescriptor.getGPUPSerialSets().getGPUPSerialSet()){
             String serialSetName = gpupSerialSet.getName();
             List<Target> targetList = new ArrayList<>();
+            SerialSet newSerialSet = new SerialSet(serialSetName,targetList);
             List<String> targets = Arrays.asList(gpupSerialSet.getTargets().toUpperCase().split(","));
-            SerialSet.checkIfSetTargetExistInGraph(targets, this.graph, targetList, serialSetName );
-            serialSetList.add(new SerialSet(serialSetName,targetList));
+            Collections.sort(targets);
+            SerialSet.checkIfSetTargetExistInGraph(targets, this.graph, newSerialSet, serialSetName );
+            serialSetList.add(newSerialSet);
         }
         this.serialSetsContainer = new SerialSetsContainer(serialSetList);
     }

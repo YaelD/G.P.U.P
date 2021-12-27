@@ -96,17 +96,13 @@ public abstract class Task{
         boolean isOpenedToRun = true;
         for(Target currTarget : target.getRequiredFor()){
             for(Target currTargetFather : currTarget.getDependsOn()){
-                synchronized (currTargetFather) {
-                    if (currTargetFather.getRunStatus().equals(RunStatus.FROZEN)) {
-                        isOpenedToRun = false;
-                    }
+                if (currTargetFather.getRunStatus().equals(RunStatus.FROZEN)) {
+                    isOpenedToRun = false;
                 }
             }
             if (isOpenedToRun) {
-                synchronized (currTarget){
-                    if(!currTarget.getRunStatus().equals(RunStatus.SKIPPED)){
-                        currTarget.setRunStatus(RunStatus.WAITING);
-                    }
+                if(!currTarget.getRunStatus().equals(RunStatus.SKIPPED)){
+                    currTarget.setRunStatus(RunStatus.WAITING);
                 }
                 targetResult.getTargetsThatCanBeRun().add(currTarget.getName());
             }
