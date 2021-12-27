@@ -189,6 +189,8 @@ public class UserInterface {
                     System.out.println("The dependency: " + e.getDependency() + " is not supported in the system");
                 } catch (TargetNotExistException e) {
                     System.out.println("The target " + e.getName() + " does not exist");
+                } catch (SerialSetException e) {
+                    System.out.println("The Target " + e.getTargetName() + "In serial Set" + e.getSerialSetName() + "doesnt exist");
                 }
             } else {
                 finish = true;

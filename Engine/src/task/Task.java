@@ -58,19 +58,19 @@ public abstract class Task{
     }
 
     public GraphDTO executeTaskOnGraph(List<Consumer<TargetDTO>> outputConsumers) throws CycleException {
-
         List<Target> sortedTargets = topologicalSort(this.graph);
-        ExecutorService threadPool = Executors.newFixedThreadPool(3);
+        ExecutorService threadPool = Executors.newFixedThreadPool(1);
         LocalTime startTime = LocalTime.now();
         for(Target currTarget : sortedTargets){
             threadPool.execute(new Runnable() {
                 @Override
                 public void run() {
+                    System.out.println("In Thread "+ Thread.currentThread().getName());
                     TargetDTO targetResult;
                     if(currTarget.getRunStatus().equals(RunStatus.WAITING)){
-                        for(SerialSet currSerialSet : currTarget.getSerialSetsContainer().getSerialSetList()){
-                            currSerialSet.getSerialSetMonitor();
-                        }
+                        System.out.println("In Thread of Target: " + currTarget.getName());
+                        Thread.currentThread().setName(currTarget.getName());
+                        currTarget.getSerialSetsMonitors();
                         targetResult = executeTaskOnTarget(currTarget);
                     }
                     else {
@@ -80,9 +80,7 @@ public abstract class Task{
                          currTarget.updateParentsStatus(targetResult.getSkippedFathers());
                     }
                     getOpenedTargetsToRun(targetResult, currTarget);
-                    for(SerialSet currSerialSet : currTarget.getSerialSetsContainer().getSerialSetList()){
-                        currSerialSet.freeMonitor();
-                    }
+                    currTarget.freeSerialSetsMonitors();
                     outputTargetResult(outputConsumers, targetResult);
                 }
             });
