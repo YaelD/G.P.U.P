@@ -69,13 +69,18 @@ public abstract class Task{
             taskRunner.setCurrTarget(currTarget);
             threadPool.execute(taskRunner);
         }
-        LocalTime endTime = LocalTime.now();
         threadPool.shutdown();
-
-        while(!threadPool.isTerminated()) {
-
+        synchronized (printDummy) {
+            while (!threadPool.isTerminated()) {
+                try {
+                    printDummy.wait();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
         }
 
+        LocalTime endTime = LocalTime.now();
 
         GraphDTO graphRunResult = new GraphDTO(this.graph, Duration.between(startTime, endTime).toMillis());
         createGraphOfFailedTargets();
@@ -213,7 +218,7 @@ public abstract class Task{
                 }
                 currTarget.freeSerialSetsMonitors();
                 outputTargetResult(outputConsumers, targetResult);
-
+                printDummy.notifyAll();
         }
     }
 
