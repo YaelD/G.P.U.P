@@ -56,10 +56,13 @@ public abstract class Task{
         checkingForCycle(targetsInDegree);
         return sortedTargets;
     }
-
+    //main Thread
     public GraphDTO executeTaskOnGraph(List<Consumer<TargetDTO>> outputConsumers) throws CycleException {
+
+
         List<Target> sortedTargets = topologicalSort(this.graph);
         ExecutorService threadPool = Executors.newFixedThreadPool(10);
+
         LocalTime startTime = LocalTime.now();
         for(Target currTarget : sortedTargets){
             TaskRunner taskRunner = new TaskRunner(outputConsumers);
@@ -67,11 +70,17 @@ public abstract class Task{
             threadPool.execute(taskRunner);
         }
         LocalTime endTime = LocalTime.now();
+        threadPool.shutdown();
+
+        while(!threadPool.isTerminated()) {
+
+        }
+
+
         GraphDTO graphRunResult = new GraphDTO(this.graph, Duration.between(startTime, endTime).toMillis());
-        //createGraphOfFailedTargets();
+        createGraphOfFailedTargets();
         return graphRunResult;
     }
-
 
 
 
@@ -170,9 +179,9 @@ public abstract class Task{
             synchronized (currTarget){
                 while(currTarget.getRunStatus().equals(RunStatus.FROZEN)){
                     try {
-                        synchronized (Task.printDummy){
-                            System.out.println(Thread.currentThread().getName() + ": Going to wait on Target: " + currTarget.getName());
-                        }
+//                        synchronized (Task.printDummy){
+//                            System.out.println(Thread.currentThread().getName() + ": Going to wait on Target: " + currTarget.getName());
+//                        }
                         currTarget.wait();
                     } catch (InterruptedException e) {
                         e.printStackTrace();
@@ -180,33 +189,30 @@ public abstract class Task{
                 }
             }
                 if(currTarget.getRunStatus().equals(RunStatus.WAITING)){
-                    //Thread.currentThread().setName(currTarget.getName());
                     currTarget.getSerialSetsMonitors();
-                    synchronized (Task.printDummy){
-                        System.out.println(Thread.currentThread().getName() + ": working on Target: " + currTarget.getName());
-                    }
+//                    synchronized (Task.printDummy){
+//                        System.out.println(Thread.currentThread().getName() + ": working on Target: " + currTarget.getName());
+//                    }
                     targetResult = executeTaskOnTarget(currTarget);
-                    synchronized (Task.printDummy){
-                        System.out.println(Thread.currentThread().getName() + ": finished on Target: " + currTarget.getName());
-                    }
+//                    synchronized (Task.printDummy){
+//                        System.out.println(Thread.currentThread().getName() + ": finished on Target: " + currTarget.getName());
+//                    }
                     if(targetResult.getRunResult().equals(RunResults.FAILURE)){
                         currTarget.updateParentsStatus(targetResult.getSkippedFathers());
                     }
                     getOpenedTargetsToRun(targetResult, currTarget);
                 }
                 else {  //currTarget.RunStatus = Skipped
-                    synchronized (Task.printDummy){
-                        System.out.println(Thread.currentThread().getName() + ": working on Target: " + currTarget.getName());
-                    }
+//                    synchronized (Task.printDummy){
+//                        System.out.println(Thread.currentThread().getName() + ": working on Target: " + currTarget.getName());
+//                    }
                     targetResult = new TargetDTO(currTarget);
-                    synchronized (Task.printDummy){
-                        System.out.println(Thread.currentThread().getName() + ": finished on Target: " + currTarget.getName());
-                    }
+//                    synchronized (Task.printDummy){
+//                        System.out.println(Thread.currentThread().getName() + ": finished on Target: " + currTarget.getName());
+//                    }
                 }
                 currTarget.freeSerialSetsMonitors();
-                synchronized (Task.printDummy){
-                    outputTargetResult(outputConsumers, targetResult);
-                }
+                outputTargetResult(outputConsumers, targetResult);
 
         }
     }

@@ -45,18 +45,18 @@ public class SerialSet {
         //Thread A got the lock!!!
         while (!canGetMonitor){  //
             try{
-                synchronized (Task.printDummy){
-                    System.out.println(Thread.currentThread().getName() + " going to wait for " + this.name + " SerialSet monitor");
-                }
+//                synchronized (Task.printDummy){
+//                    System.out.println(Thread.currentThread().getName() + " going to wait for " + this.name + " SerialSet monitor");
+//                }
                 this.wait(); //wait and release the lock
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
         }
         canGetMonitor = false;
-        synchronized (Task.printDummy){
-            System.out.println(Thread.currentThread().getName() + ": got: " + this.name + " SerialSet monitor");
-        }
+//        synchronized (Task.printDummy){
+//            System.out.println(Thread.currentThread().getName() + ": got: " + this.name + " SerialSet monitor");
+//        }
         return;
         //Free the lock!
     }
@@ -65,9 +65,9 @@ public class SerialSet {
     public synchronized void freeMonitor(){
         canGetMonitor = true;
         this.notifyAll();
-        synchronized (Task.printDummy){
-            System.out.println(Thread.currentThread().getName() + ": release " + this.name + " SerialSet monitor");
-        }
+//        synchronized (Task.printDummy){
+//            System.out.println(Thread.currentThread().getName() + ": release " + this.name + " SerialSet monitor");
+//        }
 
     }
 
