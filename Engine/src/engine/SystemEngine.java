@@ -196,27 +196,13 @@ public class SystemEngine implements Engine{
         Consumer<TargetDTO> fileWriterConsumer = targetDTO -> { writeToFile(targetDTO, path); };
         outputConsumers.add(fileWriterConsumer);
         GraphDTO runResult = null;
-//        Thread thread = new Thread(new Runnable() {
-//            @Override
-//            public void run() {
-//                try {
-//                    tasksInSystem.get(taskType).executeTaskOnGraph(outputConsumers);
-//                } catch (CycleException e) {
-//
-//                }
-//            }
-//        });
-//        thread.start();
 
         try {
             runResult = this.tasksInSystem.get(taskType).executeTaskOnGraph(outputConsumers);
-            return null;
+            return runResult;
         } catch (CycleException e) {
             return null;
         }
-
-
-        //return null;
     }
 
     private String openDirectoryAndFiles(TaskType taskType) {

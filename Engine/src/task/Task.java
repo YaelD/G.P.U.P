@@ -5,7 +5,6 @@ import dto.TargetDTO;
 import dto.TaskParamsDTO;
 import exceptions.CycleException;
 import graph.Graph;
-import graph.SerialSet;
 import graph.SerialSetsContainer;
 import target.RunResults;
 import target.RunStatus;
@@ -14,6 +13,7 @@ import target.Target;
 import java.time.Duration;
 import java.time.LocalTime;
 import java.util.*;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.function.Consumer;
@@ -23,12 +23,16 @@ import java.util.function.Consumer;
 public abstract class Task{
 
     protected Graph graph;
-    public static Object printDummy = new Object();
+    public static Object taskDummyLock = new Object();
     protected SerialSetsContainer serialSetsContainer;
+
+    private CountDownLatch latch;
+
 
     public Task(Graph graph, SerialSetsContainer serialSetsContainer) {
         this.graph = graph;
         this.serialSetsContainer = serialSetsContainer;
+        this.latch = null;
     }
 
     public Graph getGraph() {
@@ -61,7 +65,11 @@ public abstract class Task{
 
 
         List<Target> sortedTargets = topologicalSort(this.graph);
-        ExecutorService threadPool = Executors.newFixedThreadPool(10);
+        ExecutorService threadPool = Executors.newFixedThreadPool(2);
+
+        this.latch = new CountDownLatch(sortedTargets.size());
+
+
 
         LocalTime startTime = LocalTime.now();
         for(Target currTarget : sortedTargets){
@@ -70,18 +78,16 @@ public abstract class Task{
             threadPool.execute(taskRunner);
         }
         threadPool.shutdown();
-        synchronized (printDummy) {
-            while (!threadPool.isTerminated()) {
-                try {
-                    printDummy.wait();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
+        try {
+            this.latch.await();
+            System.out.println("RunTask==>Woke from latch!");
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
 
-        LocalTime endTime = LocalTime.now();
 
+        LocalTime endTime = LocalTime.now();
+        System.out.println("Thread Pool===> Finished!!! " +  threadPool.isTerminated());
         GraphDTO graphRunResult = new GraphDTO(this.graph, Duration.between(startTime, endTime).toMillis());
         createGraphOfFailedTargets();
         return graphRunResult;
@@ -164,6 +170,7 @@ public abstract class Task{
     }
     public abstract void updateParameters(TaskParamsDTO taskParamsDTO);
 
+    //----------------------------------------------------------------------------------------------
     private class TaskRunner implements Runnable{
         List<Consumer<TargetDTO>> outputConsumers;
         Target currTarget;
@@ -178,15 +185,10 @@ public abstract class Task{
 
         @Override
         public void run() {
-            //System.out.println("In Thread "+ Thread.currentThread().getName());
-
             TargetDTO targetResult;
             synchronized (currTarget){
                 while(currTarget.getRunStatus().equals(RunStatus.FROZEN)){
                     try {
-//                        synchronized (Task.printDummy){
-//                            System.out.println(Thread.currentThread().getName() + ": Going to wait on Target: " + currTarget.getName());
-//                        }
                         currTarget.wait();
                     } catch (InterruptedException e) {
                         e.printStackTrace();
@@ -195,30 +197,20 @@ public abstract class Task{
             }
                 if(currTarget.getRunStatus().equals(RunStatus.WAITING)){
                     currTarget.getSerialSetsMonitors();
-//                    synchronized (Task.printDummy){
-//                        System.out.println(Thread.currentThread().getName() + ": working on Target: " + currTarget.getName());
-//                    }
                     targetResult = executeTaskOnTarget(currTarget);
-//                    synchronized (Task.printDummy){
-//                        System.out.println(Thread.currentThread().getName() + ": finished on Target: " + currTarget.getName());
-//                    }
                     if(targetResult.getRunResult().equals(RunResults.FAILURE)){
                         currTarget.updateParentsStatus(targetResult.getSkippedFathers());
                     }
                     getOpenedTargetsToRun(targetResult, currTarget);
                 }
-                else {  //currTarget.RunStatus = Skipped
-//                    synchronized (Task.printDummy){
-//                        System.out.println(Thread.currentThread().getName() + ": working on Target: " + currTarget.getName());
-//                    }
+                else {
                     targetResult = new TargetDTO(currTarget);
-//                    synchronized (Task.printDummy){
-//                        System.out.println(Thread.currentThread().getName() + ": finished on Target: " + currTarget.getName());
-//                    }
                 }
                 currTarget.freeSerialSetsMonitors();
                 outputTargetResult(outputConsumers, targetResult);
-                printDummy.notifyAll();
+                latch.countDown();
+                System.out.println("The latch value is=" + latch.toString());
+
         }
     }
 
