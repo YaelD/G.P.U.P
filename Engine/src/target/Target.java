@@ -126,13 +126,6 @@ public class Target implements Cloneable {
         this.dependsOn = dependsOn;
     }
 
-    //    @Override
-//    public int hashCode() {
-//        return Objects.hash(name, place, requiredFor, dependsOn, info);
-//    }
-
-
-
     public void updateParentsStatus(Set<String> skippedFathers) {
         if(this.getRequiredFor().isEmpty()){
             return;
@@ -147,6 +140,19 @@ public class Target implements Cloneable {
         }
     }
 
+    public void getRequiredForAncestors(Set<String> targetsSet){
+        for(Target target : this.requiredFor){
+            targetsSet.add(target.name);
+            target.getRequiredForAncestors(targetsSet);
+        }
+    }
+
+    public void getDependsOnAncestors(Set<String> targetsSet){
+        for(Target target : this.dependsOn){
+            targetsSet.add(target.name);
+            target.getDependsOnAncestors(targetsSet);
+        }
+    }
 
     @Override
     public Target clone()  {

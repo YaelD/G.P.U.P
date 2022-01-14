@@ -35,7 +35,8 @@ public class UserInterface {
                 "\n4. Find Path between two Targets." +
                 "\n5. Active task." +
                 "\n6. Check for cycle." +
-                "\n7. Exit");
+                "\n7. Exit" +
+                "\n8. What if");
     }
 
 
@@ -71,6 +72,9 @@ public class UserInterface {
                     case 7:
                         exit = true;
                         break;
+                    case 8:
+                        this.whatIf();
+                        break;
                     default:
                         System.out.println("Invalid choice, please try again");
                         break;
@@ -79,6 +83,12 @@ public class UserInterface {
                 System.out.println("Invalid Input: " + in.nextLine());
             }
         }
+    }
+
+    private void whatIf() {
+        System.out.println(engine.whatIf("J", Dependency.REQUIRED_FOR));
+
+
     }
 
     private void checkForCycleInGraph() {

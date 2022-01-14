@@ -9,6 +9,7 @@ import task.TaskType;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 import java.util.function.Consumer;
 
 public interface Engine {
@@ -19,7 +20,6 @@ public interface Engine {
 
     public TargetDTO getTarget(String name) throws TargetNotExistException;
 
-    //public Collection<List<String>> getPaths(String firstTargetName, String secondTargetName, String relation) throws TargetNotExistException, InvalidDependencyException;
     public Collection<List<String>> getPaths(String firstTargetName, String secondTargetName, Dependency dependency) throws TargetNotExistException, InvalidDependencyException;
 
     public GraphDTO activateTask(Consumer<TargetDTO> consumerString, TaskParamsDTO taskParams, TaskType taskType, boolean isIncremental);
@@ -31,6 +31,8 @@ public interface Engine {
     public boolean isCycleInGraph();
 
     public List<String> findCycle(String targetName) throws TargetNotExistException;
+
+    public Set<String> whatIf(String targetName, Dependency dependency);
 
 
 }

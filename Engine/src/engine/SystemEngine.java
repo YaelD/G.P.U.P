@@ -113,6 +113,19 @@ public class SystemEngine implements Engine{
     }
 
     @Override
+    public Set<String> whatIf(String targetName, Dependency dependency) {
+        Target target = graph.getTarget(targetName);
+        Set<String> targetSet = new HashSet<>();
+        if(dependency.equals(Dependency.REQUIRED_FOR)){
+            target.getRequiredForAncestors(targetSet);
+        }
+        else{
+            target.getDependsOnAncestors(targetSet);
+        }
+        return targetSet;
+    }
+
+    @Override
     public GraphDTO getGraphDTO() {
         GraphDTO graphDTO = new GraphDTO(this.graph);
         return graphDTO;
