@@ -1,7 +1,4 @@
-import dto.GraphDTO;
-import dto.SimulationTaskParamsDTO;
-import dto.TargetDTO;
-import dto.TaskParamsDTO;
+import dto.*;
 import engine.Engine;
 import engine.SystemEngine;
 import exceptions.*;
@@ -296,9 +293,9 @@ public class UserInterface {
         }
         System.out.println(PRINT_LINE);
                 int inputTaskType = getInputInt("Please enter the type of the task: " +
-                        "\n1. Simulation task ",
-                        "Invalid input, please choose a number between 1 to 1",
-                        "Invalid input, The input should be a number", 1, 1);
+                        "\n1. Simulation task\n2.Compilation task",
+                        "Invalid input, please choose a number between 1 to 2",
+                        "Invalid input, The input should be a number", 1, 2);
                 switch (inputTaskType){
                     case -1:
                         System.out.println("Returning to main menu");
@@ -307,6 +304,7 @@ public class UserInterface {
                         taskType = TaskType.SIMULATION_TASK;
                         break;
                     case 2:
+                        taskType = TaskType.COMPILATION_TASK;
                         break;
                 }
             int incrementalInput = getInputInt("Do you want to run the task incrementally?" +
@@ -343,6 +341,7 @@ public class UserInterface {
                 taskParams = getParamsOfSimulationTask();
                 break;
             case COMPILATION_TASK:
+                taskParams = getParamsOfCompilationTask();
                 break;
         }
 
@@ -355,11 +354,20 @@ public class UserInterface {
             printTargetRunResult(targetDTO);
         };
         GraphDTO taskResults = null;
-        System.out.println(PRINT_LINE);
-        System.out.println("Initiating task......");
-        taskResults = engine.activateTask(printStrConsumer, taskParams, taskType, isIncremental);
-        printTaskRunResults(taskResults);
+//        System.out.println(PRINT_LINE);
+//        System.out.println("Initiating task......");
+        taskResults = engine.activateTask(null/*printStrConsumer*/, taskParams, taskType, isIncremental);
+        //printTaskRunResults(taskResults);
+    }
 
+    private TaskParamsDTO getParamsOfCompilationTask() {
+        Scanner in = new Scanner(System.in);
+        String sourceDir, destinationDir;
+        System.out.println("Enter source dir:");
+        sourceDir = in.nextLine();
+        System.out.println("Enter destination dir:");
+        destinationDir = in.nextLine();
+        return new CompilationTaskParamsDTO(sourceDir,destinationDir);
     }
 
     private void printTargetRunResult(TargetDTO targetDTO) {

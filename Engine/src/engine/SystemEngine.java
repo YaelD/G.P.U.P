@@ -62,7 +62,9 @@ public class SystemEngine implements Engine{
         this.maxThreadNum = gpupDescriptor.getGPUPConfiguration().getGPUPMaxParallelism();
         this.tasksInSystem = new HashMap<>();
         this.isFileLoaded = true;
-        initializeSerialSets(gpupDescriptor);
+        if(gpupDescriptor.getGPUPSerialSets() != null){
+            initializeSerialSets(gpupDescriptor);
+        }
     }
 
     private void initializeSerialSets(GPUPDescriptor gpupDescriptor) throws SerialSetException {
