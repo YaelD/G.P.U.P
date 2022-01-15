@@ -25,7 +25,6 @@ public abstract class Task{
     protected Graph graph;
     public static Object taskDummyLock = new Object();
     protected SerialSetsContainer serialSetsContainer;
-
     private CountDownLatch latch;
 
 
@@ -63,14 +62,9 @@ public abstract class Task{
     //main Thread
     public GraphDTO executeTaskOnGraph(List<Consumer<TargetDTO>> outputConsumers) throws CycleException {
 
-
         List<Target> sortedTargets = topologicalSort(this.graph);
         ExecutorService threadPool = Executors.newFixedThreadPool(2);
-
         this.latch = new CountDownLatch(sortedTargets.size());
-
-
-
         LocalTime startTime = LocalTime.now();
         for(Target currTarget : sortedTargets){
             TaskRunner taskRunner = new TaskRunner(outputConsumers);
@@ -84,16 +78,12 @@ public abstract class Task{
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-
-
         LocalTime endTime = LocalTime.now();
         System.out.println("Thread Pool===> Finished!!! " +  threadPool.isTerminated());
         GraphDTO graphRunResult = new GraphDTO(this.graph, Duration.between(startTime, endTime).toMillis());
         createGraphOfFailedTargets();
         return graphRunResult;
     }
-
-
 
 
     private void getOpenedTargetsToRun(TargetDTO targetResult, Target target) {
@@ -116,7 +106,6 @@ public abstract class Task{
 
         }
     }
-
 
 
     protected abstract TargetDTO executeTaskOnTarget(Target currTarget);
@@ -168,6 +157,7 @@ public abstract class Task{
         }
         return targetsInDegree;
     }
+
     public abstract void updateParameters(TaskParamsDTO taskParamsDTO);
 
     //----------------------------------------------------------------------------------------------

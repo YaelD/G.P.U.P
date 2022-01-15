@@ -1,9 +1,6 @@
 package engine;
 
-import dto.GraphDTO;
-import dto.SimulationTaskParamsDTO;
-import dto.TargetDTO;
-import dto.TaskParamsDTO;
+import dto.*;
 import exceptions.*;
 import graph.Dependency;
 import graph.Graph;
@@ -12,6 +9,7 @@ import graph.SerialSetsContainer;
 import schema.generated.GPUPDescriptor;
 import target.RunResults;
 import target.Target;
+import task.CompilationTask;
 import task.SimulationTask;
 import task.Task;
 import task.TaskType;
@@ -200,6 +198,11 @@ public class SystemEngine implements Engine{
                 case SIMULATION_TASK:
                     if(taskParams instanceof SimulationTaskParamsDTO){
                         this.tasksInSystem.put(taskType, new SimulationTask(this.graph.clone(), (SimulationTaskParamsDTO) taskParams,this.serialSetsContainer));
+                    }
+                    break;
+                case COMPILATION_TASK:
+                    if(taskParams instanceof CompilationTaskParamsDTO){
+                        this.tasksInSystem.put(taskType, new CompilationTask(this.graph.clone(), (CompilationTaskParamsDTO) taskParams,this.serialSetsContainer));
                     }
                     break;
             }
