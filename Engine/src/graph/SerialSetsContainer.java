@@ -1,6 +1,5 @@
 package graph;
 
-import target.RunStatus;
 import target.Target;
 
 import java.util.ArrayList;
@@ -21,7 +20,7 @@ public class SerialSetsContainer {
 
     public synchronized boolean isTargetInSerialSet (Target target){
         for(SerialSet currSerialSet: this.serialSetList){
-            if(currSerialSet.getTargetsSet().contains(target)){
+            if(currSerialSet.getTargetsList().contains(target)){
                 //TODO: function in serial-set that get the monitor
                 //currSerialSet.updateTargetsRunStatus(target);
                 return true;

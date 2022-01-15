@@ -86,6 +86,7 @@ public class HeaderController {
             Parent root = fxmlLoader.load(resource.openStream());
             GraphInfoController graphInfoController = fxmlLoader.getController();
             graphInfoController.setGraphInfo(this.engine.getGraphDTO());
+            graphInfoController.setSerialSets(this.engine.getSerialSetsInfo());
             base_BorderPane.setCenter(root);
             primaryStage.show();
         } catch (IOException e) {

@@ -1,12 +1,15 @@
 package tables;
 
 import dto.GraphDTO;
+import dto.SerialSetDTO;
 import dto.TargetDTO;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableView;
 import tables.TargetsTableController;
 import target.PlaceInGraph;
+
+import java.util.List;
 
 public class GraphInfoController {
 
@@ -17,6 +20,9 @@ public class GraphInfoController {
 
     @FXML
     private TableView<TargetDTO> serialSetTableView;
+
+    @FXML
+    private SerialSetTableController serialSetTableViewController;
 
     @FXML
     private Label NumOfTargets_Label;
@@ -42,6 +48,10 @@ public class GraphInfoController {
         this.NumOfRoots_Label.setText(String.valueOf(graphInfo.getNumOfTargetsInPlace(PlaceInGraph.ROOT)));
         this.NumOfTargets_Label.setText(String.valueOf(graphInfo.getNumOfTargets()));
         targetsTableViewController.setTargets(graphInfo);
+    }
+
+    public void setSerialSets(List<SerialSetDTO> serialSets){
+        this.serialSetTableViewController.fillSerialSetsInfo(serialSets);
     }
 
 }

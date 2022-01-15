@@ -3,7 +3,6 @@ package graph;
 import exceptions.SerialSetException;
 
 import target.Target;
-import task.Task;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,7 +24,7 @@ public class SerialSet {
         return name;
     }
 
-    public List<Target> getTargetsSet() {
+    public List<Target> getTargetsList() {
         return targetList;
     }
 
@@ -35,7 +34,7 @@ public class SerialSet {
                 throw new SerialSetException(currTarget, serialSetName);
             }
             else{
-                currSerialSet.getTargetsSet().add(graph.getTarget(currTarget));
+                currSerialSet.getTargetsList().add(graph.getTarget(currTarget));
                 graph.getTarget(currTarget).getSerialSetsContainer().getSerialSetList().add(currSerialSet);
             }
         }

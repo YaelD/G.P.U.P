@@ -1,6 +1,7 @@
 package engine;
 
 import dto.GraphDTO;
+import dto.SerialSetDTO;
 import dto.TargetDTO;
 import dto.TaskParamsDTO;
 import exceptions.*;
@@ -31,6 +32,9 @@ public interface Engine {
     public boolean isCycleInGraph();
 
     public List<String> findCycle(String targetName) throws TargetNotExistException;
+
+    public List<SerialSetDTO> getSerialSetsInfo();
+
 
     public Set<String> whatIf(String targetName, Dependency dependency);
 

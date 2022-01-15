@@ -113,6 +113,15 @@ public class SystemEngine implements Engine{
     }
 
     @Override
+    public List<SerialSetDTO> getSerialSetsInfo() {
+        List<SerialSetDTO> serialSetDTOList = new ArrayList<>();
+        for(SerialSet serialSet: this.serialSetsContainer.getSerialSetList()){
+            serialSetDTOList.add(new SerialSetDTO(serialSet));
+        }
+        return serialSetDTOList;
+    }
+
+    @Override
     public Set<String> whatIf(String targetName, Dependency dependency) {
         Target target = graph.getTarget(targetName);
         Set<String> targetSet = new HashSet<>();
