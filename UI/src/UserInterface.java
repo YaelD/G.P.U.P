@@ -185,7 +185,7 @@ public class UserInterface {
             String path = in.nextLine();
             if (!path.equals("0")) {
                 try {
-                    engine.readFile(path);
+                    engine.loadFile(path);
                     System.out.println("File loaded successfully!");
                     finish = true;
                 } catch (InvalidFileException e) {

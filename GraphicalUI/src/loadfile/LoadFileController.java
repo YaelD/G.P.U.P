@@ -1,4 +1,4 @@
-package load_file;
+package loadfile;
 
 import engine.Engine;
 import exceptions.*;
@@ -12,9 +12,12 @@ import javafx.stage.Stage;
 
 import java.io.File;
 
+import header.HeaderController;
+
 public class LoadFileController {
 
-    Engine engine;
+    private Engine engine;
+    private HeaderController headerController;
 
     @FXML
     private Button fileChooser_btn;
@@ -43,7 +46,7 @@ public class LoadFileController {
     }
 
     @FXML
-    void confirmFile(ActionEvent event) {
+    private void confirmFile(ActionEvent event) {
         if(file_path_TextFiled.getText().isEmpty()){
             warning_label.setDisable(false);
             warning_label.setText("Please enter a file");
@@ -51,9 +54,10 @@ public class LoadFileController {
         }
 
         try {
-            engine.readFile(file_path_TextFiled.getText());
+            engine.loadFile(file_path_TextFiled.getText());
             warning_label.setVisible(true);
             warning_label.setText("File loaded sucessfully YAY!!!!!!!");
+            headerController.enableButtons();
         } catch (InvalidFileException e) {
             warning_label.setText("Invalid File");
         } catch (DependencyConflictException e) {
@@ -73,5 +77,9 @@ public class LoadFileController {
 
     public void setEngine(Engine engine) {
         this.engine = engine;
+    }
+
+    public void setHeaderController(HeaderController headerController) {
+        this.headerController = headerController;
     }
 }

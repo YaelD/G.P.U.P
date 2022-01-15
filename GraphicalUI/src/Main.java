@@ -1,10 +1,10 @@
 import engine.SystemEngine;
+import header.HeaderController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
-import load_file.LoadFileController;
 
 import java.net.URL;
 
@@ -12,14 +12,15 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        URL resource = getClass().getResource("load_file/load_file.fxml");
+
+        URL resource = getClass().getResource("header/head_and_missing_body.fxml");
         FXMLLoader fxmlLoader = new FXMLLoader();
         fxmlLoader.setLocation(resource);
-        Parent root = fxmlLoader.load(resource.openStream());
-        LoadFileController loadFileController = fxmlLoader.getController();
-        loadFileController.setEngine(new SystemEngine());
-
-        Scene scene = new Scene(root, 600, 300);
+        BorderPane root = fxmlLoader.load(resource.openStream());
+        Scene scene = new Scene(root, 800, 800);
+        HeaderController headerController = fxmlLoader.getController();
+        headerController.setPrimaryStage(primaryStage);
+        headerController.setEngine(new SystemEngine());
         primaryStage.setScene(scene);
         primaryStage.show();
     }

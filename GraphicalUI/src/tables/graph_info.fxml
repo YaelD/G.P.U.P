@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+
+<ScrollPane fitToHeight="true" fitToWidth="true" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="tables.GraphInfoController">
+   <content>
+      <SplitPane dividerPositions="0.5" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity">
+         <items>
+            <fx:include fx:id="targetsTableView" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" source="targets_table.fxml" />
+            <VBox alignment="TOP_CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308">
+               <children>
+                  <fx:include fx:id="serialSetTableView" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" source="serailsets_table.fxml" />
+                  <GridPane>
+                    <columnConstraints>
+                        <ColumnConstraints hgrow="NEVER" maxWidth="30.0" minWidth="30.0" prefWidth="30.0" />
+                        <ColumnConstraints hgrow="NEVER" />
+                        <ColumnConstraints hgrow="NEVER" maxWidth="10.0" minWidth="10.0" prefWidth="10.0" />
+                      <ColumnConstraints hgrow="NEVER" minWidth="98.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="10.0" minWidth="10.0" prefWidth="10.0" />
+                        <ColumnConstraints hgrow="NEVER" />
+                      <ColumnConstraints hgrow="NEVER" maxWidth="43.0" minWidth="0.0" prefWidth="43.0" />
+                    </columnConstraints>
+                    <rowConstraints>
+                      <RowConstraints maxHeight="30.0" minHeight="30.0" prefHeight="30.0" vgrow="NEVER" />
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                      <RowConstraints maxHeight="30.0" minHeight="30.0" prefHeight="30.0" vgrow="NEVER" />
+                    </rowConstraints>
+                     <children>
+                        <Label text="Summeries:" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                        <Label text="Total number of Targets:" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+                        <Label text="Number of Leaves" GridPane.columnIndex="3" GridPane.rowIndex="2" />
+                        <Label layoutX="175.0" layoutY="77.0" text="Number of Roots:" GridPane.columnIndex="3" GridPane.rowIndex="4" />
+                        <Label layoutX="175.0" layoutY="137.0" text="Number of Middles:" GridPane.columnIndex="3" GridPane.rowIndex="3" />
+                        <Label layoutX="175.0" layoutY="137.0" text="Number of Independents:" GridPane.columnIndex="3" GridPane.rowIndex="5" />
+                        <Label fx:id="NumOfTargets_Label" layoutX="100.0" layoutY="47.0" text="*numberOfTargets" GridPane.columnIndex="5" GridPane.rowIndex="1" />
+                        <Label fx:id="NumOfLeaves_Label" layoutX="236.0" layoutY="47.0" text="*numberOfLeaves" GridPane.columnIndex="5" GridPane.rowIndex="2" />
+                        <Label fx:id="NumOfMiddles_Label" layoutX="236.0" layoutY="77.0" text="*numOfMiddles" GridPane.columnIndex="5" GridPane.rowIndex="3" />
+                        <Label fx:id="NumOfRoots_Label" layoutX="236.0" layoutY="107.0" text="*numOfRoots" GridPane.columnIndex="5" GridPane.rowIndex="4" />
+                        <Label fx:id="NumOfIndependents_Label" layoutX="236.0" layoutY="137.0" text="*numOfIndependets" GridPane.columnIndex="5" GridPane.rowIndex="5" />
+                     </children>
+                  </GridPane>
+               </children>
+            </VBox>
+         </items>
+      </SplitPane>
+   </content>
+</ScrollPane>

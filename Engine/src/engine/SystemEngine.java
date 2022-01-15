@@ -37,7 +37,7 @@ public class SystemEngine implements Engine{
     private SerialSetsContainer serialSetsContainer;
 
     @Override
-    public boolean readFile(String path) throws
+    public boolean loadFile(String path) throws
             DuplicateTargetsException, TargetNotExistException, InvalidDependencyException, DependencyConflictException, InvalidFileException, SerialSetException {
         try {
             fileValidation(path);

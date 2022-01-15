@@ -18,8 +18,11 @@ public class TargetDTO {
     private long runTime;
     private LocalTime startingTime = null;
     private LocalTime endingTime = null;
+    private Set<String> totalRequiredFor = new HashSet<>();
+    private Set<String> totalDependsOn = new HashSet<>();
     private Set<String> targetsThatCanBeRun = new HashSet<>();
     private Set<String> skippedFathers = new HashSet<>();
+    private int totalNumOfSerialSets;
 
 
     public TargetDTO(Target target) {
@@ -36,6 +39,10 @@ public class TargetDTO {
         {
             this.dependsOn.add(currTarget.getName());
         }
+        target.getDependsOnAncestors(this.totalDependsOn);
+        target.getRequiredForAncestors(this.totalRequiredFor);
+        this.totalNumOfSerialSets = target.getSerialSetsContainer().getSerialSetList().size();
+
     }
 
     public TargetDTO(Target target, LocalTime startingTime, LocalTime endingTime) {
@@ -95,4 +102,15 @@ public class TargetDTO {
         return targetsThatCanBeRun;
     }
 
+    public Set<String> getTotalRequiredFor() {
+        return totalRequiredFor;
+    }
+
+    public Set<String> getTotalDependsOn() {
+        return totalDependsOn;
+    }
+
+    public int getTotalNumOfSerialSets() {
+        return totalNumOfSerialSets;
+    }
 }
