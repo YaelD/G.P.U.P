@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.layout.BorderPane?>
+
+
+<BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="findpath.FindPathsController">
+   <left>
+      <ScrollPane fitToHeight="true" fitToWidth="true" minWidth="200.0" prefHeight="200.0" BorderPane.alignment="CENTER">
+         <content>
+            <fx:include fx:id="findPathsToggles" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" source="find_path_toggles.fxml" />
+         </content>
+      </ScrollPane>
+   </left>
+   <center>
+      <ScrollPane fitToHeight="true" fitToWidth="true" maxWidth="1.7976931348623157E308" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+         <content>
+            <fx:include fx:id="findPathsTable" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" source="paths_table.fxml" />
+         </content>
+      </ScrollPane>
+   </center>
+</BorderPane>

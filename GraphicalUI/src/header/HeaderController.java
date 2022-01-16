@@ -1,6 +1,7 @@
 package header;
 
 import engine.Engine;
+import findpath.FindPathsController;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -10,6 +11,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import loadfile.*;
 import tables.*;
+import whatif.WhatIfMenuController;
 
 import java.io.IOException;
 import java.net.URL;
@@ -74,6 +76,18 @@ public class HeaderController {
 
     @FXML
     private void loadFindPath(ActionEvent event) {
+        URL resource = FindPathsController.class.getResource("find_paths_menu.fxml");
+        FXMLLoader fxmlLoader = new FXMLLoader();
+        fxmlLoader.setLocation(resource);
+        try {
+            Parent root = fxmlLoader.load(resource.openStream());
+            FindPathsController findPathsController = fxmlLoader.getController();
+            findPathsController.setEngine(this.engine);
+            base_BorderPane.setCenter(root);
+            primaryStage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
     }
 
@@ -103,7 +117,18 @@ public class HeaderController {
 
     @FXML
     private void loadWhatIf(ActionEvent event) {
-
+        URL resource = WhatIfMenuController.class.getResource("what_if_menu.fxml");
+        FXMLLoader fxmlLoader = new FXMLLoader();
+        fxmlLoader.setLocation(resource);
+        try {
+            Parent root = fxmlLoader.load(resource.openStream());
+            WhatIfMenuController whatIfMenuController = fxmlLoader.getController();
+            whatIfMenuController.setEngine(this.engine);
+            base_BorderPane.setCenter(root);
+            primaryStage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public void setPrimaryStage(Stage primaryStage) {

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.layout.BorderPane?>
+
+<BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="whatif.WhatIfMenuController">
+   <left>
+      <ScrollPane fitToHeight="true" fitToWidth="true" minWidth="200.0" prefHeight="200.0" BorderPane.alignment="CENTER">
+         <content>
+            <fx:include fx:id="togglesMenu" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" source="one_target_toggles.fxml" />
+         </content>
+      </ScrollPane>
+   </left>
+   <center>
+      <ScrollPane fitToHeight="true" fitToWidth="true" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+         <content>
+            <ListView fx:id="targetsListView" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" />
+         </content>
+      </ScrollPane>
+   </center>
+</BorderPane>
