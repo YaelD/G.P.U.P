@@ -194,7 +194,7 @@ public class SystemEngine implements Engine{
         List<Consumer<TargetDTO>> outputConsumers = new ArrayList<>();
 
         if(this.tasksInSystem.containsKey(taskType)){
-            this.tasksInSystem.get(taskType).updateParameters(taskParams);
+            this.tasksInSystem.get(taskType).updateParameters(taskParams, this.workingDirectory);
             if(isIncremental){
                 if(this.tasksInSystem.get(taskType).getGraph().getTargets().isEmpty()){
                     this.tasksInSystem.get(taskType).setGraph(this.graph.clone());
@@ -213,7 +213,7 @@ public class SystemEngine implements Engine{
                     break;
                 case COMPILATION_TASK:
                     if(taskParams instanceof CompilationTaskParamsDTO){
-                        this.tasksInSystem.put(taskType, new CompilationTask(this.graph.clone(), (CompilationTaskParamsDTO) taskParams,this.serialSetsContainer));
+                        this.tasksInSystem.put(taskType, new CompilationTask(this.graph.clone(), (CompilationTaskParamsDTO) taskParams,this.serialSetsContainer, this.workingDirectory));
                     }
                     break;
             }

@@ -356,7 +356,7 @@ public class UserInterface {
         GraphDTO taskResults = null;
 //        System.out.println(PRINT_LINE);
 //        System.out.println("Initiating task......");
-        taskResults = engine.activateTask(null/*printStrConsumer*/, taskParams, taskType, isIncremental);
+        taskResults = engine.activateTask(printStrConsumer, taskParams, taskType, isIncremental);
         //printTaskRunResults(taskResults);
     }
 
@@ -367,7 +367,8 @@ public class UserInterface {
         sourceDir = in.nextLine();
         System.out.println("Enter destination dir:");
         destinationDir = in.nextLine();
-        return new CompilationTaskParamsDTO(sourceDir,destinationDir);
+        CompilationTaskParamsDTO compilationTaskParamsDTO = new CompilationTaskParamsDTO(sourceDir,destinationDir);
+        return compilationTaskParamsDTO;
     }
 
     private void printTargetRunResult(TargetDTO targetDTO) {
@@ -388,6 +389,9 @@ public class UserInterface {
                     System.out.println("The targets that won't be able to process are: \n" + targetDTO.getSkippedFathers() + "\n");
                 }
             }
+        }
+        if(targetDTO.getTaskRunResult() != null){
+            System.out.println("Run result:\n" + targetDTO.getTaskRunResult());
         }
         System.out.println(PRINT_LINE);
 

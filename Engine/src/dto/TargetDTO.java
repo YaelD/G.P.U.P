@@ -23,6 +23,7 @@ public class TargetDTO {
     private Set<String> targetsThatCanBeRun = new HashSet<>();
     private Set<String> skippedFathers = new HashSet<>();
     private int totalNumOfSerialSets;
+    private String taskRunResult = null;
 
 
     public TargetDTO(Target target) {
@@ -45,10 +46,11 @@ public class TargetDTO {
 
     }
 
-    public TargetDTO(Target target, LocalTime startingTime, LocalTime endingTime) {
+    public TargetDTO(Target target, LocalTime startingTime, LocalTime endingTime, String taskRunResult) {
         this(target);
         this.startingTime = startingTime;
         this.endingTime = endingTime;
+        this.taskRunResult = taskRunResult;
     }
     public Set<String> getSkippedFathers() {
         return skippedFathers;
@@ -112,5 +114,13 @@ public class TargetDTO {
 
     public int getTotalNumOfSerialSets() {
         return totalNumOfSerialSets;
+    }
+
+//    public void setTaskRunResult(String taskRunResult) {
+//        this.taskRunResult = taskRunResult;
+//    }
+
+    public String getTaskRunResult() {
+        return taskRunResult;
     }
 }

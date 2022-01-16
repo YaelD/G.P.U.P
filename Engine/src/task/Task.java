@@ -63,7 +63,7 @@ public abstract class Task{
     public GraphDTO executeTaskOnGraph(List<Consumer<TargetDTO>> outputConsumers) throws CycleException {
 
         List<Target> sortedTargets = topologicalSort(this.graph);
-        ExecutorService threadPool = Executors.newFixedThreadPool(2);
+        ExecutorService threadPool = Executors.newFixedThreadPool(3);
         this.latch = new CountDownLatch(sortedTargets.size());
         LocalTime startTime = LocalTime.now();
         for(Target currTarget : sortedTargets){
@@ -158,7 +158,7 @@ public abstract class Task{
         return targetsInDegree;
     }
 
-    public abstract void updateParameters(TaskParamsDTO taskParamsDTO);
+    public abstract void updateParameters(TaskParamsDTO taskParamsDTO, String workingDirectory);
 
     //----------------------------------------------------------------------------------------------
     private class TaskRunner implements Runnable{
