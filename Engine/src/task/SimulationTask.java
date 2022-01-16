@@ -31,7 +31,7 @@ public class SimulationTask extends Task{
 
 
     @Override
-    public void updateParameters(TaskParamsDTO taskParamsDTO) {
+    public void updateParameters(TaskParamsDTO taskParamsDTO, String workingDirectory) {
         if(taskParamsDTO instanceof SimulationTaskParamsDTO){
             SimulationTaskParamsDTO simulationTaskParamsDTO = (SimulationTaskParamsDTO) taskParamsDTO;
             this.processTime = simulationTaskParamsDTO.getProcessTime();
@@ -66,7 +66,7 @@ public class SimulationTask extends Task{
             }
             target.setRunningTime(Duration.between(startTime, endTime).toMillis()); //todo: block
             target.setRunStatus(RunStatus.FINISHED); //todo: block
-            targetDTO = new TargetDTO(target, startTime, endTime);
+            targetDTO = new TargetDTO(target, startTime, endTime, null);
 
         } catch (InterruptedException e) {
             e.printStackTrace();

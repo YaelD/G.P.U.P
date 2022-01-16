@@ -23,17 +23,20 @@ public class CompilationTask extends Task{
     final String DESTINATION_DIR_REF_PARAM = "-d";
     private String sourceDir;
     private String DestinationDir;
+    private String workingDirectory;
 
 
-    public CompilationTask(Graph graph, CompilationTaskParamsDTO compilationTaskDTO, SerialSetsContainer serialSetsContainer) {
+    public CompilationTask(Graph graph, CompilationTaskParamsDTO compilationTaskDTO, SerialSetsContainer serialSetsContainer, String workingDirectory) {
         super(graph, serialSetsContainer);
         this.sourceDir = compilationTaskDTO.getSourceDir();
         this.DestinationDir = compilationTaskDTO.getDestinationDir();
+        this.workingDirectory = workingDirectory;
     }
 
     @Override
     protected TargetDTO executeTaskOnTarget(Target target) {
         TargetDTO targetDTO = null;
+        String runResult = "";
         LocalTime startTime, endTime;
         try {
             target.setRunStatus(RunStatus.IN_PROCESS); //todo: block
@@ -43,20 +46,20 @@ public class CompilationTask extends Task{
             int exitCode = process.waitFor();
             endTime = LocalTime.now();
             if(exitCode != 0){    //means that the process has failed
-                System.out.println("The compilation of this target has failed");
+                runResult += "The compilation of this target has failed\n";
                 target.setRunResult(RunResults.FAILURE);
             }
             else {
-                System.out.println("The process ended successfully");
+                runResult += "The process ended successfully\n";
                 target.setRunResult(RunResults.SUCCESS);
             }
-            System.out.println(processResult);
+            runResult += processResult;
 
             //Todo: target.setRunResult(RunResults.WARNING); //todo: block
 
             target.setRunningTime(Duration.between(startTime, endTime).toMillis()); //todo: block
             target.setRunStatus(RunStatus.FINISHED); //todo: block
-            targetDTO = new TargetDTO(target, startTime, endTime);
+            targetDTO = new TargetDTO(target, startTime, endTime, runResult);
 
         } catch (InterruptedException | IOException e) {
             e.printStackTrace();
@@ -78,20 +81,28 @@ public class CompilationTask extends Task{
     }
 
     private Process CompileTarget(Target target) throws IOException {
-        String fileName = "./" + target.getInfo().replace('.', '/');
-        Process process = new ProcessBuilder(JAVA_COMPILER, DESTINATION_DIR_REF_PARAM, this.DestinationDir, SOURCE_DIR_REF_PARAM ,this.sourceDir, fileName)
-                .directory(new File(this.sourceDir))
+        String filePath = "/" + target.getInfo().replace('.', '/');
+        int indexOfLastSlash = filePath.lastIndexOf('/');
+        String dirPath = filePath.substring(0,indexOfLastSlash);
+        String fileName= filePath.substring(indexOfLastSlash);
+        String destinationDir = this.DestinationDir + dirPath;
+        String sourceDir = this.sourceDir + dirPath;
+        filePath = sourceDir + fileName + ".java";
+        Process process = new ProcessBuilder(JAVA_COMPILER, DESTINATION_DIR_REF_PARAM, destinationDir, SOURCE_DIR_REF_PARAM ,sourceDir, filePath)
+                .directory(new File(this.workingDirectory))
                 .redirectErrorStream(true)
                 .start();
         return process;
+
     }
 
     @Override
-    public void updateParameters(TaskParamsDTO taskParamsDTO) {
+    public void updateParameters(TaskParamsDTO taskParamsDTO, String workingDirectory) {
         if(taskParamsDTO instanceof CompilationTaskParamsDTO){
             CompilationTaskParamsDTO compilationTaskParamsDTO = (CompilationTaskParamsDTO) taskParamsDTO;
             this.sourceDir = compilationTaskParamsDTO.getSourceDir();
             this.DestinationDir = compilationTaskParamsDTO.getDestinationDir();
+            this.workingDirectory = workingDirectory;
         }
     }
 }
