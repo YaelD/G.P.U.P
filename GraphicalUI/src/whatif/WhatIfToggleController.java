@@ -52,10 +52,6 @@ public class WhatIfToggleController {
         }
     }
 
-    public Label getWarningLabel() {
-        return warningLabel;
-    }
-
     public void setWhatIfCallback(WhatIfCallback whatIfCallback) {
         this.whatIfCallback = whatIfCallback;
     }

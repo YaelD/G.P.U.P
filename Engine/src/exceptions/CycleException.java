@@ -8,6 +8,10 @@ public class CycleException extends Exception{
         this.sourceTargetName = targetName;
     }
 
+    public CycleException(){
+
+    }
+
     public String getSourceTargetName() {
         return sourceTargetName;
     }

@@ -1,5 +1,6 @@
 package findcycles;
 
+import dto.GraphDTO;
 import dto.TargetDTO;
 import engine.Engine;
 import exceptions.TargetNotExistException;
@@ -56,13 +57,19 @@ public class FindCyclesController {
             warningLabel.setText("Please choose a target");
             isValidate = false;
         }
-
         return isValidate;
     }
 
     private void initTargetsChoiceBox(){
-        for(TargetDTO targetDTO: this.engine.getGraphDTO().getTargets().values()){
-            this.targetsChoiceBox.getItems().add(targetDTO.getName());
+        if(!engine.isCycleInGraph()){
+            GraphDTO graphDTO = this.engine.getGraphDTO();
+            for(TargetDTO targetDTO: this.engine.getGraphDTO().getTargets().values()){
+                this.targetsChoiceBox.getItems().add(targetDTO.getName());
+            }
+        }
+        else{
+            warningLabel.setVisible(true);
+            warningLabel.setText("There is a cycle in the graph, cannot proceed");
         }
     }
 

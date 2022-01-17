@@ -17,7 +17,7 @@
       <GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity">
         <columnConstraints>
             <ColumnConstraints hgrow="NEVER" maxWidth="30.0" minWidth="30.0" prefWidth="30.0" />
-            <ColumnConstraints hgrow="SOMETIMES" prefWidth="172.0" />
+            <ColumnConstraints hgrow="SOMETIMES" />
           <ColumnConstraints hgrow="NEVER" maxWidth="30.0" minWidth="30.0" prefWidth="30.0" />
         </columnConstraints>
         <rowConstraints>

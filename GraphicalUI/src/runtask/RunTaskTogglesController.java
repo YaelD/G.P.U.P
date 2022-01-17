@@ -38,6 +38,11 @@ public class RunTaskTogglesController {
 
     }
 
+    private void initialize(){
+
+    }
+
+
     @FXML
     void confirm(ActionEvent event) {
 

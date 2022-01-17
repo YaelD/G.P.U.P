@@ -40,11 +40,16 @@ public class TargetDTO {
         {
             this.dependsOn.add(currTarget.getName());
         }
-        target.getDependsOnAncestors(this.totalDependsOn);
-        target.getRequiredForAncestors(this.totalRequiredFor);
+
         this.totalNumOfSerialSets = target.getSerialSetsContainer().getSerialSetList().size();
 
     }
+
+    public void setAncestors(Target target){
+        target.getDependsOnAncestors(this.totalDependsOn);
+        target.getRequiredForAncestors(this.totalRequiredFor);
+    }
+
 
     public TargetDTO(Target target, LocalTime startingTime, LocalTime endingTime, String taskRunResult) {
         this(target);
