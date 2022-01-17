@@ -9,7 +9,7 @@ import javafx.scene.control.*;
 import java.util.function.UnaryOperator;
 import java.util.regex.Pattern;
 
-public class SimulationTaskParamToggles {
+public class SimulationParamsController {
 
     @FXML
     private TextField processTimeTextArea;
@@ -63,7 +63,7 @@ public class SimulationTaskParamToggles {
             warningLabel.setVisible(true);
             warningLabel.setText("The success with warning rate should be between 0 to 1");
         }
-       //Todo: send params
+
 
 
 

@@ -48,6 +48,9 @@ public class FindPathTogglesController {
             this.sourceTargetChoiceBox.getItems().add(currTarget.getName());
             this.destinationTargetChoiceBox.getItems().add(currTarget.getName());
         }
+        this.sourceTargetChoiceBox.getSelectionModel().select(0);
+        this.destinationTargetChoiceBox.getSelectionModel().select(1);
+
 
     }
 

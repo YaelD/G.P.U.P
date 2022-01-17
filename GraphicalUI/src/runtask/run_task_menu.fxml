@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.layout.Pane?>
+
+<SplitPane fx:id="menuSplitPane" dividerPositions="0.5" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="runtask.RunTaskMenuController">
+  <items>
+      <ScrollPane>
+         <content>
+            <fx:include fx:id="taskToggles" source="run_task_toggles.fxml" />
+         </content>
+      </ScrollPane>
+      <Pane prefHeight="200.0" prefWidth="200.0" />
+  </items>
+</SplitPane>

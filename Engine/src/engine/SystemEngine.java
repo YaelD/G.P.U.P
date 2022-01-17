@@ -97,7 +97,6 @@ public class SystemEngine implements Engine{
     @Override
     public List<String> findCycle(String targetName) throws TargetNotExistException{
         try {
-            getTarget(targetName);
             List<Target> lst = Task.topologicalSort(this.graph);
             return null;
         } catch (CycleException e) {
