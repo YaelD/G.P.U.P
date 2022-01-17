@@ -10,6 +10,7 @@ import javafx.scene.control.Button;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import loadfile.*;
+import runtask.RunTaskTogglesController;
 import tables.*;
 import whatif.WhatIfMenuController;
 
@@ -112,6 +113,18 @@ public class HeaderController {
 
     @FXML
     private void loadTaskRun(ActionEvent event) {
+        URL resource = RunTaskTogglesController.class.getResource("run_task_toggles.fxml");
+        FXMLLoader fxmlLoader = new FXMLLoader();
+        fxmlLoader.setLocation(resource);
+        try {
+            Parent root = fxmlLoader.load(resource.openStream());
+            RunTaskTogglesController runTaskTogglesController = fxmlLoader.getController();
+            runTaskTogglesController.setEngine(this.engine);
+            base_BorderPane.setCenter(root);
+            primaryStage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
     }
 

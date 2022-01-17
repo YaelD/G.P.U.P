@@ -1,16 +1,13 @@
 package whatif;
 
 import engine.Engine;
-import findpath.SimpleTableStringProperty;
 import graph.Dependency;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
-import javafx.scene.control.TableView;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.VBox;
 
 import java.util.Set;
 
@@ -25,13 +22,13 @@ public class WhatIfMenuController {
     private GridPane togglesMenu;
 
     @FXML
-    private WhatIfToggleController togglesMenuController;
+    private WhatIfToggleController togglesController;
 
 
     public void setEngine(Engine engine) {
         this.engine = engine;
-        togglesMenuController.initChoiceBoxes(this.engine.getGraphDTO());
-        togglesMenuController.setWhatIfCallback(new WhatIfCallback() {
+        togglesController.initChoiceBoxes(this.engine.getGraphDTO());
+        togglesController.setWhatIfCallback(new WhatIfCallback() {
             @Override
             public void findWhatIf(String targetName, Dependency dependency) {
                 Set<String> targets = engine.whatIf(targetName, dependency);

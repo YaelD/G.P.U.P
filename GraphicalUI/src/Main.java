@@ -12,7 +12,6 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-
         URL resource = getClass().getResource("header/head_and_missing_body.fxml");
         FXMLLoader fxmlLoader = new FXMLLoader();
         fxmlLoader.setLocation(resource);
@@ -22,6 +21,7 @@ public class Main extends Application {
         headerController.setPrimaryStage(primaryStage);
         headerController.setEngine(new SystemEngine());
         primaryStage.setScene(scene);
+
         primaryStage.show();
     }
 }
