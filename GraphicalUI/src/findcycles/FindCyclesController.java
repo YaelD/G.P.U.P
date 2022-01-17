@@ -61,15 +61,9 @@ public class FindCyclesController {
     }
 
     private void initTargetsChoiceBox(){
-        if(!engine.isCycleInGraph()){
-            GraphDTO graphDTO = this.engine.getGraphDTO();
-            for(TargetDTO targetDTO: this.engine.getGraphDTO().getTargets().values()){
-                this.targetsChoiceBox.getItems().add(targetDTO.getName());
-            }
-        }
-        else{
-            warningLabel.setVisible(true);
-            warningLabel.setText("There is a cycle in the graph, cannot proceed");
+        GraphDTO graphDTO = this.engine.getGraphDTO();
+        for(TargetDTO targetDTO: this.engine.getGraphDTO().getTargets().values()){
+            this.targetsChoiceBox.getItems().add(targetDTO.getName());
         }
     }
 

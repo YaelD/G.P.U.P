@@ -142,15 +142,19 @@ public class Target implements Cloneable {
 
     public void getRequiredForAncestors(Set<String> targetsSet){
         for(Target target : this.requiredFor){
-            targetsSet.add(target.name);
-            target.getRequiredForAncestors(targetsSet);
+            if(!targetsSet.contains(target.name)){
+                targetsSet.add(target.name);
+                target.getRequiredForAncestors(targetsSet);
+            }
         }
     }
 
     public void getDependsOnAncestors(Set<String> targetsSet){
         for(Target target : this.dependsOn){
-            targetsSet.add(target.name);
-            target.getDependsOnAncestors(targetsSet);
+            if(!targetsSet.contains(target.name)){
+                targetsSet.add(target.name);
+                target.getDependsOnAncestors(targetsSet);
+            }
         }
     }
 

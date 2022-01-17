@@ -36,7 +36,7 @@ public interface Engine {
     public List<SerialSetDTO> getSerialSetsInfo();
 
 
-    public Set<String> whatIf(String targetName, Dependency dependency) throws CycleException;
+    public Set<String> whatIf(String targetName, Dependency dependency);
 
 
 }

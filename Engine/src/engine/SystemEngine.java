@@ -122,12 +122,9 @@ public class SystemEngine implements Engine{
     }
 
     @Override
-    public Set<String> whatIf(String targetName, Dependency dependency) throws CycleException {
+    public Set<String> whatIf(String targetName, Dependency dependency)  {
         Target target = graph.getTarget(targetName);
         Set<String> targetSet = new HashSet<>();
-        if(this.isCycleInGraph()){
-            throw new CycleException();
-        }
         if(dependency.equals(Dependency.REQUIRED_FOR)){
             target.getRequiredForAncestors(targetSet);
         }
