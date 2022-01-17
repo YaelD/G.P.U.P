@@ -1,6 +1,7 @@
 package header;
 
 import engine.Engine;
+import findcycles.FindCyclesController;
 import findpath.FindPathsController;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -72,6 +73,18 @@ public class HeaderController {
 
     @FXML
     private void loadFindCycle(ActionEvent event) {
+        URL resource = FindCyclesController.class.getResource("searchCyclesMenu.fxml");
+        FXMLLoader fxmlLoader = new FXMLLoader();
+        fxmlLoader.setLocation(resource);
+        try {
+            Parent root = fxmlLoader.load(resource.openStream());
+            FindCyclesController findCyclesController = fxmlLoader.getController();
+            findCyclesController.setEngine(this.engine);
+            base_BorderPane.setCenter(root);
+            primaryStage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
     }
 

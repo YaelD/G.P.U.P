@@ -2,11 +2,17 @@ package findcycles;
 
 import dto.TargetDTO;
 import engine.Engine;
+import exceptions.TargetNotExistException;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
+
+import java.util.List;
 
 public class FindCyclesController {
 
@@ -22,8 +28,36 @@ public class FindCyclesController {
     private ListView<String> cyclesListView;
 
     @FXML
-    void searchCycles(ActionEvent event) {
+    private Label warningLabel;
 
+    @FXML
+    void searchCycles(ActionEvent event) {
+        if(validate()){
+            String targetName = this.targetsChoiceBox.getValue();
+            try {
+                List<String> cycle = this.engine.findCycle(targetName);
+                if(cycle == null){
+                    cyclesListView.setPlaceholder(new Label("This target does not take place in any cycle"));
+                }
+                else{
+                    ObservableList<String> data = FXCollections.observableArrayList();
+                    data.addAll(cycle);
+                    cyclesListView.setItems(data);
+                }
+            } catch (TargetNotExistException ignored) {
+            }
+        }
+    }
+
+    private boolean validate(){
+        boolean isValidate = true;
+        if(this.targetsChoiceBox.getValue() == null){
+            warningLabel.setVisible(true);
+            warningLabel.setText("Please choose a target");
+            isValidate = false;
+        }
+
+        return isValidate;
     }
 
     private void initTargetsChoiceBox(){
@@ -34,6 +68,7 @@ public class FindCyclesController {
 
     public void setEngine(Engine engine) {
         this.engine = engine;
+        initTargetsChoiceBox();
     }
 }
 

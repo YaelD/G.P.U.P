@@ -10,7 +10,6 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 
-
 <BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="findcycles.FindCyclesController">
    <left>
       <ScrollPane fitToHeight="true" fitToWidth="true" minWidth="200.0" prefHeight="200.0" BorderPane.alignment="CENTER">
@@ -43,7 +42,7 @@
                <children>
                   <ChoiceBox fx:id="targetsChoiceBox" maxHeight="50.0" maxWidth="1.7976931348623157E308" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="3" GridPane.rowSpan="2" />
                   <Button fx:id="searchButton" maxHeight="50.0" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#searchCycles" prefWidth="125.0" text="Search" GridPane.columnIndex="1" GridPane.rowIndex="6" GridPane.rowSpan="2" />
-                  <Label text="Label" visible="false" GridPane.columnIndex="1" GridPane.rowIndex="14" />
+                  <Label fx:id="warningLabel" text="Label" visible="false" GridPane.columnIndex="1" GridPane.rowIndex="14" />
                   <Label text="Please choose a target:" GridPane.columnIndex="1" GridPane.rowIndex="1" GridPane.rowSpan="2" />
                </children>
             </GridPane>

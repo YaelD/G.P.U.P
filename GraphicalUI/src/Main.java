@@ -16,7 +16,7 @@ public class Main extends Application {
         FXMLLoader fxmlLoader = new FXMLLoader();
         fxmlLoader.setLocation(resource);
         BorderPane root = fxmlLoader.load(resource.openStream());
-        Scene scene = new Scene(root, 800, 800);
+        Scene scene = new Scene(root, 600, 500);
         HeaderController headerController = fxmlLoader.getController();
         headerController.setPrimaryStage(primaryStage);
         headerController.setEngine(new SystemEngine());
