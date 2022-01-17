@@ -102,8 +102,7 @@ public class SystemEngine implements Engine{
             return null;
         } catch (CycleException e) {
             List<List<String>> cycles = new ArrayList<>();
-            findPaths(targetName, targetName,
-                    Dependency.DEPENDS_ON, cycles);
+            callFindPaths(targetName, targetName, Dependency.DEPENDS_ON, cycles);
             if (cycles.isEmpty()) {
                 return null;
             } else {
@@ -158,35 +157,74 @@ public class SystemEngine implements Engine{
         if(!this.graph.getTargetGraph().containsKey(secondTargetName)){
             throw new TargetNotExistException(secondTargetName);
         }
-        findPaths(firstTargetName, secondTargetName, dependency, paths);
+        callFindPaths(firstTargetName, secondTargetName, dependency, paths);
         return paths;
-
     }
 
-    private void findPaths(String currTargetName, String destinationTargetName, Dependency dependency, List<List<String>> paths) {
+    private void callFindPaths(String firstTargetName, String secondTargetName, Dependency dependency, List<List<String>> paths) {
+        Set<String> visitedTargets = new HashSet<>();
+        List<String> currPath = new ArrayList<>();
+        findPaths(firstTargetName, secondTargetName, dependency, paths, currPath, visitedTargets);
+        if(!paths.isEmpty()){
+            for(List<String> path : paths){
+                path.add(0, firstTargetName);
+            }
+        }
+    }
+
+    private void findPaths(String currTargetName, String destinationTargetName, Dependency dependency, List<List<String>> paths, List<String> currentPath, Set<String> visitedTargets) {
         Set<Target> dependencies = this.graph.getTarget(currTargetName).getDependencies(dependency);
 
         if(dependencies.isEmpty()){
             return;
         }
         else{
-            for(Target target: dependencies){
+            visitedTargets.add(currTargetName);
+            for(Target target : dependencies){
                 if(target.getName().equals(destinationTargetName)){
-                    List<String> path = new ArrayList<>();
-                    path.add(0,target.getName());
-                    path.add(0,currTargetName);
-                    paths.add(path);
-                } else{
-                    int currPathsSize = paths.size();
-                    findPaths(target.getName(), destinationTargetName, dependency, paths);
-                    int newSize = paths.size();
-                    for(int i = currPathsSize;i< newSize; ++i){
-                        paths.get(i).add(0,currTargetName);
+                    currentPath.add(target.getName());
+                    List<String> pathToInsert = new ArrayList<>();
+                    pathToInsert.addAll(currentPath);
+                    paths.add(pathToInsert);
+                    currentPath.remove(target.getName());
+                }
+                else{
+                    if(!visitedTargets.contains(target.getName())) {
+                        currentPath.add(target.getName());
+                        findPaths(target.getName(), destinationTargetName, dependency, paths, currentPath, visitedTargets);
+                        currentPath.remove(target.getName());
                     }
                 }
             }
+            visitedTargets.remove(currTargetName);
         }
     }
+
+
+//        if(dependencies.isEmpty()){
+//            return;
+//        }
+//        else{
+//            visitedTargets.add(currTargetName);
+//            for(Target target: dependencies){
+//                if(!visitedTargets.contains(target.getName())){
+//                    if(target.getName().equals(destinationTargetName)){
+//                        List<String> path = new ArrayList<>();
+//                        path.add(0,target.getName());
+//                        path.add(0,currTargetName);
+//                        paths.add(path);
+//                    } else{
+//                        int currPathsSize = paths.size();
+//                        findPaths(target.getName(), destinationTargetName, dependency, paths, visitedTargets);
+//                        int newSize = paths.size();
+//                        for(int i = currPathsSize;i< newSize; ++i){
+//                            paths.get(i).add(0,currTargetName);
+//                        }
+//                    }
+//                }
+//            }
+//        }
+//    }
 
     @Override
     public GraphDTO activateTask(Consumer<TargetDTO> consumerString, TaskParamsDTO taskParams, TaskType taskType, boolean isIncremental) {
