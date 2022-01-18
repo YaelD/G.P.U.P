@@ -1,12 +1,20 @@
 package runtask;
 
 import engine.Engine;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.SplitPane;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
+import task.RunType;
 import task.TaskType;
 
 import java.io.IOException;
@@ -15,7 +23,11 @@ import java.util.List;
 
 public class RunTaskMenuController {
 
-    private Stage primaryStage;
+    SimpleIntegerProperty numOfThreads;
+    ObjectProperty<TaskType> selectedTaskType;
+    ObjectProperty<RunType> selectedRunType;
+
+
 
     @FXML
     private SplitPane menuSplitPane;
@@ -26,62 +38,33 @@ public class RunTaskMenuController {
     @FXML
     private RunTaskTogglesController taskTogglesController;
 
-    private ScrollPane compilationToggles;
-
-    private CompilationParamsController compilationTogglesController;
-
-    private ScrollPane simulationToggles;
-
-    private SimulationParamsController simulationTogglesController;
 
     private Engine engine;
 
 
+    public RunTaskMenuController() {
+        this.selectedRunType = new SimpleObjectProperty<>(RunType.FROM_SCRATCH);
+        this.selectedTaskType = new SimpleObjectProperty<>(TaskType.SIMULATION_TASK);
+        this.numOfThreads = new SimpleIntegerProperty();
+    }
+
     public void initialize() {
-        initCompilationToggles();
-        initSimulationToggles();
-    }
-
-    private void initSimulationToggles(){
-        URL resource = SimulationParamsController.class.getResource("simlation_task_toggles.fxml");
-        FXMLLoader fxmlLoader = new FXMLLoader();
-        fxmlLoader.setLocation(resource);
-        try {
-            this.simulationToggles = fxmlLoader.load(resource.openStream());
-            this.simulationTogglesController = fxmlLoader.getController();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        this.taskTogglesController.setCurrSplitPane(this.menuSplitPane);
     }
 
 
-    private void initCompilationToggles(){
-        URL resource = CompilationParamsController.class.getResource("compilation_task_toggles.fxml");
-        FXMLLoader fxmlLoader = new FXMLLoader();
-        fxmlLoader.setLocation(resource);
-        try {
-            this.compilationToggles = fxmlLoader.load(resource.openStream());
-            this.compilationTogglesController = fxmlLoader.getController();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
 
     public void setEngine(Engine engine) {
         this.engine = engine;
         this.taskTogglesController.setEngine(engine);
-        this.taskTogglesController.setTaskRunMenuCallback(new chooseTaskCallback() {
-            @Override
-            public void loadSpecificTaskToggles(List<String> targetsName, TaskType taskType) {
-                menuSplitPane.getItems().remove(1);
-                switch (taskType){
-                    case SIMULATION_TASK:
-                        menuSplitPane.getItems().add(simulationToggles);
-                        break;
-                    case COMPILATION_TASK:
-                        menuSplitPane.getItems().add(compilationToggles);
-                }
-            }
-        });
+        this.taskTogglesController.setSelectedTaskType(this.selectedTaskType);
+        this.taskTogglesController.setSelectedRunType(this.selectedRunType);
+        this.taskTogglesController.setNumOfOfThreads(this.numOfThreads);
+
+
+
+
+
+
     }
 }

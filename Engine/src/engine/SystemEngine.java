@@ -133,6 +133,11 @@ public class SystemEngine implements Engine{
     }
 
     @Override
+    public int getMaxNumOfThreads() {
+        return this.maxThreadNum;
+    }
+
+    @Override
     public GraphDTO getGraphDTO() {
         GraphDTO graphDTO = new GraphDTO(this.graph);
         return graphDTO;

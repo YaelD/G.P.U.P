@@ -2,6 +2,8 @@ package loadfile;
 
 import engine.Engine;
 import exceptions.*;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -12,12 +14,10 @@ import javafx.stage.Stage;
 
 import java.io.File;
 
-import header.HeaderController;
-
 public class LoadFileController {
 
     private Engine engine;
-    private HeaderController headerController;
+    SimpleBooleanProperty isFileLoaded;
 
     @FXML
     private Button fileChooser_btn;
@@ -56,8 +56,9 @@ public class LoadFileController {
         try {
             engine.loadFile(file_path_TextFiled.getText());
             warning_label.setVisible(true);
-            warning_label.setText("File loaded sucessfully YAY!!!!!!!");
-            headerController.enableButtons();
+            warning_label.setText("File loaded successfully YAY!!!!!!!");
+            isFileLoaded.set(true);
+            //headerController.enableButtons();
         } catch (InvalidFileException e) {
             warning_label.setText("Invalid File");
         } catch (DependencyConflictException e) {
@@ -79,7 +80,7 @@ public class LoadFileController {
         this.engine = engine;
     }
 
-    public void setHeaderController(HeaderController headerController) {
-        this.headerController = headerController;
+    public void setIsFileLoaded(SimpleBooleanProperty isFileLoaded) {
+        this.isFileLoaded = isFileLoaded;
     }
 }

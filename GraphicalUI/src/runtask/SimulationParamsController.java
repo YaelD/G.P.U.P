@@ -30,7 +30,7 @@ public class SimulationParamsController {
     private Label warningLabel;
 
 
-    private void initialize(){
+    public void initialize(){
         processTimeTextArea.textProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
@@ -39,11 +39,14 @@ public class SimulationParamsController {
                 }
             }
         });
-        Pattern pattern = Pattern.compile("\\d*|\\d+\\,\\d*");
+        Pattern pattern = Pattern.compile("/^[0-9]+(\\\\.[0-9]+)?$");
         TextFormatter formatter = new TextFormatter((UnaryOperator<TextFormatter.Change>) change -> {
             return pattern.matcher(change.getControlNewText()).matches() ? change : null;
         });
         successRateTextArea.setTextFormatter(formatter);
+        formatter = new TextFormatter((UnaryOperator<TextFormatter.Change>) change -> {
+            return pattern.matcher(change.getControlNewText()).matches() ? change : null;
+        });
         successWithWaringsRateTextArea.setTextFormatter(formatter);
     }
 
@@ -63,6 +66,8 @@ public class SimulationParamsController {
             warningLabel.setVisible(true);
             warningLabel.setText("The success with warning rate should be between 0 to 1");
         }
+
+
 
 
 

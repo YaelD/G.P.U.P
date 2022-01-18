@@ -22,13 +22,13 @@ public class WhatIfMenuController {
     private GridPane togglesMenu;
 
     @FXML
-    private WhatIfToggleController togglesController;
+    private WhatIfToggleController togglesMenuController;
 
 
     public void setEngine(Engine engine) {
         this.engine = engine;
-        togglesController.initChoiceBoxes(this.engine.getGraphDTO());
-        togglesController.setWhatIfCallback(new WhatIfCallback() {
+        togglesMenuController.initChoiceBoxes(this.engine.getGraphDTO());
+        togglesMenuController.setWhatIfCallback(new WhatIfCallback() {
             @Override
             public void findWhatIf(String targetName, Dependency dependency) {
                 Set<String> targets = engine.whatIf(targetName, dependency);

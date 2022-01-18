@@ -3,6 +3,9 @@ package header;
 import engine.Engine;
 import findcycles.FindCyclesController;
 import findpath.FindPathsController;
+import javafx.beans.binding.Bindings;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -20,6 +23,8 @@ import java.io.IOException;
 import java.net.URL;
 
 public class HeaderController {
+
+    SimpleBooleanProperty isFileOpened;
 
     private Engine engine;
 
@@ -46,6 +51,16 @@ public class HeaderController {
     @FXML
     private Button uploadFile_btn;
 
+    public HeaderController() {
+        this.isFileOpened = new SimpleBooleanProperty(false);
+
+    }
+
+    @FXML
+    private  void initialize(){
+        this.enableButtons();
+    }
+
     @FXML
     private void loadFileLoader(ActionEvent event) {
         URL resource =  LoadFileController.class.getResource("load_file.fxml");
@@ -55,7 +70,8 @@ public class HeaderController {
             Parent root = fxmlLoader.load(resource.openStream());
             LoadFileController loadFileController = fxmlLoader.getController();
             loadFileController.setEngine(this.engine);
-            loadFileController.setHeaderController(this);
+            loadFileController.setIsFileLoaded(this.isFileOpened);
+
             base_BorderPane.setCenter(root);
             primaryStage.show();
         } catch (IOException e) {
@@ -64,11 +80,11 @@ public class HeaderController {
     }
 
     public void enableButtons(){
-        this.graphInfo_btn.setDisable(false);
-        this.findCycle_btn.setDisable(false);
-        this.findPath_btn.setDisable(false);
-        this.runTask_btn.setDisable(false);
-        this.whatIf_btn.setDisable(false);
+        this.graphInfo_btn.disableProperty().bind(Bindings.not(this.isFileOpened));
+        this.findCycle_btn.disableProperty().bind(Bindings.not(this.isFileOpened));
+        this.findPath_btn.disableProperty().bind(Bindings.not(this.isFileOpened));
+        this.runTask_btn.disableProperty().bind(Bindings.not(this.isFileOpened));
+        this.whatIf_btn.disableProperty().bind(Bindings.not(this.isFileOpened));
     }
 
 

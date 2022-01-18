@@ -39,4 +39,5 @@ public interface Engine {
     public Set<String> whatIf(String targetName, Dependency dependency);
 
 
+    public int getMaxNumOfThreads();
 }
