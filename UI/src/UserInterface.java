@@ -281,6 +281,7 @@ public class UserInterface {
 
     private void activeSystemTask(){
         boolean isIncremental = false;
+        int threadNumber;
         TaskType taskType = TaskType.SIMULATION_TASK;
         if(!engine.isFileLoaded())
         {
@@ -328,12 +329,14 @@ public class UserInterface {
                     isIncremental = false;
                     break;
             }
-            runSystemTask(isIncremental, taskType);
-
+            System.out.println("Enter number of thread:");
+            Scanner in = new Scanner(System.in);
+            threadNumber = in.nextInt();
+            runSystemTask(isIncremental, taskType, threadNumber);
     }
 
 
-    private void runSystemTask(boolean isIncremental, TaskType taskType){
+    private void runSystemTask(boolean isIncremental, TaskType taskType, int threadNumber){
 
         TaskParamsDTO taskParams = null;
         switch (taskType){
@@ -356,7 +359,7 @@ public class UserInterface {
         GraphDTO taskResults = null;
 //        System.out.println(PRINT_LINE);
 //        System.out.println("Initiating task......");
-        taskResults = engine.activateTask(printStrConsumer, taskParams, taskType, isIncremental);
+        taskResults = engine.activateTask(printStrConsumer, taskParams, taskType, isIncremental, threadNumber);
         //printTaskRunResults(taskResults);
     }
 

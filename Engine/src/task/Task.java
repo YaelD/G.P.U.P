@@ -60,10 +60,10 @@ public abstract class Task{
         return sortedTargets;
     }
     //main Thread
-    public GraphDTO executeTaskOnGraph(List<Consumer<TargetDTO>> outputConsumers) throws CycleException {
+    public GraphDTO executeTaskOnGraph(List<Consumer<TargetDTO>> outputConsumers, int threadNumber) throws CycleException {
 
         List<Target> sortedTargets = topologicalSort(this.graph);
-        ExecutorService threadPool = Executors.newFixedThreadPool(3);
+        ExecutorService threadPool = Executors.newFixedThreadPool(threadNumber);
         this.latch = new CountDownLatch(sortedTargets.size());
         LocalTime startTime = LocalTime.now();
         for(Target currTarget : sortedTargets){

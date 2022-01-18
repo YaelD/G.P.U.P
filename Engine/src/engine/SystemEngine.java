@@ -226,7 +226,7 @@ public class SystemEngine implements Engine{
 //    }
 
     @Override
-    public GraphDTO activateTask(Consumer<TargetDTO> consumerString, TaskParamsDTO taskParams, TaskType taskType, boolean isIncremental) {
+    public GraphDTO activateTask(Consumer<TargetDTO> consumerString, TaskParamsDTO taskParams, TaskType taskType, boolean isIncremental, int threadNumber) {
 
         List<Consumer<TargetDTO>> outputConsumers = new ArrayList<>();
 
@@ -262,7 +262,7 @@ public class SystemEngine implements Engine{
         GraphDTO runResult = null;
 
         try {
-            runResult = this.tasksInSystem.get(taskType).executeTaskOnGraph(outputConsumers);
+            runResult = this.tasksInSystem.get(taskType).executeTaskOnGraph(outputConsumers, threadNumber);
             return runResult;
         } catch (CycleException e) {
             return null;
