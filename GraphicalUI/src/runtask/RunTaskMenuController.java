@@ -1,10 +1,7 @@
 package runtask;
 
 import engine.Engine;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.*;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
@@ -23,48 +20,42 @@ import java.util.List;
 
 public class RunTaskMenuController {
 
-    SimpleIntegerProperty numOfThreads;
-    ObjectProperty<TaskType> selectedTaskType;
-    ObjectProperty<RunType> selectedRunType;
+    @FXML private GridPane chooseTargetsToggles;
+    @FXML private ChooseTargetsController chooseTargetsTogglesController;
 
+    @FXML private GridPane chooseThreadsAndTaskToggles;
+    @FXML private ChooseTaskController chooseThreadsAndTaskTogglesController;
 
+    @FXML private GridPane simulationTaskToggles;
+    @FXML private SimulationParamsController simulationTaskTogglesController;
 
-    @FXML
-    private SplitPane menuSplitPane;
+    @FXML private GridPane compilationTaskToggles;
+    @FXML private CompilationParamsController compilationTaskTogglesController;
 
-    @FXML
-    private GridPane taskToggles;
+    private SimpleListProperty<String> targetsList;
+    private ObjectProperty<TaskType> taskType;
+    private ObjectProperty<RunType> runType;
+    private SimpleIntegerProperty numOfThreads;
 
-    @FXML
-    private RunTaskTogglesController taskTogglesController;
+    Engine engine;
 
-
-    private Engine engine;
-
-
-    public RunTaskMenuController() {
-        this.selectedRunType = new SimpleObjectProperty<>(RunType.FROM_SCRATCH);
-        this.selectedTaskType = new SimpleObjectProperty<>(TaskType.SIMULATION_TASK);
+    public RunTaskMenuController(){
+        this.taskType = new SimpleObjectProperty<>();
+        this.runType = new SimpleObjectProperty<>();
+        this.targetsList = new SimpleListProperty<>();
         this.numOfThreads = new SimpleIntegerProperty();
     }
 
-    public void initialize() {
-        this.taskTogglesController.setCurrSplitPane(this.menuSplitPane);
+
+    @FXML
+    private void initialize(){
+        this.chooseTargetsTogglesController.setTargetsList(targetsList);
     }
 
-
-
-    public void setEngine(Engine engine) {
+    public void setEngine(Engine engine){
         this.engine = engine;
-        this.taskTogglesController.setEngine(engine);
-        this.taskTogglesController.setSelectedTaskType(this.selectedTaskType);
-        this.taskTogglesController.setSelectedRunType(this.selectedRunType);
-        this.taskTogglesController.setNumOfOfThreads(this.numOfThreads);
-
-
-
-
-
-
+        this.chooseTargetsTogglesController.setEngine(engine);
     }
+
+
 }

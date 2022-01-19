@@ -43,11 +43,11 @@ public class SimulationParamsController {
         TextFormatter formatter = new TextFormatter((UnaryOperator<TextFormatter.Change>) change -> {
             return pattern.matcher(change.getControlNewText()).matches() ? change : null;
         });
-        successRateTextArea.setTextFormatter(formatter);
+        //successRateTextArea.setTextFormatter(formatter);
         formatter = new TextFormatter((UnaryOperator<TextFormatter.Change>) change -> {
             return pattern.matcher(change.getControlNewText()).matches() ? change : null;
         });
-        successWithWaringsRateTextArea.setTextFormatter(formatter);
+        //successWithWaringsRateTextArea.setTextFormatter(formatter);
     }
 
 

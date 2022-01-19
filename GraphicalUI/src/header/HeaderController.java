@@ -4,7 +4,6 @@ import engine.Engine;
 import findcycles.FindCyclesController;
 import findpath.FindPathsController;
 import javafx.beans.binding.Bindings;
-import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -15,7 +14,6 @@ import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import loadfile.*;
 import runtask.RunTaskMenuController;
-import runtask.RunTaskTogglesController;
 import tables.*;
 import whatif.WhatIfMenuController;
 
@@ -143,13 +141,13 @@ public class HeaderController {
 
     @FXML
     private void loadTaskRun(ActionEvent event) {
-        URL resource = RunTaskMenuController.class.getResource("run_task_menu.fxml");
+            URL resource = RunTaskMenuController.class.getResource("run_task_menu_big.fxml");
         FXMLLoader fxmlLoader = new FXMLLoader();
         fxmlLoader.setLocation(resource);
         try {
             Parent root = fxmlLoader.load(resource.openStream());
             RunTaskMenuController runTaskMenuController = fxmlLoader.getController();
-            runTaskMenuController.setEngine(this.engine);
+            runTaskMenuController.setEngine(engine);
             base_BorderPane.setCenter(root);
             primaryStage.show();
         } catch (IOException e) {

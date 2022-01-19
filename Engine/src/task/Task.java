@@ -199,6 +199,7 @@ public abstract class Task{
                 currTarget.freeSerialSetsMonitors();
                 outputTargetResult(outputConsumers, targetResult);
                 latch.countDown();
+
                 System.out.println("The latch value is=" + latch.toString());
 
         }
