@@ -49,11 +49,14 @@ public class RunTaskMenuController {
     @FXML
     private void initialize(){
         this.chooseTargetsTogglesController.setTargetsList(targetsList);
+        this.chooseThreadsAndTaskTogglesController.setCompilationLayout(this.compilationTaskToggles);
+        this.chooseThreadsAndTaskTogglesController.setSimulationLayout(this.simulationTaskToggles);
     }
 
     public void setEngine(Engine engine){
         this.engine = engine;
         this.chooseTargetsTogglesController.setEngine(engine);
+        this.chooseThreadsAndTaskTogglesController.setEngine(engine);
     }
 
 

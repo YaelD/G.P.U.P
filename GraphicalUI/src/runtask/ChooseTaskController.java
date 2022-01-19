@@ -8,11 +8,7 @@ import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.ToggleGroup;
 
-import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.RadioButton;
-import javafx.scene.control.ToggleGroup;
+import javafx.scene.layout.GridPane;
 
 public class ChooseTaskController {
 
@@ -25,12 +21,33 @@ public class ChooseTaskController {
     @FXML private ToggleGroup runTypeToggle;
     @FXML private RadioButton incrementalRadioButton;
 
-
+    private GridPane simulationLayout;
+    private GridPane compilationLayout;
     private Engine engine;
+
+    public void setSimulationLayout(GridPane simulationLayout) {
+        this.simulationLayout = simulationLayout;
+    }
+
+    public void setCompilationLayout(GridPane compilationLayout) {
+        this.compilationLayout = compilationLayout;
+    }
 
     @FXML
     void enableNextPanel(ActionEvent event) {
+        if(!validation()){
+            //TODO: add a warning label
+        }
+        else if(simulationRadioButton.isSelected()){
+            simulationLayout.setVisible(true);
+        }
+        else{
+            compilationLayout.setVisible(true);
+        }
+    }
 
+    private boolean validation() {
+        return true;
     }
 
     @FXML
