@@ -58,10 +58,5 @@
          </toggleGroup>
       </RadioButton>
       <RadioButton layoutX="60.0" layoutY="227.0" mnemonicParsing="false" text="Incramental" toggleGroup="$runTypeToggle" GridPane.columnIndex="2" GridPane.rowIndex="10" />
-      <HBox alignment="CENTER" layoutX="40.0" layoutY="400.0" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="15">
-         <children>
-            <Button fx:id="returnButton" alignment="CENTER" contentDisplay="CENTER" maxHeight="1.7976931348623157E308" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#returnToPrevPanel" prefWidth="100.0" text="Return" />
-         </children>
-      </HBox>
    </children>
 </GridPane>

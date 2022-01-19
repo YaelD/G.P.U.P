@@ -10,7 +10,6 @@
 <?import javafx.scene.control.ToggleGroup?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
-<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
@@ -76,10 +75,5 @@
          </content>
       </ScrollPane>
       <Label text="The selected targets are:" GridPane.columnIndex="2" GridPane.rowIndex="12" />
-      <HBox alignment="CENTER" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="17">
-         <children>
-            <Button fx:id="continueButton" alignment="CENTER" contentDisplay="CENTER" maxHeight="1.7976931348623157E308" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#enableNextPanel" prefWidth="100.0" text="Continue" />
-         </children>
-      </HBox>
    </children>
 </GridPane>

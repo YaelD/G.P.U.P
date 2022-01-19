@@ -1,5 +1,7 @@
 package runtask;
 
+import javafx.beans.binding.Bindings;
+import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
@@ -11,26 +13,30 @@ import java.util.regex.Pattern;
 
 public class SimulationParamsController {
 
-    @FXML
-    private TextField processTimeTextArea;
+    private SimpleDoubleProperty successRate;
+    private SimpleDoubleProperty successRateWithWarnings;
+
+    @FXML private TextField processTimeTextArea;
+    @FXML private CheckBox isRandomCheckBox;
+    @FXML private Label warningLabel;
+    @FXML private Slider successRateSlider;
+    @FXML private Label successRateLabel;
+    @FXML private Slider successWithWarningSlider;
+    @FXML private Label successWithWarningsLabel;
+    @FXML private Button confirmButton;
+
+    public SimulationParamsController() {
+        this.successRate = new SimpleDoubleProperty(0);
+        successRateWithWarnings = new SimpleDoubleProperty(0);
+    }
 
     @FXML
-    private CheckBox isRandomCheckBox;
+    private void initialize() {
+        this.successRateLabel.textProperty().bind(Bindings.concat(successRateSlider.valueProperty() + "%"));
+        this.successWithWarningsLabel.textProperty().bind(Bindings.concat(successWithWarningSlider.valueProperty() + "%"));
+        this.successRate.bind(successRateSlider.valueProperty());
+        this.successRateWithWarnings.bind(successWithWarningSlider.valueProperty());
 
-    @FXML
-    private TextField successRateTextArea;
-
-    @FXML
-    private TextField successWithWaringsRateTextArea;
-
-    @FXML
-    private Button confirmButton;
-
-    @FXML
-    private Label warningLabel;
-
-
-    public void initialize(){
         processTimeTextArea.textProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
@@ -39,39 +45,15 @@ public class SimulationParamsController {
                 }
             }
         });
-        Pattern pattern = Pattern.compile("/^[0-9]+(\\\\.[0-9]+)?$");
-        TextFormatter formatter = new TextFormatter((UnaryOperator<TextFormatter.Change>) change -> {
-            return pattern.matcher(change.getControlNewText()).matches() ? change : null;
-        });
-        //successRateTextArea.setTextFormatter(formatter);
-        formatter = new TextFormatter((UnaryOperator<TextFormatter.Change>) change -> {
-            return pattern.matcher(change.getControlNewText()).matches() ? change : null;
-        });
-        //successWithWaringsRateTextArea.setTextFormatter(formatter);
+
+
+
     }
-
-
-
-
 
     @FXML
     void onConfirm(ActionEvent event) {
-        double successRate = Double.parseDouble(successRateTextArea.getText());
-        double successWithWarningRate = Double.parseDouble(successRateTextArea.getText());
-        if(successRate > 1 || successRate < 0){
-            warningLabel.setVisible(true);
-            warningLabel.setText("The success rate should be between 0 to 1");
-        }
-        else if(successWithWarningRate > 1 || successWithWarningRate < 0){
-            warningLabel.setVisible(true);
-            warningLabel.setText("The success with warning rate should be between 0 to 1");
-        }
-
-
-
-
-
 
     }
 
 }
+
