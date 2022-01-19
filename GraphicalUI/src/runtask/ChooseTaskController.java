@@ -3,10 +3,7 @@ package runtask;
 import engine.Engine;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.RadioButton;
-import javafx.scene.control.ToggleGroup;
+import javafx.scene.control.*;
 
 import javafx.scene.layout.GridPane;
 
@@ -20,10 +17,12 @@ public class ChooseTaskController {
     @FXML private RadioButton fromScratchRadioButton;
     @FXML private ToggleGroup runTypeToggle;
     @FXML private RadioButton incrementalRadioButton;
+    @FXML private Label warningLabel;
 
     private GridPane simulationLayout;
     private GridPane compilationLayout;
     private Engine engine;
+
 
     public void setSimulationLayout(GridPane simulationLayout) {
         this.simulationLayout = simulationLayout;
