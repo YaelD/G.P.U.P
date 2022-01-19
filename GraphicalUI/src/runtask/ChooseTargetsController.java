@@ -37,8 +37,12 @@ public class ChooseTargetsController {
     @FXML private ChoiceBox<Dependency> whatIf_DependencyCB;
     @FXML private Button WhatIfButton;
     @FXML private ListView<String> selectedTargetsListView;
-    @FXML private Button continueButton;
 
+
+
+    public ChooseTargetsController() {
+
+    }
 
     public void setTargetsList(SimpleListProperty<String> targetListProperty) {
         targetListProperty.bind(selectedTargetsListView.itemsProperty());
@@ -110,7 +114,6 @@ public class ChooseTargetsController {
     }
 
 
-
     @FXML
     void checkTargetsWithWhatIf(ActionEvent event) {
         Set<String> whatIfTargets = this.engine.whatIf(whatIf_targetsCB.getValue(),whatIf_DependencyCB.getValue());
@@ -118,9 +121,5 @@ public class ChooseTargetsController {
         selectedTargetsListView.getItems().addAll(whatIfTargets);
     }
 
-    @FXML
-    void enableNextPanel(ActionEvent event) {
-
-    }
 
 }

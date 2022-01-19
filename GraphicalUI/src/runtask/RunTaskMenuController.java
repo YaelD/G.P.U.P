@@ -36,8 +36,7 @@ public class RunTaskMenuController {
     private ObjectProperty<TaskType> taskType;
     private ObjectProperty<RunType> runType;
     private SimpleIntegerProperty numOfThreads;
-
-    Engine engine;
+    private Engine engine;
 
     public RunTaskMenuController(){
         this.taskType = new SimpleObjectProperty<>();
