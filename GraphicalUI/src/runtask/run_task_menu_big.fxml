@@ -5,7 +5,7 @@
 
 <ScrollPane xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="runtask.RunTaskMenuController">
    <content>
-      <HBox fx:id="baseHBox" alignment="CENTER" minHeight="-Infinity" minWidth="-Infinity" spacing="10.0">
+      <HBox fx:id="baseHBox" alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" spacing="10.0">
          <children>
             <fx:include fx:id="chooseTargetsToggles" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" source="run_task_choose_targets.fxml" />
             <fx:include fx:id="chooseThreadsAndTaskToggles" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" source="run_task_toggles_choose_num_threads_and_tasks.fxml" />

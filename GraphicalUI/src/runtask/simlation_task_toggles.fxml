@@ -15,6 +15,7 @@
     <ColumnConstraints hgrow="NEVER" maxWidth="30.0" minWidth="30.0" prefWidth="30.0" />
       <ColumnConstraints hgrow="NEVER" maxWidth="30.0" minWidth="30.0" prefWidth="100.0" />
       <ColumnConstraints hgrow="SOMETIMES" />
+      <ColumnConstraints hgrow="NEVER" maxWidth="30.0" minWidth="30.0" prefWidth="100.0" />
     <ColumnConstraints hgrow="NEVER" maxWidth="30.0" minWidth="30.0" prefWidth="30.0" />
   </columnConstraints>
   <rowConstraints>
@@ -46,23 +47,15 @@
       <Label text="Enter success rate" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="7" />
       <Label text="Enter success rate with warnings" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="10" />
       <Label fx:id="warningLabel" text="Waring!!" visible="false" GridPane.columnIndex="2" GridPane.rowIndex="14" GridPane.rowSpan="2" />
-      <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="5.0" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="8">
-         <children>
-            <Slider fx:id="successRateSlider" majorTickUnit="5.0" minorTickCount="5" showTickLabels="true" />
-            <Label fx:id="successRateLabel" text="0%" />
-         </children>
-      </HBox>
-      <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="5.0" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="11">
-         <children>
-            <Slider fx:id="successWithWarningSlider" majorTickUnit="5.0" minorTickCount="5" showTickLabels="true" />
-            <Label fx:id="successWithWarningsLabel" text="0%" />
-         </children>
-      </HBox>
       <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="13">
          <children>
             <Button fx:id="confirmButton" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#onConfirm" text="Confirm" />
          </children>
       </HBox>
       <Label text="Enter Simulation Task Parameters" underline="true" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="1" />
+      <Slider fx:id="successRateSlider" majorTickUnit="5.0" minorTickCount="5" showTickLabels="true" GridPane.columnIndex="2" GridPane.rowIndex="8" />
+      <Label fx:id="successRateLabel" text="0%" GridPane.columnIndex="3" GridPane.rowIndex="8" />
+      <Label fx:id="successWithWarningsLabel" text="0%" GridPane.columnIndex="3" GridPane.rowIndex="11" />
+      <Slider fx:id="successWithWarningSlider" majorTickUnit="5.0" minorTickCount="5" showTickLabels="true" GridPane.columnIndex="2" GridPane.rowIndex="11" />
    </children>
 </GridPane>

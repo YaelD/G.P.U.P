@@ -1,14 +1,15 @@
 package runtask;
 
+import dto.CompilationTaskParamsDTO;
+import dto.SimulationTaskParamsDTO;
+import dto.TaskParamsDTO;
 import engine.Engine;
+import engine.SystemEngine;
 import javafx.beans.property.*;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.control.Label;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.control.SplitPane;
+import javafx.scene.Scene;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
@@ -17,7 +18,8 @@ import task.TaskType;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 public class RunTaskMenuController {
 
@@ -36,9 +38,15 @@ public class RunTaskMenuController {
     @FXML private CompilationParamsController compilationTaskTogglesController;
 
     private SimpleListProperty<String> targetsList;
-    private ObjectProperty<TaskType> taskType;
-    private ObjectProperty<RunType> runType;
+    private SimpleObjectProperty<TaskType> taskType;
+    private SimpleObjectProperty<RunType> runType;
     private SimpleIntegerProperty numOfThreads;
+
+    private SimpleObjectProperty<SimulationTaskParamsDTO> simulationTaskParamsDTO;
+    private SimpleObjectProperty<CompilationTaskParamsDTO> compilationTaskParamsDTO;
+
+
+
     private Engine engine;
 
     public RunTaskMenuController(){
@@ -46,6 +54,8 @@ public class RunTaskMenuController {
         this.runType = new SimpleObjectProperty<>();
         this.targetsList = new SimpleListProperty<>();
         this.numOfThreads = new SimpleIntegerProperty();
+        this.compilationTaskParamsDTO = new SimpleObjectProperty<>();
+        this.simulationTaskParamsDTO = new SimpleObjectProperty<>();
     }
 
 
@@ -56,6 +66,46 @@ public class RunTaskMenuController {
         this.chooseThreadsAndTaskTogglesController.setSimulationLayout(this.simulationTaskToggles);
         baseHBox.getChildren().remove(simulationTaskToggles);
         baseHBox.getChildren().remove(compilationTaskToggles);
+        this.chooseThreadsAndTaskTogglesController.setMenuPane(baseHBox);
+        this.chooseThreadsAndTaskTogglesController.setTaskTypeAndRunTypeListeners(taskType, runType);
+        this.chooseThreadsAndTaskTogglesController.setNumOfThreads(this.numOfThreads);
+        this.simulationTaskTogglesController.bindParamsDTO(this.simulationTaskParamsDTO);
+        this.simulationTaskTogglesController.setActiveTaskCallback(new ActiveTaskCallback() {
+            @Override
+            public void activeTask(TaskParamsDTO taskParams) {
+                URL resource = getClass().getResource("run_task_popup.fxml");
+                FXMLLoader fxmlLoader = new FXMLLoader();
+                fxmlLoader.setLocation(resource);
+                BorderPane root = null;
+                try {
+                    root = fxmlLoader.load(resource.openStream());
+                    Scene scene = new Scene(root, 1000, 600);
+                    RunWindowController runWindowController = fxmlLoader.getController();
+                    runWindowController.setEngine(engine);
+                    Set<String> targetSet = new HashSet<>();
+                    targetSet.addAll(targetsList.getValue());
+                    runWindowController.runTask(taskParams, numOfThreads.getValue(),
+                            taskType.getValue(), runType.getValue(), targetSet);
+                    Stage secondaryStage = new Stage();
+                    secondaryStage.setScene(scene);
+                    secondaryStage.setTitle("Run task");
+                    secondaryStage.show();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+
+
+//                Consumer<PausableThreadPoolExecutor> threadPoolConsumer = new Consumer<PausableThreadPoolExecutor>() {
+//                    @Override
+//                    public void accept(PausableThreadPoolExecutor pausableThreadPoolExecutor) {
+//
+//                    }
+//                };
+//                engine.activateTask(null, , taskParams, taskType.getValue(), false,numOfThreads.get());
+
+            }
+        });
     }
 
     public void setEngine(Engine engine){
@@ -63,6 +113,8 @@ public class RunTaskMenuController {
         this.chooseTargetsTogglesController.setEngine(engine);
         this.chooseThreadsAndTaskTogglesController.setEngine(engine);
     }
+
+
 
 
 }
