@@ -23,11 +23,11 @@ public interface Engine {
 
     public Collection<List<String>> getPaths(String firstTargetName, String secondTargetName, Dependency dependency) throws TargetNotExistException, InvalidDependencyException;
 
-    public GraphDTO activateTask(Consumer<TargetDTO> consumerString, TaskParamsDTO taskParams, TaskType taskType, boolean isIncremental, int threadNumber);
+    public GraphDTO activateTask(Consumer<TargetDTO> consumerString, TaskParamsDTO taskParams, TaskType taskType, boolean isIncremental, int threadNumber, Set<String> selectedTargets);
 
     public boolean isFileLoaded();
 
-    public boolean isRunInIncrementalMode(TaskType taskType);
+    public boolean isRunInIncrementalMode(TaskType taskType, Set<String> selectedTargets);
 
     public boolean isCycleInGraph();
 

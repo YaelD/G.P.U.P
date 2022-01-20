@@ -316,14 +316,14 @@ public class UserInterface {
                     System.out.println("Returning to main menu");
                     return;
                 case 1:
-                    if(engine.isRunInIncrementalMode(taskType)){
-                        isIncremental = true;
-                    }
-                    else{
-                        isIncremental = false;
-                        System.out.println("The task cannot run incrementally." +
-                                "The "+ taskType.getTaskType() + " task run from Scratch by default");
-                    }
+//                    if(engine.isRunInIncrementalMode(taskType)){
+//                        isIncremental = true;
+//                    }
+//                    else{
+//                        isIncremental = false;
+//                        System.out.println("The task cannot run incrementally." +
+//                                "The "+ taskType.getTaskType() + " task run from Scratch by default");
+//                    }
                     break;
                 case 2:
                     isIncremental = false;
@@ -359,7 +359,7 @@ public class UserInterface {
         GraphDTO taskResults = null;
 //        System.out.println(PRINT_LINE);
 //        System.out.println("Initiating task......");
-        taskResults = engine.activateTask(printStrConsumer, taskParams, taskType, isIncremental, threadNumber);
+        //taskResults = engine.activateTask(printStrConsumer, taskParams, taskType, isIncremental, threadNumber);
         //printTaskRunResults(taskResults);
     }
 

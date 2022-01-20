@@ -75,6 +75,22 @@ public class Graph implements Cloneable {
         return graph;
     }
 
+    public static Graph buildGraphForRunning(Set<String> targetsForRunning, Graph systemGraph){
+        Graph graphForRunning = systemGraph.clone();
+        for(String selectedTarget : targetsForRunning){
+            for(Target target : graphForRunning.getTargets()){
+                if(!targetsForRunning.contains(target.getName())){
+                    graphForRunning.getTargetGraph().remove(target.getName());
+                }
+            }
+            Set<Target> requiredFor = systemGraph.getTarget(selectedTarget).getRequiredFor();
+            Set<Target> dependsOn = systemGraph.getTarget(selectedTarget).getDependsOn();
+            requiredFor.removeIf(target -> !targetsForRunning.contains(target.getName()));
+            dependsOn.removeIf(target -> !targetsForRunning.contains(target.getName()));
+        }
+        return graphForRunning;
+    }
+
     private static void checkDuplicateTargets(GPUPTargets gpupTargets, Map<String, Target> graph)
             throws TargetNotExistException, DependencyConflictException, InvalidDependencyException {
         for(GPUPTarget gpupTarget : gpupTargets.getGPUPTarget()){

@@ -231,31 +231,33 @@ public class SystemEngine implements Engine{
 //    }
 
     @Override
-    public GraphDTO activateTask(Consumer<TargetDTO> consumerString, TaskParamsDTO taskParams, TaskType taskType, boolean isIncremental, int threadNumber) {
+    public GraphDTO activateTask(Consumer<TargetDTO> consumerString, TaskParamsDTO taskParams, TaskType taskType, boolean isIncremental, int threadNumber, Set<String> selectedTargets) {
 
         List<Consumer<TargetDTO>> outputConsumers = new ArrayList<>();
+        Graph graphForRunning = Graph.buildGraphForRunning(selectedTargets, this.graph);
 
         if(this.tasksInSystem.containsKey(taskType)){
             this.tasksInSystem.get(taskType).updateParameters(taskParams, this.workingDirectory);
-            if(isIncremental){
-                if(this.tasksInSystem.get(taskType).getGraph().getTargets().isEmpty()){
-                    this.tasksInSystem.get(taskType).setGraph(this.graph.clone());
-                }
-            }
-            else{
-                this.tasksInSystem.get(taskType).setGraph(this.graph.clone());
-            }
+            this.tasksInSystem.get(taskType).setGraph(graphForRunning);
+//            if(isIncremental){
+//                if(this.tasksInSystem.get(taskType).getGraph().getTargets().isEmpty()){
+//                    this.tasksInSystem.get(taskType).setGraph(this.graph.clone());
+//                }
+//            }
+//            else{
+//                this.tasksInSystem.get(taskType).setGraph(graphForRunning);
+//            }
         }
         else{
             switch (taskType){
                 case SIMULATION_TASK:
                     if(taskParams instanceof SimulationTaskParamsDTO){
-                        this.tasksInSystem.put(taskType, new SimulationTask(this.graph.clone(), (SimulationTaskParamsDTO) taskParams,this.serialSetsContainer));
+                        this.tasksInSystem.put(taskType, new SimulationTask(graphForRunning, (SimulationTaskParamsDTO) taskParams,this.serialSetsContainer));
                     }
                     break;
                 case COMPILATION_TASK:
                     if(taskParams instanceof CompilationTaskParamsDTO){
-                        this.tasksInSystem.put(taskType, new CompilationTask(this.graph.clone(), (CompilationTaskParamsDTO) taskParams,this.serialSetsContainer, this.workingDirectory));
+                        this.tasksInSystem.put(taskType, new CompilationTask(graphForRunning, (CompilationTaskParamsDTO) taskParams,this.serialSetsContainer, this.workingDirectory));
                     }
                     break;
             }
@@ -273,6 +275,7 @@ public class SystemEngine implements Engine{
             return null;
         }
     }
+
 
     private String openDirectoryAndFiles(TaskType taskType) {
         StringBuffer stringBuffer = new StringBuffer();
@@ -331,14 +334,18 @@ public class SystemEngine implements Engine{
     }
 
     @Override
-    public boolean isRunInIncrementalMode(TaskType taskType) {
+    public boolean isRunInIncrementalMode(TaskType taskType, Set<String> selectedTargets) {
         if(!this.tasksInSystem.containsKey(taskType)){
             return false;
         }
         if(this.tasksInSystem.get(taskType).getGraph().getTargets().isEmpty()){
             return false;
         }
-
+        for(String target : selectedTargets){
+            if(!this.tasksInSystem.get(taskType).getGraph().getTargets().contains(target)){
+                return false;
+            }
+        }
         return true;
     }
 
