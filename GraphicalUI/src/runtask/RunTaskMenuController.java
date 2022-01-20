@@ -10,6 +10,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.SplitPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 import task.RunType;
 import task.TaskType;
@@ -19,6 +20,8 @@ import java.net.URL;
 import java.util.List;
 
 public class RunTaskMenuController {
+
+    @FXML private HBox baseHBox;
 
     @FXML private GridPane chooseTargetsToggles;
     @FXML private ChooseTargetsController chooseTargetsTogglesController;
@@ -51,6 +54,8 @@ public class RunTaskMenuController {
         this.chooseTargetsTogglesController.setTargetsList(targetsList);
         this.chooseThreadsAndTaskTogglesController.setCompilationLayout(this.compilationTaskToggles);
         this.chooseThreadsAndTaskTogglesController.setSimulationLayout(this.simulationTaskToggles);
+        baseHBox.getChildren().remove(simulationTaskToggles);
+        baseHBox.getChildren().remove(compilationTaskToggles);
     }
 
     public void setEngine(Engine engine){

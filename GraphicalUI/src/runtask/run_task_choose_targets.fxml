@@ -40,11 +40,11 @@
       <RowConstraints maxHeight="30.0" minHeight="30.0" prefHeight="30.0" vgrow="NEVER" />
       <RowConstraints maxHeight="30.0" minHeight="30.0" prefHeight="30.0" vgrow="NEVER" />
       <RowConstraints maxHeight="30.0" minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
-      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+      <RowConstraints maxHeight="30.0" minHeight="30.0" prefHeight="30.0" vgrow="NEVER" />
   </rowConstraints>
    <children>
-      <Label text="Choose Targets:" GridPane.columnIndex="2" />
-      <VBox fx:id="targetsSubMenu" alignment="CENTER_LEFT" spacing="5.0" GridPane.columnIndex="2" GridPane.rowIndex="2" GridPane.rowSpan="4">
+      <Label text="Choose Targets:" underline="true" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="1" />
+      <VBox fx:id="targetsSubMenu" alignment="CENTER_LEFT" spacing="5.0" GridPane.columnIndex="2" GridPane.rowIndex="3" GridPane.rowSpan="4">
          <children>
             <CheckBox fx:id="chooseAllTargetsCheckBox" mnemonicParsing="false" text="Choose all Targets" />
             <ScrollPane fitToHeight="true" fitToWidth="true" prefHeight="200.0" prefWidth="200.0">
@@ -54,13 +54,13 @@
             </ScrollPane>
          </children>
       </VBox>
-      <RadioButton fx:id="chooseTargetsRB" mnemonicParsing="false" selected="true" text="Choose targets to run" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="1">
+      <RadioButton fx:id="chooseTargetsRB" mnemonicParsing="false" selected="true" text="Choose targets to run" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="2">
          <toggleGroup>
             <ToggleGroup fx:id="chooseTargetsToogleGroup" />
          </toggleGroup>
       </RadioButton>
-      <RadioButton fx:id="chooseWhatIfRB" mnemonicParsing="false" text="Choose targets with WhatIf" toggleGroup="$chooseTargetsToogleGroup" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="6" />
-      <VBox fx:id="whatIfSubMenu" spacing="5.0" GridPane.columnIndex="2" GridPane.rowIndex="7" GridPane.rowSpan="5">
+      <RadioButton fx:id="chooseWhatIfRB" mnemonicParsing="false" text="Choose targets with WhatIf" toggleGroup="$chooseTargetsToogleGroup" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="7" />
+      <VBox fx:id="whatIfSubMenu" spacing="5.0" GridPane.columnIndex="2" GridPane.rowIndex="8" GridPane.rowSpan="5">
          <children>
             <Label text="Choose target" />
             <ChoiceBox fx:id="whatIf_targetsCB" prefWidth="150.0" />
@@ -69,11 +69,11 @@
             <Button fx:id="WhatIfButton" contentDisplay="CENTER" maxHeight="1.7976931348623157E308" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#checkTargetsWithWhatIf" prefWidth="100.0" text="Search" />
          </children>
       </VBox>
-      <ScrollPane fitToHeight="true" fitToWidth="true" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="2" GridPane.rowIndex="13" GridPane.rowSpan="3">
+      <ScrollPane fitToHeight="true" fitToWidth="true" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="2" GridPane.rowIndex="14" GridPane.rowSpan="3">
          <content>
             <ListView fx:id="selectedTargetsListView" />
          </content>
       </ScrollPane>
-      <Label text="The selected targets are:" GridPane.columnIndex="2" GridPane.rowIndex="12" />
+      <Label text="The selected targets are:" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="13" />
    </children>
 </GridPane>

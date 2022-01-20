@@ -1,7 +1,9 @@
 package runtask;
 
+import engine.Engine;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
@@ -13,6 +15,7 @@ import java.util.regex.Pattern;
 
 public class SimulationParamsController {
 
+    private SimpleIntegerProperty proccessTime;
     private SimpleDoubleProperty successRate;
     private SimpleDoubleProperty successRateWithWarnings;
 
@@ -25,9 +28,12 @@ public class SimulationParamsController {
     @FXML private Label successWithWarningsLabel;
     @FXML private Button confirmButton;
 
+    Engine engine;
+
     public SimulationParamsController() {
         this.successRate = new SimpleDoubleProperty(0);
         successRateWithWarnings = new SimpleDoubleProperty(0);
+        this.proccessTime = new SimpleIntegerProperty(1000);
     }
 
     @FXML
@@ -45,14 +51,10 @@ public class SimulationParamsController {
                 }
             }
         });
-
-
-
     }
 
     @FXML
     void onConfirm(ActionEvent event) {
-
     }
 
 }
