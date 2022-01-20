@@ -9,10 +9,7 @@ import graph.SerialSetsContainer;
 import schema.generated.GPUPDescriptor;
 import target.RunResults;
 import target.Target;
-import task.CompilationTask;
-import task.SimulationTask;
-import task.Task;
-import task.TaskType;
+import task.*;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -231,7 +228,9 @@ public class SystemEngine implements Engine{
 //    }
 
     @Override
-    public GraphDTO activateTask(Consumer<TargetDTO> consumerString, TaskParamsDTO taskParams, TaskType taskType, boolean isIncremental, int threadNumber, Set<String> selectedTargets) {
+    public GraphDTO activateTask(Consumer<TargetDTO> consumerString, Consumer<PausableThreadPoolExecutor> threadPoolConsumer,
+                                 TaskParamsDTO taskParams, TaskType taskType, boolean isIncremental,
+                                 int threadNumber, Set<String> selectedTargets) {
 
         List<Consumer<TargetDTO>> outputConsumers = new ArrayList<>();
         Graph graphForRunning = Graph.buildGraphForRunning(selectedTargets, this.graph);
@@ -269,7 +268,7 @@ public class SystemEngine implements Engine{
         GraphDTO runResult = null;
 
         try {
-            runResult = this.tasksInSystem.get(taskType).executeTaskOnGraph(outputConsumers, threadNumber);
+            runResult = this.tasksInSystem.get(taskType).executeTaskOnGraph(outputConsumers, threadPoolConsumer, threadNumber);
             return runResult;
         } catch (CycleException e) {
             return null;

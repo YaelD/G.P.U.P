@@ -6,6 +6,7 @@ import dto.TargetDTO;
 import dto.TaskParamsDTO;
 import exceptions.*;
 import graph.Dependency;
+import task.PausableThreadPoolExecutor;
 import task.TaskType;
 
 import java.util.Collection;
@@ -23,7 +24,10 @@ public interface Engine {
 
     public Collection<List<String>> getPaths(String firstTargetName, String secondTargetName, Dependency dependency) throws TargetNotExistException, InvalidDependencyException;
 
-    public GraphDTO activateTask(Consumer<TargetDTO> consumerString, TaskParamsDTO taskParams, TaskType taskType, boolean isIncremental, int threadNumber, Set<String> selectedTargets);
+    public GraphDTO activateTask(Consumer<TargetDTO> consumerString,
+                                 Consumer<PausableThreadPoolExecutor> threadPoolConsumer,
+                                 TaskParamsDTO taskParams, TaskType taskType, boolean isIncremental,
+                                 int threadNumber, Set<String> selectedTargets);
 
     public boolean isFileLoaded();
 

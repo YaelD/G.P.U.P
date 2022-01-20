@@ -13,9 +13,7 @@ import target.Target;
 import java.time.Duration;
 import java.time.LocalTime;
 import java.util.*;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import java.util.concurrent.*;
 import java.util.function.Consumer;
 
 
@@ -60,16 +58,19 @@ public abstract class Task{
         return sortedTargets;
     }
     //main Thread
-    public GraphDTO executeTaskOnGraph(List<Consumer<TargetDTO>> outputConsumers, int threadNumber) throws CycleException {
+    public GraphDTO executeTaskOnGraph(List<Consumer<TargetDTO>> outputConsumers,
+                                       Consumer<PausableThreadPoolExecutor> threadPoolConsumer,
+                                       int threadNumber) throws CycleException {
 
         List<Target> sortedTargets = topologicalSort(this.graph);
-        ExecutorService threadPool = Executors.newFixedThreadPool(threadNumber);
+
+        BlockingQueue<Runnable> workingQueue = new LinkedBlockingQueue<>();
+        PausableThreadPoolExecutor threadPool = new PausableThreadPoolExecutor(threadNumber, workingQueue);
+        threadPoolConsumer.accept(threadPool);
         this.latch = new CountDownLatch(sortedTargets.size());
         LocalTime startTime = LocalTime.now();
         for(Target currTarget : sortedTargets){
-            TaskRunner taskRunner = new TaskRunner(outputConsumers);
-            taskRunner.setCurrTarget(currTarget);
-            threadPool.execute(taskRunner);
+            addTargetToThreadPool(threadPool, currTarget, outputConsumers);
         }
         threadPool.shutdown();
         try {
@@ -83,6 +84,40 @@ public abstract class Task{
         GraphDTO graphRunResult = new GraphDTO(this.graph, Duration.between(startTime, endTime).toMillis());
         createGraphOfFailedTargets();
         return graphRunResult;
+    }
+
+    private void addTargetToThreadPool(PausableThreadPoolExecutor threadPool, Target currTarget, List<Consumer<TargetDTO>> outputConsumers) {
+        threadPool.execute(new Runnable() {
+            @Override
+            public void run() {
+                TargetDTO targetResult;
+                synchronized (currTarget){
+                    while(currTarget.getRunStatus().equals(RunStatus.FROZEN)){
+                        try {
+                            currTarget.wait();
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+                if(currTarget.getRunStatus().equals(RunStatus.WAITING)){
+                    currTarget.getSerialSetsMonitors();
+                    targetResult = executeTaskOnTarget(currTarget);
+                    if(targetResult.getRunResult().equals(RunResults.FAILURE)){
+                        currTarget.updateParentsStatus(targetResult.getSkippedFathers());
+                    }
+                    getOpenedTargetsToRun(targetResult, currTarget);
+                }
+                else {
+                    targetResult = new TargetDTO(currTarget);
+                }
+                currTarget.freeSerialSetsMonitors();
+                outputTargetResult(outputConsumers, targetResult);
+                latch.countDown();
+
+                System.out.println("The latch value is=" + latch.toString());
+            }
+        });
     }
 
 
@@ -161,48 +196,48 @@ public abstract class Task{
     public abstract void updateParameters(TaskParamsDTO taskParamsDTO, String workingDirectory);
 
     //----------------------------------------------------------------------------------------------
-    private class TaskRunner implements Runnable{
-        List<Consumer<TargetDTO>> outputConsumers;
-        Target currTarget;
-
-        public TaskRunner(List<Consumer<TargetDTO>> outputConsumers) {
-            this.outputConsumers = outputConsumers;
-        }
-
-        public void setCurrTarget(Target currTarget) {
-            this.currTarget = currTarget;
-        }
-
-        @Override
-        public void run() {
-            TargetDTO targetResult;
-            synchronized (currTarget){
-                while(currTarget.getRunStatus().equals(RunStatus.FROZEN)){
-                    try {
-                        currTarget.wait();
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-                if(currTarget.getRunStatus().equals(RunStatus.WAITING)){
-                    currTarget.getSerialSetsMonitors();
-                    targetResult = executeTaskOnTarget(currTarget);
-                    if(targetResult.getRunResult().equals(RunResults.FAILURE)){
-                        currTarget.updateParentsStatus(targetResult.getSkippedFathers());
-                    }
-                    getOpenedTargetsToRun(targetResult, currTarget);
-                }
-                else {
-                    targetResult = new TargetDTO(currTarget);
-                }
-                currTarget.freeSerialSetsMonitors();
-                outputTargetResult(outputConsumers, targetResult);
-                latch.countDown();
-
-                System.out.println("The latch value is=" + latch.toString());
-
-        }
-    }
+//    class TaskRunner implements Runnable{
+//        List<Consumer<TargetDTO>> outputConsumers;
+//        Target currTarget;
+//
+//        public TaskRunner(List<Consumer<TargetDTO>> outputConsumers) {
+//            this.outputConsumers = outputConsumers;
+//        }
+//
+//        public void setCurrTarget(Target currTarget) {
+//            this.currTarget = currTarget;
+//        }
+//
+//        @Override
+//        public void run() {
+//            TargetDTO targetResult;
+//            synchronized (currTarget){
+//                while(currTarget.getRunStatus().equals(RunStatus.FROZEN)){
+//                    try {
+//                        currTarget.wait();
+//                    } catch (InterruptedException e) {
+//                        e.printStackTrace();
+//                    }
+//                }
+//            }
+//                if(currTarget.getRunStatus().equals(RunStatus.WAITING)){
+//                    currTarget.getSerialSetsMonitors();
+//                    targetResult = executeTaskOnTarget(currTarget);
+//                    if(targetResult.getRunResult().equals(RunResults.FAILURE)){
+//                        currTarget.updateParentsStatus(targetResult.getSkippedFathers());
+//                    }
+//                    getOpenedTargetsToRun(targetResult, currTarget);
+//                }
+//                else {
+//                    targetResult = new TargetDTO(currTarget);
+//                }
+//                currTarget.freeSerialSetsMonitors();
+//                outputTargetResult(outputConsumers, targetResult);
+//                latch.countDown();
+//
+//                System.out.println("The latch value is=" + latch.toString());
+//
+//        }
+//    }
 
 }
