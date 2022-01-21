@@ -78,16 +78,17 @@ public class Graph implements Cloneable {
     public static Graph buildGraphForRunning(Set<String> targetsForRunning, Graph systemGraph){
         Graph graphForRunning = systemGraph.clone();
         for(String selectedTarget : targetsForRunning){
-            for(Target target : graphForRunning.getTargets()){
+            for(Target target : systemGraph.getTargets()){
                 if(!targetsForRunning.contains(target.getName())){
                     graphForRunning.getTargetGraph().remove(target.getName());
                 }
             }
-            Set<Target> requiredFor = systemGraph.getTarget(selectedTarget).getRequiredFor();
-            Set<Target> dependsOn = systemGraph.getTarget(selectedTarget).getDependsOn();
-            requiredFor.removeIf(target -> !targetsForRunning.contains(target.getName()));
-            dependsOn.removeIf(target -> !targetsForRunning.contains(target.getName()));
+            Set<Target> requiredFor = graphForRunning.getTarget(selectedTarget).getRequiredFor();
+            Set<Target> dependsOn = graphForRunning.getTarget(selectedTarget).getDependsOn();
+            requiredFor.removeIf(target -> !(targetsForRunning.contains(target.getName())));
+            dependsOn.removeIf(target -> !(targetsForRunning.contains(target.getName())));
         }
+        addTargetsPlaceInGraph(graphForRunning.getTargetGraph());
         return graphForRunning;
     }
 

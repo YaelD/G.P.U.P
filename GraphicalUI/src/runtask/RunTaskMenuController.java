@@ -74,6 +74,7 @@ public class RunTaskMenuController {
             @Override
             public void activeTask(TaskParamsDTO taskParams) {
                 URL resource = getClass().getResource("run_task_popup.fxml");
+                //TODO: validate all the parameters
                 FXMLLoader fxmlLoader = new FXMLLoader();
                 fxmlLoader.setLocation(resource);
                 BorderPane root = null;

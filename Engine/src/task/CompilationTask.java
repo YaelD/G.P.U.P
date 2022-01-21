@@ -39,7 +39,7 @@ public class CompilationTask extends Task{
         String runResult = "";
         LocalTime startTime, endTime;
         try {
-            target.setRunStatus(RunStatus.IN_PROCESS); //todo: block
+            target.setRunStatus(RunStatus.IN_PROCESS);
             startTime = LocalTime.now();
             Process process = CompileTarget(target);
             String processResult = getProcessResult(process);
@@ -55,10 +55,10 @@ public class CompilationTask extends Task{
             }
             runResult += processResult;
 
-            //Todo: target.setRunResult(RunResults.WARNING); //todo: block
+            //Todo: target.setRunResult(RunResults.WARNING);
 
-            target.setRunningTime(Duration.between(startTime, endTime).toMillis()); //todo: block
-            target.setRunStatus(RunStatus.FINISHED); //todo: block
+            target.setRunningTime(Duration.between(startTime, endTime).toMillis());
+            target.setRunStatus(RunStatus.FINISHED);
             targetDTO = new TargetDTO(target, startTime, endTime, runResult);
 
         } catch (InterruptedException | IOException e) {
