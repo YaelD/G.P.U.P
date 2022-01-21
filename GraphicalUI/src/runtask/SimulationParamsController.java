@@ -33,8 +33,8 @@ public class SimulationParamsController {
 
 
     public SimulationParamsController() {
-        this.successRate = new SimpleDoubleProperty(0);
-        successRateWithWarnings = new SimpleDoubleProperty(0);
+        this.successRate = new SimpleDoubleProperty(0.0);
+        successRateWithWarnings = new SimpleDoubleProperty(0.0);
         this.processTime = new SimpleIntegerProperty(1000);
         this.isRandomProcessTime = new SimpleBooleanProperty(false);
         this.simulationTaskParams = new SimpleObjectProperty<>();
@@ -47,23 +47,28 @@ public class SimulationParamsController {
             @Override
             public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
                 successRateLabel.textProperty().setValue(String.valueOf(newValue.intValue()) + "%");
-
+                successRate.set(newValue.intValue()/100);
             }
         });
         this.successWithWarningSlider.valueProperty().addListener(new ChangeListener<Number>() {
             @Override
             public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
                 successWithWarningsLabel.textProperty().setValue(String.valueOf(newValue.intValue()) + "%");
+                successRateWithWarnings.set(newValue.intValue()/100);
+
             }
         });
-
-        this.successRate.bind(successRateSlider.valueProperty());
-        this.successRateWithWarnings.bind(successWithWarningSlider.valueProperty());
+        processTimeTextArea.setText("1000");
         processTimeTextArea.textProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
                 if (!newValue.matches("\\d*")) {
                     processTimeTextArea.setText(newValue.replaceAll("[^\\d]", "0"));
+                    processTimeTextArea.setText("1000");
+                }
+                else if(newValue.equals("")){
+                    processTime.set(1000);
+                    processTimeTextArea.setText("1000");
                 }
                 else{
                     processTime.set(Integer.valueOf(newValue));
@@ -72,21 +77,14 @@ public class SimulationParamsController {
         });
     }
 
-    public void bindParamsDTO(ObjectProperty<SimulationTaskParamsDTO> paramsDTOObjectProperty){
-        paramsDTOObjectProperty.bind(this.simulationTaskParams);
-    }
-
     public void setActiveTaskCallback(ActiveTaskCallback activeTaskCallback) {
         this.activeTaskCallback = activeTaskCallback;
     }
 
     @FXML
     void onConfirm(ActionEvent event) {
-//        activeTaskCallback.activeTask(new SimulationTaskParamsDTO(this.processTime.intValue(),
-//                this.isRandomProcessTime.getValue(), this.successRate.doubleValue(), this.successRateWithWarnings.doubleValue()));
-        activeTaskCallback.activeTask(new SimulationTaskParamsDTO(3000,
-                false, 0.5, 0.4));
-
+        activeTaskCallback.activeTask(new SimulationTaskParamsDTO(this.processTime.intValue(),
+                this.isRandomProcessTime.getValue(), this.successRate.doubleValue(), this.successRateWithWarnings.doubleValue()));
     }
 
 }

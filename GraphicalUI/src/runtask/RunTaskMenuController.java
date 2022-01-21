@@ -69,8 +69,7 @@ public class RunTaskMenuController {
         this.chooseThreadsAndTaskTogglesController.setMenuPane(baseHBox);
         this.chooseThreadsAndTaskTogglesController.setTaskTypeAndRunTypeListeners(taskType, runType);
         this.chooseThreadsAndTaskTogglesController.setNumOfThreads(this.numOfThreads);
-        this.simulationTaskTogglesController.bindParamsDTO(this.simulationTaskParamsDTO);
-        this.simulationTaskTogglesController.setActiveTaskCallback(new ActiveTaskCallback() {
+        ActiveTaskCallback callback = new ActiveTaskCallback() {
             @Override
             public void activeTask(TaskParamsDTO taskParams) {
                 URL resource = getClass().getResource("run_task_popup.fxml");
@@ -93,19 +92,11 @@ public class RunTaskMenuController {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-
-
-
-//                Consumer<PausableThreadPoolExecutor> threadPoolConsumer = new Consumer<PausableThreadPoolExecutor>() {
-//                    @Override
-//                    public void accept(PausableThreadPoolExecutor pausableThreadPoolExecutor) {
-//
-//                    }
-//                };
-//                engine.activateTask(null, , taskParams, taskType.getValue(), false,numOfThreads.get());
-
             }
-        });
+        };
+
+        this.simulationTaskTogglesController.setActiveTaskCallback(callback);
+        this.compilationTaskTogglesController.setActiveTaskCallback(callback);
     }
 
     public void setEngine(Engine engine){

@@ -13,6 +13,12 @@ public class SerialSetsContainer {
         this.serialSetList = serialSetList;
     }
 
+    public SerialSetsContainer() {
+    }
+
+    public void setSerialSetList(List<SerialSet> serialSetList) {
+        this.serialSetList = serialSetList;
+    }
 
     public List<SerialSet> getSerialSetList() {
         return serialSetList;

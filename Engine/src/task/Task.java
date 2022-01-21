@@ -62,7 +62,9 @@ public abstract class Task{
                                        Consumer<PausableThreadPoolExecutor> threadPoolConsumer,
                                        int threadNumber) throws CycleException {
 
+
         List<Target> sortedTargets = topologicalSort(this.graph);
+
 
         BlockingQueue<Runnable> workingQueue = new LinkedBlockingQueue<>();
         PausableThreadPoolExecutor threadPool = new PausableThreadPoolExecutor(threadNumber, workingQueue);
@@ -75,12 +77,12 @@ public abstract class Task{
         threadPool.shutdown();
         try {
             this.latch.await();
-            System.out.println("RunTask==>Woke from latch!");
+            //System.out.println("RunTask==>Woke from latch!");
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
         LocalTime endTime = LocalTime.now();
-        System.out.println("Thread Pool===> Finished!!! " +  threadPool.isTerminated());
+        //System.out.println("Thread Pool===> Finished!!! " +  threadPool.isTerminated());
         GraphDTO graphRunResult = new GraphDTO(this.graph, Duration.between(startTime, endTime).toMillis());
         createGraphOfFailedTargets();
         return graphRunResult;
@@ -115,7 +117,7 @@ public abstract class Task{
                 outputTargetResult(outputConsumers, targetResult);
                 latch.countDown();
 
-                System.out.println("The latch value is=" + latch.toString());
+                //System.out.println("The latch value is=" + latch.toString());
             }
         });
     }

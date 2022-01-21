@@ -59,6 +59,7 @@ public class SystemEngine implements Engine{
         this.maxThreadNum = gpupDescriptor.getGPUPConfiguration().getGPUPMaxParallelism();
         this.tasksInSystem = new HashMap<>();
         this.isFileLoaded = true;
+        this.serialSetsContainer = new SerialSetsContainer();
         if(gpupDescriptor.getGPUPSerialSets() != null){
             initializeSerialSets(gpupDescriptor);
         }
@@ -75,7 +76,7 @@ public class SystemEngine implements Engine{
             SerialSet.checkIfSetTargetExistInGraph(targets, this.graph, newSerialSet, serialSetName );
             serialSetList.add(newSerialSet);
         }
-        this.serialSetsContainer = new SerialSetsContainer(serialSetList);
+        this.serialSetsContainer.setSerialSetList(serialSetList);
     }
 
     private void fileValidation(String path) throws InvalidFileException, IOException {
