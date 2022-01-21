@@ -22,14 +22,14 @@ public class CompilationTask extends Task{
     final String SOURCE_DIR_REF_PARAM = "-cp";
     final String DESTINATION_DIR_REF_PARAM = "-d";
     private String sourceDir;
-    private String DestinationDir;
+    private String destinationDir;
     private String workingDirectory;
 
 
     public CompilationTask(Graph graph, CompilationTaskParamsDTO compilationTaskDTO, SerialSetsContainer serialSetsContainer, String workingDirectory) {
         super(graph, serialSetsContainer);
         this.sourceDir = compilationTaskDTO.getSourceDir();
-        this.DestinationDir = compilationTaskDTO.getDestinationDir();
+        this.destinationDir = compilationTaskDTO.getDestinationDir();
         this.workingDirectory = workingDirectory;
     }
 
@@ -81,18 +81,33 @@ public class CompilationTask extends Task{
     }
 
     private Process CompileTarget(Target target) throws IOException {
+
         String filePath = "/" + target.getInfo().replace('.', '/');
         int indexOfLastSlash = filePath.lastIndexOf('/');
         String dirPath = filePath.substring(0,indexOfLastSlash);
         String fileName= filePath.substring(indexOfLastSlash);
-        String destinationDir = this.DestinationDir + dirPath;
+        //String destinationDir = this.DestinationDir + dirPath;
         String sourceDir = this.sourceDir + dirPath;
         filePath = sourceDir + fileName + ".java";
-        Process process = new ProcessBuilder(JAVA_COMPILER, DESTINATION_DIR_REF_PARAM, destinationDir, SOURCE_DIR_REF_PARAM ,sourceDir, filePath)
-                .directory(new File(this.workingDirectory))
+        Process process = new ProcessBuilder(JAVA_COMPILER, DESTINATION_DIR_REF_PARAM, this.destinationDir, SOURCE_DIR_REF_PARAM ,sourceDir, filePath)
+                .directory(new File(this.sourceDir))
                 .redirectErrorStream(true)
                 .start();
         return process;
+
+
+//        String filePath = "/" + target.getInfo().replace('.', '/');
+//        int indexOfLastSlash = filePath.lastIndexOf('/');
+//        String dirPath = filePath.substring(0,indexOfLastSlash);
+//        String fileName= filePath.substring(indexOfLastSlash);
+//        String destinationDir = this.DestinationDir + dirPath;
+//        String sourceDir = this.sourceDir + dirPath;
+//        filePath = sourceDir + fileName + ".java";
+//        Process process = new ProcessBuilder(JAVA_COMPILER, DESTINATION_DIR_REF_PARAM, destinationDir, SOURCE_DIR_REF_PARAM ,sourceDir, filePath)
+//                .directory(new File(this.workingDirectory))
+//                .redirectErrorStream(true)
+//                .start();
+//        return process;
 
     }
 
@@ -101,7 +116,7 @@ public class CompilationTask extends Task{
         if(taskParamsDTO instanceof CompilationTaskParamsDTO){
             CompilationTaskParamsDTO compilationTaskParamsDTO = (CompilationTaskParamsDTO) taskParamsDTO;
             this.sourceDir = compilationTaskParamsDTO.getSourceDir();
-            this.DestinationDir = compilationTaskParamsDTO.getDestinationDir();
+            this.destinationDir = compilationTaskParamsDTO.getDestinationDir();
             this.workingDirectory = workingDirectory;
         }
     }
