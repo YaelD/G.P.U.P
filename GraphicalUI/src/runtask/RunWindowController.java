@@ -60,7 +60,13 @@ public class RunWindowController {
 
     @FXML
     private void initialize(){
-        percentLabel.textProperty().bind(Bindings.concat(progressBar.progressProperty().intValue() + "%"));
+        progressBar.setProgress(0);
+        progressBar.progressProperty().addListener(new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+                percentLabel.setText(String.valueOf(Integer.valueOf((int)(newValue.doubleValue()*100))  + "%"));
+            }
+        });
 
     }
 
@@ -71,19 +77,22 @@ public class RunWindowController {
 
     public void setEngine(Engine systemEngine) {
         this.engine = systemEngine;
+
     }
 
     public void runTask(TaskParamsDTO taskParams, int numOfThreads, TaskType taskType,
                         RunType runType, Set<String> targetsList) {
+
+
+        double targetListSize = targetsList.size();
+
+
+
         Consumer<TargetDTO> consoleConsumer = targetDTO ->  {
-
-//            String NEW_LINE = "-----------------------------------------------\n";
-//            String str = "Target name: " + targetDTO.getName() +
-//                    "\n";
-
             Platform.runLater(new Runnable() {
                 @Override
                 public void run() {
+                    progressBar.progressProperty().set(progressBar.progressProperty().doubleValue() + (double)(1/targetListSize));
                     final String PRINT_LINE = "---------------------------------------------\n";
                     String currStr = "";
                     currStr += (PRINT_LINE);
@@ -108,12 +117,10 @@ public class RunWindowController {
                         currStr +=("Run result:\n" + targetDTO.getTaskRunResult());
                     }
                     currStr +=(PRINT_LINE);
-
+                    progressBar.setProgress(progressBar.getProgress() + (1/(targetsList.size())));
                     taskRunConsole.setText(taskRunConsole.getText() + currStr);
                 }
             });
-
-
         };
         Consumer<PausableThreadPoolExecutor> threadPoolExecutorConsumer = pausableThreadPoolExecutor -> {
             this.pauseToggle.selectedProperty().addListener(new ChangeListener<Boolean>() {
@@ -133,7 +140,6 @@ public class RunWindowController {
             public void run() {
                 engine.activateTask(consoleConsumer,threadPoolExecutorConsumer, taskParams,
                         taskType, runType.equals(RunType.INCREMENTAL), numOfThreads, targetsList);
-
             }
         }).start();
     }

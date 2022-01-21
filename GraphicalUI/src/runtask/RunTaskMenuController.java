@@ -12,6 +12,7 @@ import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import task.RunType;
 import task.TaskType;
@@ -86,6 +87,7 @@ public class RunTaskMenuController {
                     runWindowController.runTask(taskParams, numOfThreads.getValue(),
                             taskType.getValue(), runType.getValue(), targetSet);
                     Stage secondaryStage = new Stage();
+                    secondaryStage.initModality(Modality.APPLICATION_MODAL);
                     secondaryStage.setScene(scene);
                     secondaryStage.setTitle("Run task");
                     secondaryStage.show();

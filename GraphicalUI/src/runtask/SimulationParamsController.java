@@ -67,8 +67,8 @@ public class SimulationParamsController {
                     processTimeTextArea.setText("1000");
                 }
                 else if(newValue.equals("")){
-                    processTime.set(1000);
-                    processTimeTextArea.setText("1000");
+//                    processTime.set(1000);
+//                    processTimeTextArea.setText("1000");
                 }
                 else{
                     processTime.set(Integer.valueOf(newValue));
