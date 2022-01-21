@@ -3,25 +3,21 @@ package runtask;
 import dto.TargetDTO;
 import dto.TaskParamsDTO;
 import engine.Engine;
+import exceptions.TargetNotExistException;
 import javafx.application.Platform;
-import javafx.beans.binding.Bindings;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.layout.StackPane;
-import javafx.scene.shape.Circle;
-import javafx.util.Callback;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.VBox;
 import target.RunResults;
 import task.PausableThreadPoolExecutor;
 import task.RunType;
 import task.TaskType;
 
 import java.time.format.DateTimeFormatter;
-import java.util.List;
 import java.util.Set;
 import java.util.function.Consumer;
 
@@ -30,26 +26,24 @@ public class RunWindowController {
 
     private Engine engine;
 
+
     @FXML
     private TextArea taskRunConsole;
 
     @FXML
-    private TableView<TargetRepresenter> targetsTable;
+    private VBox frozenList;
 
     @FXML
-    private TableColumn<TargetRepresenter, StackPane> frozenColumn;
+    private VBox waitingList;
 
     @FXML
-    private TableColumn<TargetRepresenter, StackPane> waitingColumn;
+    private VBox inProcessList;
 
     @FXML
-    private TableColumn<TargetRepresenter, StackPane> inProccessColumn;
+    private VBox finishedList;
 
     @FXML
-    private TableColumn<TargetRepresenter, StackPane> finishedColumn;
-
-    @FXML
-    private TableColumn<TargetRepresenter, StackPane> SkippedColumn;
+    private VBox skippedList;
 
     @FXML
     private TextArea targetInfoConsole;
@@ -74,7 +68,6 @@ public class RunWindowController {
 
     @FXML
     private ProgressBar progressBar;
-
     @FXML
     private void initialize(){
         progressBar.setProgress(0);
@@ -85,11 +78,6 @@ public class RunWindowController {
             }
         });
 
-        frozenColumn.setCellValueFactory(new PropertyValueFactory<TargetRepresenter, StackPane>("button"));
-        waitingColumn.setCellValueFactory(new PropertyValueFactory<TargetRepresenter, StackPane>("button"));
-        finishedColumn.setCellValueFactory(new PropertyValueFactory<TargetRepresenter, StackPane>("button"));
-        inProccessColumn.setCellValueFactory(new PropertyValueFactory<TargetRepresenter, StackPane>("button"));
-        SkippedColumn.setCellValueFactory(new PropertyValueFactory<TargetRepresenter, StackPane>("button"));
 
     }
 
@@ -106,11 +94,27 @@ public class RunWindowController {
     public void runTask(TaskParamsDTO taskParams, int numOfThreads, TaskType taskType,
                         RunType runType, Set<String> targetsList) {
 
-        final ObservableList<TargetRepresenter> data = FXCollections.observableArrayList();
+
         for(String targetName: targetsList){
-            data.add(new TargetRepresenter(targetName));
+            TargetDraw currTargetDraw = new TargetDraw(targetName);
+            currTargetDraw.addEventFilter(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent event) {
+                    try {
+                        TargetDTO targetInfo = engine.getTarget(currTargetDraw.getName());
+                        targetInfoConsole.setText(targetInfo.toString());
+                    } catch (TargetNotExistException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+            frozenList.getChildren().add(currTargetDraw);
+
+
+            //frozenList.getChildren().add();
+
         }
-        targetsTable.setItems(data);
+
         double targetListSize = targetsList.size();
         Consumer<TargetDTO> consoleConsumer = targetDTO ->  {
             Platform.runLater(new Runnable() {

@@ -4,8 +4,6 @@
 <?import javafx.scene.control.ProgressBar?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.Separator?>
-<?import javafx.scene.control.TableColumn?>
-<?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.ToggleButton?>
 <?import javafx.scene.layout.BorderPane?>
@@ -15,25 +13,25 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="runtask.RunWindowController">
+<BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="564.0" prefWidth="1069.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="runtask.RunWindowController">
    <center>
       <GridPane alignment="CENTER">
         <columnConstraints>
-          <ColumnConstraints hgrow="NEVER" maxWidth="30.0" minWidth="30.0" prefWidth="30.0" />
-            <ColumnConstraints fillWidth="false" hgrow="ALWAYS" maxWidth="1.7976931348623157E308" minWidth="10.0" prefWidth="50.0" />
-            <ColumnConstraints fillWidth="false" hgrow="ALWAYS" maxWidth="1.7976931348623157E308" minWidth="10.0" prefWidth="50.0" />
-            <ColumnConstraints fillWidth="false" hgrow="ALWAYS" maxWidth="1.7976931348623157E308" minWidth="10.0" prefWidth="50.0" />
-            <ColumnConstraints fillWidth="false" hgrow="ALWAYS" maxWidth="1.7976931348623157E308" minWidth="10.0" prefWidth="50.0" />
-            <ColumnConstraints fillWidth="false" hgrow="ALWAYS" maxWidth="1.7976931348623157E308" minWidth="10.0" prefWidth="50.0" />
-            <ColumnConstraints halignment="CENTER" hgrow="NEVER" maxWidth="50.0" minWidth="50.0" prefWidth="50.0" />
-            <ColumnConstraints fillWidth="false" hgrow="ALWAYS" maxWidth="1.7976931348623157E308" minWidth="10.0" prefWidth="50.0" />
-            <ColumnConstraints fillWidth="false" hgrow="ALWAYS" maxWidth="1.7976931348623157E308" minWidth="10.0" prefWidth="50.0" />
-            <ColumnConstraints fillWidth="false" hgrow="ALWAYS" maxWidth="1.7976931348623157E308" minWidth="10.0" prefWidth="50.0" />
-            <ColumnConstraints fillWidth="false" hgrow="ALWAYS" maxWidth="1.7976931348623157E308" minWidth="10.0" prefWidth="50.0" />
-            <ColumnConstraints fillWidth="false" hgrow="ALWAYS" maxWidth="1.7976931348623157E308" minWidth="10.0" prefWidth="50.0" />
-            <ColumnConstraints fillWidth="false" hgrow="ALWAYS" maxWidth="1.7976931348623157E308" minWidth="10.0" prefWidth="50.0" />
-            <ColumnConstraints fillWidth="false" hgrow="ALWAYS" maxWidth="1.7976931348623157E308" minWidth="10.0" prefWidth="50.0" />
-            <ColumnConstraints hgrow="NEVER" maxWidth="30.0" minWidth="30.0" prefWidth="30.0" />
+          <ColumnConstraints fillWidth="false" hgrow="NEVER" maxWidth="30.0" minWidth="30.0" prefWidth="30.0" />
+            <ColumnConstraints fillWidth="false" hgrow="SOMETIMES" maxWidth="1.7976931348623157E308" minWidth="10.0" prefWidth="50.0" />
+            <ColumnConstraints fillWidth="false" hgrow="SOMETIMES" maxWidth="1.7976931348623157E308" minWidth="10.0" prefWidth="50.0" />
+            <ColumnConstraints fillWidth="false" hgrow="SOMETIMES" maxWidth="1.7976931348623157E308" minWidth="10.0" prefWidth="50.0" />
+            <ColumnConstraints fillWidth="false" hgrow="SOMETIMES" maxWidth="1.7976931348623157E308" minWidth="10.0" prefWidth="50.0" />
+            <ColumnConstraints fillWidth="false" hgrow="SOMETIMES" maxWidth="1.7976931348623157E308" minWidth="10.0" prefWidth="50.0" />
+            <ColumnConstraints fillWidth="false" hgrow="SOMETIMES" maxWidth="50.0" minWidth="50.0" prefWidth="50.0" />
+            <ColumnConstraints fillWidth="false" hgrow="SOMETIMES" maxWidth="1.7976931348623157E308" minWidth="10.0" prefWidth="50.0" />
+            <ColumnConstraints fillWidth="false" hgrow="SOMETIMES" maxWidth="1.7976931348623157E308" minWidth="10.0" prefWidth="50.0" />
+            <ColumnConstraints fillWidth="false" hgrow="SOMETIMES" maxWidth="1.7976931348623157E308" minWidth="10.0" prefWidth="50.0" />
+            <ColumnConstraints fillWidth="false" hgrow="SOMETIMES" maxWidth="1.7976931348623157E308" minWidth="10.0" prefWidth="50.0" />
+            <ColumnConstraints fillWidth="false" hgrow="SOMETIMES" maxWidth="1.7976931348623157E308" minWidth="10.0" prefWidth="50.0" />
+            <ColumnConstraints fillWidth="false" hgrow="SOMETIMES" maxWidth="1.7976931348623157E308" minWidth="10.0" prefWidth="50.0" />
+            <ColumnConstraints fillWidth="false" hgrow="SOMETIMES" maxWidth="1.7976931348623157E308" minWidth="10.0" prefWidth="50.0" />
+            <ColumnConstraints fillWidth="false" hgrow="NEVER" maxWidth="30.0" minWidth="30.0" prefWidth="30.0" />
         </columnConstraints>
         <rowConstraints>
           <RowConstraints maxHeight="30.0" minHeight="30.0" prefHeight="30.0" vgrow="NEVER" />
@@ -56,17 +54,51 @@
         </rowConstraints>
          <children>
             <TextArea fx:id="taskRunConsole" editable="false" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" GridPane.columnIndex="7" GridPane.columnSpan="7" GridPane.rowIndex="2" GridPane.rowSpan="9" />
-            <ScrollPane fitToHeight="true" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.columnSpan="5" GridPane.rowIndex="2" GridPane.rowSpan="9">
+            <ScrollPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="600.0" prefWidth="600.0" GridPane.columnIndex="1" GridPane.columnSpan="5" GridPane.rowIndex="2" GridPane.rowSpan="9">
                <content>
-                  <TableView fx:id="targetsTable" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" nodeOrientation="LEFT_TO_RIGHT">
-                     <columns>
-                        <TableColumn fx:id="frozenColumn" maxWidth="1.7976931348623157E308" prefWidth="100.0" text="Frozen" />
-                        <TableColumn fx:id="waitingColumn" maxWidth="1.7976931348623157E308" prefWidth="100.0" text="Waiting" />
-                        <TableColumn fx:id="inProccessColumn" maxWidth="1.7976931348623157E308" prefWidth="100.0" text="In process" />
-                        <TableColumn fx:id="finishedColumn" maxWidth="1.7976931348623157E308" prefWidth="100.0" text="Finished" />
-                        <TableColumn fx:id="SkippedColumn" maxWidth="1.7976931348623157E308" prefWidth="100.0" text="Skipped" />
-                     </columns>
-                  </TableView>
+                  <GridPane maxHeight="1.7976931348623157E308">
+                    <columnConstraints>
+                        <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                        <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" />
+                        <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                        <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" />
+                        <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                        <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" />
+                      <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                        <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" />
+                        <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                    </columnConstraints>
+                    <rowConstraints>
+                      <RowConstraints maxHeight="30.0" minHeight="30.0" prefHeight="30.0" vgrow="NEVER" />
+                        <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+                      <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+                      <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="30.0" minHeight="30.0" prefHeight="30.0" vgrow="NEVER" />
+                    </rowConstraints>
+                     <children>
+                        <Label text="FROZEN" />
+                        <Label layoutX="40.0" layoutY="17.0" text="WAITING" GridPane.columnIndex="2" />
+                        <Label layoutX="140.0" layoutY="17.0" text="IN PROCESS" GridPane.columnIndex="4" />
+                        <Label layoutX="240.0" layoutY="17.0" text="FINISHED" GridPane.columnIndex="6" />
+                        <Label layoutX="240.0" layoutY="17.0" text="SKIPPED" GridPane.columnIndex="8" />
+                        <Separator orientation="VERTICAL" prefHeight="200.0" GridPane.columnIndex="1" GridPane.rowSpan="2147483647" />
+                        <Separator orientation="VERTICAL" prefHeight="200.0" GridPane.columnIndex="3" GridPane.rowSpan="2147483647" />
+                        <Separator layoutX="267.0" layoutY="10.0" orientation="VERTICAL" prefHeight="200.0" GridPane.columnIndex="5" GridPane.rowSpan="2147483647" />
+                        <Separator layoutX="110.0" layoutY="10.0" orientation="VERTICAL" prefHeight="200.0" GridPane.columnIndex="7" GridPane.rowSpan="2147483647" />
+                        <VBox fx:id="frozenList" alignment="TOP_CENTER" maxHeight="1.7976931348623157E308" prefHeight="200.0" prefWidth="100.0" spacing="10.0" GridPane.rowIndex="1" GridPane.rowSpan="2147483647" />
+                        <VBox fx:id="waitingList" alignment="TOP_CENTER" layoutX="10.0" layoutY="40.0" prefHeight="200.0" prefWidth="100.0" spacing="10.0" GridPane.columnIndex="2" GridPane.rowIndex="1" GridPane.rowSpan="2147483647" />
+                        <VBox fx:id="inProcessList" alignment="TOP_CENTER" layoutX="116.0" layoutY="40.0" prefHeight="200.0" prefWidth="100.0" spacing="10.0" GridPane.columnIndex="4" GridPane.rowIndex="1" GridPane.rowSpan="2147483647" />
+                        <VBox fx:id="finishedList" alignment="TOP_CENTER" layoutX="222.0" layoutY="40.0" prefHeight="200.0" prefWidth="100.0" spacing="10.0" GridPane.columnIndex="6" GridPane.rowIndex="1" GridPane.rowSpan="2147483647" />
+                        <VBox fx:id="skippedList" alignment="TOP_CENTER" layoutX="328.0" layoutY="40.0" prefHeight="200.0" prefWidth="100.0" spacing="10.0" GridPane.columnIndex="8" GridPane.rowIndex="1" GridPane.rowSpan="2147483647" />
+                     </children>
+                  </GridPane>
                </content>
             </ScrollPane>
             <TextArea fx:id="targetInfoConsole" layoutX="600.0" layoutY="66.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" GridPane.columnIndex="7" GridPane.columnSpan="7" GridPane.rowIndex="12" GridPane.rowSpan="4" />
