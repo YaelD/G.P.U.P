@@ -60,11 +60,11 @@
                <content>
                   <TableView fx:id="targetsTable" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" nodeOrientation="LEFT_TO_RIGHT">
                      <columns>
-                        <TableColumn maxWidth="1.7976931348623157E308" prefWidth="100.0" text="Frozen" />
-                        <TableColumn maxWidth="1.7976931348623157E308" prefWidth="100.0" text="Waiting" />
-                        <TableColumn maxWidth="1.7976931348623157E308" prefWidth="100.0" text="In process" />
-                        <TableColumn maxWidth="1.7976931348623157E308" prefWidth="100.0" text="Finished" />
-                        <TableColumn maxWidth="1.7976931348623157E308" prefWidth="100.0" text="Skipped" />
+                        <TableColumn fx:id="frozenColumn" maxWidth="1.7976931348623157E308" prefWidth="100.0" text="Frozen" />
+                        <TableColumn fx:id="waitingColumn" maxWidth="1.7976931348623157E308" prefWidth="100.0" text="Waiting" />
+                        <TableColumn fx:id="inProccessColumn" maxWidth="1.7976931348623157E308" prefWidth="100.0" text="In process" />
+                        <TableColumn fx:id="finishedColumn" maxWidth="1.7976931348623157E308" prefWidth="100.0" text="Finished" />
+                        <TableColumn fx:id="SkippedColumn" maxWidth="1.7976931348623157E308" prefWidth="100.0" text="Skipped" />
                      </columns>
                   </TableView>
                </content>

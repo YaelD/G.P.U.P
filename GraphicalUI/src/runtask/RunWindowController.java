@@ -7,12 +7,14 @@ import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.scene.control.Label;
-import javafx.scene.control.ProgressBar;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.ToggleButton;
+import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.StackPane;
+import javafx.scene.shape.Circle;
+import javafx.util.Callback;
 import target.RunResults;
 import task.PausableThreadPoolExecutor;
 import task.RunType;
@@ -32,7 +34,22 @@ public class RunWindowController {
     private TextArea taskRunConsole;
 
     @FXML
-    private TableView<?> targetsTable;
+    private TableView<TargetRepresenter> targetsTable;
+
+    @FXML
+    private TableColumn<TargetRepresenter, StackPane> frozenColumn;
+
+    @FXML
+    private TableColumn<TargetRepresenter, StackPane> waitingColumn;
+
+    @FXML
+    private TableColumn<TargetRepresenter, StackPane> inProccessColumn;
+
+    @FXML
+    private TableColumn<TargetRepresenter, StackPane> finishedColumn;
+
+    @FXML
+    private TableColumn<TargetRepresenter, StackPane> SkippedColumn;
 
     @FXML
     private TextArea targetInfoConsole;
@@ -68,6 +85,12 @@ public class RunWindowController {
             }
         });
 
+        frozenColumn.setCellValueFactory(new PropertyValueFactory<TargetRepresenter, StackPane>("button"));
+        waitingColumn.setCellValueFactory(new PropertyValueFactory<TargetRepresenter, StackPane>("button"));
+        finishedColumn.setCellValueFactory(new PropertyValueFactory<TargetRepresenter, StackPane>("button"));
+        inProccessColumn.setCellValueFactory(new PropertyValueFactory<TargetRepresenter, StackPane>("button"));
+        SkippedColumn.setCellValueFactory(new PropertyValueFactory<TargetRepresenter, StackPane>("button"));
+
     }
 
     private void boundUI(){
@@ -83,11 +106,12 @@ public class RunWindowController {
     public void runTask(TaskParamsDTO taskParams, int numOfThreads, TaskType taskType,
                         RunType runType, Set<String> targetsList) {
 
-
+        final ObservableList<TargetRepresenter> data = FXCollections.observableArrayList();
+        for(String targetName: targetsList){
+            data.add(new TargetRepresenter(targetName));
+        }
+        targetsTable.setItems(data);
         double targetListSize = targetsList.size();
-
-
-
         Consumer<TargetDTO> consoleConsumer = targetDTO ->  {
             Platform.runLater(new Runnable() {
                 @Override
@@ -122,6 +146,11 @@ public class RunWindowController {
                 }
             });
         };
+
+        Consumer<TargetDTO> blabla = targetDTO -> {
+
+        };
+
         Consumer<PausableThreadPoolExecutor> threadPoolExecutorConsumer = pausableThreadPoolExecutor -> {
             this.pauseToggle.selectedProperty().addListener(new ChangeListener<Boolean>() {
                 @Override

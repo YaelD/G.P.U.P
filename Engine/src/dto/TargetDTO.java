@@ -13,7 +13,7 @@ public class TargetDTO {
     private PlaceInGraph place;
     private Set<String> requiredFor = new HashSet<>();
     private Set<String> dependsOn = new HashSet<>();
-    private String info = null;
+    private String info;
     private RunResults runResult;
     private long runTime;
     private LocalTime startingTime = null;
