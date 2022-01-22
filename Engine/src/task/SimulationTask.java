@@ -31,7 +31,7 @@ public class SimulationTask extends Task{
 
 
     @Override
-    public void updateParameters(TaskParamsDTO taskParamsDTO, String workingDirectory) {
+    public void updateParameters(TaskParamsDTO taskParamsDTO) {
         if(taskParamsDTO instanceof SimulationTaskParamsDTO){
             SimulationTaskParamsDTO simulationTaskParamsDTO = (SimulationTaskParamsDTO) taskParamsDTO;
             this.processTime = simulationTaskParamsDTO.getProcessTime();
@@ -44,29 +44,31 @@ public class SimulationTask extends Task{
     @Override
     protected TargetDTO executeTaskOnTarget(Target target) {
         TargetDTO targetDTO = null;
-        LocalTime startTime, endTime;
+        //LocalTime startTime, endTime;
         int currTargetProcessTime = this.processTime;
 
         if(this.isRandom){
             currTargetProcessTime = getRandomProcessTime();
         }
         try {
-            target.setRunStatus(RunStatus.IN_PROCESS); //todo: block
-            startTime = LocalTime.now();
+            target.setRunStatus(RunStatus.IN_PROCESS);
+            target.setStartingProcessTime(LocalTime.now());
+            //startTime = LocalTime.now();
             Thread.sleep(currTargetProcessTime);
-            endTime = LocalTime.now();
+            //endTime = LocalTime.now();
+            target.setEndingProcessTime(LocalTime.now());
             if(getRandomNumber() <= this.successRate){
                 if(getRandomNumber() <= this.successWithWarningsRate){
-                    target.setRunResult(RunResults.WARNING);//todo: block
+                    target.setRunResult(RunResults.WARNING);
                 }else{
-                    target.setRunResult(RunResults.SUCCESS);//todo: block
+                    target.setRunResult(RunResults.SUCCESS);
                 }
             }else{
-                target.setRunResult(RunResults.FAILURE);//todo: block
+                target.setRunResult(RunResults.FAILURE);
             }
-            target.setRunningTime(Duration.between(startTime, endTime).toMillis()); //todo: block
-            target.setRunStatus(RunStatus.FINISHED); //todo: block
-            targetDTO = new TargetDTO(target, startTime, endTime, null);
+            target.setRunningTime(Duration.between(target.getStartingProcessTime(), target.getEndingProcessTime()).toMillis());
+            target.setRunStatus(RunStatus.FINISHED);
+            targetDTO = new TargetDTO(target, null);
 
         } catch (InterruptedException e) {
             e.printStackTrace();

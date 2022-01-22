@@ -65,7 +65,6 @@ public abstract class Task{
 
         List<Target> sortedTargets = topologicalSort(this.graph);
 
-
         BlockingQueue<Runnable> workingQueue = new LinkedBlockingQueue<>();
         PausableThreadPoolExecutor threadPool = new PausableThreadPoolExecutor(threadNumber, workingQueue);
         threadPoolConsumer.accept(threadPool);
@@ -103,10 +102,11 @@ public abstract class Task{
                     }
                 }
                 if(currTarget.getRunStatus().equals(RunStatus.WAITING)){
+                    currTarget.setStartWaitingTime(LocalTime.now());
                     currTarget.getSerialSetsMonitors();
                     targetResult = executeTaskOnTarget(currTarget);
                     if(targetResult.getRunResult().equals(RunResults.FAILURE)){
-                        currTarget.updateParentsStatus(targetResult.getSkippedFathers());
+                        currTarget.updateParentsStatus(targetResult.getSkippedFathers(), currTarget.getName()); //כל מי שסגרתי לריצה בגללי
                     }
                     getOpenedTargetsToRun(targetResult, currTarget);
                 }
@@ -128,6 +128,7 @@ public abstract class Task{
         for(Target currParent : target.getRequiredFor()){
             for(Target childOfTheCurrParent : currParent.getDependsOn()){
                 if (childOfTheCurrParent.getRunStatus().equals(RunStatus.FROZEN)) {
+                    currParent.getWaitForThisTargetsToBeFinished().add(childOfTheCurrParent.getName());
                     isOpenedToRun = false;
                 }
             }
@@ -195,7 +196,7 @@ public abstract class Task{
         return targetsInDegree;
     }
 
-    public abstract void updateParameters(TaskParamsDTO taskParamsDTO, String workingDirectory);
+    public abstract void updateParameters(TaskParamsDTO taskParamsDTO);
 
     //----------------------------------------------------------------------------------------------
 //    class TaskRunner implements Runnable{

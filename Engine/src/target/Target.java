@@ -5,6 +5,7 @@ import graph.SerialSet;
 import graph.SerialSetsContainer;
 import schema.generated.GPUPTarget;
 
+import java.time.LocalTime;
 import java.util.*;
 
 public class Target implements Cloneable {
@@ -18,6 +19,11 @@ public class Target implements Cloneable {
     private long runningTime;
     private RunStatus runStatus;
     private SerialSetsContainer serialSetsContainer;
+    private LocalTime startingProcessTime = null;
+    private LocalTime endingProcessTime = null;
+    private LocalTime startWaitingTime = null;
+    private Set<String> failedChildTargets = new HashSet<>();
+    private Set<String> waitForThisTargetsToBeFinished = new HashSet<>();
 
 
     public Target(GPUPTarget target) {
@@ -90,6 +96,46 @@ public class Target implements Cloneable {
         notifyAll();
     }
 
+    public LocalTime getStartingProcessTime() {
+        return startingProcessTime;
+    }
+
+    public LocalTime getEndingProcessTime() {
+        return endingProcessTime;
+    }
+
+    public synchronized void setStartingProcessTime(LocalTime startingProcessTime) {
+        this.startingProcessTime = startingProcessTime;
+    }
+
+    public synchronized void setEndingProcessTime(LocalTime endingProcessTime) {
+        this.endingProcessTime = endingProcessTime;
+    }
+
+    public LocalTime getStartWaitingTime() {
+        return startWaitingTime;
+    }
+
+    public synchronized void setStartWaitingTime(LocalTime startWaitingTime) {
+        this.startWaitingTime = startWaitingTime;
+    }
+
+    public Set<String> getFailedChildTargets() {
+        return failedChildTargets;
+    }
+
+    public Set<String> getWaitForThisTargetsToBeFinished() {
+        return waitForThisTargetsToBeFinished;
+    }
+
+    public void setRequiredFor(Set<Target> requiredFor) {
+        this.requiredFor = requiredFor;
+    }
+
+    public void setDependsOn(Set<Target> dependsOn) {
+        this.dependsOn = dependsOn;
+    }
+
     public void getSerialSetsMonitors(){
         for(SerialSet currSerialSet : this.getSerialSetsContainer().getSerialSetList()){
             currSerialSet.getSerialSetMonitor();
@@ -102,31 +148,7 @@ public class Target implements Cloneable {
         }
     }
 
-
-    @Override
-    public String toString() {
-        return "target.Target{" +
-                "name='" + name + '\'' +
-                '}';
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Target target = (Target) o;
-        return Objects.equals(name, target.name) && place == target.place && Objects.equals(requiredFor, target.requiredFor) && Objects.equals(dependsOn, target.dependsOn) && Objects.equals(info, target.info);
-    }
-
-    public void setRequiredFor(Set<Target> requiredFor) {
-        this.requiredFor = requiredFor;
-    }
-
-    public void setDependsOn(Set<Target> dependsOn) {
-        this.dependsOn = dependsOn;
-    }
-
-    public void updateParentsStatus(Set<String> skippedFathers) {
+    public void updateParentsStatus(Set<String> skippedFathers, String sourceTargetName) {
         if(this.getRequiredFor().isEmpty()){
             return;
         }
@@ -134,8 +156,9 @@ public class Target implements Cloneable {
             for(Target currTarget : this.getRequiredFor()){
                 currTarget.setRunStatus(RunStatus.SKIPPED);
                 currTarget.setRunResult(RunResults.SKIPPED);
+                currTarget.getFailedChildTargets().add(sourceTargetName);
                 skippedFathers.add(currTarget.getName());
-                currTarget.updateParentsStatus(skippedFathers);
+                currTarget.updateParentsStatus(skippedFathers, sourceTargetName);
             }
         }
     }
@@ -156,6 +179,21 @@ public class Target implements Cloneable {
                 target.getDependsOnAncestors(targetsSet);
             }
         }
+    }
+
+    @Override
+    public String toString() {
+        return "target.Target{" +
+                "name='" + name + '\'' +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Target target = (Target) o;
+        return Objects.equals(name, target.name) && place == target.place && Objects.equals(requiredFor, target.requiredFor) && Objects.equals(dependsOn, target.dependsOn) && Objects.equals(info, target.info);
     }
 
     @Override

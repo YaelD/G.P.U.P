@@ -27,11 +27,16 @@ import java.util.function.Consumer;
 public class SystemEngine implements Engine{
 
     private Graph graph;
+    private Graph graphForRunning = null;
     private Map<TaskType, Task> tasksInSystem = new HashMap<>();
     private String workingDirectory;
     private boolean isFileLoaded = false;
     private int maxThreadNum;
     private SerialSetsContainer serialSetsContainer;
+
+    public Graph getGraphForRunning() {
+        return graphForRunning;
+    }
 
     @Override
     public boolean loadFile(String path) throws
@@ -234,11 +239,11 @@ public class SystemEngine implements Engine{
                                  int threadNumber, Set<String> selectedTargets) {
 
         List<Consumer<TargetDTO>> outputConsumers = new ArrayList<>();
-        Graph graphForRunning = Graph.buildGraphForRunning(selectedTargets, this.graph);
+        this.graphForRunning = Graph.buildGraphForRunning(selectedTargets, this.graph);
 
         if(this.tasksInSystem.containsKey(taskType)){
-            this.tasksInSystem.get(taskType).updateParameters(taskParams, this.workingDirectory);
-            this.tasksInSystem.get(taskType).setGraph(graphForRunning);
+            this.tasksInSystem.get(taskType).updateParameters(taskParams);
+            this.tasksInSystem.get(taskType).setGraph(this.graphForRunning);
 //            if(isIncremental){
 //                if(this.tasksInSystem.get(taskType).getGraph().getTargets().isEmpty()){
 //                    this.tasksInSystem.get(taskType).setGraph(this.graph.clone());
@@ -252,12 +257,12 @@ public class SystemEngine implements Engine{
             switch (taskType){
                 case SIMULATION_TASK:
                     if(taskParams instanceof SimulationTaskParamsDTO){
-                        this.tasksInSystem.put(taskType, new SimulationTask(graphForRunning, (SimulationTaskParamsDTO) taskParams,this.serialSetsContainer));
+                        this.tasksInSystem.put(taskType, new SimulationTask(this.graphForRunning, (SimulationTaskParamsDTO) taskParams,this.serialSetsContainer));
                     }
                     break;
                 case COMPILATION_TASK:
                     if(taskParams instanceof CompilationTaskParamsDTO){
-                        this.tasksInSystem.put(taskType, new CompilationTask(graphForRunning, (CompilationTaskParamsDTO) taskParams,this.serialSetsContainer, this.workingDirectory));
+                        this.tasksInSystem.put(taskType, new CompilationTask(this.graphForRunning, (CompilationTaskParamsDTO) taskParams,this.serialSetsContainer));
                     }
                     break;
             }
@@ -358,6 +363,15 @@ public class SystemEngine implements Engine{
             return true;
 
         }
+    }
+
+    @Override
+    public TargetDTO getRunningTarget(String targetName) {
+        TargetDTO targetDTO = null;
+        if(this.graphForRunning != null){
+            targetDTO = new TargetDTO(graphForRunning.getTarget(targetName));
+        }
+        return targetDTO;
     }
 
     @Override
