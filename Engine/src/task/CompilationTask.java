@@ -55,8 +55,6 @@ public class CompilationTask extends Task{
             }
             runResult += processResult;
 
-            //Todo: target.setRunResult(RunResults.WARNING);
-
             target.setRunningTime(Duration.between(target.getStartingProcessTime(), target.getEndingProcessTime()).toMillis());
             target.setRunStatus(RunStatus.FINISHED);
             targetDTO = new TargetDTO(target, runResult);
