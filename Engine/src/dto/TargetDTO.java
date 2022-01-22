@@ -27,7 +27,7 @@ public class TargetDTO {
     private Set<String> skippedFathers = new HashSet<>();
     private int totalNumOfSerialSets;
     private String taskRunResult = null;
-    private Set<String> serialSetNames = null; //all serial set names that the current target belongs to them - needed always during the running of the task.
+    private Set<String> serialSetNames = new HashSet<>();; //all serial set names that the current target belongs to them - needed always during the running of the task.
     private LocalTime startingProcessTime = null; //the time that the target began the process- needed when the run status is "in process"
     private LocalTime endingProcessTime = null; //the time that the target ended the process
     private LocalTime startWaitingTime = null; //the time that the target begins waiting to start the process- needed when the run status is "waiting", for calculating the duration of the waiting and showing it to the user

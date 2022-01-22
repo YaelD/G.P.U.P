@@ -310,8 +310,8 @@ public class SystemEngine implements Engine{
                 out.write("Target info:" + targetDTO.getInfo() + "\n");
             }
             if(!targetDTO.getRunResult().equals(RunResults.SKIPPED)){
-                out.write("Process Start time:" + targetDTO.getStartingTime().format(DateTimeFormatter.ofPattern("HH:mm:ss")) + "\n");
-                out.write("Process End time:" + targetDTO.getEndingTime().format(DateTimeFormatter.ofPattern("HH:mm:ss")) + "\n");
+//                out.write("Process Start time:" + targetDTO.getStartingTime().format(DateTimeFormatter.ofPattern("HH:mm:ss")) + "\n");
+//                out.write("Process End time:" + targetDTO.getEndingTime().format(DateTimeFormatter.ofPattern("HH:mm:ss")) + "\n");
                 if(!targetDTO.getTargetsThatCanBeRun().isEmpty()){
                     out.write("The dependent Targets that were opened:\n" + targetDTO.getTargetsThatCanBeRun() + "\n");
                 }
