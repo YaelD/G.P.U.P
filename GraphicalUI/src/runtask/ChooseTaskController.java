@@ -1,11 +1,10 @@
 package runtask;
 
 import engine.Engine;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.*;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -14,6 +13,10 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import task.RunType;
 import task.TaskType;
+
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 public class ChooseTaskController {
 
@@ -32,6 +35,8 @@ public class ChooseTaskController {
     private Engine engine;
     private HBox menuPane;
 
+    private SimpleListProperty<String> targetsList;
+
     private SimpleObjectProperty<TaskType> currTaskType;
     private SimpleObjectProperty<RunType> currRunType;
 
@@ -39,6 +44,12 @@ public class ChooseTaskController {
     public ChooseTaskController() {
         currTaskType = new SimpleObjectProperty<>(TaskType.SIMULATION_TASK);
         currRunType = new SimpleObjectProperty<>(RunType.FROM_SCRATCH);
+        this.targetsList = new SimpleListProperty<>();
+    }
+
+
+    public void setTargetsList(SimpleListProperty<String> targetListProperty) {
+        this.targetsList.bind(targetListProperty);
     }
 
     public void setSimulationLayout(GridPane simulationLayout) {
@@ -81,14 +92,26 @@ public class ChooseTaskController {
     }
 
     private boolean validation() {
+        Set<String> targetSet = new HashSet<>();
+        targetSet.addAll(this.targetsList);
+
         // TODO: send set of targets!
-//        if(this.currRunType.getValue().equals(RunType.INCREMENTAL) && !engine.isRunInIncrementalMode(this.currTaskType.getValue(), )){
-//            warningLabel.setVisible(true);
-//            warningLabel.setText("The " + currTaskType.getValue().getTaskType() + " task cannot run incrementally" +
-//                    "\nSetting run From Scratch by default");
-//            //this.currRunType.setValue(RunType.FROM_SCRATCH);
-//            this.runTypeToggle.selectToggle(fromScratchRadioButton);
-//        }
+        if(this.currRunType.getValue().equals(RunType.INCREMENTAL) && !engine.isRunInIncrementalMode(this.currTaskType.getValue(),targetSet )){
+            warningLabel.setVisible(true);
+            warningLabel.setText("The " + currTaskType.getValue().getTaskType() + " task cannot run incrementally" +
+                    "\nSetting run From Scratch by default");
+            this.currRunType.setValue(RunType.FROM_SCRATCH);
+            this.runTypeToggle.selectToggle(fromScratchRadioButton);
+            return false;
+        }
+        if(targetSet.isEmpty()){
+            warningLabel.setVisible(true);
+            warningLabel.setText("Please choose some targets");
+            return false;
+
+
+        }
+
 
         return true;
     }

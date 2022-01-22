@@ -51,8 +51,8 @@ public class SimulationTask extends Task{
             currTargetProcessTime = getRandomProcessTime();
         }
         try {
-            target.setRunStatus(RunStatus.IN_PROCESS);
             target.setStartingProcessTime(LocalTime.now());
+            target.setRunStatus(RunStatus.IN_PROCESS);
             //startTime = LocalTime.now();
             Thread.sleep(currTargetProcessTime);
             //endTime = LocalTime.now();

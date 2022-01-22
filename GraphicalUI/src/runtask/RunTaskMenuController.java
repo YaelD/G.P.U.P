@@ -65,6 +65,7 @@ public class RunTaskMenuController {
         this.chooseTargetsTogglesController.setTargetsList(targetsList);
         this.chooseThreadsAndTaskTogglesController.setCompilationLayout(this.compilationTaskToggles);
         this.chooseThreadsAndTaskTogglesController.setSimulationLayout(this.simulationTaskToggles);
+        this.chooseThreadsAndTaskTogglesController.setTargetsList(this.targetsList);
         baseHBox.getChildren().remove(simulationTaskToggles);
         baseHBox.getChildren().remove(compilationTaskToggles);
         this.chooseThreadsAndTaskTogglesController.setMenuPane(baseHBox);
@@ -73,8 +74,10 @@ public class RunTaskMenuController {
         ActiveTaskCallback callback = new ActiveTaskCallback() {
             @Override
             public void activeTask(TaskParamsDTO taskParams) {
+                if(targetsList.isEmpty()){
+                    return;
+                }
                 URL resource = getClass().getResource("run_task_popup.fxml");
-                //TODO: validate all the parameters
                 FXMLLoader fxmlLoader = new FXMLLoader();
                 fxmlLoader.setLocation(resource);
                 BorderPane root = null;

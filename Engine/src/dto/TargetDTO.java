@@ -174,6 +174,10 @@ public class TargetDTO {
         return taskRunResult;
     }
 
+    public String getRunningTargetStatus() {
+        return runningTargetStatus;
+    }
+
     public void updateRunningTargetStatus(RunStatus runStatus){
         this.runningTargetStatus = "";
         this.runningTargetStatus += "Target name: "+ this.name;
@@ -185,9 +189,10 @@ public class TargetDTO {
         else{
             this.runningTargetStatus += "this target does not belong to any serial set";
         }
-        this.runningTargetStatus += "Run status: ";
+        this.runningTargetStatus += "\nRun status: ";
         switch (runStatus){
             case WAITING:
+                //System.out.println("In target" + );
                 if(this.startWaitingTime != null){
                     this.runningTargetStatus += "waiting \nWaiting time: " +
                             Duration.between(this.startWaitingTime, LocalTime.now()).toMillis() + " ms";

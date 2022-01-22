@@ -37,8 +37,8 @@ public class CompilationTask extends Task{
         String runResult = "";
         //LocalTime startTime, endTime;
         try {
-            target.setRunStatus(RunStatus.IN_PROCESS);
             target.setStartingProcessTime(LocalTime.now());
+            target.setRunStatus(RunStatus.IN_PROCESS);
             //startTime = LocalTime.now();
             Process process = CompileTarget(target);
             String processResult = getProcessResult(process);

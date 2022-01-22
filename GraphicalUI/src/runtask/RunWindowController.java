@@ -1,8 +1,10 @@
 package runtask;
 
+import dto.GraphDTO;
 import dto.TargetDTO;
 import dto.TaskParamsDTO;
 import engine.Engine;
+import graph.Graph;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -13,7 +15,9 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.GridPane;
 import target.RunResults;
+import target.Target;
 import task.PausableThreadPoolExecutor;
 import task.RunType;
 import task.TaskType;
@@ -27,17 +31,13 @@ import java.util.function.Consumer;
 public class RunWindowController {
 
     private Engine engine;
+    private Graph graph;
 
+    @FXML
+    private GridPane runResultsPane;
 
     @FXML
     private TextArea taskRunConsole;
-
-
-//    @FXML private VBox frozenList;
-//    @FXML private VBox waitingList;
-//    @FXML private VBox inProcessList;
-//    @FXML private VBox finishedList;
-//    @FXML private VBox skippedList;
 
     @FXML
     private TableView<TargetsTableButtonsHandler> targetsTable;
@@ -92,27 +92,22 @@ public class RunWindowController {
         });
         frozenColumn.setCellValueFactory(new PropertyValueFactory<TargetsTableButtonsHandler, Button>("frozenBtn"));
         waitingColumn.setCellValueFactory(new PropertyValueFactory<TargetsTableButtonsHandler, Button>("waitingBtn"));
-
-
-
-
-
-    }
-
-    private void boundUI(){
+        inProcessColumn.setCellValueFactory(new PropertyValueFactory<TargetsTableButtonsHandler, Button>("inProcessBtn"));
+        finishedColumn.setCellValueFactory(new PropertyValueFactory<TargetsTableButtonsHandler, Button>("finishedBtn"));
+        skippedColumn.setCellValueFactory(new PropertyValueFactory<TargetsTableButtonsHandler, Button>("skippedBtn"));
 
     }
+
 
 
     public void setEngine(Engine systemEngine) {
         this.engine = systemEngine;
-
+        this.graph = this.engine.getGraphForRunning();
     }
 
     public void runTask(TaskParamsDTO taskParams, int numOfThreads, TaskType taskType,
                         RunType runType, Set<String> targetsList) {
 
-        List<TargetsTableButtonsHandler> targetDraws = new ArrayList<>();
         ObservableList<TargetsTableButtonsHandler> data = FXCollections.observableArrayList();
         for(String targetName: targetsList){
             TargetsTableButtonsHandler targetDraw =  new TargetsTableButtonsHandler(targetName);
@@ -120,49 +115,38 @@ public class RunWindowController {
                 currButton.addEventFilter(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
                     @Override
                     public void handle(MouseEvent event) {
-                        TargetDTO targetInfo = engine.getRunningTarget(targetDraw.getName());
-                        targetInfoConsole.setText(targetInfo.toString());
+                        TargetDTO targetDTO = engine.getRunningTarget(targetDraw.getName());
+                        String str = targetDTO.getRunningTargetStatus();
+                        if(str.equals("")){
+                            str = createRunResultString(targetDTO);
+                        }
+                        targetInfoConsole.setText(str);
                     }
                 });
             }
             data.add(targetDraw);
-
         }
         targetsTable.setItems(data);
 
-
-//        for(String targetName: targetsList){
-//            TargetDraw currTargetDraw = new TargetDraw(targetName);
-//            currTargetDraw.addEventFilter(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
-//                @Override
-//                public void handle(MouseEvent event) {
-//                    try {
-//                        TargetDTO targetInfo = engine.getTarget(currTargetDraw.getName());
-//                        targetInfoConsole.setText(targetInfo.toString());
-//                    } catch (TargetNotExistException e) {
-//                        e.printStackTrace();
-//                    }
-//                }
-//            });
-//            frozenList.getChildren().add(currTargetDraw);
-//        }
-
         //----------------------------------------------------
-        //Add target run status change listener
         Thread statusChangeListener = new Thread(new Runnable() {
             @Override
             public void run() {
                 while (progressBar.progressProperty().get() != 1){
+
                     for(TargetsTableButtonsHandler currTargetDraw: data) {
                         TargetDTO targetDTO = engine.getRunningTarget(currTargetDraw.getName());
-                        if(targetDTO.getRunStatus() != null){
-                            System.out.println(targetDTO.getName() + "----" + targetDTO.getRunStatus());
-                            currTargetDraw.updateButtons(targetDTO.getRunStatus());
+                        if(targetDTO != null && targetDTO.getRunStatus()!= null){
+                            currTargetDraw.setRunStatus(targetDTO.getRunStatus());
                         }
                     }
                 }
             }
         });
+
+        statusChangeListener.setDaemon(false);
+
+
 
 
 
@@ -172,37 +156,12 @@ public class RunWindowController {
             Platform.runLater(new Runnable() {
                 @Override
                 public void run() {
-                    progressBar.progressProperty().set(progressBar.progressProperty().doubleValue() + (double)(1/targetListSize));
-                    final String PRINT_LINE = "---------------------------------------------\n";
-                    String currStr = "";
-                    currStr += (PRINT_LINE);
-                    currStr +=("Target name: " + targetDTO.getName()+ "\n") ;
-                    currStr +=("Process result: " + targetDTO.getRunResult().getStatus() + "\n");
-                    if(targetDTO.getInfo() != null){
-                        currStr +=("Target info:" + targetDTO.getInfo() + "\n");
-                    }
-                    if(!targetDTO.getRunResult().equals(RunResults.SKIPPED)){
-                        if(!targetDTO.getTargetsThatCanBeRun().isEmpty()){
-                            currStr +=("The dependent Targets that were opened:\n" + targetDTO.getTargetsThatCanBeRun() + "\n");
-                        }
-                        if(targetDTO.getRunResult().equals(RunResults.FAILURE)){
-                            if(!targetDTO.getSkippedFathers().isEmpty()){
-                                currStr +=("The targets that won't be able to process are: \n" + targetDTO.getSkippedFathers() + "\n");
-                            }
-                        }
-                    }
-                    if(targetDTO.getTaskRunResult() != null){
-                        currStr +=("Run result:\n" + targetDTO.getTaskRunResult());
-                    }
-                    currStr +=(PRINT_LINE);
-                    progressBar.setProgress(progressBar.getProgress() + (1/(targetsList.size())));
+                    progressBar.progressProperty().set(progressBar.progressProperty().doubleValue() + (double) (1/targetListSize));
+                    String currStr = createRunResultString(targetDTO);
                     taskRunConsole.setText(taskRunConsole.getText() + currStr);
+
                 }
             });
-        };
-
-        Consumer<TargetDTO> blabla = targetDTO -> {
-
         };
 
         Consumer<PausableThreadPoolExecutor> threadPoolExecutorConsumer = pausableThreadPoolExecutor -> {
@@ -222,9 +181,53 @@ public class RunWindowController {
             @Override
             public void run() {
                 statusChangeListener.start();
-                engine.activateTask(consoleConsumer,threadPoolExecutorConsumer, taskParams,
+                GraphDTO taskResult = engine.activateTask(consoleConsumer,threadPoolExecutorConsumer, taskParams,
                         taskType, runType.equals(RunType.INCREMENTAL), numOfThreads, targetsList);
+                Platform.runLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        progressBar.setProgress(1);
+                        runResultsPane.setVisible(true);
+                        numFinishedSuccessLabel.setText(String.valueOf(taskResult.getNumOfTargetsRunResult(RunResults.SUCCESS)));
+                        numFailureLabel.setText(String.valueOf(taskResult.getNumOfTargetsRunResult(RunResults.FAILURE)));
+                        numSkippedLabel.setText(String.valueOf(taskResult.getNumOfTargetsRunResult(RunResults.SKIPPED)));
+                        numFinishedWarningsLabel.setText(String.valueOf(taskResult.getNumOfTargetsRunResult(RunResults.WARNING)));
+                    }
+                });
             }
         }).start();
     }
+
+    private String createRunResultString(TargetDTO targetDTO){
+        final String PRINT_LINE = "---------------------------------------------\n";
+        String currStr = "";
+        currStr += (PRINT_LINE);
+        currStr +=("Target name: " + targetDTO.getName()+ "\n") ;
+        currStr +=("Process result: " + targetDTO.getRunResult().getStatus() + "\n");
+        if(targetDTO.getInfo() != null){
+            currStr +=("Target info:" + targetDTO.getInfo() + "\n");
+        }
+        if(!targetDTO.getRunResult().equals(RunResults.SKIPPED)){
+            if(!targetDTO.getTargetsThatCanBeRun().isEmpty()){
+                currStr +=("The dependent Targets that were opened:\n" + targetDTO.getTargetsThatCanBeRun() + "\n");
+            }
+            if(targetDTO.getRunResult().equals(RunResults.FAILURE)){
+                if(!targetDTO.getSkippedFathers().isEmpty()){
+                    currStr +=("The targets that won't be able to process are: \n" + targetDTO.getSkippedFathers() + "\n");
+                }
+            }
+        }
+        if(targetDTO.getTaskRunResult() != null){
+            currStr +=("Run result:\n" + targetDTO.getTaskRunResult());
+        }
+        if(targetDTO.getSerialSetNames() != null){
+            currStr += "\nSerialSets: \n" + targetDTO.getSerialSetNames().toString() + "\n";
+        }
+
+        currStr +=(PRINT_LINE);
+        return currStr;
+    }
+
+
+
 }

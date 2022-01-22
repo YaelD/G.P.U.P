@@ -3,6 +3,9 @@ package runtask;
 import dto.TargetDTO;
 import engine.Engine;
 import javafx.application.Platform;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.EventHandler;
 import javafx.scene.control.Button;
 import javafx.scene.input.MouseEvent;
@@ -15,7 +18,7 @@ import java.util.Map;
 public class TargetsTableButtonsHandler {
     private String name;
 
-    private RunStatus runStatus;
+    private SimpleObjectProperty<RunStatus> runStatus;
 
     private Button frozenBtn;
     private Button waitingBtn;
@@ -27,7 +30,21 @@ public class TargetsTableButtonsHandler {
 
 
     public TargetsTableButtonsHandler(String name) {
-        runStatus = RunStatus.FROZEN;
+        runStatus = new SimpleObjectProperty<>(RunStatus.FROZEN);
+        runStatus.addListener(new ChangeListener<RunStatus>() {
+            @Override
+            public void changed(ObservableValue<? extends RunStatus> observable, RunStatus oldValue, RunStatus newValue) {
+                if(!oldValue.equals(newValue)){
+                    Platform.runLater(new Runnable() {
+                        @Override
+                        public void run() {
+                            buttonsMap.get(oldValue).setVisible(false);
+                            buttonsMap.get(newValue).setVisible(true);
+                        }
+                    });
+                }
+            }
+        });
         this.name = name;
         frozenBtn = new Button(name);
         waitingBtn = new Button(name);
@@ -44,8 +61,6 @@ public class TargetsTableButtonsHandler {
         finishedBtn.setVisible(false);
         skippedBtn.setVisible(false);
     }
-
-
 
     public Map<RunStatus, Button> getButtonsMap() {
         return buttonsMap;
@@ -75,16 +90,10 @@ public class TargetsTableButtonsHandler {
         return skippedBtn;
     }
 
-    public void updateButtons(RunStatus runStatusToCheck) {
-        if(!runStatus.equals(runStatusToCheck)){
-            Platform.runLater(new Runnable() {
-                @Override
-                public void run() {
-                    buttonsMap.get(runStatus).setVisible(false);
-                    buttonsMap.get(runStatusToCheck).setVisible(true);
-                    runStatus = runStatusToCheck;
-                }
-            });
-        }
+
+    public void setRunStatus(RunStatus runStatus) {
+        this.runStatus.set(runStatus);
     }
+
+
 }

@@ -240,18 +240,9 @@ public class SystemEngine implements Engine{
 
         List<Consumer<TargetDTO>> outputConsumers = new ArrayList<>();
         this.graphForRunning = Graph.buildGraphForRunning(selectedTargets, this.graph);
-
         if(this.tasksInSystem.containsKey(taskType)){
-            this.tasksInSystem.get(taskType).updateParameters(taskParams);
             this.tasksInSystem.get(taskType).setGraph(this.graphForRunning);
-//            if(isIncremental){
-//                if(this.tasksInSystem.get(taskType).getGraph().getTargets().isEmpty()){
-//                    this.tasksInSystem.get(taskType).setGraph(this.graph.clone());
-//                }
-//            }
-//            else{
-//                this.tasksInSystem.get(taskType).setGraph(graphForRunning);
-//            }
+            this.tasksInSystem.get(taskType).updateParameters(taskParams);
         }
         else{
             switch (taskType){
@@ -369,8 +360,10 @@ public class SystemEngine implements Engine{
     public TargetDTO getRunningTarget(String targetName) {
         TargetDTO targetDTO = null;
         if(this.graphForRunning != null){
-            targetDTO = new TargetDTO(graphForRunning.getTarget(targetName));
-            targetDTO.updateRunningTargetStatus(targetDTO.getRunStatus());
+            if(graphForRunning.getTarget(targetName) != null){
+                targetDTO = new TargetDTO(graphForRunning.getTarget(targetName));
+                targetDTO.updateRunningTargetStatus(targetDTO.getRunStatus());
+            }
         }
         return targetDTO;
     }

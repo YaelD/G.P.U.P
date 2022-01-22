@@ -102,7 +102,6 @@ public abstract class Task{
                     }
                 }
                 if(currTarget.getRunStatus().equals(RunStatus.WAITING)){
-                    currTarget.setStartWaitingTime(LocalTime.now());
                     currTarget.getSerialSetsMonitors();
                     targetResult = executeTaskOnTarget(currTarget);
                     if(targetResult.getRunResult().equals(RunResults.FAILURE)){
@@ -127,7 +126,11 @@ public abstract class Task{
         boolean isOpenedToRun = true;
         for(Target currParent : target.getRequiredFor()){
             for(Target childOfTheCurrParent : currParent.getDependsOn()){
-                if (childOfTheCurrParent.getRunStatus().equals(RunStatus.FROZEN)) {
+                if (childOfTheCurrParent.getRunStatus().equals(RunStatus.FROZEN)
+                || childOfTheCurrParent.getRunStatus().equals(RunStatus.WAITING)) {
+                    if(currParent.getName().equals("J")){
+                        System.out.println("DEBUG ME");
+                    }
                     currParent.getWaitForThisTargetsToBeFinished().add(childOfTheCurrParent.getName());
                     isOpenedToRun = false;
                 }
@@ -135,6 +138,7 @@ public abstract class Task{
             if (isOpenedToRun) {
                 if(!currParent.getRunStatus().equals(RunStatus.SKIPPED)){
                     currParent.setRunStatus(RunStatus.WAITING);
+                    currParent.setStartWaitingTime(LocalTime.now());
                 }
                 targetResult.getTargetsThatCanBeRun().add(currParent.getName());
             }
@@ -150,13 +154,15 @@ public abstract class Task{
 
     private void createGraphOfFailedTargets() {
         String graphName = this.graph.getName();
+
         Graph newGraph = new Graph(new HashMap<>(), graphName);
         for(Target currTarget : this.graph.getTargets()){
             if(currTarget.getRunResult().equals(RunResults.FAILURE) ||
                     currTarget.getRunResult().equals(RunResults.SKIPPED)){
-                currTarget.setRunResult(null);
-                currTarget.setRunStatus(RunStatus.FROZEN);
-                newGraph.getTargetGraph().put(currTarget.getName(), currTarget.clone());
+                Target clonedTarget = currTarget.clone();
+                clonedTarget.setRunResult(null);
+                clonedTarget.setRunStatus(RunStatus.FROZEN);
+                newGraph.getTargetGraph().put(clonedTarget.getName(), clonedTarget);
             }
         }
         Graph.updateGraphTargets(newGraph);
@@ -175,6 +181,7 @@ public abstract class Task{
             target.setRunStatus(RunStatus.FROZEN);
             if(target.getDependsOn().isEmpty()){
                 target.setRunStatus(RunStatus.WAITING);
+                target.setStartWaitingTime(LocalTime.now());
                 sourceTargets.add(target);
             }
         }

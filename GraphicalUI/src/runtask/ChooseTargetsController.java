@@ -116,9 +116,12 @@ public class ChooseTargetsController {
 
     @FXML
     void checkTargetsWithWhatIf(ActionEvent event) {
+
         Set<String> whatIfTargets = this.engine.whatIf(whatIf_targetsCB.getValue(),whatIf_DependencyCB.getValue());
         selectedTargetsListView.getItems().clear();
+        selectedTargetsListView.getItems().add(whatIf_targetsCB.getValue());
         selectedTargetsListView.getItems().addAll(whatIfTargets);
+
     }
 
 

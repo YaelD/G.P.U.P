@@ -6,6 +6,7 @@ import dto.TargetDTO;
 import dto.TaskParamsDTO;
 import exceptions.*;
 import graph.Dependency;
+import graph.Graph;
 import task.PausableThreadPoolExecutor;
 import task.TaskType;
 
@@ -45,4 +46,6 @@ public interface Engine {
     public TargetDTO getRunningTarget(String targetName);
 
     public int getMaxNumOfThreads();
+
+    public Graph getGraphForRunning();
 }
