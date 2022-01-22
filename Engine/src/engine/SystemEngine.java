@@ -368,6 +368,11 @@ public class SystemEngine implements Engine{
     @Override
     public TargetDTO getRunningTarget(String targetName) {
         TargetDTO targetDTO = null;
+        try {
+            targetDTO = this.getTarget(targetName);
+        } catch (TargetNotExistException e) {
+            e.printStackTrace();
+        }
         if(this.graphForRunning != null){
             targetDTO = new TargetDTO(graphForRunning.getTarget(targetName));
         }

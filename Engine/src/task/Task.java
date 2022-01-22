@@ -172,6 +172,7 @@ public abstract class Task{
     private static List<Target> initSourceQueue(Collection<Target> targets) {
         List<Target> sourceTargets = new LinkedList<>();
         for(Target target : targets){
+            target.setRunStatus(RunStatus.FROZEN);
             if(target.getDependsOn().isEmpty()){
                 target.setRunStatus(RunStatus.WAITING);
                 sourceTargets.add(target);

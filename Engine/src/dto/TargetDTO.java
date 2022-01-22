@@ -26,7 +26,7 @@ public class TargetDTO {
     private Set<String> targetsThatCanBeRun = new HashSet<>();
     private Set<String> skippedFathers = new HashSet<>();
     private int totalNumOfSerialSets;
-    private String taskRunResult = null;
+    private String taskRunResult = "";
     private Set<String> serialSetNames = new HashSet<>();; //all serial set names that the current target belongs to them - needed always during the running of the task.
     private LocalTime startingProcessTime = null; //the time that the target began the process- needed when the run status is "in process"
     private LocalTime endingProcessTime = null; //the time that the target ended the process
@@ -36,6 +36,7 @@ public class TargetDTO {
 
 
     public TargetDTO(Target target) {
+        this.runStatus = RunStatus.FROZEN;
         this.name = target.getName();
         this.place = target.getPlace();
         this.info = target.getInfo();
@@ -170,4 +171,6 @@ public class TargetDTO {
     public String getTaskRunResult() {
         return taskRunResult;
     }
+
+
 }

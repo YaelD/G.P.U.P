@@ -155,7 +155,10 @@ public class RunWindowController {
                 while (progressBar.progressProperty().get() != 1){
                     for(TargetsTableButtonsHandler currTargetDraw: data) {
                         TargetDTO targetDTO = engine.getRunningTarget(currTargetDraw.getName());
-                        currTargetDraw.updateButtons(targetDTO.getRunStatus());
+                        if(targetDTO.getRunStatus() != null){
+                            System.out.println(targetDTO.getName() + "----" + targetDTO.getRunStatus());
+                            currTargetDraw.updateButtons(targetDTO.getRunStatus());
+                        }
                     }
                 }
             }
@@ -179,8 +182,6 @@ public class RunWindowController {
                         currStr +=("Target info:" + targetDTO.getInfo() + "\n");
                     }
                     if(!targetDTO.getRunResult().equals(RunResults.SKIPPED)){
-//                        currStr +=("Process Start time:" + targetDTO.getStartingTime().format(DateTimeFormatter.ofPattern("HH:mm:ss")) + "\n");
-//                        currStr +=("Process End time:" + targetDTO.getEndingTime().format(DateTimeFormatter.ofPattern("HH:mm:ss")) + "\n");
                         if(!targetDTO.getTargetsThatCanBeRun().isEmpty()){
                             currStr +=("The dependent Targets that were opened:\n" + targetDTO.getTargetsThatCanBeRun() + "\n");
                         }
