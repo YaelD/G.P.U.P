@@ -6,6 +6,7 @@ import target.RunResults;
 import target.RunStatus;
 import target.Target;
 
+import java.time.Duration;
 import java.time.LocalTime;
 import java.util.*;
 
@@ -33,6 +34,7 @@ public class TargetDTO {
     private LocalTime startWaitingTime = null; //the time that the target begins waiting to start the process- needed when the run status is "waiting", for calculating the duration of the waiting and showing it to the user
     private Set<String> failedChildTargets = new HashSet<>(); //all the names of the target that failed and causes to this curr target to be skipped- needed when the run status is "skipped"
     private Set<String> waitForThisTargetsToBeFinished = new HashSet<>(); //all the names of the targets that this target waiting for them to be finished- needed when the run status is "frozen"
+    private String runningTargetStatus = null;
 
 
     public TargetDTO(Target target) {
@@ -172,5 +174,41 @@ public class TargetDTO {
         return taskRunResult;
     }
 
+    public void updateRunningTargetStatus(RunStatus runStatus){
+        this.runningTargetStatus = "";
+        this.runningTargetStatus += "Target name: "+ this.name;
+        this.runningTargetStatus += "\nPlace in graph: " +this.place;
+        this.runningTargetStatus += "\nSerialSets: ";
+        if(!this.serialSetNames.isEmpty()){
+            this.runningTargetStatus += this.serialSetNames.toString()+"\n";
+        }
+        else{
+            this.runningTargetStatus += "this target does not belong to any serial set";
+        }
+        this.runningTargetStatus += "Run status: ";
+        switch (runStatus){
+            case WAITING:
+                if(this.startWaitingTime != null){
+                    this.runningTargetStatus += "waiting \nWaiting time: " +
+                            Duration.between(this.startWaitingTime, LocalTime.now()).toMillis() + " ms";
+                }
+                break;
+            case FINISHED:
+                this.runningTargetStatus = "";
+                break;
+            case FROZEN:
+                this.runningTargetStatus += "frozen \nWaiting to the targets: "+
+                        this.waitForThisTargetsToBeFinished.toString()+ " to finish their running.";
+                break;
+            case IN_PROCESS:
+                this.runningTargetStatus += "in process \nProcessing time: "+
+                        Duration.between(this.startingProcessTime, LocalTime.now()).toMillis() + " ms";
+                break;
+            case SKIPPED:
+                this.runningTargetStatus += "skipped \n Skipped because of the failure of targets: "+
+                        this.failedChildTargets.toString();
+                break;
+        }
+    }
 
 }

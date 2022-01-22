@@ -310,8 +310,8 @@ public class SystemEngine implements Engine{
                 out.write("Target info:" + targetDTO.getInfo() + "\n");
             }
             if(!targetDTO.getRunResult().equals(RunResults.SKIPPED)){
-//                out.write("Process Start time:" + targetDTO.getStartingTime().format(DateTimeFormatter.ofPattern("HH:mm:ss")) + "\n");
-//                out.write("Process End time:" + targetDTO.getEndingTime().format(DateTimeFormatter.ofPattern("HH:mm:ss")) + "\n");
+                out.write("Process Start time:" + targetDTO.getStartingProcessTime().format(DateTimeFormatter.ofPattern("HH:mm:ss")) + "\n");
+                out.write("Process End time:" + targetDTO.getEndingProcessTime().format(DateTimeFormatter.ofPattern("HH:mm:ss")) + "\n");
                 if(!targetDTO.getTargetsThatCanBeRun().isEmpty()){
                     out.write("The dependent Targets that were opened:\n" + targetDTO.getTargetsThatCanBeRun() + "\n");
                 }
@@ -368,13 +368,9 @@ public class SystemEngine implements Engine{
     @Override
     public TargetDTO getRunningTarget(String targetName) {
         TargetDTO targetDTO = null;
-        try {
-            targetDTO = this.getTarget(targetName);
-        } catch (TargetNotExistException e) {
-            e.printStackTrace();
-        }
         if(this.graphForRunning != null){
             targetDTO = new TargetDTO(graphForRunning.getTarget(targetName));
+            targetDTO.updateRunningTargetStatus(targetDTO.getRunStatus());
         }
         return targetDTO;
     }
