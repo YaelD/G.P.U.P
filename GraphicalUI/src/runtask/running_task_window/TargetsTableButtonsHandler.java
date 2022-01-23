@@ -1,15 +1,10 @@
 package runtask.running_task_window;
 
-import dto.TargetDTO;
-import engine.Engine;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.event.EventHandler;
 import javafx.scene.control.Button;
-import javafx.scene.input.MouseEvent;
-import target.RunResults;
 import target.RunStatus;
 
 import java.util.HashMap;
@@ -70,9 +65,7 @@ public class TargetsTableButtonsHandler {
         return name;
     }
 
-    public Button getFrozenBtn() {
-        return frozenBtn;
-    }
+    public Button getFrozenBtn() { return frozenBtn; }
 
     public Button getWaitingBtn() {
         return waitingBtn;
