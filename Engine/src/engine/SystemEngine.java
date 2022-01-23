@@ -234,6 +234,22 @@ public class SystemEngine implements Engine{
 
         List<Consumer<TargetDTO>> outputConsumers = new ArrayList<>();
         this.graphForRunning = Graph.buildGraphForRunning(selectedTargets, this.graph);
+
+        if(taskType.equals(TaskType.COMPILATION_TASK)){
+            for(Target target : this.graphForRunning.getTargets()){
+                String filePath = "/" + target.getInfo().replace('.', '/');
+                int indexOfLastSlash = filePath.lastIndexOf('/');
+                String dirPath = filePath.substring(0,indexOfLastSlash);
+                String fileName= filePath.substring(indexOfLastSlash);
+                CompilationTaskParamsDTO compilationTaskParamsDTO = (CompilationTaskParamsDTO)taskParams;
+                String localSourceDir = compilationTaskParamsDTO.getSourceDir() + dirPath;
+                filePath = localSourceDir +  fileName + ".java";
+                target.setCompilationFileName(filePath);
+                target.setCompilerOperatingLine("Compiler's operating line: "+
+                        "javac"+ " "+"-d"+ " " + compilationTaskParamsDTO.getDestinationDir() +
+                        " " + "-cp"+ " " + localSourceDir + " " + filePath);
+            }
+        }
         if(this.tasksInSystem.containsKey(taskType)){
             this.tasksInSystem.get(taskType).setGraph(this.graphForRunning);
             this.tasksInSystem.get(taskType).updateParameters(taskParams);

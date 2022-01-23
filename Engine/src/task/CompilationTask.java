@@ -81,11 +81,11 @@ public class CompilationTask extends Task{
         String dirPath = filePath.substring(0,indexOfLastSlash);
         String fileName= filePath.substring(indexOfLastSlash);
         String localSourceDir = this.sourceDir + dirPath;
-        filePath = localSourceDir +  fileName + ".java";
-        target.setCompilationFileName(filePath);
-        target.setCompilerOperatingLine("Compiler's operating line: "+
-        JAVA_COMPILER+ " "+DESTINATION_DIR_REF_PARAM+ " " + this.destinationDir +
-                " " + SOURCE_DIR_REF_PARAM+ " " + localSourceDir + " " + filePath);
+//        filePath = localSourceDir +  fileName + ".java";
+//        target.setCompilationFileName(filePath);
+//        target.setCompilerOperatingLine("Compiler's operating line: "+
+//        JAVA_COMPILER+ " "+DESTINATION_DIR_REF_PARAM+ " " + this.destinationDir +
+//                " " + SOURCE_DIR_REF_PARAM+ " " + localSourceDir + " " + filePath);
         return localSourceDir;
     }
 
