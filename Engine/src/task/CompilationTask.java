@@ -40,20 +40,21 @@ public class CompilationTask extends Task{
             target.setStartingProcessTime(LocalTime.now());
             target.setRunStatus(RunStatus.IN_PROCESS);
             //startTime = LocalTime.now();
-            Process process = CompileTarget(target);
+            Process process = CompileTarget(target, runResult);
             String processResult = getProcessResult(process);
             int exitCode = process.waitFor();
             target.setEndingProcessTime(LocalTime.now());
             //endTime = LocalTime.now();
             if(exitCode != 0){    //means that the process has failed
-                runResult += "The compilation of this target has failed\n";
                 target.setRunResult(RunResults.FAILURE);
+                runResult += processResult;
             }
             else {
-                runResult += "The process ended successfully\n";
                 target.setRunResult(RunResults.SUCCESS);
+                runResult += "\nJavac output: ";
+                runResult += processResult;
             }
-            runResult += processResult;
+
 
             target.setRunningTime(Duration.between(target.getStartingProcessTime(), target.getEndingProcessTime()).toMillis());
             target.setRunStatus(RunStatus.FINISHED);
@@ -78,15 +79,17 @@ public class CompilationTask extends Task{
         return result;
     }
 
-    private Process CompileTarget(Target target) throws IOException {
+    private Process CompileTarget(Target target, String runResult) throws IOException {
 
         String filePath = "/" + target.getInfo().replace('.', '/');
         int indexOfLastSlash = filePath.lastIndexOf('/');
         String dirPath = filePath.substring(0,indexOfLastSlash);
         String fileName= filePath.substring(indexOfLastSlash);
-        //String destinationDir = this.DestinationDir + dirPath;
         String sourceDir = this.sourceDir + dirPath;
         filePath = sourceDir + fileName + ".java";
+        runResult += "Compiled file: " + filePath + "\n Compiler's operating line: "+
+                JAVA_COMPILER+ " "+DESTINATION_DIR_REF_PARAM+ " " + this.destinationDir +
+                " " + SOURCE_DIR_REF_PARAM+ " " + sourceDir + " " + filePath;
         Process process = new ProcessBuilder(JAVA_COMPILER, DESTINATION_DIR_REF_PARAM, this.destinationDir, SOURCE_DIR_REF_PARAM ,sourceDir, filePath)
                 .directory(new File(this.sourceDir))
                 .redirectErrorStream(true)
