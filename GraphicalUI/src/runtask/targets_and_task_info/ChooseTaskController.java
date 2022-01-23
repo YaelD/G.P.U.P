@@ -11,6 +11,7 @@ import javafx.scene.control.*;
 
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import runtask.menu.RunTaskMenuController;
 import task.RunType;
 import task.TaskType;
 
@@ -41,6 +42,7 @@ public class ChooseTaskController {
     private SimpleObjectProperty<RunType> currRunType;
 
 
+
     public ChooseTaskController() {
         currTaskType = new SimpleObjectProperty<>(TaskType.SIMULATION_TASK);
         currRunType = new SimpleObjectProperty<>(RunType.FROM_SCRATCH);
@@ -49,7 +51,7 @@ public class ChooseTaskController {
 
 
     public void setTargetsList(SimpleListProperty<String> targetListProperty) {
-        this.targetsList.bind(targetListProperty);
+        this.targetsList = targetListProperty;
     }
 
     public void setSimulationLayout(GridPane simulationLayout) {
@@ -94,8 +96,6 @@ public class ChooseTaskController {
     private boolean validation() {
         Set<String> targetSet = new HashSet<>();
         targetSet.addAll(this.targetsList);
-
-        // TODO: send set of targets!
         if(this.currRunType.getValue().equals(RunType.INCREMENTAL) && !engine.isRunInIncrementalMode(this.currTaskType.getValue(),targetSet )){
             warningLabel.setVisible(true);
             warningLabel.setText("The " + currTaskType.getValue().getTaskType() + " task cannot run incrementally" +
@@ -106,13 +106,9 @@ public class ChooseTaskController {
         }
         if(targetSet.isEmpty()){
             warningLabel.setVisible(true);
-            warningLabel.setText("Please choose some targets");
+            warningLabel.setText("Please choose targets");
             return false;
-
-
         }
-
-
         return true;
     }
 
@@ -123,37 +119,7 @@ public class ChooseTaskController {
 
     @FXML
     private void initialize(){
-        taskToggleGroup.selectedToggleProperty().addListener(new ChangeListener<Toggle>() {
-            @Override
-            public void changed(ObservableValue<? extends Toggle> observable, Toggle oldValue, Toggle newValue) {
-                if(newValue == simulationRadioButton){
-                    currTaskType.set(TaskType.SIMULATION_TASK);
-                    menuPane.getChildren().remove(compilationLayout);
-                }
-                else if(newValue == compilationRadioButton){
-                    currTaskType.set(TaskType.COMPILATION_TASK);
-                    menuPane.getChildren().remove(simulationLayout);
-                }
-                warningLabel.setVisible(false);
-
-            }
-        });
-        runTypeToggle.selectedToggleProperty().addListener(new ChangeListener<Toggle>() {
-            @Override
-            public void changed(ObservableValue<? extends Toggle> observable, Toggle oldValue, Toggle newValue) {
-                if(newValue == incrementalRadioButton){
-                    currRunType.set(RunType.INCREMENTAL);
-                    menuPane.getChildren().remove(simulationLayout);
-                    menuPane.getChildren().remove(compilationLayout);
-                }
-                else if(newValue == fromScratchRadioButton){
-                    currRunType.set(RunType.FROM_SCRATCH);
-                    menuPane.getChildren().remove(simulationLayout);
-                    menuPane.getChildren().remove(compilationLayout);
-                }
-                //warningLabel.setVisible(false);
-            }
-        });
+        //RunTaskMenuController.initControllers(taskToggleGroup, simulationRadioButton, currTaskType, menuPane, compilationLayout, compilationRadioButton, simulationLayout, warningLabel, runTypeToggle, incrementalRadioButton, currRunType, fromScratchRadioButton);
     }
 
 
