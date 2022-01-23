@@ -21,6 +21,9 @@ public class Main extends Application {
         headerController.setPrimaryStage(primaryStage);
         headerController.setEngine(new SystemEngine());
         primaryStage.setScene(scene);
+        primaryStage.setTitle("GPUP");
+        primaryStage.setMinHeight(400);
+        primaryStage.setMinWidth(400);
 
         primaryStage.show();
     }

@@ -54,24 +54,24 @@ public class LoadFileController {
         }
 
         try {
-            engine.loadFile(file_path_TextFiled.getText());
             warning_label.setVisible(true);
+            engine.loadFile(file_path_TextFiled.getText());
             warning_label.setText("File loaded successfully YAY!!!!!!!");
             isFileLoaded.set(true);
             //headerController.enableButtons();
         } catch (InvalidFileException e) {
             warning_label.setText("Invalid File");
         } catch (DependencyConflictException e) {
-            warning_label.setText("Dependency conflict between " + e.getFirstTarget() + " and " +
-                    e.getSecondTarget() + "With dependency: " + e.getDependencyType());
+            warning_label.setText("Dependency conflict between '" + e.getFirstTarget() + "' and '" +
+                    e.getSecondTarget() + "' With dependency: '" + e.getDependencyType() +"'");
         } catch (DuplicateTargetsException e) {
-            e.printStackTrace();
+            warning_label.setText("The Target '" + e.getTargetName() + "' is appearing more than once");
         } catch (InvalidDependencyException e) {
-            e.printStackTrace();
+            warning_label.setText("The dependency '" + e.getDependency() + "' is invalid") ;
         } catch (TargetNotExistException e) {
-            e.printStackTrace();
+            warning_label.setText("The target '" + e.getName() + "' is not exist");
         } catch (SerialSetException e) {
-            e.printStackTrace();
+            warning_label.setText("The serial set " + e.getSerialSetName() + " contains invalid target '" + e.getTargetName() + "'") ;
         }
 
     }

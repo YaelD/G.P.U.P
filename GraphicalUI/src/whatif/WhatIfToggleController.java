@@ -48,6 +48,7 @@ public class WhatIfToggleController {
             dependency = Dependency.REQUIRED_FOR;
         }
         if(validate()){
+            warningLabel.setVisible(false);
             this.whatIfCallback.findWhatIf(sourceTarget, dependency);
         }
     }

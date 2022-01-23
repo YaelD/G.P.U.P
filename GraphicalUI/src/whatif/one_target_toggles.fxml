@@ -44,6 +44,6 @@
       <Label text="Source Target" GridPane.columnIndex="1" GridPane.rowIndex="1" />
       <Label text="Dependency" GridPane.columnIndex="1" GridPane.rowIndex="4" />
       <Button fx:id="findWhatIfButton" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#findTargets" text="FindWhatIf" GridPane.columnIndex="1" GridPane.rowIndex="8" GridPane.rowSpan="2" />
-      <Label fx:id="warningLabel" layoutX="40.0" layoutY="227.0" text="Warinig!!" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="11" GridPane.rowSpan="2" />
+      <Label fx:id="warningLabel" layoutX="40.0" layoutY="227.0" text="Warinig!!" visible="false" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="11" GridPane.rowSpan="2" />
    </children>
 </GridPane>

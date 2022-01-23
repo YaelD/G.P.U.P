@@ -167,9 +167,11 @@ public class RunWindowController {
                 public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
                     if(newValue == true){
                         pausableThreadPoolExecutor.pause();
+                        pauseToggle.setText("Resume");
                     }
                     else{
                         pausableThreadPoolExecutor.resume();
+                        pauseToggle.setText("Pause");
                     }
                 }
             });
@@ -184,6 +186,7 @@ public class RunWindowController {
                     @Override
                     public void run() {
                         progressBar.setProgress(1);
+                        pauseToggle.setDisable(true);
                         runResultsPane.setVisible(true);
                         numFinishedSuccessLabel.setText(String.valueOf(taskResult.getNumOfTargetsRunResult(RunResults.SUCCESS)));
                         numFailureLabel.setText(String.valueOf(taskResult.getNumOfTargetsRunResult(RunResults.FAILURE)));

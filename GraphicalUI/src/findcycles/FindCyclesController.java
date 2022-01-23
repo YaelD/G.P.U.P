@@ -36,6 +36,7 @@ public class FindCyclesController {
         if(validate()){
             String targetName = this.targetsChoiceBox.getValue();
             try {
+                warningLabel.setVisible(false);
                 cyclesListView.getItems().clear();
                 List<String> cycle = this.engine.findCycle(targetName);
                 if(cycle == null){

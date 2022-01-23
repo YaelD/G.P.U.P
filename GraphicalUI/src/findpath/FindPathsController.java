@@ -36,12 +36,15 @@ public class FindPathsController {
             public void findPaths(String sourceTargetName, String destinationTargetName, Dependency dependency) {
                 try {
                     Collection<List<String>> paths = engine.getPaths(sourceTargetName, destinationTargetName, dependency);
+                    findPathsTogglesController.getWarningLabel().setVisible(false);
+                    findPathsTable.getItems().clear();
                     if(!paths.isEmpty()){
                         findPathsTableController.setTableValues(paths);
                     }
                     else{
-                        findPathsTogglesController.getWarningLabel().setVisible(true);
-                        findPathsTogglesController.getWarningLabel().setText("There is no path between the given Targets");
+                        findPathsTable.setPlaceholder(new Label("There is no path between the given Targets"));
+                        //findPathsTogglesController.getWarningLabel().setVisible(true);
+                        //findPathsTogglesController.getWarningLabel().setText("There is no path between the given Targets");
                     }
 
                 } catch (TargetNotExistException e) {

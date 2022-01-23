@@ -4,13 +4,13 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.FlowPane?>
 <?import javafx.scene.layout.GridPane?>
-<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
 
 <BorderPane fx:id="base_BorderPane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="header.HeaderController">
    <top>
-      <GridPane>
+      <GridPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308">
          <BorderPane.margin>
             <Insets />
          </BorderPane.margin>
@@ -20,22 +20,21 @@
             <ColumnConstraints hgrow="NEVER" maxWidth="30.0" minWidth="30.0" prefWidth="30.0" />
          </columnConstraints>
          <rowConstraints>
+            <RowConstraints maxHeight="20.0" minHeight="20.0" prefHeight="20.0" vgrow="NEVER" />
             <RowConstraints vgrow="NEVER" />
+            <RowConstraints maxHeight="20.0" minHeight="20.0" prefHeight="20.0" vgrow="NEVER" />
          </rowConstraints>
          <children>
-            <HBox alignment="CENTER_LEFT" fillHeight="false" prefHeight="50.0" spacing="10.0" GridPane.columnIndex="1">
+            <FlowPane hgap="10.0" vgap="5.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
                <children>
                   <Button fx:id="graphInfo_btn" disable="true" mnemonicParsing="false" onAction="#loadGraphInfo" text="Graph Info" />
-                  <Button fx:id="findPath_btn" disable="true" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onAction="#loadFindPath" text="Find Path" />
-                  <Button fx:id="findCycle_btn" disable="true" layoutX="62.0" layoutY="10.0" mnemonicParsing="false" onAction="#loadFindCycle" text="Find Cycle" />
-                  <Button fx:id="whatIf_btn" disable="true" layoutX="114.0" layoutY="10.0" mnemonicParsing="false" onAction="#loadWhatIf" text="What if" />
-                  <Button fx:id="runTask_btn" disable="true" layoutX="166.0" layoutY="10.0" mnemonicParsing="false" onAction="#loadTaskRun" text="Run Task" />
-                  <Button fx:id="uploadFile_btn" layoutX="218.0" layoutY="10.0" mnemonicParsing="false" onAction="#loadFileLoader" text="Upload File" />
+                  <Button fx:id="findPath_btn" disable="true" mnemonicParsing="false" onAction="#loadFindPath" text="Find Path" />
+                  <Button fx:id="findCycle_btn" disable="true" mnemonicParsing="false" onAction="#loadFindCycle" text="Find Cycle" />
+                  <Button fx:id="whatIf_btn" disable="true" mnemonicParsing="false" onAction="#loadWhatIf" text="What if" />
+                  <Button fx:id="runTask_btn" disable="true" mnemonicParsing="false" onAction="#loadTaskRun" text="Run Task" />
+                  <Button fx:id="uploadFile_btn" mnemonicParsing="false" onAction="#loadFileLoader" text="Upload File" />
                </children>
-               <opaqueInsets>
-                  <Insets />
-               </opaqueInsets>
-            </HBox>
+            </FlowPane>
          </children>
       </GridPane>
    </top>
