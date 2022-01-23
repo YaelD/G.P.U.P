@@ -59,6 +59,11 @@ public class SystemEngine implements Engine{
             TargetNotExistException, InvalidDependencyException, DependencyConflictException, SerialSetException, DupSerialSetsNameException {
         Map<String, Target> map = Graph.buildTargetGraph(gpupDescriptor.getGPUPTargets());
         String graphName = gpupDescriptor.getGPUPConfiguration().getGPUPGraphName();
+        this.workingDirectory = gpupDescriptor.getGPUPConfiguration().getGPUPWorkingDirectory();
+        this.maxThreadNum = gpupDescriptor.getGPUPConfiguration().getGPUPMaxParallelism();
+        this.tasksInSystem = new HashMap<>();
+        this.isFileLoaded = true;
+        this.graph = new Graph(map, graphName);
         this.serialSetsContainer = new SerialSetsContainer();
         if(gpupDescriptor.getGPUPSerialSets() != null){
             initializeSerialSets(gpupDescriptor);
@@ -66,11 +71,6 @@ public class SystemEngine implements Engine{
         for(Target target : this.graph.getTargets()){
             target.updateWaitForTheseTargetsToBeFinished();
         }
-        this.workingDirectory = gpupDescriptor.getGPUPConfiguration().getGPUPWorkingDirectory();
-        this.maxThreadNum = gpupDescriptor.getGPUPConfiguration().getGPUPMaxParallelism();
-        this.tasksInSystem = new HashMap<>();
-        this.isFileLoaded = true;
-        this.graph = new Graph(map, graphName);
     }
 
     private void initializeSerialSets(GPUPDescriptor gpupDescriptor) throws SerialSetException, DupSerialSetsNameException {
