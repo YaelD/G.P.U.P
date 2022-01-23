@@ -293,6 +293,14 @@ public class RunTaskMenuController {
                     baseHBox.getChildren().remove(simulationTaskToggles);
                     baseHBox.getChildren().remove(compilationTaskToggles);
                 }
+
+                for(CheckBox checkBox: targetsCheckBoxList.getItems()){
+                    checkBox.setSelected(false);
+                }
+                chooseAllTargetsCheckBox.setSelected(false);
+                selectedTargetsListView.getItems().clear();
+
+
             }
         });
     }
