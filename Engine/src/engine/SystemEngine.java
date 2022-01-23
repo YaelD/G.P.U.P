@@ -59,11 +59,6 @@ public class SystemEngine implements Engine{
             TargetNotExistException, InvalidDependencyException, DependencyConflictException, SerialSetException, DupSerialSetsNameException {
         Map<String, Target> map = Graph.buildTargetGraph(gpupDescriptor.getGPUPTargets());
         String graphName = gpupDescriptor.getGPUPConfiguration().getGPUPGraphName();
-        this.graph = new Graph(map, graphName);
-        this.workingDirectory = gpupDescriptor.getGPUPConfiguration().getGPUPWorkingDirectory();
-        this.maxThreadNum = gpupDescriptor.getGPUPConfiguration().getGPUPMaxParallelism();
-        this.tasksInSystem = new HashMap<>();
-        this.isFileLoaded = true;
         this.serialSetsContainer = new SerialSetsContainer();
         if(gpupDescriptor.getGPUPSerialSets() != null){
             initializeSerialSets(gpupDescriptor);
@@ -71,6 +66,11 @@ public class SystemEngine implements Engine{
         for(Target target : this.graph.getTargets()){
             target.updateWaitForTheseTargetsToBeFinished();
         }
+        this.workingDirectory = gpupDescriptor.getGPUPConfiguration().getGPUPWorkingDirectory();
+        this.maxThreadNum = gpupDescriptor.getGPUPConfiguration().getGPUPMaxParallelism();
+        this.tasksInSystem = new HashMap<>();
+        this.isFileLoaded = true;
+        this.graph = new Graph(map, graphName);
     }
 
     private void initializeSerialSets(GPUPDescriptor gpupDescriptor) throws SerialSetException, DupSerialSetsNameException {
@@ -226,30 +226,6 @@ public class SystemEngine implements Engine{
     }
 
 
-//        if(dependencies.isEmpty()){
-//            return;
-//        }
-//        else{
-//            visitedTargets.add(currTargetName);
-//            for(Target target: dependencies){
-//                if(!visitedTargets.contains(target.getName())){
-//                    if(target.getName().equals(destinationTargetName)){
-//                        List<String> path = new ArrayList<>();
-//                        path.add(0,target.getName());
-//                        path.add(0,currTargetName);
-//                        paths.add(path);
-//                    } else{
-//                        int currPathsSize = paths.size();
-//                        findPaths(target.getName(), destinationTargetName, dependency, paths, visitedTargets);
-//                        int newSize = paths.size();
-//                        for(int i = currPathsSize;i< newSize; ++i){
-//                            paths.get(i).add(0,currTargetName);
-//                        }
-//                    }
-//                }
-//            }
-//        }
-//    }
 
     @Override
     public GraphDTO activateTask(Consumer<TargetDTO> consumerString, Consumer<PausableThreadPoolExecutor> threadPoolConsumer,

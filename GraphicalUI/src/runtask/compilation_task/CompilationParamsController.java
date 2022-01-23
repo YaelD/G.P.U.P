@@ -9,6 +9,7 @@ import javafx.scene.control.TextField;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
 import runtask.menu.ActiveTaskCallback;
+import runtask.menu.ReturnCallback;
 
 import java.io.File;
 
@@ -17,7 +18,7 @@ public class CompilationParamsController {
     private String sourcePath;
     private String destinationPath;
     private ActiveTaskCallback callback;
-
+    private ReturnCallback returnCallback;
     @FXML private Button sourceFolderButton;
     @FXML private Button destinationFolderButtons;
     @FXML private Button confirmButton;
@@ -73,7 +74,16 @@ public class CompilationParamsController {
         }
     }
 
+    @FXML
+    void returnToPrevWindow(ActionEvent event) {
+        this.returnCallback.returnToPrev();
+    }
+
     public void setActiveTaskCallback(ActiveTaskCallback callback) {
         this.callback = callback;
+    }
+
+    public void setReturnCallBack(ReturnCallback returnCallBack) {
+        this.returnCallback = returnCallBack;
     }
 }

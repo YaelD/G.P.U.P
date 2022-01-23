@@ -34,6 +34,8 @@ public class RunTaskMenuController {
 
     @FXML private HBox baseHBox;
 
+
+
     @FXML private GridPane simulationTaskToggles;
     @FXML private SimulationParamsController simulationTaskTogglesController;
 
@@ -72,12 +74,16 @@ public class RunTaskMenuController {
 
     private Engine engine;
 
+
+
     public RunTaskMenuController(){
         this.taskType = new SimpleObjectProperty<>(TaskType.SIMULATION_TASK);
         this.runType = new SimpleObjectProperty<>(RunType.FROM_SCRATCH);
         this.targetsList = new SimpleListProperty<>();
         this.numOfThreads = new SimpleIntegerProperty(1);
     }
+
+
 
 
 
@@ -91,6 +97,8 @@ public class RunTaskMenuController {
         selectedTargetsListView.getItems().addAll(whatIfTargets);
 
     }
+
+
 
 
 
@@ -112,6 +120,8 @@ public class RunTaskMenuController {
             baseHBox.getChildren().remove(compilationTaskToggles);
             try{
                 baseHBox.getChildren().add(simulationTaskToggles);
+                baseHBox.getChildren().get(0).setDisable(true);
+                baseHBox.getChildren().get(1).setDisable(true);
                 simulationTaskToggles.setMaxHeight(Double.MAX_VALUE);
                 simulationTaskToggles.setMaxWidth(Double.MAX_VALUE);
             }catch (IllegalArgumentException e){
@@ -122,6 +132,8 @@ public class RunTaskMenuController {
             baseHBox.getChildren().remove(simulationTaskToggles);
             try{
                 baseHBox.getChildren().add(compilationTaskToggles);
+                baseHBox.getChildren().get(0).setDisable(true);
+                baseHBox.getChildren().get(1).setDisable(true);
                 compilationTaskToggles.setMaxHeight(Double.MAX_VALUE);
                 compilationTaskToggles.setMaxWidth(Double.MAX_VALUE);
             }catch (IllegalArgumentException e){
@@ -130,8 +142,9 @@ public class RunTaskMenuController {
         }
 
 
-    }
 
+
+    }
 
 
     @FXML
@@ -172,7 +185,24 @@ public class RunTaskMenuController {
             }
         };
         simulationTaskTogglesController.setActiveTaskCallback(activeTaskCallback);
+        simulationTaskTogglesController.setReturnCallBack(new ReturnCallback() {
+            @Override
+            public void returnToPrev() {
+                baseHBox.getChildren().remove(simulationTaskToggles);
+                baseHBox.getChildren().get(0).setDisable(false);
+                baseHBox.getChildren().get(1).setDisable(false);
+
+            }
+        });
         compilationTaskTogglesController.setActiveTaskCallback(activeTaskCallback);
+        compilationTaskTogglesController.setReturnCallBack(new ReturnCallback() {
+            @Override
+            public void returnToPrev() {
+                baseHBox.getChildren().remove(compilationTaskToggles);
+                baseHBox.getChildren().get(0).setDisable(false);
+                baseHBox.getChildren().get(1).setDisable(false);
+            }
+        });
 
     }
 

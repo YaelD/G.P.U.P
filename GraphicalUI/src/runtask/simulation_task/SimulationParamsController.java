@@ -8,6 +8,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import runtask.menu.ActiveTaskCallback;
+import runtask.menu.ReturnCallback;
 
 public class SimulationParamsController {
 
@@ -18,6 +19,8 @@ public class SimulationParamsController {
     private SimpleObjectProperty<SimulationTaskParamsDTO> simulationTaskParams;
     private ActiveTaskCallback activeTaskCallback;
 
+    private ReturnCallback returnCallBack;
+
     @FXML private TextField processTimeTextArea;
     @FXML private CheckBox isRandomCheckBox;
     @FXML private Label warningLabel;
@@ -27,6 +30,14 @@ public class SimulationParamsController {
     @FXML private Label successWithWarningsLabel;
     @FXML private Button confirmButton;
 
+    @FXML
+    void returnToPrevWindow(ActionEvent event) {
+        returnCallBack.returnToPrev();
+    }
+
+    public void setReturnCallBack(ReturnCallback returnCallBack) {
+        this.returnCallBack = returnCallBack;
+    }
 
     public SimulationParamsController() {
         this.successRate = new SimpleDoubleProperty(0.0);

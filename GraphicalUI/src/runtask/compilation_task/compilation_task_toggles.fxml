@@ -47,12 +47,17 @@
          <font>
             <Font size="15.0" />
          </font></Label>
-      <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="13">
+      <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="12.0" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="13">
          <children>
-            <Button fx:id="confirmButton" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#confirm" text="Confirm">
+            <Button maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#returnToPrevWindow" text="Return">
                <font>
                   <Font size="13.0" />
                </font></Button>
+            <Button fx:id="confirmButton1" layoutX="94.0" layoutY="10.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#confirm" text="Confirm">
+               <font>
+                  <Font size="13.0" />
+               </font>
+            </Button>
          </children>
       </HBox>
       <Label text="Choose destination folder" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="6">
