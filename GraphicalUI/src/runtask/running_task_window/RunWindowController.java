@@ -182,15 +182,11 @@ public class RunWindowController {
 
 
         Consumer<PausableThreadPoolExecutor> threadPoolExecutorConsumer = pausableThreadPoolExecutor -> {
-            System.out.println("ThreadPool start num of threads=" + pausableThreadPoolExecutor.getPoolSize());
-
-
             numOfThreadsCB.valueProperty().addListener(new ChangeListener<Integer>() {
                 @Override
                 public void changed(ObservableValue<? extends Integer> observable, Integer oldValue, Integer newValue) {
                     pausableThreadPoolExecutor.setCorePoolSize(newValue);
                     pausableThreadPoolExecutor.setMaximumPoolSize(newValue);
-                    System.out.println("ThreadPool num of threads after change=" + pausableThreadPoolExecutor.getPoolSize());
                 }
             });
             this.pauseToggle.selectedProperty().addListener(new ChangeListener<Boolean>() {
