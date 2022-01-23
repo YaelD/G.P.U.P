@@ -8,6 +8,7 @@ import exceptions.*;
 import graph.Dependency;
 import graph.Graph;
 import task.PausableThreadPoolExecutor;
+import task.RunType;
 import task.TaskType;
 
 import java.util.Collection;
@@ -40,7 +41,7 @@ public interface Engine {
 
     public List<SerialSetDTO> getSerialSetsInfo();
 
-    public Set<String> whatIf(String targetName, Dependency dependency);
+    public Set<String> whatIf(String targetName, Dependency dependency, TaskType taskType, RunType runType) ;
 
     public TargetDTO getRunningTarget(String targetName);
 

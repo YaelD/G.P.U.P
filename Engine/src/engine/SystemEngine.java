@@ -126,14 +126,24 @@ public class SystemEngine implements Engine{
     }
 
     @Override
-    public Set<String> whatIf(String targetName, Dependency dependency)  {
-        Target target = graph.getTarget(targetName);
+    public Set<String> whatIf(String targetName, Dependency dependency, TaskType taskType, RunType runType){
+        Target target = null;
         Set<String> targetSet = new HashSet<>();
-        if(dependency.equals(Dependency.REQUIRED_FOR)){
-            target.getRequiredForAncestors(targetSet);
+        if(runType.equals(RunType.INCREMENTAL)){
+            if(this.tasksInSystem.containsKey(taskType)){
+                target = this.tasksInSystem.get(taskType).getGraph().getTarget(targetName);
+            }
         }
         else{
-            target.getDependsOnAncestors(targetSet);
+            target = graph.getTarget(targetName);
+        }
+        if(target != null){
+            if(dependency.equals(Dependency.REQUIRED_FOR)){
+                target.getRequiredForAncestors(targetSet);
+            }
+            else{
+                target.getDependsOnAncestors(targetSet);
+            }
         }
         return targetSet;
     }
