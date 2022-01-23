@@ -47,11 +47,11 @@ public class CompilationTask extends Task{
             //endTime = LocalTime.now();
             if(exitCode != 0){    //means that the process has failed
                 target.setRunResult(RunResults.FAILURE);
+                runResult += "\nJavac output: ";
                 runResult += processResult;
             }
             else {
                 target.setRunResult(RunResults.SUCCESS);
-                runResult += "\nJavac output: ";
                 runResult += processResult;
             }
 
