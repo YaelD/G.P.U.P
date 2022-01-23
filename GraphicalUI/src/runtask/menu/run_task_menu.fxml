@@ -7,10 +7,10 @@
    <content>
       <HBox fx:id="baseHBox" alignment="CENTER" fillHeight="false" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" spacing="10.0">
          <children>
-            <fx:include fx:id="chooseTargetsToggles" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" source="../targets_and_task_info/run_task_choose_targets.fxml" HBox.hgrow="NEVER" />
-            <fx:include fx:id="chooseThreadsAndTaskToggles" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" source="../targets_and_task_info/run_task_toggles_choose_num_threads_and_tasks.fxml" HBox.hgrow="NEVER" />
-            <fx:include fx:id="simulationTaskToggles" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" source="../simulation_task/simlation_task_toggles.fxml" HBox.hgrow="NEVER" />
-            <fx:include fx:id="compilationTaskToggles" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" source="../compilation_task/compilation_task_toggles.fxml" HBox.hgrow="NEVER" />
+            <fx:include fx:id="chooseTargetsToggles" source="../targets_and_task_info/run_task_choose_targets.fxml" HBox.hgrow="NEVER" />
+            <fx:include fx:id="chooseThreadsAndTaskToggles" source="../targets_and_task_info/run_task_toggles_choose_num_threads_and_tasks.fxml" HBox.hgrow="NEVER" />
+            <fx:include fx:id="simulationTaskToggles" source="../simulation_task/simlation_task_toggles.fxml" HBox.hgrow="NEVER" />
+            <fx:include fx:id="compilationTaskToggles" source="../compilation_task/compilation_task_toggles.fxml" HBox.hgrow="NEVER" />
          </children>
       </HBox>
    </content>
