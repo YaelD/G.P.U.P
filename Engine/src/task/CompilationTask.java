@@ -34,7 +34,7 @@ public class CompilationTask extends Task{
     @Override
     protected TargetDTO executeTaskOnTarget(Target target) {
         TargetDTO targetDTO = null;
-        String runResult = "";
+        String runResult = new String("");
         //LocalTime startTime, endTime;
         try {
             target.setStartingProcessTime(LocalTime.now());
