@@ -68,6 +68,9 @@ public class SystemEngine implements Engine{
         if(gpupDescriptor.getGPUPSerialSets() != null){
             initializeSerialSets(gpupDescriptor);
         }
+        for(Target target : this.graph.getTargets()){
+            target.updateWaitForTheseTargetsToBeFinished();
+        }
     }
 
     private void initializeSerialSets(GPUPDescriptor gpupDescriptor) throws SerialSetException {

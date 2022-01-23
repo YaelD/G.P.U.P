@@ -181,6 +181,12 @@ public class Target implements Cloneable {
         }
     }
 
+    public void updateWaitForTheseTargetsToBeFinished(){
+        for(Target target : this.dependsOn){
+            this.waitForThisTargetsToBeFinished.add(target.getName());
+        }
+    }
+
     @Override
     public String toString() {
         return "target.Target{" +

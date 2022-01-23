@@ -131,8 +131,12 @@ public abstract class Task{
                     if(currParent.getName().equals("J")){
                         System.out.println("DEBUG ME");
                     }
-                    currParent.getWaitForThisTargetsToBeFinished().add(childOfTheCurrParent.getName());
+                    //currParent.getWaitForThisTargetsToBeFinished().add(childOfTheCurrParent.getName());
                     isOpenedToRun = false;
+                }
+                else{
+                    currParent.getWaitForThisTargetsToBeFinished().remove(childOfTheCurrParent.getName());
+                    isOpenedToRun = true;
                 }
             }
             if (isOpenedToRun) {
@@ -162,6 +166,7 @@ public abstract class Task{
                 Target clonedTarget = currTarget.clone();
                 clonedTarget.setRunResult(null);
                 clonedTarget.setRunStatus(RunStatus.FROZEN);
+                clonedTarget.updateWaitForTheseTargetsToBeFinished();
                 newGraph.getTargetGraph().put(clonedTarget.getName(), clonedTarget);
             }
         }
