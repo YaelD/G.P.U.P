@@ -43,7 +43,7 @@
                <children>
                   <ChoiceBox fx:id="targetsChoiceBox" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="3" GridPane.rowSpan="2" />
                   <Button fx:id="searchButton" mnemonicParsing="false" onAction="#searchCycles" prefWidth="125.0" text="Search" GridPane.columnIndex="1" GridPane.rowIndex="6" GridPane.rowSpan="2" />
-                  <Label fx:id="warningLabel" prefWidth="161.0" text="Label" textFill="#f50000" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="10" GridPane.rowSpan="4">
+                  <Label fx:id="warningLabel" prefWidth="161.0" text="Label" textFill="#f50000" visible="false" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="10" GridPane.rowSpan="4">
                      <font>
                         <Font size="15.0" />
                      </font></Label>

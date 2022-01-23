@@ -67,7 +67,7 @@
             </Button>
          </children>
       </HBox>
-      <Label fx:id="warningLabel" layoutX="40.0" layoutY="227.0" prefWidth="154.0" text="warning" textFill="RED" wrapText="true" GridPane.columnIndex="2" GridPane.rowIndex="11" GridPane.rowSpan="4">
+      <Label fx:id="warningLabel" layoutX="40.0" layoutY="227.0" prefWidth="154.0" text="warning" textFill="RED" visible="false" wrapText="true" GridPane.columnIndex="2" GridPane.rowIndex="11" GridPane.rowSpan="4">
          <font>
             <Font size="15.0" />
          </font></Label>
