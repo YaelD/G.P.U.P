@@ -7,6 +7,7 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
 <ScrollPane fitToHeight="true" fitToWidth="true" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="tables.GraphInfoController">
    <content>
@@ -36,17 +37,50 @@
                       <RowConstraints maxHeight="30.0" minHeight="30.0" prefHeight="30.0" vgrow="NEVER" />
                     </rowConstraints>
                      <children>
-                        <Label text="Summeries:" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                        <Label text="Total number of Targets:" GridPane.columnIndex="3" GridPane.rowIndex="1" />
-                        <Label text="Number of Leaves" GridPane.columnIndex="3" GridPane.rowIndex="2" />
-                        <Label layoutX="175.0" layoutY="77.0" text="Number of Roots:" GridPane.columnIndex="3" GridPane.rowIndex="4" />
-                        <Label layoutX="175.0" layoutY="137.0" text="Number of Middles:" GridPane.columnIndex="3" GridPane.rowIndex="3" />
-                        <Label layoutX="175.0" layoutY="137.0" text="Number of Independents:" GridPane.columnIndex="3" GridPane.rowIndex="5" />
-                        <Label fx:id="NumOfTargets_Label" layoutX="100.0" layoutY="47.0" text="*numberOfTargets" GridPane.columnIndex="5" GridPane.rowIndex="1" />
-                        <Label fx:id="NumOfLeaves_Label" layoutX="236.0" layoutY="47.0" text="*numberOfLeaves" GridPane.columnIndex="5" GridPane.rowIndex="2" />
-                        <Label fx:id="NumOfMiddles_Label" layoutX="236.0" layoutY="77.0" text="*numOfMiddles" GridPane.columnIndex="5" GridPane.rowIndex="3" />
-                        <Label fx:id="NumOfRoots_Label" layoutX="236.0" layoutY="107.0" text="*numOfRoots" GridPane.columnIndex="5" GridPane.rowIndex="4" />
-                        <Label fx:id="NumOfIndependents_Label" layoutX="236.0" layoutY="137.0" text="*numOfIndependets" GridPane.columnIndex="5" GridPane.rowIndex="5" />
+                        <Label text="Summeries:" underline="true" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                           <font>
+                              <Font size="14.0" />
+                           </font></Label>
+                        <Label text="Total number of Targets:" GridPane.columnIndex="3" GridPane.rowIndex="1">
+                           <font>
+                              <Font size="14.0" />
+                           </font></Label>
+                        <Label text="Number of Leaves" GridPane.columnIndex="3" GridPane.rowIndex="2">
+                           <font>
+                              <Font size="14.0" />
+                           </font></Label>
+                        <Label layoutX="175.0" layoutY="77.0" text="Number of Roots:" GridPane.columnIndex="3" GridPane.rowIndex="4">
+                           <font>
+                              <Font size="14.0" />
+                           </font></Label>
+                        <Label layoutX="175.0" layoutY="137.0" text="Number of Middles:" GridPane.columnIndex="3" GridPane.rowIndex="3">
+                           <font>
+                              <Font size="14.0" />
+                           </font></Label>
+                        <Label layoutX="175.0" layoutY="137.0" text="Number of Independents:" GridPane.columnIndex="3" GridPane.rowIndex="5">
+                           <font>
+                              <Font size="14.0" />
+                           </font></Label>
+                        <Label fx:id="NumOfTargets_Label" layoutX="100.0" layoutY="47.0" text="*numberOfTargets" GridPane.columnIndex="5" GridPane.rowIndex="1">
+                           <font>
+                              <Font size="13.0" />
+                           </font></Label>
+                        <Label fx:id="NumOfLeaves_Label" layoutX="236.0" layoutY="47.0" text="*numberOfLeaves" GridPane.columnIndex="5" GridPane.rowIndex="2">
+                           <font>
+                              <Font size="13.0" />
+                           </font></Label>
+                        <Label fx:id="NumOfMiddles_Label" layoutX="236.0" layoutY="77.0" text="*numOfMiddles" GridPane.columnIndex="5" GridPane.rowIndex="3">
+                           <font>
+                              <Font size="13.0" />
+                           </font></Label>
+                        <Label fx:id="NumOfRoots_Label" layoutX="236.0" layoutY="107.0" text="*numOfRoots" GridPane.columnIndex="5" GridPane.rowIndex="4">
+                           <font>
+                              <Font size="13.0" />
+                           </font></Label>
+                        <Label fx:id="NumOfIndependents_Label" layoutX="236.0" layoutY="137.0" text="*numOfIndependets" GridPane.columnIndex="5" GridPane.rowIndex="5">
+                           <font>
+                              <Font size="13.0" />
+                           </font></Label>
                      </children>
                   </GridPane>
                </children>

@@ -18,7 +18,7 @@ import java.util.function.Consumer;
 
 public interface Engine {
 
-    public boolean loadFile(String path) throws InvalidFileException, DependencyConflictException, DuplicateTargetsException, InvalidDependencyException, TargetNotExistException, SerialSetException;
+    public boolean loadFile(String path) throws InvalidFileException, DependencyConflictException, DuplicateTargetsException, InvalidDependencyException, TargetNotExistException, SerialSetException, DupSerialSetsNameException;
 
     public GraphDTO getGraphDTO();
 

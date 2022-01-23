@@ -17,6 +17,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import target.RunResults;
+import target.RunStatus;
 import task.PausableThreadPoolExecutor;
 import task.RunType;
 import task.TaskType;
@@ -130,11 +131,15 @@ public class RunWindowController {
             @Override
             public void run() {
                 while (progressBar.progressProperty().get() != 1){
-
                     for(TargetsTableButtonsHandler currTargetDraw: data) {
                         TargetDTO targetDTO = engine.getRunningTarget(currTargetDraw.getName());
                         if(targetDTO != null && targetDTO.getRunStatus()!= null){
                             currTargetDraw.setRunStatus(targetDTO.getRunStatus());
+                            if(targetDTO.getRunStatus().equals(RunStatus.FINISHED)){
+                                if(targetDTO.getRunResult() != null){
+                                    currTargetDraw.setRunResults(targetDTO.getRunResult());
+                                }
+                            }
                         }
                     }
                 }
@@ -217,7 +222,7 @@ public class RunWindowController {
                 }
             }
         }
-        if(targetDTO.getTaskRunResult() != null){
+        if(targetDTO.getTaskRunResult() != null && !(targetDTO.getTaskRunResult().isEmpty())){
             currStr +=("Run result:\n" + targetDTO.getTaskRunResult());
         }
         if(targetDTO.getSerialSetNames() != null){

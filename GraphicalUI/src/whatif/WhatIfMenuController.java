@@ -8,6 +8,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.layout.GridPane;
+import task.RunType;
 
 import java.util.Set;
 
@@ -32,7 +33,7 @@ public class WhatIfMenuController {
             @Override
             public void findWhatIf(String targetName, Dependency dependency) {
                 targetsListView.getItems().clear();
-                Set<String> targets = engine.whatIf(targetName, dependency);
+                Set<String> targets = engine.whatIf(targetName, dependency, null, RunType.FROM_SCRATCH);
                 if(targets.isEmpty()){
                     targetsListView.setPlaceholder(new Label("There are no targets to show"));
                 }

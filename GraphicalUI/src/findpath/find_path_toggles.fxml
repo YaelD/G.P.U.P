@@ -7,12 +7,15 @@
 <?import javafx.scene.control.ToggleGroup?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.text.Font?>
 
 <GridPane alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="-Infinity" minHeight="-Infinity" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="findpath.FindPathTogglesController">
   <columnConstraints>
       <ColumnConstraints hgrow="NEVER" maxWidth="30.0" minWidth="30.0" prefWidth="30.0" />
-    <ColumnConstraints hgrow="SOMETIMES" minWidth="-Infinity" />
+      <ColumnConstraints hgrow="NEVER" maxWidth="30.0" minWidth="30.0" prefWidth="100.0" />
+    <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" minWidth="-Infinity" />
     <ColumnConstraints hgrow="NEVER" maxWidth="30.0" minWidth="30.0" prefWidth="30.0" />
   </columnConstraints>
   <rowConstraints>
@@ -30,22 +33,50 @@
       <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
       <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
       <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
       <RowConstraints maxHeight="30.0" minHeight="30.0" prefHeight="30.0" vgrow="NEVER" />
       <RowConstraints maxHeight="30.0" minHeight="30.0" prefHeight="30.0" vgrow="NEVER" />
       <RowConstraints maxHeight="30.0" minHeight="30.0" prefHeight="30.0" vgrow="NEVER" />
   </rowConstraints>
    <children>
-      <ChoiceBox fx:id="sourceTargetChoiceBox" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-      <ChoiceBox fx:id="destinationTargetChoiceBox" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="5" />
-      <RadioButton fx:id="dependsOnRadioButton" mnemonicParsing="false" selected="true" text="DependsOn" GridPane.columnIndex="1" GridPane.rowIndex="8">
+      <ChoiceBox fx:id="sourceTargetChoiceBox" prefWidth="150.0" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+      <ChoiceBox fx:id="destinationTargetChoiceBox" prefWidth="150.0" GridPane.columnIndex="2" GridPane.rowIndex="5" />
+      <RadioButton fx:id="dependsOnRadioButton" mnemonicParsing="false" selected="true" text="DependsOn" GridPane.columnIndex="2" GridPane.rowIndex="8">
          <toggleGroup>
             <ToggleGroup fx:id="dependencyToggleGroup" />
-         </toggleGroup></RadioButton>
-      <RadioButton fx:id="requiredForRadioButton" mnemonicParsing="false" text="RequiredFor" toggleGroup="$dependencyToggleGroup" GridPane.columnIndex="1" GridPane.rowIndex="9" />
-      <Label text="Source Target" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-      <Label text="Destination Target" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-      <Label text="Dependency" GridPane.columnIndex="1" GridPane.rowIndex="7" />
-      <Button fx:id="findPathsButton" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#findPaths" text="Find Paths" GridPane.columnIndex="1" GridPane.rowIndex="11" GridPane.rowSpan="2" />
-      <Label fx:id="warningLabel" layoutX="40.0" layoutY="227.0" text="Warinig!!" visible="false" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="14" GridPane.rowSpan="2" />
+         </toggleGroup>
+         <font>
+            <Font size="14.0" />
+         </font></RadioButton>
+      <RadioButton fx:id="requiredForRadioButton" mnemonicParsing="false" text="RequiredFor" toggleGroup="$dependencyToggleGroup" GridPane.columnIndex="2" GridPane.rowIndex="9">
+         <font>
+            <Font size="14.0" />
+         </font></RadioButton>
+      <Label text="Source Target" underline="true" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="1">
+         <font>
+            <Font size="15.0" />
+         </font></Label>
+      <Label text="Destination Target" underline="true" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="4">
+         <font>
+            <Font size="15.0" />
+         </font></Label>
+      <Label text="Dependency" underline="true" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="7">
+         <font>
+            <Font size="15.0" />
+         </font></Label>
+      <Label fx:id="warningLabel" layoutX="40.0" layoutY="227.0" text="Warinig!!" textFill="RED" visible="false" wrapText="true" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="14" GridPane.rowSpan="3">
+         <font>
+            <Font size="15.0" />
+         </font></Label>
+      <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="12">
+         <children>
+            <Button fx:id="findPathsButton" maxHeight="1.7976931348623157E308" mnemonicParsing="false" onAction="#findPaths" text="Find Paths">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Button>
+         </children>
+      </HBox>
    </children>
 </GridPane>

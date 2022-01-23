@@ -40,7 +40,7 @@ public class SystemEngine implements Engine{
 
     @Override
     public boolean loadFile(String path) throws
-            DuplicateTargetsException, TargetNotExistException, InvalidDependencyException, DependencyConflictException, InvalidFileException, SerialSetException {
+            DuplicateTargetsException, TargetNotExistException, InvalidDependencyException, DependencyConflictException, InvalidFileException, SerialSetException, DupSerialSetsNameException {
         try {
             fileValidation(path);
             File file = new File(path.trim());
@@ -56,7 +56,7 @@ public class SystemEngine implements Engine{
     }
 
     private void initializeSystem(GPUPDescriptor gpupDescriptor) throws DuplicateTargetsException,
-            TargetNotExistException, InvalidDependencyException, DependencyConflictException, SerialSetException {
+            TargetNotExistException, InvalidDependencyException, DependencyConflictException, SerialSetException, DupSerialSetsNameException {
         Map<String, Target> map = Graph.buildTargetGraph(gpupDescriptor.getGPUPTargets());
         String graphName = gpupDescriptor.getGPUPConfiguration().getGPUPGraphName();
         this.graph = new Graph(map, graphName);
@@ -73,7 +73,7 @@ public class SystemEngine implements Engine{
         }
     }
 
-    private void initializeSerialSets(GPUPDescriptor gpupDescriptor) throws SerialSetException {
+    private void initializeSerialSets(GPUPDescriptor gpupDescriptor) throws SerialSetException, DupSerialSetsNameException {
         List<SerialSet> serialSetList = new ArrayList<>();
         for(GPUPDescriptor.GPUPSerialSets.GPUPSerialSet gpupSerialSet : gpupDescriptor.getGPUPSerialSets().getGPUPSerialSet()){
             String serialSetName = gpupSerialSet.getName();
@@ -81,7 +81,12 @@ public class SystemEngine implements Engine{
             SerialSet newSerialSet = new SerialSet(serialSetName,targetList);
             List<String> targets = Arrays.asList(gpupSerialSet.getTargets().toUpperCase().split(","));
             Collections.sort(targets);
-            SerialSet.checkIfSetTargetExistInGraph(targets, this.graph, newSerialSet, serialSetName );
+            SerialSet.checkIfSetTargetExistInGraph(targets, this.graph, newSerialSet, serialSetName);
+            for(SerialSet currSerialSet: serialSetList){
+                if(currSerialSet.getName().equals(newSerialSet.getName())){
+                    throw new DupSerialSetsNameException(currSerialSet.getName());
+                }
+            }
             serialSetList.add(newSerialSet);
         }
         this.serialSetsContainer.setSerialSetList(serialSetList);

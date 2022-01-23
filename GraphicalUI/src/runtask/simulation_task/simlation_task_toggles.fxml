@@ -9,6 +9,7 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.text.Font?>
 
 <GridPane alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="runtask.simulation_task.SimulationParamsController">
   <columnConstraints>
@@ -42,17 +43,38 @@
   </rowConstraints>
    <children>
       <TextField fx:id="processTimeTextArea" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" GridPane.columnIndex="2" GridPane.rowIndex="3" />
-      <CheckBox fx:id="isRandomCheckBox" mnemonicParsing="false" text="Random process time" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="5" />
-      <Label text="Enter process time:" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="2" />
-      <Label text="Enter success rate" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="7" />
-      <Label text="Enter success rate with warnings" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="10" />
-      <Label fx:id="warningLabel" text="Waring!!" visible="false" GridPane.columnIndex="2" GridPane.rowIndex="14" GridPane.rowSpan="4" />
+      <CheckBox fx:id="isRandomCheckBox" mnemonicParsing="false" text="Random process time" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="5">
+         <font>
+            <Font size="14.0" />
+         </font></CheckBox>
+      <Label text="Enter process time:" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="2">
+         <font>
+            <Font size="14.0" />
+         </font></Label>
+      <Label text="Enter success rate" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="7">
+         <font>
+            <Font size="14.0" />
+         </font></Label>
+      <Label text="Enter success rate with warnings" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="10">
+         <font>
+            <Font size="14.0" />
+         </font></Label>
+      <Label fx:id="warningLabel" text="Waring!!" textFill="RED" visible="false" GridPane.columnIndex="2" GridPane.rowIndex="14" GridPane.rowSpan="4">
+         <font>
+            <Font size="14.0" />
+         </font></Label>
       <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="13">
          <children>
-            <Button fx:id="confirmButton" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#onConfirm" text="Confirm" />
+            <Button fx:id="confirmButton" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#onConfirm" text="Confirm">
+               <font>
+                  <Font size="14.0" />
+               </font></Button>
          </children>
       </HBox>
-      <Label text="Enter Simulation Task Parameters" underline="true" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="1" />
+      <Label text="Enter Simulation Task Parameters" underline="true" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="1">
+         <font>
+            <Font size="14.0" />
+         </font></Label>
       <Slider fx:id="successRateSlider" majorTickUnit="5.0" minorTickCount="5" showTickLabels="true" GridPane.columnIndex="2" GridPane.rowIndex="8" />
       <Label fx:id="successRateLabel" text="0%" GridPane.columnIndex="3" GridPane.rowIndex="8" />
       <Label fx:id="successWithWarningsLabel" text="0%" GridPane.columnIndex="3" GridPane.rowIndex="11" />

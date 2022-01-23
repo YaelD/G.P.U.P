@@ -83,7 +83,7 @@ public class UserInterface {
     }
 
     private void whatIf() {
-        System.out.println(engine.whatIf("J", Dependency.REQUIRED_FOR));
+        //System.out.println(engine.whatIf("J", Dependency.REQUIRED_FOR));
 
 
     }
@@ -198,6 +198,8 @@ public class UserInterface {
                     System.out.println("The target " + e.getName() + " does not exist");
                 } catch (SerialSetException e) {
                     System.out.println("The Target " + e.getTargetName() + "In serial Set" + e.getSerialSetName() + "doesnt exist");
+                } catch (DupSerialSetsNameException e) {
+                    e.printStackTrace();
                 }
             } else {
                 finish = true;

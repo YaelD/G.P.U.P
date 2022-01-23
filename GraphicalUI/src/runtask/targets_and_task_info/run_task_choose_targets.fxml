@@ -13,6 +13,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
 <GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="runtask.targets_and_task_info.ChooseTargetsController">
   <columnConstraints>
@@ -44,12 +45,18 @@
       <RowConstraints maxHeight="30.0" minHeight="30.0" prefHeight="30.0" vgrow="NEVER" />
   </rowConstraints>
    <children>
-      <Label text="Choose Targets:" underline="true" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="1" />
+      <Label text="Choose Targets:" underline="true" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="1">
+         <font>
+            <Font name="System Bold" size="15.0" />
+         </font></Label>
       <VBox fx:id="targetsSubMenu" alignment="CENTER_LEFT" spacing="5.0" GridPane.columnIndex="2" GridPane.rowIndex="3" GridPane.rowSpan="4">
          <children>
             <HBox alignment="CENTER_LEFT" spacing="20.0">
                <children>
-                  <CheckBox fx:id="chooseAllTargetsCheckBox" mnemonicParsing="false" text="Choose all Targets" />
+                  <CheckBox fx:id="chooseAllTargetsCheckBox" mnemonicParsing="false" text="Choose all Targets">
+                     <font>
+                        <Font size="14.0" />
+                     </font></CheckBox>
                   <Button mnemonicParsing="false" onAction="#clearAllTargets" text="Clear" />
                </children>
             </HBox>
@@ -64,13 +71,25 @@
          <toggleGroup>
             <ToggleGroup fx:id="chooseTargetsToogleGroup" />
          </toggleGroup>
+         <font>
+            <Font size="14.0" />
+         </font>
       </RadioButton>
-      <RadioButton fx:id="chooseWhatIfRB" mnemonicParsing="false" text="Choose targets with WhatIf" toggleGroup="$chooseTargetsToogleGroup" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="7" />
+      <RadioButton fx:id="chooseWhatIfRB" mnemonicParsing="false" text="Choose targets with WhatIf" toggleGroup="$chooseTargetsToogleGroup" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="7">
+         <font>
+            <Font size="14.0" />
+         </font></RadioButton>
       <VBox fx:id="whatIfSubMenu" spacing="5.0" GridPane.columnIndex="2" GridPane.rowIndex="8" GridPane.rowSpan="5">
          <children>
-            <Label text="Choose target" />
+            <Label text="Choose target">
+               <font>
+                  <Font size="14.0" />
+               </font></Label>
             <ChoiceBox fx:id="whatIf_targetsCB" prefWidth="150.0" />
-            <Label layoutX="10.0" layoutY="10.0" text="Choose Dependency" />
+            <Label layoutX="10.0" layoutY="10.0" text="Choose Dependency">
+               <font>
+                  <Font size="14.0" />
+               </font></Label>
             <ChoiceBox fx:id="whatIf_DependencyCB" layoutX="10.0" layoutY="40.0" prefWidth="150.0" />
             <Button fx:id="WhatIfButton" contentDisplay="CENTER" maxHeight="1.7976931348623157E308" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#checkTargetsWithWhatIf" prefWidth="100.0" text="Search" />
          </children>
@@ -80,6 +99,9 @@
             <ListView fx:id="selectedTargetsListView" />
          </content>
       </ScrollPane>
-      <Label text="The selected targets are:" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="13" />
+      <Label text="The selected targets are:" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="13">
+         <font>
+            <Font size="14.0" />
+         </font></Label>
    </children>
 </GridPane>

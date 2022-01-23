@@ -5,6 +5,7 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.control.Button;
+import target.RunResults;
 import target.RunStatus;
 
 import java.util.HashMap;
@@ -14,6 +15,7 @@ public class TargetsTableButtonsHandler {
     private String name;
 
     private SimpleObjectProperty<RunStatus> runStatus;
+    private SimpleObjectProperty<RunResults> runResults;
 
     private Button frozenBtn;
     private Button waitingBtn;
@@ -25,6 +27,7 @@ public class TargetsTableButtonsHandler {
 
 
     public TargetsTableButtonsHandler(String name) {
+        runResults = new SimpleObjectProperty<>(RunResults.SUCCESS);
         runStatus = new SimpleObjectProperty<>(RunStatus.FROZEN);
         runStatus.addListener(new ChangeListener<RunStatus>() {
             @Override
@@ -35,6 +38,19 @@ public class TargetsTableButtonsHandler {
                         public void run() {
                             buttonsMap.get(oldValue).setVisible(false);
                             buttonsMap.get(newValue).setVisible(true);
+                            if(newValue.equals(RunStatus.FINISHED)){
+                                switch (runResults.getValue()){
+                                    case SUCCESS:
+                                        buttonsMap.get(RunStatus.FINISHED).setStyle("-fx-background-color: #63ff46; ");
+                                        break;
+                                    case FAILURE:
+                                        buttonsMap.get(RunStatus.FINISHED).setStyle("-fx-background-color: #ff3d3d; ");
+                                        break;
+                                    case WARNING:
+                                        buttonsMap.get(RunStatus.FINISHED).setStyle("-fx-background-color: #b28058; ");
+                                        break;
+                                }
+                            }
                         }
                     });
                 }
@@ -83,6 +99,9 @@ public class TargetsTableButtonsHandler {
         return skippedBtn;
     }
 
+    public void setRunResults(RunResults runResults) {
+        this.runResults.set(runResults);
+    }
 
     public void setRunStatus(RunStatus runStatus) {
         this.runStatus.set(runStatus);

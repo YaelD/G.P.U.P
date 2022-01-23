@@ -7,6 +7,7 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.text.Font?>
 
 <GridPane alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="runtask.compilation_task.CompilationParamsController">
   <columnConstraints>
@@ -38,15 +39,30 @@
       <RowConstraints maxHeight="30.0" minHeight="30.0" prefHeight="30.0" vgrow="NEVER" />
   </rowConstraints>
    <children>
-      <Label fx:id="warningLabel" text="Warning!!" visible="false" GridPane.columnIndex="2" GridPane.rowIndex="16" GridPane.rowSpan="2" />
-      <Label text="Enter Compilation Task Parameters" underline="true" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="1" />
+      <Label fx:id="warningLabel" prefHeight="21.0" prefWidth="199.0" text="Warning!!" textFill="RED" visible="false" wrapText="true" GridPane.columnIndex="2" GridPane.rowIndex="9" GridPane.rowSpan="2">
+         <font>
+            <Font size="15.0" />
+         </font></Label>
+      <Label text="Enter Compilation Task Parameters" underline="true" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="1">
+         <font>
+            <Font size="15.0" />
+         </font></Label>
       <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="13">
          <children>
-            <Button fx:id="confirmButton" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#confirm" text="Confirm" />
+            <Button fx:id="confirmButton" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#confirm" text="Confirm">
+               <font>
+                  <Font size="13.0" />
+               </font></Button>
          </children>
       </HBox>
-      <Label text="Choose destination folder" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="6" />
-      <Label text="Choose source folder" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="2" />
+      <Label text="Choose destination folder" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="6">
+         <font>
+            <Font size="13.0" />
+         </font></Label>
+      <Label text="Choose source folder" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="2">
+         <font>
+            <Font size="13.0" />
+         </font></Label>
       <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="5.0" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="3">
          <children>
             <TextField fx:id="sourceTextArea" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" />

@@ -80,7 +80,7 @@ public class SimulationParamsController {
     @FXML
     void onConfirm(ActionEvent event) {
         activeTaskCallback.activeTask(new SimulationTaskParamsDTO(this.processTime.intValue(),
-                this.isRandomProcessTime.getValue(), this.successRate.doubleValue(), this.successRateWithWarnings.doubleValue()));
+                this.isRandomProcessTime.get(), this.successRate.doubleValue(), this.successRateWithWarnings.doubleValue()));
     }
 
 }

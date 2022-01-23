@@ -83,12 +83,16 @@ public class RunTaskMenuController {
 
     @FXML
     void checkTargetsWithWhatIf(ActionEvent event) {
-        Set<String> whatIfTargets = this.engine.whatIf(whatIf_targetsCB.getValue(),whatIf_DependencyCB.getValue());
+
+        Set<String> whatIfTargets = this.engine.whatIf(whatIf_targetsCB.getValue(),
+                whatIf_DependencyCB.getValue(), taskType.getValue(), runType.getValue());
         selectedTargetsListView.getItems().clear();
         selectedTargetsListView.getItems().add(whatIf_targetsCB.getValue());
         selectedTargetsListView.getItems().addAll(whatIfTargets);
 
     }
+
+
 
     @FXML
     void clearAllTargets(ActionEvent event) {
@@ -103,7 +107,6 @@ public class RunTaskMenuController {
     void enableNextPanel(ActionEvent event) {
         warningLabel.setVisible(false);
         if(!validation()){
-            //TODO: add a warning label
         }
         else if(simulationRadioButton.isSelected()){
             baseHBox.getChildren().remove(compilationTaskToggles);
@@ -260,9 +263,6 @@ public class RunTaskMenuController {
                     baseHBox.getChildren().remove(simulationTaskToggles);
                     baseHBox.getChildren().remove(compilationTaskToggles);
                 }
-
-
-
             }
         });
     }
@@ -283,7 +283,9 @@ public class RunTaskMenuController {
     private void initTargetsCheckBoxList(Set<String> optionalTargetsSet){
         if(!optionalTargetsSet.isEmpty()){
             targetsCheckBoxList.getItems().clear();
+            whatIf_targetsCB.getItems().clear();
             for(String currTarget: optionalTargetsSet){
+                whatIf_targetsCB.getItems().add(currTarget);
                 CheckBox checkBox = new CheckBox(currTarget);
                 checkBox.selectedProperty().addListener(new ChangeListener<Boolean>() {
                     @Override
@@ -298,12 +300,15 @@ public class RunTaskMenuController {
                 });
                 targetsCheckBoxList.getItems().add(checkBox);
             }
+            whatIf_targetsCB.setValue(whatIf_targetsCB.getItems().get(0));
 
         }
     }
 
 
     private void initLists(GraphDTO graphDTO) {
+        targetsCheckBoxList.getItems().clear();
+        whatIf_targetsCB.getItems().clear();
         for(TargetDTO targetDTO: graphDTO.getTargets().values()){
             whatIf_targetsCB.getItems().add(targetDTO.getName());
             CheckBox checkBox = new CheckBox(targetDTO.getName());

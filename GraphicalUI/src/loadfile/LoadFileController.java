@@ -62,16 +62,24 @@ public class LoadFileController {
         } catch (InvalidFileException e) {
             warning_label.setText("Invalid File");
         } catch (DependencyConflictException e) {
-            warning_label.setText("Dependency conflict between '" + e.getFirstTarget() + "' and '" +
+            warning_label.setText("Can't load file: " +
+                    "\nDependency conflict between '" + e.getFirstTarget() + "' and '" +
                     e.getSecondTarget() + "' With dependency: '" + e.getDependencyType() +"'");
         } catch (DuplicateTargetsException e) {
-            warning_label.setText("The Target '" + e.getTargetName() + "' is appearing more than once");
+            warning_label.setText("Can't load file: " +
+                    "\nThe Target '" + e.getTargetName() + "' is appearing more than once");
         } catch (InvalidDependencyException e) {
-            warning_label.setText("The dependency '" + e.getDependency() + "' is invalid") ;
+            warning_label.setText("Can't load file: " +
+                    "\nThe dependency '" + e.getDependency() + "' is invalid") ;
         } catch (TargetNotExistException e) {
-            warning_label.setText("The target '" + e.getName() + "' is not exist");
+            warning_label.setText("Can't load file: " +
+                    "\nThe target '" + e.getName() + "' is not exist");
         } catch (SerialSetException e) {
-            warning_label.setText("The serial set " + e.getSerialSetName() + " contains invalid target '" + e.getTargetName() + "'") ;
+            warning_label.setText("Can't load file: " +
+                    "\nThe serial set " + e.getSerialSetName() + " contains invalid target '" + e.getTargetName() + "'") ;
+        } catch (DupSerialSetsNameException e) {
+            warning_label.setText("Can't load file: " +
+                    "\nThe serial set '" + e.getSerialSetName() + "' appears several times");
         }
 
     }
