@@ -321,6 +321,13 @@ public class SystemEngine implements Engine{
             if(targetDTO.getInfo() != null){
                 out.write("Target info:" + targetDTO.getInfo() + "\n");
             }
+            if(!targetDTO.getCompilationFileName().equals("")){
+                out.write("Compilation file name: " + targetDTO.getCompilationFileName() + "\n");
+            }
+            if(!targetDTO.getCompilerOperatingLine().equals("")){
+                out.write("Compilation operation line: " + targetDTO.getCompilerOperatingLine()+ "\n");
+
+            }
             if(!targetDTO.getRunResult().equals(RunResults.SKIPPED)){
                 out.write("Process Start time:" + targetDTO.getStartingProcessTime().format(DateTimeFormatter.ofPattern("HH:mm:ss")) + "\n");
                 out.write("Process End time:" + targetDTO.getEndingProcessTime().format(DateTimeFormatter.ofPattern("HH:mm:ss")) + "\n");
@@ -331,6 +338,9 @@ public class SystemEngine implements Engine{
                     if(!targetDTO.getSkippedFathers().isEmpty()){
                         out.write("The targets that won't be able to process are: \n" + targetDTO.getSkippedFathers() + "\n");
                     }
+                    if(!targetDTO.getCompilationRunResult().equals("")){
+                        out.write("The Run result: \n" + targetDTO.getCompilationRunResult());
+                    }
                 }
                 if(targetDTO.getTaskRunResult() != null && !targetDTO.getTaskRunResult().isEmpty()){
                     out.write("Task Run results: " + targetDTO.getTaskRunResult() + "\n");
@@ -339,6 +349,7 @@ public class SystemEngine implements Engine{
             else{
                 out.write("The target was skipped because of: " + targetDTO.getFailedChildTargets());
             }
+
         } catch (IOException e) {
             e.printStackTrace();
         } finally {

@@ -239,4 +239,18 @@ public class TargetDTO {
 
     }
 
+    //Compilation params:
+
+
+    public String getCompilationRunResult() {
+        return compilationRunResult;
+    }
+
+    public String getCompilationFileName() {
+        return compilationFileName;
+    }
+
+    public String getCompilerOperatingLine() {
+        return compilerOperatingLine;
+    }
 }
