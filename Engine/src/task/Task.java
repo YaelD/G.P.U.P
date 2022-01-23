@@ -128,9 +128,7 @@ public abstract class Task{
             for(Target childOfTheCurrParent : currParent.getDependsOn()){
                 if (childOfTheCurrParent.getRunStatus().equals(RunStatus.FROZEN)
                 || childOfTheCurrParent.getRunStatus().equals(RunStatus.WAITING)) {
-                    if(currParent.getName().equals("J")){
-                        System.out.println("DEBUG ME");
-                    }
+
                     //currParent.getWaitForThisTargetsToBeFinished().add(childOfTheCurrParent.getName());
                     isOpenedToRun = false;
                 }

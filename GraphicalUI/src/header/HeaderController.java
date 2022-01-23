@@ -69,6 +69,7 @@ public class HeaderController {
             Parent root = fxmlLoader.load(resource.openStream());
             LoadFileController loadFileController = fxmlLoader.getController();
             loadFileController.setEngine(this.engine);
+            this.isFileOpened.set(false);
             loadFileController.setIsFileLoaded(this.isFileOpened);
 
             base_BorderPane.setCenter(root);
