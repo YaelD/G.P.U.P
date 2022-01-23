@@ -36,6 +36,7 @@ public class FindCyclesController {
         if(validate()){
             String targetName = this.targetsChoiceBox.getValue();
             try {
+                cyclesListView.getItems().clear();
                 List<String> cycle = this.engine.findCycle(targetName);
                 if(cycle == null){
                     cyclesListView.setPlaceholder(new Label("This target does not take place in any cycle"));

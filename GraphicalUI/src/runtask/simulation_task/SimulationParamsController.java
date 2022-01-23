@@ -1,17 +1,13 @@
-package runtask;
+package runtask.simulation_task;
 
 import dto.SimulationTaskParamsDTO;
-import engine.Engine;
-import javafx.beans.binding.Bindings;
 import javafx.beans.property.*;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-
-import java.util.function.UnaryOperator;
-import java.util.regex.Pattern;
+import runtask.menu.ActiveTaskCallback;
 
 public class SimulationParamsController {
 
@@ -47,14 +43,14 @@ public class SimulationParamsController {
             @Override
             public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
                 successRateLabel.textProperty().setValue(String.valueOf(newValue.intValue()) + "%");
-                successRate.set(newValue.intValue()/100);
+                successRate.setValue(newValue.floatValue()/100);
             }
         });
         this.successWithWarningSlider.valueProperty().addListener(new ChangeListener<Number>() {
             @Override
             public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
                 successWithWarningsLabel.textProperty().setValue(String.valueOf(newValue.intValue()) + "%");
-                successRateWithWarnings.set(newValue.intValue()/100);
+                successRateWithWarnings.set(newValue.floatValue()/100);
 
             }
         });

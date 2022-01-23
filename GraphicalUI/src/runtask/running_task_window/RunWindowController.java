@@ -1,4 +1,4 @@
-package runtask;
+package runtask.running_task_window;
 
 import dto.GraphDTO;
 import dto.TargetDTO;
@@ -17,13 +17,10 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import target.RunResults;
-import target.Target;
 import task.PausableThreadPoolExecutor;
 import task.RunType;
 import task.TaskType;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Set;
 import java.util.function.Consumer;
 
@@ -221,7 +218,9 @@ public class RunWindowController {
             currStr +=("Run result:\n" + targetDTO.getTaskRunResult());
         }
         if(targetDTO.getSerialSetNames() != null){
-            currStr += "\nSerialSets: \n" + targetDTO.getSerialSetNames().toString() + "\n";
+            if(!targetDTO.getSerialSetNames().isEmpty()){
+                currStr += "\nSerialSets: \n" + targetDTO.getSerialSetNames().toString() + "\n";
+            }
         }
 
         currStr +=(PRINT_LINE);

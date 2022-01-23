@@ -1,10 +1,9 @@
-package runtask;
+package runtask.menu;
 
 import dto.CompilationTaskParamsDTO;
 import dto.SimulationTaskParamsDTO;
 import dto.TaskParamsDTO;
 import engine.Engine;
-import engine.SystemEngine;
 import javafx.beans.property.*;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -14,6 +13,11 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import runtask.running_task_window.RunWindowController;
+import runtask.compilation_task.CompilationParamsController;
+import runtask.simulation_task.SimulationParamsController;
+import runtask.targets_and_task_info.ChooseTargetsController;
+import runtask.targets_and_task_info.ChooseTaskController;
 import task.RunType;
 import task.TaskType;
 
@@ -77,7 +81,7 @@ public class RunTaskMenuController {
                 if(targetsList.isEmpty()){
                     return;
                 }
-                URL resource = getClass().getResource("run_task_popup.fxml");
+                URL resource = RunWindowController.class.getResource("run_task_running_task_window.fxml");
                 FXMLLoader fxmlLoader = new FXMLLoader();
                 fxmlLoader.setLocation(resource);
                 BorderPane root = null;
@@ -88,13 +92,14 @@ public class RunTaskMenuController {
                     runWindowController.setEngine(engine);
                     Set<String> targetSet = new HashSet<>();
                     targetSet.addAll(targetsList.getValue());
-                    runWindowController.runTask(taskParams, numOfThreads.getValue(),
-                            taskType.getValue(), runType.getValue(), targetSet);
                     Stage secondaryStage = new Stage();
                     secondaryStage.initModality(Modality.APPLICATION_MODAL);
                     secondaryStage.setScene(scene);
                     secondaryStage.setTitle("Run task");
                     secondaryStage.show();
+                    runWindowController.runTask(taskParams, numOfThreads.getValue(),
+                            taskType.getValue(), runType.getValue(), targetSet);
+
                 } catch (IOException e) {
                     e.printStackTrace();
                 }

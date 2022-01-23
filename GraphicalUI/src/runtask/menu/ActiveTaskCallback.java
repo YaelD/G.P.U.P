@@ -1,4 +1,4 @@
-package runtask;
+package runtask.menu;
 
 import dto.TaskParamsDTO;
 

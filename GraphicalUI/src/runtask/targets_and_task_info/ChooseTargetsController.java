@@ -1,4 +1,4 @@
-package runtask;
+package runtask.targets_and_task_info;
 
 import dto.GraphDTO;
 import dto.TargetDTO;

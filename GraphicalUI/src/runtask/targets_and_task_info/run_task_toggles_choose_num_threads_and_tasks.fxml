@@ -10,7 +10,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="runtask.ChooseTaskController">
+<GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="runtask.targets_and_task_info.ChooseTaskController">
   <columnConstraints>
       <ColumnConstraints hgrow="NEVER" maxWidth="30.0" minWidth="30.0" prefWidth="30.0" />
       <ColumnConstraints hgrow="NEVER" maxWidth="20.0" minWidth="20.0" prefWidth="20.0" />
@@ -61,7 +61,7 @@
          </toggleGroup>
       </RadioButton>
       <RadioButton fx:id="incrementalRadioButton" layoutX="60.0" layoutY="227.0" mnemonicParsing="false" text="Incremental" toggleGroup="$runTypeToggle" GridPane.columnIndex="2" GridPane.rowIndex="10" />
-      <Label fx:id="warningLabel" prefWidth="150.0" text="Warning Label" wrapText="true" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="15" GridPane.rowSpan="2" />
+      <Label fx:id="warningLabel" prefWidth="150.0" text="Warning Label" visible="false" wrapText="true" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="15" GridPane.rowSpan="4" />
       <Label text="Choose Task Properties:" underline="true" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="1" />
    </children>
 </GridPane>

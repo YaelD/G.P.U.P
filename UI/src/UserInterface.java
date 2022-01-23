@@ -382,8 +382,8 @@ public class UserInterface {
             System.out.println("Target info:" + targetDTO.getInfo() + "\n");
         }
         if(!targetDTO.getRunResult().equals(RunResults.SKIPPED)){
-            System.out.println("Process Start time:" + targetDTO.getStartingTime().format(DateTimeFormatter.ofPattern("HH:mm:ss")) + "\n");
-            System.out.println("Process End time:" + targetDTO.getEndingTime().format(DateTimeFormatter.ofPattern("HH:mm:ss")) + "\n");
+//            System.out.println("Process Start time:" + targetDTO.getStartingTime().format(DateTimeFormatter.ofPattern("HH:mm:ss")) + "\n");
+//            System.out.println("Process End time:" + targetDTO.getEndingTime().format(DateTimeFormatter.ofPattern("HH:mm:ss")) + "\n");
             if(!targetDTO.getTargetsThatCanBeRun().isEmpty()){
                 System.out.println("The dependent Targets that were opened:\n" + targetDTO.getTargetsThatCanBeRun() + "\n");
             }

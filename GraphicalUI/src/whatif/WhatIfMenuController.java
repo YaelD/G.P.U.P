@@ -31,6 +31,7 @@ public class WhatIfMenuController {
         togglesMenuController.setWhatIfCallback(new WhatIfCallback() {
             @Override
             public void findWhatIf(String targetName, Dependency dependency) {
+                targetsListView.getItems().clear();
                 Set<String> targets = engine.whatIf(targetName, dependency);
                 if(targets.isEmpty()){
                     targetsListView.setPlaceholder(new Label("There are no targets to show"));

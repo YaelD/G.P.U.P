@@ -10,10 +10,11 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import loadfile.*;
-import runtask.RunTaskMenuController;
+import runtask.menu.RunTaskMenuController;
 import tables.*;
 import whatif.WhatIfMenuController;
 
@@ -141,7 +142,11 @@ public class HeaderController {
 
     @FXML
     private void loadTaskRun(ActionEvent event) {
-            URL resource = RunTaskMenuController.class.getResource("run_task_menu_big.fxml");
+        if(engine.isCycleInGraph()){
+            base_BorderPane.setCenter(new Label("There is cycle in the graph, cannot run task"));
+            return;
+        }
+            URL resource = RunTaskMenuController.class.getResource("run_task_menu.fxml");
         FXMLLoader fxmlLoader = new FXMLLoader();
         fxmlLoader.setLocation(resource);
         try {

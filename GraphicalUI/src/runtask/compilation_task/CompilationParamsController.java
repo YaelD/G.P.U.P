@@ -1,4 +1,4 @@
-package runtask;
+package runtask.compilation_task;
 
 import dto.CompilationTaskParamsDTO;
 import javafx.event.ActionEvent;
@@ -8,6 +8,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
+import runtask.menu.ActiveTaskCallback;
 
 import java.io.File;
 

@@ -338,7 +338,7 @@ public class SystemEngine implements Engine{
             return false;
         }
         for(String target : selectedTargets){
-            if(!this.tasksInSystem.get(taskType).getGraph().getTargets().contains(target)){
+            if(this.tasksInSystem.get(taskType).getGraph().getTarget(target) == null){
                 return false;
             }
         }
