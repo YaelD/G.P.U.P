@@ -369,6 +369,17 @@ public class SystemEngine implements Engine{
     }
 
     @Override
+    public Set<String> getTaskGraphInSystem(TaskType taskType) {
+        Set<String> targetNamesInTaskGraph = new HashSet<>();
+        if(this.tasksInSystem.containsKey(taskType)){
+            for(Target target : this.tasksInSystem.get(taskType).getGraph().getTargets()){
+                targetNamesInTaskGraph.add(target.getName());
+            }
+        }
+        return targetNamesInTaskGraph;
+    }
+
+    @Override
     public String toString() {
         return "engine.SystemEngine{" +
                 "graph=" + graph +

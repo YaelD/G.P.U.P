@@ -40,12 +40,13 @@ public interface Engine {
 
     public List<SerialSetDTO> getSerialSetsInfo();
 
-
     public Set<String> whatIf(String targetName, Dependency dependency);
 
     public TargetDTO getRunningTarget(String targetName);
 
     public int getMaxNumOfThreads();
+
+    public Set<String> getTaskGraphInSystem(TaskType taskType);
 
     public Graph getGraphForRunning();
 }
