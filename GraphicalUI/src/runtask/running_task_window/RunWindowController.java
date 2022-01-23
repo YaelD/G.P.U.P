@@ -55,6 +55,9 @@ public class RunWindowController {
     @FXML
     private TableColumn<TargetsTableButtonsHandler, Button> skippedColumn;
 
+    @FXML
+    private ChoiceBox<Integer> numOfThreadsCB;
+
 
     @FXML
     private TextArea targetInfoConsole;
@@ -105,6 +108,13 @@ public class RunWindowController {
 
     public void runTask(TaskParamsDTO taskParams, int numOfThreads, TaskType taskType,
                         RunType runType, Set<String> targetsList) {
+
+
+        for(int i =1; i <= engine.getMaxNumOfThreads(); ++i){
+            this.numOfThreadsCB.getItems().add(i);
+        }
+        numOfThreadsCB.valueProperty().setValue(numOfThreads);
+
 
         ObservableList<TargetsTableButtonsHandler> data = FXCollections.observableArrayList();
         for(String targetName: targetsList){
@@ -166,17 +176,36 @@ public class RunWindowController {
             });
         };
 
+        Consumer<PausableThreadPoolExecutor> threadPoolNumOfThreadsConsumer = pausableThreadPoolExecutor -> {
+
+        };
+
+
         Consumer<PausableThreadPoolExecutor> threadPoolExecutorConsumer = pausableThreadPoolExecutor -> {
+            System.out.println("ThreadPool start num of threads=" + pausableThreadPoolExecutor.getPoolSize());
+
+
+            numOfThreadsCB.valueProperty().addListener(new ChangeListener<Integer>() {
+                @Override
+                public void changed(ObservableValue<? extends Integer> observable, Integer oldValue, Integer newValue) {
+                    pausableThreadPoolExecutor.setCorePoolSize(newValue);
+                    pausableThreadPoolExecutor.setMaximumPoolSize(newValue);
+                    System.out.println("ThreadPool num of threads after change=" + pausableThreadPoolExecutor.getPoolSize());
+                }
+            });
             this.pauseToggle.selectedProperty().addListener(new ChangeListener<Boolean>() {
                 @Override
                 public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
                     if(newValue == true){
                         pausableThreadPoolExecutor.pause();
                         pauseToggle.setText("Resume");
+                        numOfThreadsCB.setDisable(false);
                     }
                     else{
                         pausableThreadPoolExecutor.resume();
                         pauseToggle.setText("Pause");
+                        numOfThreadsCB.setDisable(true);
+
                     }
                 }
             });

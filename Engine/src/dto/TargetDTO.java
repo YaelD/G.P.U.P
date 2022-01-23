@@ -20,8 +20,6 @@ public class TargetDTO {
     private RunResults runResult;
     private RunStatus runStatus;
     private long runTime;
-//    private LocalTime startingTime = null;
-//    private LocalTime endingTime = null;
     private Set<String> totalRequiredFor = new HashSet<>();
     private Set<String> totalDependsOn = new HashSet<>();
     private Set<String> targetsThatCanBeRun = new HashSet<>();
@@ -36,8 +34,21 @@ public class TargetDTO {
     private Set<String> waitForThisTargetsToBeFinished = new HashSet<>(); //all the names of the targets that this target waiting for them to be finished- needed when the run status is "frozen"
     private String runningTargetStatus = null;
 
+    //CompilationParams
+    private String compilationRunResult;
+    private String compilationFileName;
+    private String compilerOperatingLine;
+    private LocalTime startingCompileTime;
+    private LocalTime endingCompileTime;
+
+
 
     public TargetDTO(Target target) {
+        this.startingCompileTime = target.getStartingCompileTime();
+        this.endingCompileTime = target.getEndingCompileTime();
+        this.compilationRunResult = target.getCompilationRunResult();
+        this.compilationFileName = target.getCompilationFileName();
+        this.compilerOperatingLine = target.getCompilerOperatingLine();
         this.runStatus = RunStatus.FROZEN;
         this.name = target.getName();
         this.place = target.getPlace();
@@ -192,7 +203,6 @@ public class TargetDTO {
         this.runningTargetStatus += "\nRun status: ";
         switch (runStatus){
             case WAITING:
-                //System.out.println("In target" + );
                 if(this.startWaitingTime != null){
                     this.runningTargetStatus += "waiting \nWaiting time: " +
                             Duration.between(this.startWaitingTime, LocalTime.now()).toMillis() + " ms";
@@ -214,6 +224,19 @@ public class TargetDTO {
                         this.failedChildTargets.toString();
                 break;
         }
+        if(!this.compilationFileName.isEmpty()){
+            runningTargetStatus += "\nCompilation file name: " + this.compilationFileName  + "\n";
+        }
+        if(!this.compilerOperatingLine.isEmpty()){
+            runningTargetStatus += this.compilerOperatingLine + "\n";
+        }
+        if(this.startingCompileTime != null && this.endingCompileTime != null){
+            runningTargetStatus += "Compiler Running time: " + Duration.between(this.startingCompileTime, this.endingCompileTime).toMillis() + "ms \n";
+        }
+        if(!this.compilationRunResult.isEmpty()){
+            runningTargetStatus += "Compilation run result: " + this.compilationRunResult + "\n";
+        }
+
     }
 
 }

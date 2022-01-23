@@ -25,12 +25,61 @@ public class Target implements Cloneable {
     private Set<String> failedChildTargets = new HashSet<>();
     private Set<String> waitForThisTargetsToBeFinished = new HashSet<>();
 
+    //CompilationParams
+    private String compilationRunResult;
+    private String compilationFileName;
+    private String compilerOperatingLine;
+    private LocalTime startingCompileTime = null;
+    private LocalTime endingCompileTime = null;
 
     public Target(GPUPTarget target) {
+        this.compilationRunResult = "";
+        this.compilationFileName = "";
+        this.compilerOperatingLine = "";
         this.name = target.getName();
         this.info = target.getGPUPUserData();
         this.runStatus = RunStatus.FROZEN;
         this.serialSetsContainer = new SerialSetsContainer(new ArrayList<>());
+    }
+
+    public LocalTime getStartingCompileTime() {
+        return startingCompileTime;
+    }
+
+    public void setStartingCompileTime(LocalTime startingCompileTime) {
+        this.startingCompileTime = startingCompileTime;
+    }
+
+    public LocalTime getEndingCompileTime() {
+        return endingCompileTime;
+    }
+
+    public void setEndingCompileTime(LocalTime endingCompileTime) {
+        this.endingCompileTime = endingCompileTime;
+    }
+
+    public String getCompilationRunResult() {
+        return compilationRunResult;
+    }
+
+    public String getCompilationFileName() {
+        return compilationFileName;
+    }
+
+    public String getCompilerOperatingLine() {
+        return compilerOperatingLine;
+    }
+
+    public synchronized void setCompilationFileName(String compilationFileName) {
+        this.compilationFileName = compilationFileName;
+    }
+
+    public synchronized void setCompilerOperatingLine(String compilerOperatingLine) {
+        this.compilerOperatingLine = compilerOperatingLine;
+    }
+
+    public synchronized void setCompilationRunResult(String compilationRunResult) {
+        this.compilationRunResult = compilationRunResult;
     }
 
     public SerialSetsContainer getSerialSetsContainer() {
@@ -70,6 +119,7 @@ public class Target implements Cloneable {
             return this.getDependsOn();
         }
     }
+
 
     public RunResults getRunResult() {
         return runResult;

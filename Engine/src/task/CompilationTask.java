@@ -34,31 +34,26 @@ public class CompilationTask extends Task{
     @Override
     protected TargetDTO executeTaskOnTarget(Target target) {
         TargetDTO targetDTO = null;
-        String runResult = new String("");
-        //LocalTime startTime, endTime;
         try {
             target.setStartingProcessTime(LocalTime.now());
             target.setRunStatus(RunStatus.IN_PROCESS);
-            //startTime = LocalTime.now();
-            Process process = CompileTarget(target, runResult);
+            String localSourceDir = buildPaths(target);
+            Process process = CompileTarget(target, localSourceDir);
             String processResult = getProcessResult(process);
             int exitCode = process.waitFor();
             target.setEndingProcessTime(LocalTime.now());
-            //endTime = LocalTime.now();
             if(exitCode != 0){    //means that the process has failed
                 target.setRunResult(RunResults.FAILURE);
-                runResult += "\nJavac output: ";
-                runResult += processResult;
+                target.setCompilationRunResult("\nJavac output: " + processResult);
             }
             else {
                 target.setRunResult(RunResults.SUCCESS);
-                runResult += processResult;
+                target.setCompilationRunResult(processResult);
             }
-
 
             target.setRunningTime(Duration.between(target.getStartingProcessTime(), target.getEndingProcessTime()).toMillis());
             target.setRunStatus(RunStatus.FINISHED);
-            targetDTO = new TargetDTO(target, runResult);
+            targetDTO = new TargetDTO(target);
 
         } catch (InterruptedException | IOException e) {
             e.printStackTrace();
@@ -78,37 +73,31 @@ public class CompilationTask extends Task{
 
         return result;
     }
+    //private Process CompileTarget(Target target, String runResult) throws IOException {
 
-    private Process CompileTarget(Target target, String runResult) throws IOException {
-
+    private String buildPaths(Target target){
         String filePath = "/" + target.getInfo().replace('.', '/');
         int indexOfLastSlash = filePath.lastIndexOf('/');
         String dirPath = filePath.substring(0,indexOfLastSlash);
         String fileName= filePath.substring(indexOfLastSlash);
-        String sourceDir = this.sourceDir + dirPath;
-        filePath = sourceDir + fileName + ".java";
-        runResult += "Compiled file: " + filePath + "\n Compiler's operating line: "+
-                JAVA_COMPILER+ " "+DESTINATION_DIR_REF_PARAM+ " " + this.destinationDir +
-                " " + SOURCE_DIR_REF_PARAM+ " " + sourceDir + " " + filePath;
-        Process process = new ProcessBuilder(JAVA_COMPILER, DESTINATION_DIR_REF_PARAM, this.destinationDir, SOURCE_DIR_REF_PARAM ,sourceDir, filePath)
+        String localSourceDir = this.sourceDir + dirPath;
+        filePath = localSourceDir +  fileName + ".java";
+        target.setCompilationFileName(filePath);
+        target.setCompilerOperatingLine("Compiler's operating line: "+
+        JAVA_COMPILER+ " "+DESTINATION_DIR_REF_PARAM+ " " + this.destinationDir +
+                " " + SOURCE_DIR_REF_PARAM+ " " + localSourceDir + " " + filePath);
+        return localSourceDir;
+    }
+
+    private Process CompileTarget(Target target, String localSourceDir) throws IOException {
+        target.setStartingCompileTime(LocalTime.now());
+        Process process = new ProcessBuilder(JAVA_COMPILER, DESTINATION_DIR_REF_PARAM, this.destinationDir,
+                SOURCE_DIR_REF_PARAM ,localSourceDir, target.getCompilationFileName())
                 .directory(new File(this.sourceDir))
                 .redirectErrorStream(true)
                 .start();
+        target.setEndingCompileTime(LocalTime.now());
         return process;
-
-
-//        String filePath = "/" + target.getInfo().replace('.', '/');
-//        int indexOfLastSlash = filePath.lastIndexOf('/');
-//        String dirPath = filePath.substring(0,indexOfLastSlash);
-//        String fileName= filePath.substring(indexOfLastSlash);
-//        String destinationDir = this.DestinationDir + dirPath;
-//        String sourceDir = this.sourceDir + dirPath;
-//        filePath = sourceDir + fileName + ".java";
-//        Process process = new ProcessBuilder(JAVA_COMPILER, DESTINATION_DIR_REF_PARAM, destinationDir, SOURCE_DIR_REF_PARAM ,sourceDir, filePath)
-//                .directory(new File(this.workingDirectory))
-//                .redirectErrorStream(true)
-//                .start();
-//        return process;
 
     }
 
