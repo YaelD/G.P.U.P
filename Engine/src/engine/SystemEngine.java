@@ -315,6 +315,9 @@ public class SystemEngine implements Engine{
                             new FileOutputStream(path+"\\" + targetDTO.getName() + ".log")));
             out.write("Target name: " + targetDTO.getName()+ "\n"); ;
             out.write("Process result: " + targetDTO.getRunResult().getStatus() + "\n");
+            if(!targetDTO.getSerialSetNames().isEmpty()){
+                out.write("SerialSets: " + targetDTO.getSerialSetNames() + "\n") ;
+            }
             if(targetDTO.getInfo() != null){
                 out.write("Target info:" + targetDTO.getInfo() + "\n");
             }
@@ -329,6 +332,12 @@ public class SystemEngine implements Engine{
                         out.write("The targets that won't be able to process are: \n" + targetDTO.getSkippedFathers() + "\n");
                     }
                 }
+                if(targetDTO.getTaskRunResult() != null && !targetDTO.getTaskRunResult().isEmpty()){
+                    out.write("Task Run results: " + targetDTO.getTaskRunResult() + "\n");
+                }
+            }
+            else{
+                out.write("The target was skipped because of: " + targetDTO.getFailedChildTargets());
             }
         } catch (IOException e) {
             e.printStackTrace();

@@ -47,7 +47,7 @@ public class TargetsTableButtonsHandler {
                                         buttonsMap.get(RunStatus.FINISHED).setStyle("-fx-background-color: #ff3d3d; ");
                                         break;
                                     case WARNING:
-                                        buttonsMap.get(RunStatus.FINISHED).setStyle("-fx-background-color: #b28058; ");
+                                        buttonsMap.get(RunStatus.FINISHED).setStyle("-fx-background-color: #ff8337; ");
                                         break;
                                 }
                             }
