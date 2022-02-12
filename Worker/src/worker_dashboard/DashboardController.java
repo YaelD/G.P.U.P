@@ -1,4 +1,4 @@
-package worker.worker_dashboard;
+package worker_dashboard;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;

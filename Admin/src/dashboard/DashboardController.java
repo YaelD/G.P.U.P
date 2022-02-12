@@ -1,4 +1,4 @@
-package admin.dashboard;
+package dashboard;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;

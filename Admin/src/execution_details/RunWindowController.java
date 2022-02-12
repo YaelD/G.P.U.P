@@ -1,10 +1,10 @@
-package admin.execution_details;
+package execution_details;
 
-import dto.GraphDTO;
-import dto.TargetDTO;
-import dto.TaskParamsDTO;
-import engine.Engine;
-import graph.Graph;
+//import dto.GraphDTO;
+//import dto.TargetDTO;
+//import dto.TaskParamsDTO;
+//import engine.Engine;
+//import graph.Graph;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -17,12 +17,12 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
-import runtask.running_task_window.TargetsTableButtonsHandler;
-import target.RunResults;
-import target.RunStatus;
-import task.PausableThreadPoolExecutor;
-import task.RunType;
-import task.TaskType;
+//import runtask.running_task_window.TargetsTableButtonsHandler;
+//import target.RunResults;
+//import target.RunStatus;
+//import task.PausableThreadPoolExecutor;
+//import task.RunType;
+//import task.TaskType;
 
 import java.util.Set;
 import java.util.function.Consumer;
@@ -30,8 +30,8 @@ import java.util.function.Consumer;
 
 public class RunWindowController {
 
-    private Engine engine;
-    private Graph graph;
+//    private Engine engine;
+//    private Graph graph;
 
     @FXML
     private GridPane runResultsPane;
@@ -136,6 +136,7 @@ public class RunWindowController {
 
     }
 
+    /*
 
     @FXML
     private void initialize(){
@@ -314,6 +315,8 @@ public class RunWindowController {
         currStr +=(PRINT_LINE);
         return currStr;
     }
+
+     */
 
 
 

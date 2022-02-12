@@ -6,7 +6,6 @@ import dto.TargetDTO;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableView;
-import tables.TargetsTableController;
 import target.PlaceInGraph;
 
 import java.util.List;
