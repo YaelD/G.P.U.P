@@ -1,17 +1,25 @@
 package admin_login;
 
+import dashboard.DashboardController;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
+import javafx.stage.Stage;
 import okhttp3.*;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
+import java.net.URL;
 
 public class LoginWindowController {
 
     final private String LOGIN_URL = "";//TODO: add login url
+
+    private Stage primaryStage;
 
     @FXML
     private Button logInButton;
@@ -21,24 +29,25 @@ public class LoginWindowController {
 
     @FXML
     void OnLogin(ActionEvent event){
-        OkHttpClient client = new OkHttpClient();
-        Request request = new Request.Builder().
-        url(LOGIN_URL).build();
 
-        Call call = client.newCall(request);
+        try {
+            URL resource = DashboardController.class.getResource("dashboard.fxml");
+            FXMLLoader fxmlLoader = new FXMLLoader();
+            fxmlLoader.setLocation(resource);
+            Parent root = fxmlLoader.load(resource.openStream());
+            Scene scene = new Scene(root, 1000, 600);
+            primaryStage.setScene(scene);
+            primaryStage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
-        call.enqueue(new Callback() {
-            @Override
-            public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                System.out.println("Opps there is an error");
-            }
 
-            @Override
-            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                
-            }
-        });
+
 
     }
 
+    public void setPrimaryStage(Stage primaryStage) {
+        this.primaryStage = primaryStage;
+    }
 }

@@ -32,12 +32,12 @@ public class UserManager {
         }
     }
 
-    public synchronized Set<User> getUsers() {
+//    public synchronized Set<User> getUsers() {
+//
+//        return Collections.unmodifiableSet(usersSet);
+//    }
 
-        return Collections.unmodifiableSet(usersSet);
-    }
-
-    public boolean isUserExists(User user) {
-        return usersSet.contains(username);
-    }
+//    public boolean isUserExists(User user) {
+//        return usersSet.contains(username);
+//    }
 }
