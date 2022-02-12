@@ -1,0 +1,14 @@
+<component name="ArtifactManager">
+  <artifact type="war" name="WebServer:war">
+    <output-path>$PROJECT_DIR$/WebServer/target</output-path>
+    <properties id="maven-jee-properties">
+      <options>
+        <module>WebServer</module>
+        <packaging>war</packaging>
+      </options>
+    </properties>
+    <root id="archive" name="WebServer-1.0-SNAPSHOT.war">
+      <element id="artifact" artifact-name="WebServer:war exploded" />
+    </root>
+  </artifact>
+</component>
