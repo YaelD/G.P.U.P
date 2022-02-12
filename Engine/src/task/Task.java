@@ -21,15 +21,21 @@ import java.util.function.Consumer;
 public abstract class Task{
 
     protected Graph graph;
-    public static Object taskDummyLock = new Object();
-    protected SerialSetsContainer serialSetsContainer;
+    protected String taskName;
+    protected String creatorName;
+    protected double totalTaskPrice;
+    protected Set<String> registeredWorkers = new HashSet<>();
+    protected TaskStatus status;
+
     private CountDownLatch latch;
+    //public static Object taskDummyLock = new Object();
 
-
-    public Task(Graph graph, SerialSetsContainer serialSetsContainer) {
+    public Task(Graph graph, String creatorName, String taskName) {
         this.graph = graph;
-        this.serialSetsContainer = serialSetsContainer;
+        this.creatorName = creatorName;
         this.latch = null;
+        this.status = TaskStatus.NEW;
+        this.taskName = taskName;
     }
 
     public Graph getGraph() {
@@ -65,15 +71,15 @@ public abstract class Task{
 
         List<Target> sortedTargets = topologicalSort(this.graph);
 
-        BlockingQueue<Runnable> workingQueue = new LinkedBlockingQueue<>();
-        PausableThreadPoolExecutor threadPool = new PausableThreadPoolExecutor(threadNumber, workingQueue);
-        threadPoolConsumer.accept(threadPool);
-        this.latch = new CountDownLatch(sortedTargets.size());
+//        BlockingQueue<Runnable> workingQueue = new LinkedBlockingQueue<>();
+//        PausableThreadPoolExecutor threadPool = new PausableThreadPoolExecutor(threadNumber, workingQueue);
+//        threadPoolConsumer.accept(threadPool);
+//        this.latch = new CountDownLatch(sortedTargets.size());
         LocalTime startTime = LocalTime.now();
-        for(Target currTarget : sortedTargets){
-            addTargetToThreadPool(threadPool, currTarget, outputConsumers);
-        }
-        threadPool.shutdown();
+//        for(Target currTarget : sortedTargets){
+//            addTargetToThreadPool(threadPool, currTarget, outputConsumers);
+//        }
+//        threadPool.shutdown();
         try {
             this.latch.await();
             //System.out.println("RunTask==>Woke from latch!");
@@ -209,49 +215,6 @@ public abstract class Task{
 
     public abstract void updateParameters(TaskParamsDTO taskParamsDTO);
 
-    //----------------------------------------------------------------------------------------------
-//    class TaskRunner implements Runnable{
-//        List<Consumer<TargetDTO>> outputConsumers;
-//        Target currTarget;
-//
-//        public TaskRunner(List<Consumer<TargetDTO>> outputConsumers) {
-//            this.outputConsumers = outputConsumers;
-//        }
-//
-//        public void setCurrTarget(Target currTarget) {
-//            this.currTarget = currTarget;
-//        }
-//
-//        @Override
-//        public void run() {
-//            TargetDTO targetResult;
-//            synchronized (currTarget){
-//                while(currTarget.getRunStatus().equals(RunStatus.FROZEN)){
-//                    try {
-//                        currTarget.wait();
-//                    } catch (InterruptedException e) {
-//                        e.printStackTrace();
-//                    }
-//                }
-//            }
-//                if(currTarget.getRunStatus().equals(RunStatus.WAITING)){
-//                    currTarget.getSerialSetsMonitors();
-//                    targetResult = executeTaskOnTarget(currTarget);
-//                    if(targetResult.getRunResult().equals(RunResults.FAILURE)){
-//                        currTarget.updateParentsStatus(targetResult.getSkippedFathers());
-//                    }
-//                    getOpenedTargetsToRun(targetResult, currTarget);
-//                }
-//                else {
-//                    targetResult = new TargetDTO(currTarget);
-//                }
-//                currTarget.freeSerialSetsMonitors();
-//                outputTargetResult(outputConsumers, targetResult);
-//                latch.countDown();
-//
-//                System.out.println("The latch value is=" + latch.toString());
-//
-//        }
-//    }
+
 
 }

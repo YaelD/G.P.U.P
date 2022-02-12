@@ -52,35 +52,35 @@ public class LoadFileController {
             warning_label.setText("Please enter a file");
             return;
         }
-
-        try {
-            warning_label.setVisible(true);
-            engine.loadFile(file_path_TextFiled.getText());
-            warning_label.setText("File loaded successfully YAY!!!!!!!");
-            isFileLoaded.set(true);
-            //headerController.enableButtons();
-        } catch (InvalidFileException e) {
-            warning_label.setText("Invalid File");
-        } catch (DependencyConflictException e) {
-            warning_label.setText("Can't load file: " +
-                    "\nDependency conflict between '" + e.getFirstTarget() + "' and '" +
-                    e.getSecondTarget() + "' With dependency: '" + e.getDependencyType() +"'");
-        } catch (DuplicateTargetsException e) {
-            warning_label.setText("Can't load file: " +
-                    "\nThe Target '" + e.getTargetName() + "' is appearing more than once");
-        } catch (InvalidDependencyException e) {
-            warning_label.setText("Can't load file: " +
-                    "\nThe dependency '" + e.getDependency() + "' is invalid") ;
-        } catch (TargetNotExistException e) {
-            warning_label.setText("Can't load file: " +
-                    "\nThe target '" + e.getName() + "' is not exist");
-        } catch (SerialSetException e) {
-            warning_label.setText("Can't load file: " +
-                    "\nThe serial set " + e.getSerialSetName() + " contains invalid target '" + e.getTargetName() + "'") ;
-        } catch (DupSerialSetsNameException e) {
-            warning_label.setText("Can't load file: " +
-                    "\nThe serial set '" + e.getSerialSetName() + "' appears several times");
-        }
+//
+//        try {
+//            warning_label.setVisible(true);
+//            engine.loadFile(file_path_TextFiled.getText());
+//            warning_label.setText("File loaded successfully YAY!!!!!!!");
+//            isFileLoaded.set(true);
+//            //headerController.enableButtons();
+//        } catch (InvalidFileException e) {
+//            warning_label.setText("Invalid File");
+//        } catch (DependencyConflictException e) {
+//            warning_label.setText("Can't load file: " +
+//                    "\nDependency conflict between '" + e.getFirstTarget() + "' and '" +
+//                    e.getSecondTarget() + "' With dependency: '" + e.getDependencyType() +"'");
+//        } catch (DuplicateTargetsException e) {
+//            warning_label.setText("Can't load file: " +
+//                    "\nThe Target '" + e.getTargetName() + "' is appearing more than once");
+//        } catch (InvalidDependencyException e) {
+//            warning_label.setText("Can't load file: " +
+//                    "\nThe dependency '" + e.getDependency() + "' is invalid") ;
+//        } catch (TargetNotExistException e) {
+//            warning_label.setText("Can't load file: " +
+//                    "\nThe target '" + e.getName() + "' is not exist");
+//        } catch (SerialSetException e) {
+//            warning_label.setText("Can't load file: " +
+//                    "\nThe serial set " + e.getSerialSetName() + " contains invalid target '" + e.getTargetName() + "'") ;
+//        } catch (DupSerialSetsNameException e) {
+//            warning_label.setText("Can't load file: " +
+//                    "\nThe serial set '" + e.getSerialSetName() + "' appears several times");
+//        }
 
     }
 

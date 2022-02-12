@@ -11,6 +11,7 @@ import task.PausableThreadPoolExecutor;
 import task.RunType;
 import task.TaskType;
 
+import java.io.InputStream;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
@@ -18,7 +19,9 @@ import java.util.function.Consumer;
 
 public interface Engine {
 
-    public boolean loadFile(String path) throws InvalidFileException, DependencyConflictException, DuplicateTargetsException, InvalidDependencyException, TargetNotExistException, SerialSetException, DupSerialSetsNameException;
+    //public boolean loadFile(String path) throws InvalidFileException, DependencyConflictException, DuplicateTargetsException, InvalidDependencyException, TargetNotExistException, SerialSetException, DupSerialSetsNameException;
+
+    public boolean loadFile(InputStream stream) throws DependencyConflictException, DuplicateTargetsException, InvalidDependencyException, TargetNotExistException;
 
     public GraphDTO getGraphDTO();
 

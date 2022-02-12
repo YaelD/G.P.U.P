@@ -19,9 +19,9 @@ public class UserInterface {
 
     private final String PRINT_LINE = "------------------------------------------------------------\n";
 
-    public UserInterface() {
-        this.engine = new SystemEngine();
-    }
+//    public UserInterface() {
+//        this.engine = new SystemEngine();
+//    }
 
 
     private void printMenu(){
@@ -181,26 +181,26 @@ public class UserInterface {
             Scanner in = new Scanner(System.in);
             String path = in.nextLine();
             if (!path.equals("0")) {
-                try {
-                    engine.loadFile(path);
-                    System.out.println("File loaded successfully!");
-                    finish = true;
-                } catch (InvalidFileException e) {
-                    System.out.println("The file in: " + e.getPath() + " is invalid because " + e.getReason());
-                } catch (DependencyConflictException e) {
-                    System.out.println("There is a dependency conflict between Targets: "
-                            + e.getFirstTarget() + ", " + e.getSecondTarget() + " dependency: " + e.getDependencyType());
-                } catch (DuplicateTargetsException e) {
-                    System.out.println("The target " + e.getTargetName() + " appears several times in the graph");
-                } catch (InvalidDependencyException e) {
-                    System.out.println("The dependency: " + e.getDependency() + " is not supported in the system");
-                } catch (TargetNotExistException e) {
-                    System.out.println("The target " + e.getName() + " does not exist");
-                } catch (SerialSetException e) {
-                    System.out.println("The Target " + e.getTargetName() + "In serial Set" + e.getSerialSetName() + "doesnt exist");
-                } catch (DupSerialSetsNameException e) {
-                    e.printStackTrace();
-                }
+//                try {
+//                    engine.loadFile(path);
+//                    System.out.println("File loaded successfully!");
+//                    finish = true;
+//                } catch (InvalidFileException e) {
+//                    System.out.println("The file in: " + e.getPath() + " is invalid because " + e.getReason());
+//                } catch (DependencyConflictException e) {
+//                    System.out.println("There is a dependency conflict between Targets: "
+//                            + e.getFirstTarget() + ", " + e.getSecondTarget() + " dependency: " + e.getDependencyType());
+//                } catch (DuplicateTargetsException e) {
+//                    System.out.println("The target " + e.getTargetName() + " appears several times in the graph");
+//                } catch (InvalidDependencyException e) {
+//                    System.out.println("The dependency: " + e.getDependency() + " is not supported in the system");
+//                } catch (TargetNotExistException e) {
+//                    System.out.println("The target " + e.getName() + " does not exist");
+//                } catch (SerialSetException e) {
+//                    System.out.println("The Target " + e.getTargetName() + "In serial Set" + e.getSerialSetName() + "doesnt exist");
+//                } catch (DupSerialSetsNameException e) {
+//                    e.printStackTrace();
+//                }
             } else {
                 finish = true;
             }

@@ -26,84 +26,87 @@ import java.util.function.Consumer;
 
 public class SystemEngine implements Engine{
 
-    private Graph graph;
+    private final String workingDirectory = "c:\\gpup-working-dir";
+    private static SystemEngine systemEngine = null;
+
     private Graph graphForRunning = null;
-    private Map<TaskType, Task> tasksInSystem = new HashMap<>();
-    private String workingDirectory;
-    private boolean isFileLoaded = false;
-    private int maxThreadNum;
-    private SerialSetsContainer serialSetsContainer;
+    private Set<Task> tasksInSystem = new HashSet<>();
+    private Set<Graph> graphsInSystem = new HashSet<>();
+
+    private SystemEngine() {
+        File directory = new File(this.workingDirectory);
+        if(!directory.exists()){
+            directory.mkdir();
+        }
+    }
+
+    public static Engine getInstance(){
+        if (systemEngine == null)
+            systemEngine = new SystemEngine();
+
+        return systemEngine;
+    }
 
     public Graph getGraphForRunning() {
         return graphForRunning;
     }
 
     @Override
-    public boolean loadFile(String path) throws
-            DuplicateTargetsException, TargetNotExistException, InvalidDependencyException, DependencyConflictException, InvalidFileException, SerialSetException, DupSerialSetsNameException {
+    public boolean loadFile(InputStream stream) throws
+            DuplicateTargetsException, TargetNotExistException, InvalidDependencyException, DependencyConflictException {
         try {
-            fileValidation(path);
-            File file = new File(path.trim());
             JAXBContext jaxbContext = JAXBContext.newInstance(GPUPDescriptor.class);
             Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
-            GPUPDescriptor gpupDescriptor = (GPUPDescriptor) jaxbUnmarshaller.unmarshal(file);
+            GPUPDescriptor gpupDescriptor = (GPUPDescriptor) jaxbUnmarshaller.unmarshal(stream);
             initializeSystem(gpupDescriptor);
 
-        } catch (JAXBException | IOException e) {
+        } catch (JAXBException e) {
             e.printStackTrace();
         }
         return false;
     }
+//    public boolean loadFile(String path) throws
+//            DuplicateTargetsException, TargetNotExistException, InvalidDependencyException, DependencyConflictException, InvalidFileException, SerialSetException, DupSerialSetsNameException {
+//        try {
+//            InputStream stream;
+//            fileValidation(path);
+//            File file = new File(path.trim());
+//            JAXBContext jaxbContext = JAXBContext.newInstance(GPUPDescriptor.class);
+//            Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
+//
+//            GPUPDescriptor gpupDescriptor = (GPUPDescriptor) jaxbUnmarshaller.unmarshal(file);
+//            initializeSystem(gpupDescriptor);
+//
+//        } catch (JAXBException | IOException e) {
+//            e.printStackTrace();
+//        }
+//        return false;
+//    }
 
     private void initializeSystem(GPUPDescriptor gpupDescriptor) throws DuplicateTargetsException,
-            TargetNotExistException, InvalidDependencyException, DependencyConflictException, SerialSetException, DupSerialSetsNameException {
+            TargetNotExistException, InvalidDependencyException, DependencyConflictException {
         Map<String, Target> map = Graph.buildTargetGraph(gpupDescriptor.getGPUPTargets());
         String graphName = gpupDescriptor.getGPUPConfiguration().getGPUPGraphName();
-        this.workingDirectory = gpupDescriptor.getGPUPConfiguration().getGPUPWorkingDirectory();
-        this.maxThreadNum = gpupDescriptor.getGPUPConfiguration().getGPUPMaxParallelism();
-        this.tasksInSystem = new HashMap<>();
         this.isFileLoaded = true;
-        this.graph = new Graph(map, graphName);
-        this.serialSetsContainer = new SerialSetsContainer();
-        if(gpupDescriptor.getGPUPSerialSets() != null){
-            initializeSerialSets(gpupDescriptor);
-        }
-        for(Target target : this.graph.getTargets()){
-            target.updateWaitForTheseTargetsToBeFinished();
-        }
+        this.graphsInSystem.add(new Graph(map, graphName));
+//        for(Target target : this.graph.getTargets()){
+//            target.updateWaitForTheseTargetsToBeFinished();
+//        }
     }
 
-    private void initializeSerialSets(GPUPDescriptor gpupDescriptor) throws SerialSetException, DupSerialSetsNameException {
-        List<SerialSet> serialSetList = new ArrayList<>();
-        for(GPUPDescriptor.GPUPSerialSets.GPUPSerialSet gpupSerialSet : gpupDescriptor.getGPUPSerialSets().getGPUPSerialSet()){
-            String serialSetName = gpupSerialSet.getName();
-            List<Target> targetList = new ArrayList<>();
-            SerialSet newSerialSet = new SerialSet(serialSetName,targetList);
-            List<String> targets = Arrays.asList(gpupSerialSet.getTargets().toUpperCase().split(","));
-            Collections.sort(targets);
-            SerialSet.checkIfSetTargetExistInGraph(targets, this.graph, newSerialSet, serialSetName);
-            for(SerialSet currSerialSet: serialSetList){
-                if(currSerialSet.getName().equals(newSerialSet.getName())){
-                    throw new DupSerialSetsNameException(currSerialSet.getName());
-                }
-            }
-            serialSetList.add(newSerialSet);
-        }
-        this.serialSetsContainer.setSerialSetList(serialSetList);
-    }
 
-    private void fileValidation(String path) throws InvalidFileException, IOException {
-        Path directory = Paths.get(path.trim());
-        if(!Files.exists(directory)) {
-            throw new InvalidFileException(path, "There is no file in this path");
-        }
-        if(Files.probeContentType(directory) == null){
-            throw new InvalidFileException(path, "The file type is not recognized");
-        }
-        if(!Files.probeContentType(directory).equals("text/xml")){
-            throw new InvalidFileException(path,"The file in the current path is not an XML file");
-        }
-    }
+//    private void fileValidation(String path) throws InvalidFileException, IOException {
+//        Path directory = Paths.get(path.trim());
+//        if(!Files.exists(directory)) {
+//            throw new InvalidFileException(path, "There is no file in this path");
+//        }
+//        if(Files.probeContentType(directory) == null){
+//            throw new InvalidFileException(path, "The file type is not recognized");
+//        }
+//        if(!Files.probeContentType(directory).equals("text/xml")){
+//            throw new InvalidFileException(path,"The file in the current path is not an XML file");
+//        }
+//    }
 
     @Override
     public List<String> findCycle(String targetName) throws TargetNotExistException{
