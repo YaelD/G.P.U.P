@@ -6,6 +6,7 @@
       <module fileurl="file://$PROJECT_DIR$/Engine/Engine.iml" filepath="$PROJECT_DIR$/Engine/Engine.iml" />
       <module fileurl="file://$PROJECT_DIR$/GPUP.iml" filepath="$PROJECT_DIR$/GPUP.iml" />
       <module fileurl="file://$PROJECT_DIR$/UI/UI.iml" filepath="$PROJECT_DIR$/UI/UI.iml" />
+      <module fileurl="file://$PROJECT_DIR$/WebServer/WebServer.iml" filepath="$PROJECT_DIR$/WebServer/WebServer.iml" />
       <module fileurl="file://$PROJECT_DIR$/Worker/Worker.iml" filepath="$PROJECT_DIR$/Worker/Worker.iml" />
     </modules>
   </component>
