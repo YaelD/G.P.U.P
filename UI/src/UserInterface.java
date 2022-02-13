@@ -98,7 +98,8 @@ public class UserInterface {
         String targetName = in.next();
 
         try {
-            List<String> cycle = engine.findCycle(targetName);
+            List<String> cycle = null;
+            //List<String> cycle = engine.findCycle(targetName);
             if(cycle == null){
                 System.out.println("There is no cycle including " + targetName);
             }
@@ -144,8 +145,8 @@ public class UserInterface {
         Collection<List<String>> paths = null;
         try {
             //paths = engine.getPaths(firstTargetName, secondTargetName, relation);
-            paths = engine.getPaths(firstTargetName, secondTargetName, dependency);
-            if (paths.isEmpty()) {
+            //paths = engine.getPaths(firstTargetName, secondTargetName, dependency);
+            if (null) {
                 System.out.println("There are not paths from target " + firstTargetName + " to target " + secondTargetName);
             } else {
                 printPaths(paths);
@@ -243,7 +244,7 @@ public class UserInterface {
             }
             else {
                 try {
-                    TargetDTO target = engine.getTarget(targetName);
+                    //TargetDTO target = engine.getTarget(targetName);
                     printTargetDetails(target);
                     finish = true;
                 } catch (TargetNotExistException e) {
@@ -290,7 +291,7 @@ public class UserInterface {
             System.out.println("A file was not loaded to the system yet");
             return;
         }
-        if(engine.isCycleInGraph()){
+        if(true){
             System.out.println("There is a cycle in the graph, cannot active task");
             return;
         }

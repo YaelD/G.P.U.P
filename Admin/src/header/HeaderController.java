@@ -143,7 +143,7 @@ public class HeaderController {
 
     @FXML
     private void loadTaskRun(ActionEvent event) {
-        if(engine.isCycleInGraph()){
+        if(true){
             base_BorderPane.setCenter(new Label("There is cycle in the graph, cannot run task"));
             return;
         }

@@ -4,8 +4,6 @@ import dto.*;
 import exceptions.*;
 import graph.Dependency;
 import graph.Graph;
-import graph.SerialSet;
-import graph.SerialSetsContainer;
 import schema.generated.GPUPDescriptor;
 import target.RunResults;
 import target.Target;
@@ -15,9 +13,6 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 import java.io.*;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.text.FieldPosition;
 import java.text.SimpleDateFormat;
 import java.time.format.DateTimeFormatter;
@@ -29,10 +24,12 @@ public class SystemEngine implements Engine{
     private final String workingDirectory = "c:\\gpup-working-dir";
     private static SystemEngine systemEngine = null;
 
-    private Graph graphForRunning = null;
-    private Set<Task> tasksInSystem = new HashSet<>();
-    private Set<Graph> graphsInSystem = new HashSet<>();
+    //members
+    private Map<String, Task> tasksInSystem = new HashMap<>();
+    private Map<String, Graph> graphsInSystem = new HashMap<>();
 
+
+    //C'tor + creating working dir
     private SystemEngine() {
         File directory = new File(this.workingDirectory);
         if(!directory.exists()){
@@ -40,6 +37,7 @@ public class SystemEngine implements Engine{
         }
     }
 
+    //Get the instance of the singelton
     public static Engine getInstance(){
         if (systemEngine == null)
             systemEngine = new SystemEngine();
@@ -47,9 +45,26 @@ public class SystemEngine implements Engine{
         return systemEngine;
     }
 
-    public Graph getGraphForRunning() {
-        return graphForRunning;
+
+    public Map<String, Task> getTasksInSystem() {
+        return tasksInSystem;
     }
+
+    public Map<String, Graph> getGraphsInSystem() {
+        return graphsInSystem;
+    }
+
+    @Override
+    public Target getTarget(String name, String graphName) throws TargetNotExistException {
+        Graph graph = this.graphsInSystem.get(graphName);
+        return graph.getTarget(name);
+    }
+
+
+    public boolean isGraphExistsInSystem(String graphName) {
+        return (this.graphsInSystem.containsKey(graphName));
+    }
+
 
     @Override
     public boolean loadFile(InputStream stream) throws
@@ -58,7 +73,7 @@ public class SystemEngine implements Engine{
             JAXBContext jaxbContext = JAXBContext.newInstance(GPUPDescriptor.class);
             Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
             GPUPDescriptor gpupDescriptor = (GPUPDescriptor) jaxbUnmarshaller.unmarshal(stream);
-            initializeSystem(gpupDescriptor);
+            initializeGraphSystem(gpupDescriptor);
 
         } catch (JAXBException e) {
             e.printStackTrace();
@@ -83,12 +98,14 @@ public class SystemEngine implements Engine{
 //        return false;
 //    }
 
-    private void initializeSystem(GPUPDescriptor gpupDescriptor) throws DuplicateTargetsException,
+    private void initializeGraphSystem(GPUPDescriptor gpupDescriptor) throws DuplicateTargetsException,
             TargetNotExistException, InvalidDependencyException, DependencyConflictException {
         Map<String, Target> map = Graph.buildTargetGraph(gpupDescriptor.getGPUPTargets());
         String graphName = gpupDescriptor.getGPUPConfiguration().getGPUPGraphName();
-        this.isFileLoaded = true;
-        this.graphsInSystem.add(new Graph(map, graphName));
+        if(this.graphsInSystem.containsKey(graphName)){
+            //TODO: THROW AN EXCEPTION
+        }
+        this.graphsInSystem.put(graphName, new Graph(map, graphName));
 //        for(Target target : this.graph.getTargets()){
 //            target.updateWaitForTheseTargetsToBeFinished();
 //        }
@@ -109,13 +126,16 @@ public class SystemEngine implements Engine{
 //    }
 
     @Override
-    public List<String> findCycle(String targetName) throws TargetNotExistException{
+    public List<String> findCycle(String targetName, String graphName) throws TargetNotExistException{
         try {
-            List<Target> lst = Task.topologicalSort(this.graph);
+            Graph graph = this.graphsInSystem.get(graphName);
+            if(graph != null){
+                List<Target> lst = Task.topologicalSort(graph);
+            }
             return null;
         } catch (CycleException e) {
-            List<List<String>> cycles = new ArrayList<>();
-            callFindPaths(targetName, targetName, Dependency.DEPENDS_ON, cycles);
+            Collection<List<String>> cycles = new ArrayList<>();
+            cycles = getPaths(targetName, targetName, Dependency.DEPENDS_ON,graphName );
             if (cycles.isEmpty()) {
                 return null;
             } else {
@@ -124,18 +144,13 @@ public class SystemEngine implements Engine{
         }
     }
 
-    @Override
-    public List<SerialSetDTO> getSerialSetsInfo() {
-        List<SerialSetDTO> serialSetDTOList = new ArrayList<>();
-        for(SerialSet serialSet: this.serialSetsContainer.getSerialSetList()){
-            serialSetDTOList.add(new SerialSetDTO(serialSet));
-        }
-        return serialSetDTOList;
-    }
 
     @Override
-    public Set<String> whatIf(String targetName, Dependency dependency, TaskType taskType, RunType runType){
+    public Set<String> whatIfForRunningTask(String targetName, Dependency dependency, TaskType taskType,
+                                            RunType runType, String graphName){
+        Graph graph = this.graphsInSystem.get(graphName);
         Target target = null;
+
         Set<String> targetSet = new HashSet<>();
         if(runType.equals(RunType.INCREMENTAL)){
             if(this.tasksInSystem.containsKey(taskType)){
@@ -156,52 +171,56 @@ public class SystemEngine implements Engine{
         return targetSet;
     }
 
-    @Override
-    public int getMaxNumOfThreads() {
-        return this.maxThreadNum;
-    }
-
-    @Override
-    public GraphDTO getGraphDTO() {
-        GraphDTO graphDTO = new GraphDTO(this.graph);
-        return graphDTO;
-    }
-
-    @Override
-    public TargetDTO getTarget(String name) throws TargetNotExistException {
-        if(!this.graph.getTargetGraph().containsKey(name)){
-            throw new TargetNotExistException(name);
+    public Set<String> whatIf(String targetName, Dependency dependency, String graphName){
+        Target target = null;
+        Graph graph = this.graphsInSystem.get(graphName);
+        target = graph.getTarget(targetName);
+        Set<String> targetSet = new HashSet<>();
+        if(target != null) {
+            if (dependency.equals(Dependency.REQUIRED_FOR)) {
+                target.getRequiredForAncestors(targetSet);
+            } else {
+                target.getDependsOnAncestors(targetSet);
+            }
         }
-        TargetDTO targetDTO = new TargetDTO(this.graph.getTarget(name));
-        return targetDTO;
+        return targetSet;
     }
 
-    @Override
-    public Collection<List<String>> getPaths(String firstTargetName, String secondTargetName, Dependency dependency) throws TargetNotExistException, InvalidDependencyException {
-        List<List<String>> paths = new ArrayList<>();
-        if(!this.graph.getTargetGraph().containsKey(firstTargetName)){
+
+    //The function does validation og the targets and then call to find paths
+    public boolean checkTargetsValidation(String firstTargetName, String secondTargetName,
+                                          Graph graph) throws TargetNotExistException {
+
+        if(!graph.getTargetGraph().containsKey(firstTargetName)){
             throw new TargetNotExistException(firstTargetName);
         }
-        if(!this.graph.getTargetGraph().containsKey(secondTargetName)){
+        if(!graph.getTargetGraph().containsKey(secondTargetName)){
             throw new TargetNotExistException(secondTargetName);
         }
-        callFindPaths(firstTargetName, secondTargetName, dependency, paths);
+        return true;
+    }
+
+    public Collection<List<String>> getPaths(String firstTargetName, String secondTargetName,
+                                              Dependency dependency, String graphName) throws TargetNotExistException {
+        List<List<String>> paths = new ArrayList<>();
+        Graph graph = this.graphsInSystem.get(graphName);
+        if(checkTargetsValidation(firstTargetName, secondTargetName, graph)){
+            Set<String> visitedTargets = new HashSet<>();
+            List<String> currPath = new ArrayList<>();
+            findPaths(firstTargetName, secondTargetName, dependency, paths, currPath, visitedTargets, graph);
+            if(!paths.isEmpty()){
+                for(List<String> path : paths){
+                    path.add(0, firstTargetName);
+                }
+            }
+        }
         return paths;
     }
 
-    private void callFindPaths(String firstTargetName, String secondTargetName, Dependency dependency, List<List<String>> paths) {
-        Set<String> visitedTargets = new HashSet<>();
-        List<String> currPath = new ArrayList<>();
-        findPaths(firstTargetName, secondTargetName, dependency, paths, currPath, visitedTargets);
-        if(!paths.isEmpty()){
-            for(List<String> path : paths){
-                path.add(0, firstTargetName);
-            }
-        }
-    }
-
-    private void findPaths(String currTargetName, String destinationTargetName, Dependency dependency, List<List<String>> paths, List<String> currentPath, Set<String> visitedTargets) {
-        Set<Target> dependencies = this.graph.getTarget(currTargetName).getDependencies(dependency);
+    //Finding paths in graph by DFS
+    private void findPaths(String currTargetName, String destinationTargetName, Dependency dependency,
+                           List<List<String>> paths, List<String> currentPath, Set<String> visitedTargets, Graph graph) {
+        Set<Target> dependencies = graph.getTarget(currTargetName).getDependencies(dependency);
 
         if(dependencies.isEmpty()){
             return;
@@ -219,7 +238,8 @@ public class SystemEngine implements Engine{
                 else{
                     if(!visitedTargets.contains(target.getName())) {
                         currentPath.add(target.getName());
-                        findPaths(target.getName(), destinationTargetName, dependency, paths, currentPath, visitedTargets);
+                        findPaths(target.getName(), destinationTargetName, dependency, paths,
+                                currentPath, visitedTargets, graph);
                         currentPath.remove(target.getName());
                     }
                 }
@@ -230,7 +250,9 @@ public class SystemEngine implements Engine{
 
 
 
-    @Override
+    /*
+        @Override
+
     public GraphDTO activateTask(Consumer<TargetDTO> consumerString, Consumer<PausableThreadPoolExecutor> threadPoolConsumer,
                                  TaskParamsDTO taskParams, TaskType taskType, boolean isIncremental,
                                  int threadNumber, Set<String> selectedTargets) {
@@ -286,10 +308,11 @@ public class SystemEngine implements Engine{
     }
 
 
+     */
+
     private String openDirectoryAndFiles(TaskType taskType) {
         StringBuffer stringBuffer = new StringBuffer();
         Date now = new Date();
-        //File workDirectory = new File(this.workingDirectory);
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MM-yyyy HH-mm-ss");
         simpleDateFormat.format(now, stringBuffer, new FieldPosition(0));
         String path = this.workingDirectory+ "\\" + taskType.getTaskType() + "-" +
@@ -301,7 +324,7 @@ public class SystemEngine implements Engine{
         return path;
     }
 
-
+/*
     private void writeToFile(TargetDTO targetDTO, String path) {
         Writer out = null;
         try {
@@ -357,10 +380,7 @@ public class SystemEngine implements Engine{
         }
     }
 
-    @Override
-    public boolean isFileLoaded() {
-        return this.isFileLoaded;
-    }
+ */
 
     @Override
     public boolean isRunInIncrementalMode(TaskType taskType, Set<String> selectedTargets) {
@@ -379,8 +399,9 @@ public class SystemEngine implements Engine{
     }
 
     @Override
-    public boolean isCycleInGraph() {
+    public boolean isCycleInGraph(String graphName) {
         try {
+            Graph graph = this.graphsInSystem.get(graphName);
             List<Target> lst = Task.topologicalSort(graph);
             return false;
         } catch (CycleException e) {
@@ -389,17 +410,17 @@ public class SystemEngine implements Engine{
         }
     }
 
-    @Override
-    public TargetDTO getRunningTarget(String targetName) {
-        TargetDTO targetDTO = null;
-        if(this.graphForRunning != null){
-            if(graphForRunning.getTarget(targetName) != null){
-                targetDTO = new TargetDTO(graphForRunning.getTarget(targetName));
-                targetDTO.updateRunningTargetStatus(targetDTO.getRunStatus());
-            }
-        }
-        return targetDTO;
-    }
+//    @Override
+//    public TargetDTO getRunningTarget(String targetName) {
+//        TargetDTO targetDTO = null;
+//        if(this.graphForRunning != null){
+//            if(graphForRunning.getTarget(targetName) != null){
+//                targetDTO = new TargetDTO(graphForRunning.getTarget(targetName));
+//                targetDTO.updateRunningTargetStatus(targetDTO.getRunStatus());
+//            }
+//        }
+//        return targetDTO;
+//    }
 
     @Override
     public Set<String> getTaskGraphInSystem(TaskType taskType) {
@@ -412,10 +433,5 @@ public class SystemEngine implements Engine{
         return targetNamesInTaskGraph;
     }
 
-    @Override
-    public String toString() {
-        return "engine.SystemEngine{" +
-                "graph=" + graph +
-                '}';
-    }
+
 }

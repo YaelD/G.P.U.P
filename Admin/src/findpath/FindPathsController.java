@@ -35,10 +35,10 @@ public class FindPathsController {
             @Override
             public void findPaths(String sourceTargetName, String destinationTargetName, Dependency dependency) {
                 try {
-                    Collection<List<String>> paths = engine.getPaths(sourceTargetName, destinationTargetName, dependency);
+                    //Collection<List<String>> paths = engine.getPaths(sourceTargetName, destinationTargetName, dependency);
                     findPathsTogglesController.getWarningLabel().setVisible(false);
                     findPathsTable.getItems().clear();
-                    if(!paths.isEmpty()){
+                    if(null){
                         findPathsTableController.setTableValues(paths);
                     }
                     else{

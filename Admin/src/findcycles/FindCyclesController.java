@@ -38,7 +38,8 @@ public class FindCyclesController {
             try {
                 warningLabel.setVisible(false);
                 cyclesListView.getItems().clear();
-                List<String> cycle = this.engine.findCycle(targetName);
+                List<String> cycle = null;
+                //List<String> cycle = this.engine.findCycle(targetName);
                 if(cycle == null){
                     cyclesListView.setPlaceholder(new Label("This target does not take place in any cycle"));
                 }

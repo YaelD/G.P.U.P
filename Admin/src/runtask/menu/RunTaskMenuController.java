@@ -26,7 +26,6 @@ import task.TaskType;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -90,11 +89,11 @@ public class RunTaskMenuController {
     @FXML
     void checkTargetsWithWhatIf(ActionEvent event) {
 
-        Set<String> whatIfTargets = this.engine.whatIf(whatIf_targetsCB.getValue(),
-                whatIf_DependencyCB.getValue(), taskType.getValue(), runType.getValue());
+//        Set<String> whatIfTargets = this.engine.whatIfForRunningTask(whatIf_targetsCB.getValue(),
+//                whatIf_DependencyCB.getValue(), taskType.getValue(), runType.getValue());
         selectedTargetsListView.getItems().clear();
         selectedTargetsListView.getItems().add(whatIf_targetsCB.getValue());
-        selectedTargetsListView.getItems().addAll(whatIfTargets);
+        //selectedTargetsListView.getItems().addAll(whatIfTargets);
 
     }
 

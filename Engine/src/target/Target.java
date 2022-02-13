@@ -18,7 +18,6 @@ public class Target implements Cloneable {
     private RunResults runResult;
     private long runningTime;
     private RunStatus runStatus;
-    private SerialSetsContainer serialSetsContainer;
     private LocalTime startingProcessTime = null;
     private LocalTime endingProcessTime = null;
     private LocalTime startWaitingTime = null;
@@ -39,7 +38,6 @@ public class Target implements Cloneable {
         this.name = target.getName();
         this.info = target.getGPUPUserData();
         this.runStatus = RunStatus.FROZEN;
-        this.serialSetsContainer = new SerialSetsContainer(new ArrayList<>());
     }
 
     public LocalTime getStartingCompileTime() {
@@ -80,10 +78,6 @@ public class Target implements Cloneable {
 
     public synchronized void setCompilationRunResult(String compilationRunResult) {
         this.compilationRunResult = compilationRunResult;
-    }
-
-    public SerialSetsContainer getSerialSetsContainer() {
-        return serialSetsContainer;
     }
 
 
@@ -186,17 +180,6 @@ public class Target implements Cloneable {
         this.dependsOn = dependsOn;
     }
 
-    public void getSerialSetsMonitors(){
-        for(SerialSet currSerialSet : this.getSerialSetsContainer().getSerialSetList()){
-            currSerialSet.getSerialSetMonitor();
-        }
-    }
-
-    public void freeSerialSetsMonitors(){
-        for(SerialSet currSerialSet : this.getSerialSetsContainer().getSerialSetList()){
-            currSerialSet.freeMonitor();
-        }
-    }
 
     public void updateParentsStatus(Set<String> skippedFathers, String sourceTargetName) {
         if(this.getRequiredFor().isEmpty()){

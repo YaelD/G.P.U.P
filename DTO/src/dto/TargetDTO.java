@@ -1,16 +1,11 @@
 package dto;
 
-import graph.SerialSet;
-import target.PlaceInGraph;
-import target.RunResults;
-import target.RunStatus;
-import target.Target;
-
 import java.time.Duration;
 import java.time.LocalTime;
 import java.util.*;
 
 public class TargetDTO {
+
 
     private String name;
     private PlaceInGraph place;
@@ -24,9 +19,9 @@ public class TargetDTO {
     private Set<String> totalDependsOn = new HashSet<>();
     private Set<String> targetsThatCanBeRun = new HashSet<>();
     private Set<String> skippedFathers = new HashSet<>();
-    private int totalNumOfSerialSets;
     private String taskRunResult = "";
-    private Set<String> serialSetNames = new HashSet<>();; //all serial set names that the current target belongs to them - needed always during the running of the task.
+
+
     private LocalTime startingProcessTime = null; //the time that the target began the process- needed when the run status is "in process"
     private LocalTime endingProcessTime = null; //the time that the target ended the process
     private LocalTime startWaitingTime = null; //the time that the target begins waiting to start the process- needed when the run status is "waiting", for calculating the duration of the waiting and showing it to the user
@@ -42,7 +37,19 @@ public class TargetDTO {
     private LocalTime endingCompileTime;
 
 
+    public TargetDTO(String name, PlaceInGraph place, String info, Set<String> requiredFor,
+                     Set<String> dependsOn,Set<String> totalDependsOn,Set<String> totalRequiredFor){
+        this.name =name;
+        this.place = place;
+        this.info = info;
+        this.requiredFor = requiredFor;
+        this.dependsOn = dependsOn;
+        this.totalDependsOn = totalDependsOn;
+        this.totalRequiredFor = totalRequiredFor;
 
+    }
+
+/*
     public TargetDTO(Target target) {
         this.startingCompileTime = target.getStartingCompileTime();
         this.endingCompileTime = target.getEndingCompileTime();
@@ -80,10 +87,12 @@ public class TargetDTO {
         this.endingProcessTime = target.getEndingProcessTime();
     }
 
-    public TargetDTO(Target target, String taskRunResult) {
-        this(target);
-        this.taskRunResult = taskRunResult;
-    }
+ */
+
+//    public TargetDTO(Target target, String taskRunResult) {
+//        this(target);
+//        this.taskRunResult = taskRunResult;
+//    }
 
     public Set<String> getSkippedFathers() {
         return skippedFathers;
@@ -121,9 +130,7 @@ public class TargetDTO {
         return runStatus;
     }
 
-    public Set<String> getSerialSetNames() {
-        return serialSetNames;
-    }
+
 
     public LocalTime getStartingProcessTime() {
         return startingProcessTime;
@@ -173,9 +180,7 @@ public class TargetDTO {
         return totalDependsOn;
     }
 
-    public int getTotalNumOfSerialSets() {
-        return totalNumOfSerialSets;
-    }
+
 
 //    public void setTaskRunResult(String taskRunResult) {
 //        this.taskRunResult = taskRunResult;
@@ -194,12 +199,6 @@ public class TargetDTO {
         this.runningTargetStatus += "Target name: "+ this.name;
         this.runningTargetStatus += "\nPlace in graph: " +this.place;
         this.runningTargetStatus += "\nSerialSets: ";
-        if(!this.serialSetNames.isEmpty()){
-            this.runningTargetStatus += this.serialSetNames.toString()+"\n";
-        }
-        else{
-            this.runningTargetStatus += "this target does not belong to any serial set";
-        }
         this.runningTargetStatus += "\nRun status: ";
         switch (runStatus){
             case WAITING:

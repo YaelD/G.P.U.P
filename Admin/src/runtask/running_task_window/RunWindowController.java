@@ -123,12 +123,12 @@ public class RunWindowController {
                 currButton.addEventFilter(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
                     @Override
                     public void handle(MouseEvent event) {
-                        TargetDTO targetDTO = engine.getRunningTarget(targetDraw.getName());
-                        String str = targetDTO.getRunningTargetStatus();
-                        if(str.equals("")){
-                            str = createRunResultString(targetDTO);
-                        }
-                        targetInfoConsole.setText(str);
+//                        TargetDTO targetDTO = engine.getRunningTarget(targetDraw.getName());
+//                        String str = targetDTO.getRunningTargetStatus();
+//                        if(str.equals("")){
+//                            str = createRunResultString(targetDTO);
+//                        }
+//                        targetInfoConsole.setText(str);
                     }
                 });
             }
@@ -142,15 +142,15 @@ public class RunWindowController {
             public void run() {
                 while (progressBar.progressProperty().get() != 1){
                     for(TargetsTableButtonsHandler currTargetDraw: data) {
-                        TargetDTO targetDTO = engine.getRunningTarget(currTargetDraw.getName());
-                        if(targetDTO != null && targetDTO.getRunStatus()!= null){
-                            currTargetDraw.setRunStatus(targetDTO.getRunStatus());
-                            if(targetDTO.getRunStatus().equals(RunStatus.FINISHED)){
-                                if(targetDTO.getRunResult() != null){
-                                    currTargetDraw.setRunResults(targetDTO.getRunResult());
-                                }
-                            }
-                        }
+//                        TargetDTO targetDTO = engine.getRunningTarget(currTargetDraw.getName());
+//                        if(targetDTO != null && targetDTO.getRunStatus()!= null){
+//                            currTargetDraw.setRunStatus(targetDTO.getRunStatus());
+//                            if(targetDTO.getRunStatus().equals(RunStatus.FINISHED)){
+//                                if(targetDTO.getRunResult() != null){
+//                                    currTargetDraw.setRunResults(targetDTO.getRunResult());
+//                                }
+//                            }
+//                        }
                     }
                 }
             }

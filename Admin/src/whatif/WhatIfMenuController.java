@@ -28,20 +28,20 @@ public class WhatIfMenuController {
 
     public void setEngine(Engine engine) {
         this.engine = engine;
-        togglesMenuController.initChoiceBoxes(this.engine.getGraphDTO());
+        //togglesMenuController.initChoiceBoxes(this.engine.getGraphDTO());
         togglesMenuController.setWhatIfCallback(new WhatIfCallback() {
             @Override
             public void findWhatIf(String targetName, Dependency dependency) {
                 targetsListView.getItems().clear();
-                Set<String> targets = engine.whatIf(targetName, dependency, null, RunType.FROM_SCRATCH);
-                if(targets.isEmpty()){
-                    targetsListView.setPlaceholder(new Label("There are no targets to show"));
-                }
-                else{
-                    ObservableList<String> data = FXCollections.observableArrayList();
-                    data.addAll(targets);
-                    targetsListView.setItems(data);
-                }
+//                Set<String> targets = engine.whatIfForRunningTask(targetName, dependency, null, RunType.FROM_SCRATCH);
+//                if(targets.isEmpty()){
+//                    targetsListView.setPlaceholder(new Label("There are no targets to show"));
+//                }
+//                else{
+//                    ObservableList<String> data = FXCollections.observableArrayList();
+//                    data.addAll(targets);
+//                    targetsListView.setItems(data);
+//                }
             }
         });
     }

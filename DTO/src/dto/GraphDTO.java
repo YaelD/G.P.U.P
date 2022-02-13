@@ -1,9 +1,5 @@
 package dto;
 
-import graph.Graph;
-import target.PlaceInGraph;
-import target.RunResults;
-import target.Target;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -16,18 +12,25 @@ public class GraphDTO {
     private long runTime;
 
 
-    public GraphDTO(Graph graph) {
-        this.name = graph.getName();
-        this.numOfTargets = graph.getTargets().size();
-        for(Target target: graph.getTargets()) {
-            this.targets.put(target.getName(), new TargetDTO(target));
-        }
+    public GraphDTO(int numOfTargets, Map<String, TargetDTO> targets, String name){
+        this.numOfTargets = numOfTargets;
+        this.targets = targets;
+        this.name = name;
     }
 
-    public GraphDTO(Graph graph, long runTime) {
-        this(graph);
-        this.runTime = runTime;
-    }
+
+//    public GraphDTO(Graph graph) {
+//        this.name = graph.getName();
+//        this.numOfTargets = graph.getTargets().size();
+//        for(Target target: graph.getTargets()) {
+//            this.targets.put(target.getName(), new TargetDTO(target));
+//        }
+//    }
+
+//    public GraphDTO(Graph graph, long runTime) {
+//        this(graph);
+//        this.runTime = runTime;
+//    }
 
     public String getName() {
         return name;
