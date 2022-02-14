@@ -1,7 +1,7 @@
 package findpath;
 
-import graph.Dependency;
+//import graph.Dependency;
 
 public interface findPathCallback {
-    void findPaths(String sourceTargetName, String destinationTargetName, Dependency dependency);
+//    void findPaths(String sourceTargetName, String destinationTargetName, Dependency dependency);
 }

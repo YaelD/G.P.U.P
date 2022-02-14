@@ -1,8 +1,5 @@
 package task;
 
-import dto.GraphDTO;
-import dto.TargetDTO;
-import dto.TaskParamsDTO;
 import exceptions.CycleException;
 import graph.Graph;
 import graph.SerialSetsContainer;

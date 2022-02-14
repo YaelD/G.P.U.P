@@ -1,4 +1,4 @@
-import header.HeaderController;
+import container.TopContainerController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -11,13 +11,14 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        URL resource = getClass().getResource("header/head_and_missing_body.fxml");
+        URL resource = getClass().getResource("container/top_container.fxml");
         FXMLLoader fxmlLoader = new FXMLLoader();
         fxmlLoader.setLocation(resource);
         BorderPane root = fxmlLoader.load(resource.openStream());
         Scene scene = new Scene(root, 1000, 600);
-        HeaderController headerController = fxmlLoader.getController();
-        headerController.setPrimaryStage(primaryStage);
+        TopContainerController topController = fxmlLoader.getController();
+
+        //headerController.setPrimaryStage(primaryStage);
         //headerController.setEngine(new SystemEngine());
         primaryStage.setScene(scene);
         primaryStage.setTitle("GPUP");
