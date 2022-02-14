@@ -4,7 +4,7 @@ import engine.Engine;
 import engine.SystemEngine;
 
 import jakarta.servlet.ServletContext;
-import users.BlaBla;
+import user.UserManager;
 
 public class ServletUtils {
 
@@ -18,15 +18,13 @@ public class ServletUtils {
     private static final Object userManagerLock = new Object();
     private static final Object engineManagerLock = new Object();
 
-    public static BlaBla getUserManager(ServletContext servletContext) {
-        BlaBla blaBla2 = new BlaBla();
+    public static UserManager getUserManager(ServletContext servletContext) {
         synchronized (userManagerLock) {
             if (servletContext.getAttribute(USER_MANAGER_ATTRIBUTE) == null) {
-                BlaBla blaBla = new BlaBla();
-                servletContext.setAttribute(USER_MANAGER_ATTRIBUTE, blaBla);
+                servletContext.setAttribute(USER_MANAGER_ATTRIBUTE, new UserManager());
             }
         }
-        return (BlaBla) servletContext.getAttribute(USER_MANAGER_ATTRIBUTE);
+        return (UserManager) servletContext.getAttribute(USER_MANAGER_ATTRIBUTE);
     }
 
     public static Engine getChatManager(ServletContext servletContext) {

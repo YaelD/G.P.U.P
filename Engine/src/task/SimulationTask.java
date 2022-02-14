@@ -1,6 +1,5 @@
 package task;
 
-import dto.SimulationTaskParamsDTO;
 import graph.Graph;
 import graph.SerialSetsContainer;
 import target.RunResults;
@@ -18,13 +17,17 @@ public class SimulationTask extends Task{
     private double successRate;
     private double successWithWarningsRate;
 
-    public SimulationTask(Graph graph, SimulationTaskParamsDTO simulationTaskDTO, SerialSetsContainer serialSetsContainer) {
-        super(graph, "", "");
-        this.processTime = simulationTaskDTO.getProcessTime();
-        this.isRandom = simulationTaskDTO.isRandom();
-        this.successRate = simulationTaskDTO.getSuccessRate();
-        this.successWithWarningsRate = simulationTaskDTO.getSuccessWithWarningsRate();
+    public SimulationTask(Graph graph, String creatorName, String taskName) {
+        super(graph, creatorName, taskName);
     }
+
+//    public SimulationTask(Graph graph, SimulationTaskParamsDTO simulationTaskDTO, SerialSetsContainer serialSetsContainer) {
+//        super(graph, "", "");
+//        this.processTime = simulationTaskDTO.getProcessTime();
+//        this.isRandom = simulationTaskDTO.isRandom();
+//        this.successRate = simulationTaskDTO.getSuccessRate();
+//        this.successWithWarningsRate = simulationTaskDTO.getSuccessWithWarningsRate();
+//    }
 /*
 
 

@@ -5,7 +5,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import users.BlaBla;
+import user.UserManager;
 import utils.ServletUtils;
 import utils.SessionUtils;
 
@@ -18,10 +18,13 @@ public class  LoginServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         response.setContentType("text/plain;charset=UTF-8");
 
+
+
         System.out.println("HEREEEEEE=======>>>>>>>>>>>>");
 
+
         String usernameFromSession = SessionUtils.getUsername(request);
-        BlaBla userManager = ServletUtils.getUserManager(getServletContext());
+        UserManager userManager = ServletUtils.getUserManager(getServletContext());
 
         if (usernameFromSession == null) { //user is not logged in yet
 

@@ -1,6 +1,5 @@
 package task;
 
-import dto.CompilationTaskParamsDTO;
 import graph.Graph;
 import graph.SerialSetsContainer;
 import target.RunResults;
@@ -22,13 +21,16 @@ public class CompilationTask extends Task{
     private String sourceDir;
     private String destinationDir;
 
-
-
-    public CompilationTask(Graph graph, CompilationTaskParamsDTO compilationTaskDTO, SerialSetsContainer serialSetsContainer) {
-        super(graph, "", "");
-        this.sourceDir = compilationTaskDTO.getSourceDir();
-        this.destinationDir = compilationTaskDTO.getDestinationDir();
+    public CompilationTask(Graph graph, String creatorName, String taskName) {
+        super(graph, creatorName, taskName);
     }
+
+
+//    public CompilationTask(Graph graph, CompilationTaskParamsDTO compilationTaskDTO, SerialSetsContainer serialSetsContainer) {
+//        super(graph, "", "");
+//        this.sourceDir = compilationTaskDTO.getSourceDir();
+//        this.destinationDir = compilationTaskDTO.getDestinationDir();
+//    }
 /*
 
 
