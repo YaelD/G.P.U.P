@@ -1,6 +1,6 @@
 package runtask.simulation_task;
 
-import dto.SimulationTaskParamsDTO;
+//import dto.SimulationTaskParamsDTO;
 import javafx.beans.property.*;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -16,7 +16,7 @@ public class SimulationParamsController {
     private SimpleDoubleProperty successRate;
     private SimpleDoubleProperty successRateWithWarnings;
     private SimpleBooleanProperty isRandomProcessTime;
-    private SimpleObjectProperty<SimulationTaskParamsDTO> simulationTaskParams;
+//    private SimpleObjectProperty<SimulationTaskParamsDTO> simulationTaskParams;
     private ActiveTaskCallback activeTaskCallback;
 
     private ReturnCallback returnCallBack;
@@ -44,7 +44,7 @@ public class SimulationParamsController {
         successRateWithWarnings = new SimpleDoubleProperty(0.0);
         this.processTime = new SimpleIntegerProperty(1000);
         this.isRandomProcessTime = new SimpleBooleanProperty(false);
-        this.simulationTaskParams = new SimpleObjectProperty<>();
+//        this.simulationTaskParams = new SimpleObjectProperty<>();
     }
 
     @FXML
@@ -90,8 +90,8 @@ public class SimulationParamsController {
 
     @FXML
     void onConfirm(ActionEvent event) {
-        activeTaskCallback.activeTask(new SimulationTaskParamsDTO(this.processTime.intValue(),
-                this.isRandomProcessTime.get(), this.successRate.doubleValue(), this.successRateWithWarnings.doubleValue()));
+//        activeTaskCallback.activeTask(new SimulationTaskParamsDTO(this.processTime.intValue(),
+//                this.isRandomProcessTime.get(), this.successRate.doubleValue(), this.successRateWithWarnings.doubleValue()));
     }
 
 }

@@ -1,6 +1,6 @@
 package runtask.compilation_task;
 
-import dto.CompilationTaskParamsDTO;
+//import dto.CompilationTaskParamsDTO;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -43,7 +43,7 @@ public class CompilationParamsController {
             warningLabel.setText("There is no destination path");
         }
         else{
-            callback.activeTask(new CompilationTaskParamsDTO(sourcePath, destinationPath));
+//            callback.activeTask(new CompilationTaskParamsDTO(sourcePath, destinationPath));
         }
     }
 

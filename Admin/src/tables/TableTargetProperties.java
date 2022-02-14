@@ -1,6 +1,6 @@
 package tables;
 
-import dto.TargetDTO;
+//import dto.TargetDTO;
 import javafx.beans.property.SimpleStringProperty;
 
 public class TableTargetProperties {
@@ -15,16 +15,16 @@ public class TableTargetProperties {
 
 
 
-    public TableTargetProperties(TargetDTO dto) {
-        this.name = new SimpleStringProperty(dto.getName());
-        this.info = new SimpleStringProperty(dto.getInfo());
-        this.numOfDependsOn = dto.getDependsOn().size();
-        this.numOfRequiredFor = dto.getRequiredFor().size();
-        this.totalNumOfDependsOn = dto.getTotalDependsOn().size();
-        this.totalNumOfRequiredFor = dto.getTotalRequiredFor().size();
-        this.numOfSerialSet = dto.getTotalNumOfSerialSets();
-        this.placeInGraph = new SimpleStringProperty(dto.getPlace().toString());
-    }
+//    public TableTargetProperties(TargetDTO dto) {
+//        this.name = new SimpleStringProperty(dto.getName());
+//        this.info = new SimpleStringProperty(dto.getInfo());
+//        this.numOfDependsOn = dto.getDependsOn().size();
+//        this.numOfRequiredFor = dto.getRequiredFor().size();
+//        this.totalNumOfDependsOn = dto.getTotalDependsOn().size();
+//        this.totalNumOfRequiredFor = dto.getTotalRequiredFor().size();
+//        this.numOfSerialSet = dto.getTotalNumOfSerialSets();
+//        this.placeInGraph = new SimpleStringProperty(dto.getPlace().toString());
+//    }
 
     public String getName() {
         return name.get();

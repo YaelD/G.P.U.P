@@ -1,7 +1,7 @@
 package tables;
 
-import dto.GraphDTO;
-import dto.TargetDTO;
+//import dto.GraphDTO;
+//import dto.TargetDTO;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -48,13 +48,13 @@ public class TargetsTableController  {
         SerialSet_Column.setCellValueFactory(new PropertyValueFactory<TableTargetProperties, Integer>("numOfSerialSet"));
     }
 
-    public void setTargets(GraphDTO graphDTO){
-        final ObservableList<TableTargetProperties> data = FXCollections.observableArrayList();
-        for(TargetDTO currTarget: graphDTO.getTargets().values()){
-            data.add(new TableTargetProperties(currTarget));
-        }
-        Targets_TableView.setItems(data);
-    }
+//    public void setTargets(GraphDTO graphDTO){
+//        final ObservableList<TableTargetProperties> data = FXCollections.observableArrayList();
+//        for(TargetDTO currTarget: graphDTO.getTargets().values()){
+//            data.add(new TableTargetProperties(currTarget));
+//        }
+//        Targets_TableView.setItems(data);
+//    }
 
 
 }

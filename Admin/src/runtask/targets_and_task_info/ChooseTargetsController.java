@@ -1,9 +1,9 @@
 package runtask.targets_and_task_info;
 
-import dto.GraphDTO;
-import dto.TargetDTO;
-import engine.Engine;
-import graph.Dependency;
+//import dto.GraphDTO;
+//import dto.TargetDTO;
+//import engine.Engine;
+//import graph.Dependency;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleListProperty;
@@ -25,7 +25,7 @@ import java.util.Set;
 
 public class ChooseTargetsController {
 
-    private Engine engine;
+//    private Engine engine;
 
     @FXML private VBox targetsSubMenu;
     @FXML private CheckBox chooseAllTargetsCheckBox;
@@ -35,7 +35,7 @@ public class ChooseTargetsController {
     @FXML private RadioButton chooseWhatIfRB;
     @FXML private VBox whatIfSubMenu;
     @FXML private ChoiceBox<String> whatIf_targetsCB;
-    @FXML private ChoiceBox<Dependency> whatIf_DependencyCB;
+   // @FXML private ChoiceBox<Dependency> whatIf_DependencyCB;
     @FXML private Button WhatIfButton;
     @FXML private ListView<String> selectedTargetsListView;
 
@@ -60,17 +60,17 @@ public class ChooseTargetsController {
         targetListProperty.bind(selectedTargetsListView.itemsProperty());
     }
 
-    public void setEngine(Engine engine){
-        this.engine= engine;
-        GraphDTO graphDTO = this.engine.getGraphDTO();
-        whatIf_targetsCB.valueProperty().setValue(whatIf_targetsCB.getItems().get(0));
-
-    }
+//    public void setEngine(Engine engine){
+//        this.engine= engine;
+//        GraphDTO graphDTO = this.engine.getGraphDTO();
+//        whatIf_targetsCB.valueProperty().setValue(whatIf_targetsCB.getItems().get(0));
+//
+//    }
 
     @FXML
     private void initialize(){
-        //RunTaskMenuController.initTargetChoiceControllers(whatIfSubMenu, chooseWhatIfRB, targetsSubMenu, chooseTargetsRB, selectedTargetsListView, targetsCheckBoxList, chooseAllTargetsCheckBox, whatIf_DependencyCB);
-        whatIf_DependencyCB.setValue(Dependency.DEPENDS_ON);
+//        //RunTaskMenuController.initTargetChoiceControllers(whatIfSubMenu, chooseWhatIfRB, targetsSubMenu, chooseTargetsRB, selectedTargetsListView, targetsCheckBoxList, chooseAllTargetsCheckBox, whatIf_DependencyCB);
+//        whatIf_DependencyCB.setValue(Dependency.DEPENDS_ON);
 
     }
 

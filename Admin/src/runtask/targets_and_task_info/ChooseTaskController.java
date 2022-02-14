@@ -1,6 +1,6 @@
 package runtask.targets_and_task_info;
 
-import engine.Engine;
+//import engine.Engine;
 import javafx.beans.property.*;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -12,8 +12,8 @@ import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import runtask.menu.RunTaskMenuController;
-import task.RunType;
-import task.TaskType;
+//import task.RunType;
+//import task.TaskType;
 
 import java.util.HashSet;
 import java.util.List;
@@ -33,19 +33,19 @@ public class ChooseTaskController {
 
     private GridPane simulationLayout;
     private GridPane compilationLayout;
-    private Engine engine;
+    //private Engine engine;
     private HBox menuPane;
 
     private SimpleListProperty<String> targetsList;
 
-    private SimpleObjectProperty<TaskType> currTaskType;
-    private SimpleObjectProperty<RunType> currRunType;
+//    private SimpleObjectProperty<TaskType> currTaskType;
+//    private SimpleObjectProperty<RunType> currRunType;
 
 
 
     public ChooseTaskController() {
-        currTaskType = new SimpleObjectProperty<>(TaskType.SIMULATION_TASK);
-        currRunType = new SimpleObjectProperty<>(RunType.FROM_SCRATCH);
+//        currTaskType = new SimpleObjectProperty<>(TaskType.SIMULATION_TASK);
+//        currRunType = new SimpleObjectProperty<>(RunType.FROM_SCRATCH);
         this.targetsList = new SimpleListProperty<>();
     }
 
@@ -94,28 +94,28 @@ public class ChooseTaskController {
     }
 
     private boolean validation() {
-        Set<String> targetSet = new HashSet<>();
-        targetSet.addAll(this.targetsList);
-        if(this.currRunType.getValue().equals(RunType.INCREMENTAL) && !engine.isRunInIncrementalMode(this.currTaskType.getValue(),targetSet )){
-            warningLabel.setVisible(true);
-            warningLabel.setText("The " + currTaskType.getValue().getTaskType() + " task cannot run incrementally" +
-                    "\nSetting run From Scratch by default");
-            this.currRunType.setValue(RunType.FROM_SCRATCH);
-            this.runTypeToggle.selectToggle(fromScratchRadioButton);
-            return false;
-        }
-        if(targetSet.isEmpty()){
-            warningLabel.setVisible(true);
-            warningLabel.setText("Please choose targets");
-            return false;
-        }
+//        Set<String> targetSet = new HashSet<>();
+//        targetSet.addAll(this.targetsList);
+//        if(this.currRunType.getValue().equals(RunType.INCREMENTAL) && !engine.isRunInIncrementalMode(this.currTaskType.getValue(),targetSet )){
+//            warningLabel.setVisible(true);
+//            warningLabel.setText("The " + currTaskType.getValue().getTaskType() + " task cannot run incrementally" +
+//                    "\nSetting run From Scratch by default");
+//            this.currRunType.setValue(RunType.FROM_SCRATCH);
+//            this.runTypeToggle.selectToggle(fromScratchRadioButton);
+//            return false;
+//        }
+//        if(targetSet.isEmpty()){
+//            warningLabel.setVisible(true);
+//            warningLabel.setText("Please choose targets");
+//            return false;
+//        }
         return true;
     }
 
-    public void setTaskTypeAndRunTypeListeners(SimpleObjectProperty<TaskType> taskType, SimpleObjectProperty<RunType> runType){
-        taskType.bind(currTaskType);
-        runType.bind(currRunType);
-    }
+//    public void setTaskTypeAndRunTypeListeners(SimpleObjectProperty<TaskType> taskType, SimpleObjectProperty<RunType> runType){
+//        taskType.bind(currTaskType);
+//        runType.bind(currRunType);
+//    }
 
     @FXML
     private void initialize(){
@@ -128,14 +128,14 @@ public class ChooseTaskController {
         this.menuPane = menuPane;
     }
 
-    public void setEngine(Engine engine){
-        this.engine = engine;
-        for(int i=1; i<= this.engine.getMaxNumOfThreads(); i++){
-            numOfThreadsCB.getItems().add(i);
-        }
-
-        this.numOfThreadsCB.getSelectionModel().select(0);
-    }
+//    public void setEngine(Engine engine){
+//        this.engine = engine;
+//        for(int i=1; i<= this.engine.getMaxNumOfThreads(); i++){
+//            numOfThreadsCB.getItems().add(i);
+//        }
+//
+//        this.numOfThreadsCB.getSelectionModel().select(0);
+//    }
 
     public void setNumOfThreads(SimpleIntegerProperty numOfThreads) {
         numOfThreads.bind(this.numOfThreadsCB.valueProperty());

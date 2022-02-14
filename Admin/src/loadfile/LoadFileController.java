@@ -1,8 +1,5 @@
 package loadfile;
 
-import engine.Engine;
-import exceptions.*;
-import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -16,7 +13,6 @@ import java.io.File;
 
 public class LoadFileController {
 
-    private Engine engine;
     SimpleBooleanProperty isFileLoaded;
 
     @FXML
@@ -83,12 +79,12 @@ public class LoadFileController {
 //        }
 
     }
-
-    public void setEngine(Engine engine) {
-        this.engine = engine;
-    }
-
-    public void setIsFileLoaded(SimpleBooleanProperty isFileLoaded) {
-        this.isFileLoaded = isFileLoaded;
-    }
+//
+//    public void setEngine(Engine engine) {
+//        this.engine = engine;
+//    }
+//
+//    public void setIsFileLoaded(SimpleBooleanProperty isFileLoaded) {
+//        this.isFileLoaded = isFileLoaded;
+//    }
 }
