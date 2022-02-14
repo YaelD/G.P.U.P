@@ -10,18 +10,18 @@ import java.util.Set;
 public class UserManager {
 
     private final Set<User> usersSet;
-    private static UserManager userManager = null;
+   // private static UserManager userManager = null;
 
-    private UserManager() {
+    public UserManager() {
         usersSet = new HashSet<>();
     }
 
-    public static UserManager getInstance(){
-        if (userManager == null)
-            userManager = new UserManager();
-
-        return userManager;
-    }
+//    public static UserManager getInstance(){
+//        if (userManager == null)
+//            userManager = new UserManager();
+//
+//        return userManager;
+//    }
 
 
 

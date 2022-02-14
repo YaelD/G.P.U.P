@@ -22,7 +22,7 @@ import java.util.function.Consumer;
 public class SystemEngine implements Engine{
 
     private final String workingDirectory = "c:\\gpup-working-dir";
-    private static SystemEngine systemEngine = null;
+    //private static SystemEngine systemEngine = null;
 
     //members
     private Map<String, Task> tasksInSystem = new HashMap<>();
@@ -30,7 +30,7 @@ public class SystemEngine implements Engine{
 
 
     //C'tor + creating working dir
-    private SystemEngine() {
+    public SystemEngine() {
         File directory = new File(this.workingDirectory);
         if(!directory.exists()){
             directory.mkdir();
@@ -38,12 +38,12 @@ public class SystemEngine implements Engine{
     }
 
     //Get the instance of the singelton
-    public static Engine getInstance(){
-        if (systemEngine == null)
-            systemEngine = new SystemEngine();
-
-        return systemEngine;
-    }
+//    public static Engine getInstance(){
+//        if (systemEngine == null)
+//            systemEngine = new SystemEngine();
+//
+//        return systemEngine;
+//    }
 
 
     public Map<String, Task> getTasksInSystem() {

@@ -36,7 +36,7 @@
           <RowConstraints maxHeight="30.0" minHeight="30.0" prefHeight="30.0" vgrow="NEVER" />
         </rowConstraints>
          <children>
-            <HBox alignment="CENTER" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="7">
+            <HBox alignment="CENTER" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="8">
                <children>
                   <Button fx:id="logInButton" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#OnLogin" prefHeight="30.0" prefWidth="98.0" text="Login" />
                </children>
@@ -50,6 +50,11 @@
             <Label text="Wellcome to GPUP" textAlignment="JUSTIFY" GridPane.columnIndex="1" GridPane.columnSpan="4" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER">
                <font>
                   <Font name="System Bold" size="36.0" />
+               </font>
+            </Label>
+            <Label fx:id="warningLabel" prefHeight="64.0" prefWidth="200.0" text="Label" textFill="RED" visible="false" wrapText="true" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="6">
+               <font>
+                  <Font size="14.0" />
                </font>
             </Label>
          </children>
