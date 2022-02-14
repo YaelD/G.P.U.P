@@ -40,7 +40,7 @@
          </children>
       </HBox>
       <TextField fx:id="userNameTextField" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="4" GridPane.rowSpan="2" />
-      <Label text="users.User name:" GridPane.columnIndex="1" GridPane.rowIndex="4" GridPane.rowSpan="2">
+      <Label text="User name:" GridPane.columnIndex="1" GridPane.rowIndex="4" GridPane.rowSpan="2">
          <font>
             <Font size="18.0" />
          </font>

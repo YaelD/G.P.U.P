@@ -1,6 +1,7 @@
 package admin_login;
 
 import constants.Constants;
+import container.TopContainerController;
 import http_utils.HttpUtils;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
@@ -23,6 +24,9 @@ public class LoginWindowController {
     @FXML private TextField userNameTextField;
     @FXML private Label warningLabel;
 
+
+    TopContainerController topContainerController;
+
     private SimpleStringProperty errorMessageProperty;
 
     public LoginWindowController() {
@@ -34,6 +38,9 @@ public class LoginWindowController {
         this.warningLabel.textProperty().bind(errorMessageProperty);
     }
 
+    public void setTopContainerController(TopContainerController topContainerController) {
+        this.topContainerController = topContainerController;
+    }
 
     @FXML void OnLogin(ActionEvent event) {
         String userName = userNameTextField.getText();
@@ -63,6 +70,7 @@ public class LoginWindowController {
 
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                warningLabel.setVisible(true);
                 if (response.code() != 200) {
                     String responseBody = response.body().string();
                     Platform.runLater(() ->
@@ -73,6 +81,7 @@ public class LoginWindowController {
                         //TODO: ADD UPDATING USER NAME LABEL IN THE DASHBOARD ;)
                         //chatAppMainController.updateUserName(userName);
                         errorMessageProperty.set("logged in successfully");
+                        topContainerController.switchToDashboard();
                         //chatAppMainController.switchToChatRoom();
                     });
                 }
