@@ -26,7 +26,7 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;complexContent>
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;all>
- *         &lt;element ref="{}GPUP-User-Data" minOccurs="0"/>
+ *         &lt;element ref="{}GPUP-users.User-Data" minOccurs="0"/>
  *         &lt;element ref="{}GPUP-Target-Dependencies" minOccurs="0"/>
  *       &lt;/all>
  *       &lt;attribute name="name" use="required" type="{http://www.w3.org/2001/XMLSchema}string" />
@@ -44,7 +44,7 @@ import javax.xml.bind.annotation.XmlType;
 @XmlRootElement(name = "GPUP-Target")
 public class GPUPTarget {
 
-    @XmlElement(name = "GPUP-User-Data")
+    @XmlElement(name = "GPUP-users.User-Data")
     protected String gpupUserData;
     @XmlElement(name = "GPUP-Target-Dependencies")
     protected GPUPTargetDependencies gpupTargetDependencies;

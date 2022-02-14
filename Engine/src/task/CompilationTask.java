@@ -1,8 +1,6 @@
 package task;
 
 import dto.CompilationTaskParamsDTO;
-import dto.TargetDTO;
-import dto.TaskParamsDTO;
 import graph.Graph;
 import graph.SerialSetsContainer;
 import target.RunResults;
@@ -25,11 +23,14 @@ public class CompilationTask extends Task{
     private String destinationDir;
 
 
+
     public CompilationTask(Graph graph, CompilationTaskParamsDTO compilationTaskDTO, SerialSetsContainer serialSetsContainer) {
-        super(graph, serialSetsContainer);
+        super(graph, "", "");
         this.sourceDir = compilationTaskDTO.getSourceDir();
         this.destinationDir = compilationTaskDTO.getDestinationDir();
     }
+/*
+
 
     @Override
     protected TargetDTO executeTaskOnTarget(Target target) {
@@ -109,4 +110,5 @@ public class CompilationTask extends Task{
             this.destinationDir = compilationTaskParamsDTO.getDestinationDir();
         }
     }
+ */
 }

@@ -31,7 +31,7 @@ import javax.xml.namespace.QName;
 @XmlRegistry
 public class ObjectFactory {
 
-    private final static QName _GPUPUserData_QNAME = new QName("", "GPUP-User-Data");
+    private final static QName _GPUPUserData_QNAME = new QName("", "GPUP-users.User-Data");
     private final static QName _GPUPWorkingDirectory_QNAME = new QName("", "GPUP-Working-Directory");
     private final static QName _GPUPGraphName_QNAME = new QName("", "GPUP-Graph-Name");
 
@@ -126,7 +126,7 @@ public class ObjectFactory {
      * Create an instance of {@link JAXBElement }{@code <}{@link String }{@code >}}
      * 
      */
-    @XmlElementDecl(namespace = "", name = "GPUP-User-Data")
+    @XmlElementDecl(namespace = "", name = "GPUP-users.User-Data")
     public JAXBElement<String> createGPUPUserData(String value) {
         return new JAXBElement<String>(_GPUPUserData_QNAME, String.class, null, value);
     }

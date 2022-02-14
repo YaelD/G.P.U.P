@@ -35,7 +35,7 @@ public class SerialSet {
             }
             else{
                 currSerialSet.getTargetsList().add(graph.getTarget(currTarget));
-                graph.getTarget(currTarget).getSerialSetsContainer().getSerialSetList().add(currSerialSet);
+                //graph.getTarget(currTarget).getSerialSetsContainer().getSerialSetList().add(currSerialSet);
             }
         }
     }

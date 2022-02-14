@@ -1,18 +1,15 @@
 package users;
 
-import engine.Engine;
-import engine.SystemEngine;
-
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-public class UserManager {
+public class BlaBla {
 
     private final Set<User> usersSet;
    // private static UserManager userManager = null;
 
-    public UserManager() {
+    public BlaBla() {
         usersSet = new HashSet<>();
     }
 
