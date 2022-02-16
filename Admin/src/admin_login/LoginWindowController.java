@@ -60,7 +60,6 @@ public class LoginWindowController {
        // updateHttpStatusLine("New request is launched for: " + finalUrl);
 
         HttpUtils.runAsync(finalUrl, new Callback() {
-
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
                 Platform.runLater(() ->

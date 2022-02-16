@@ -66,7 +66,7 @@ public class SystemEngine implements Engine{
 
 
     @Override
-    public boolean loadFile(InputStream stream) throws
+    public boolean loadFile(InputStream stream, String creatorName) throws
             DuplicateTargetsException, TargetNotExistException, InvalidDependencyException, DependencyConflictException {
         try {
             JAXBContext jaxbContext = JAXBContext.newInstance(GPUPDescriptor.class);

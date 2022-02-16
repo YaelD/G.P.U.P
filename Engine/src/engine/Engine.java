@@ -21,7 +21,8 @@ public interface Engine {
 
     //public boolean loadFile(String path) throws InvalidFileException, DependencyConflictException, DuplicateTargetsException, InvalidDependencyException, TargetNotExistException, SerialSetException, DupSerialSetsNameException;
 
-    public boolean loadFile(InputStream stream) throws DependencyConflictException, DuplicateTargetsException, InvalidDependencyException, TargetNotExistException;
+    public boolean loadFile(InputStream stream, String creatorName) throws
+            DuplicateTargetsException, TargetNotExistException, InvalidDependencyException, DependencyConflictException;
 
     public Map<String, Task> getTasksInSystem();
 
@@ -43,7 +44,6 @@ public interface Engine {
     public boolean isRunInIncrementalMode(TaskType taskType, Set<String> selectedTargets);
 
     public boolean isCycleInGraph(String graphName);
-
 
     public List<String> findCycle(String targetName, String graphName) throws TargetNotExistException;
 

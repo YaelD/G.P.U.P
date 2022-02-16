@@ -18,5 +18,18 @@
       </library>
     </orderEntry>
     <orderEntry type="module" module-name="DTO" />
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="file://$MODULE_DIR$/../3rd party Dependencies/GSON" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES>
+          <root url="file://$MODULE_DIR$/../3rd party Dependencies/GSON" />
+        </SOURCES>
+        <jarDirectory url="file://$MODULE_DIR$/../3rd party Dependencies/GSON" recursive="false" />
+        <jarDirectory url="file://$MODULE_DIR$/../3rd party Dependencies/GSON" recursive="false" type="SOURCES" />
+      </library>
+    </orderEntry>
   </component>
 </module>

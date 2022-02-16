@@ -1,8 +1,7 @@
 package dashboard;
 
-import container.TopContainerController;
 import dto.GraphDTO;
-import javafx.beans.property.SimpleListProperty;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -17,13 +16,17 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import loadfile.LoadFileController;
-import tables.TableTargetProperties;
 
 import java.io.IOException;
 import java.net.URL;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class DashboardController {
+
+    private Timer timer;
+    private TimerTask listRefresher;
 
     @FXML
     private TableView<?> activeUsersTableView;
@@ -76,13 +79,10 @@ public class DashboardController {
     @FXML
     private void initialize(){
         loadGraphTableColumns();
-        getGraphsFromServer();
+        startListRefresher();
     }
 
 
-    private void getGraphsFromServer(){
-
-    }
 
     private void loadGraphTable(List<GraphDTO> graphs){
         final ObservableList<GraphDTO> data = FXCollections.observableArrayList(graphs);
@@ -137,6 +137,21 @@ public class DashboardController {
             e.printStackTrace();
         }
 
+    }
+
+    private void updateUsersList(List<GraphDTO> graphs) {
+        Platform.runLater(() -> {
+            ObservableList<GraphDTO> graphDTOS = graphInSystemTableView.getItems();
+            graphDTOS.clear();
+            graphDTOS.addAll(graphs);
+        });
+    }
+
+    public void startListRefresher() {
+        listRefresher = new GraphListRefresher(
+                this::updateUsersList);
+        timer = new Timer();
+        timer.schedule(listRefresher, 2, 2);
     }
 
 }
