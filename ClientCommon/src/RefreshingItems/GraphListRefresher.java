@@ -1,4 +1,4 @@
-package dashboard;
+package RefreshingItems;
 
 import com.google.gson.Gson;
 import constants.Constants;

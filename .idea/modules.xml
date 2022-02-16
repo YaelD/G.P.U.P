@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/Admin/Admin.iml" filepath="$PROJECT_DIR$/Admin/Admin.iml" />
+      <module fileurl="file://$PROJECT_DIR$/ClientCommon/ClientCommon.iml" filepath="$PROJECT_DIR$/ClientCommon/ClientCommon.iml" />
       <module fileurl="file://$PROJECT_DIR$/DTO/DTO.iml" filepath="$PROJECT_DIR$/DTO/DTO.iml" />
       <module fileurl="file://$PROJECT_DIR$/Engine/Engine.iml" filepath="$PROJECT_DIR$/Engine/Engine.iml" />
       <module fileurl="file://$PROJECT_DIR$/GPUP.iml" filepath="$PROJECT_DIR$/GPUP.iml" />

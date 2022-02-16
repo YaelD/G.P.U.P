@@ -1,5 +1,6 @@
 package dashboard;
 
+import RefreshingItems.GraphListRefresher;
 import dto.GraphDTO;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;

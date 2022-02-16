@@ -1,5 +1,6 @@
 package admin_login;
 
+
 import constants.Constants;
 import container.TopContainerController;
 import http_utils.HttpUtils;
@@ -78,11 +79,9 @@ public class LoginWindowController {
                 } else {
                     Platform.runLater(() -> {
                         //TODO: ADD UPDATING USER NAME LABEL IN THE DASHBOARD ;)
-                        //chatAppMainController.updateUserName(userName);
                         errorMessageProperty.set("logged in successfully");
                         topContainerController.setUserName(userName);
                         topContainerController.switchToDashboard();
-                        //chatAppMainController.switchToChatRoom();
                     });
                 }
             }

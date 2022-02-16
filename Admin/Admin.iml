@@ -31,5 +31,6 @@
         <jarDirectory url="file://$MODULE_DIR$/../3rd party Dependencies/GSON" recursive="false" type="SOURCES" />
       </library>
     </orderEntry>
+    <orderEntry type="module" module-name="ClientCommon" />
   </component>
 </module>
