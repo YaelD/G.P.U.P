@@ -17,5 +17,6 @@
         <jarDirectory url="file://$MODULE_DIR$/../3rd party Dependencies/okHttp" recursive="false" />
       </library>
     </orderEntry>
+    <orderEntry type="module" module-name="DTO" />
   </component>
 </module>

@@ -1,6 +1,5 @@
 package task;
 
-import dto.TargetDTO;
 import exceptions.CycleException;
 import graph.Graph;
 import graph.SerialSetsContainer;
@@ -103,14 +102,14 @@ public abstract class Task{
         return null;
     }
 
-    //this function will be called when a worker sends the run result of a target.
-    public void updateTargetsRunResult(TargetDTO targetDTO){
-        Target currTarget = this.graph.getTarget(targetDTO.getName());
-        if(targetDTO.getRunResult().equals(RunResults.FAILURE)){
-            currTarget.updateParentsStatus(targetDTO.getSkippedFathers(), currTarget.getName()); //כל מי שסגרתי לריצה בגללי
-        }
-        getOpenedTargetsToRun(targetDTO, currTarget);
-    }
+//    //this function will be called when a worker sends the run result of a target.
+//    public void updateTargetsRunResult(TargetDTO targetDTO){
+//        Target currTarget = this.graph.getTarget(targetDTO.getName());
+//        if(targetDTO.getRunResult().equals(RunResults.FAILURE)){
+//            currTarget.updateParentsStatus(targetDTO.getSkippedFathers(), currTarget.getName()); //כל מי שסגרתי לריצה בגללי
+//        }
+//        getOpenedTargetsToRun(targetDTO, currTarget);
+//    }
 
     public void executeTaskOnGraph(List<Target> sortedTargets){
 
@@ -183,33 +182,33 @@ public abstract class Task{
 //    }
 
 
-    private void getOpenedTargetsToRun(TargetDTO targetResult, Target target) {
-        boolean isOpenedToRun = true;
-        for(Target currParent : target.getRequiredFor()){
-            for(Target childOfTheCurrParent : currParent.getDependsOn()){
-                if (childOfTheCurrParent.getRunStatus().equals(RunStatus.FROZEN)
-                || childOfTheCurrParent.getRunStatus().equals(RunStatus.WAITING)) {
-
-                    //currParent.getWaitForThisTargetsToBeFinished().add(childOfTheCurrParent.getName());
-                    isOpenedToRun = false;
-                }
-                else{
-                    currParent.getWaitForThisTargetsToBeFinished().remove(childOfTheCurrParent.getName());
-                    isOpenedToRun = true;
-                }
-            }
-            if (isOpenedToRun) {
-                if(!currParent.getRunStatus().equals(RunStatus.SKIPPED)){
-                    currParent.setRunStatus(RunStatus.WAITING);
-                    currParent.setStartWaitingTime(LocalTime.now());
-                }
-                targetResult.getTargetsThatCanBeRun().add(currParent.getName());
-            }
-            else{
-                isOpenedToRun = true;
-            }
-        }
-    }
+//    private void getOpenedTargetsToRun(TargetDTO targetResult, Target target) {
+//        boolean isOpenedToRun = true;
+//        for(Target currParent : target.getRequiredFor()){
+//            for(Target childOfTheCurrParent : currParent.getDependsOn()){
+//                if (childOfTheCurrParent.getRunStatus().equals(RunStatus.FROZEN)
+//                || childOfTheCurrParent.getRunStatus().equals(RunStatus.WAITING)) {
+//
+//                    //currParent.getWaitForThisTargetsToBeFinished().add(childOfTheCurrParent.getName());
+//                    isOpenedToRun = false;
+//                }
+//                else{
+//                    currParent.getWaitForThisTargetsToBeFinished().remove(childOfTheCurrParent.getName());
+//                    isOpenedToRun = true;
+//                }
+//            }
+//            if (isOpenedToRun) {
+//                if(!currParent.getRunStatus().equals(RunStatus.SKIPPED)){
+//                    currParent.setRunStatus(RunStatus.WAITING);
+//                    currParent.setStartWaitingTime(LocalTime.now());
+//                }
+//                //targetResult.getTargetsThatCanBeRun().add(currParent.getName());
+//            }
+//            else{
+//                isOpenedToRun = true;
+//            }
+//        }
+//    }
 
 
     //protected abstract TargetDTO executeTaskOnTarget(Target currTarget);
@@ -217,7 +216,7 @@ public abstract class Task{
     private void createGraphOfFailedTargets() {
         String graphName = this.graph.getName();
 
-        Graph newGraph = new Graph(new HashMap<>(), graphName);
+        Graph newGraph = new Graph(new HashMap<>(), graphName, this.graph.getTaskPricePerTarget());
         for(Target currTarget : this.graph.getTargets()){
             if(currTarget.getRunResult().equals(RunResults.FAILURE) ||
                     currTarget.getRunResult().equals(RunResults.SKIPPED)){

@@ -57,7 +57,7 @@ public class TopContainerController {
     }
 
     private void loadDashboardPage() {
-        URL dashboardPageURL = DashboardController.class.getResource("dashboard.fxml");
+        URL dashboardPageURL = DashboardController.class.getResource("admin_dashboard.fxml");
         try {
             FXMLLoader fxmlLoader = new FXMLLoader();
             fxmlLoader.setLocation(dashboardPageURL);

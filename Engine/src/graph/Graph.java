@@ -9,6 +9,7 @@ import schema.generated.GPUPTargetDependencies;
 import schema.generated.GPUPTargets;
 import target.PlaceInGraph;
 import target.Target;
+import task.TaskType;
 
 import java.util.*;
 
@@ -16,10 +17,18 @@ public class Graph implements Cloneable {
 
     private Map<String, Target> targetGraph = new HashMap<>();
     private String name;
+    private String creatorName;
+    private Map<TaskType, Integer> taskPricePerTarget = new HashMap<>();
 
-    public Graph(Map<String, Target> targetGraph, String name) {
+    public Graph(Map<String, Target> targetGraph, String name, Map<TaskType, Integer> taskPricePerTarget) {
         this.name = name;
         this.targetGraph = targetGraph;
+        this.taskPricePerTarget = taskPricePerTarget;
+    }
+
+
+    public Map<TaskType, Integer> getTaskPricePerTarget() {
+        return taskPricePerTarget;
     }
 
     @Override

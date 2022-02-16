@@ -1,5 +1,7 @@
 package dto;
 
+import target.*;
+
 import java.time.Duration;
 import java.time.LocalTime;
 import java.util.*;
@@ -36,18 +38,37 @@ public class TargetDTO {
     private LocalTime startingCompileTime;
     private LocalTime endingCompileTime;
 
+//
+//    public TargetDTO(String name, PlaceInGraph place, String info, Set<String> requiredFor,
+//                     Set<String> dependsOn,Set<String> totalDependsOn,Set<String> totalRequiredFor){
+//        this.name =name;
+//        this.place = place;
+//        this.info = info;
+//        this.requiredFor = requiredFor;
+//        this.dependsOn = dependsOn;
+//        this.totalDependsOn = totalDependsOn;
+//        this.totalRequiredFor = totalRequiredFor;
+//
+//    }
 
-    public TargetDTO(String name, PlaceInGraph place, String info, Set<String> requiredFor,
-                     Set<String> dependsOn,Set<String> totalDependsOn,Set<String> totalRequiredFor){
-        this.name =name;
-        this.place = place;
-        this.info = info;
-        this.requiredFor = requiredFor;
-        this.dependsOn = dependsOn;
-        this.totalDependsOn = totalDependsOn;
-        this.totalRequiredFor = totalRequiredFor;
+    public TargetDTO(Target target){
 
+        this.name = target.getName();
+        this.place = target.getPlace();
+        this.info = target.getInfo();
+        for(Target currTarget: target.getRequiredFor())
+        {
+            this.requiredFor.add(currTarget.getName());
+        }
+        for (Target currTarget: target.getDependsOn())
+        {
+            this.dependsOn.add(currTarget.getName());
+        }
+        target.getDependsOnAncestors(this.totalDependsOn);
+        target.getRequiredForAncestors(this.totalRequiredFor);
     }
+
+
 
 /*
     public TargetDTO(Target target) {

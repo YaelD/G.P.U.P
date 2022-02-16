@@ -1,33 +1,86 @@
 package dto;
 
 
+import graph.Graph;
+import target.PlaceInGraph;
+import target.Target;
+
 import java.util.HashMap;
 import java.util.Map;
 
 public class GraphDTO {
 
-    private int numOfTargets;
+//    private int numOfTargets;
     private String name;
     private Map<String, TargetDTO> targets = new HashMap<>();
     private long runTime;
+    private String creatorName;
+
+    private int totalNumOfTargets;
+    private int numOfLeaves;
+    private int numOfRoots;
+    private int numOfIndependents;
+    private int numOfMiddles;
+    private int priceOfSimulationTask;
+    private int priceOfCompilationTask;
 
 
-    public GraphDTO(int numOfTargets, Map<String, TargetDTO> targets, String name){
-        this.numOfTargets = numOfTargets;
-        this.targets = targets;
-        this.name = name;
-    }
-
-
-//    public GraphDTO(Graph graph) {
-//        this.name = graph.getName();
-//        this.numOfTargets = graph.getTargets().size();
-//        for(Target target: graph.getTargets()) {
-//            this.targets.put(target.getName(), new TargetDTO(target));
-//        }
+//    public GraphDTO(int numOfTargets, Map<String, TargetDTO> targets, String name){
+////        this.numOfTargets = numOfTargets;
+//        this.targets = targets;
+//        this.name = name;
 //    }
 
-//    public GraphDTO(Graph graph, long runTime) {
+
+    public GraphDTO(Graph graph) {
+        this.creatorName = graph.getName();
+
+        this.name = graph.getName();
+        this.totalNumOfTargets = graph.getTargets().size();
+        this.numOfLeaves = 0;
+        this.numOfIndependents = 0;
+        this.numOfMiddles = 0;
+        this.numOfRoots = 0;
+        for(Target target: graph.getTargets()) {
+            switch(target.getPlace()){
+                case INDEPENDENT:
+                    numOfIndependents++;
+                  break;
+                case ROOT:
+                    numOfRoots++;
+                    break;
+                case MIDDLE:
+                    numOfMiddles++;
+                    break;
+                case LEAF:
+                    numOfLeaves++;
+                    break;
+            }
+            this.targets.put(target.getName(), new TargetDTO(target));
+        }
+    }
+
+    public int getTotalNumOfTargets() {
+        return totalNumOfTargets;
+    }
+
+    public int getNumOfLeaves() {
+        return numOfLeaves;
+    }
+
+    public int getNumOfRoots() {
+        return numOfRoots;
+    }
+
+    public int getNumOfIndependents() {
+        return numOfIndependents;
+    }
+
+    public int getNumOfMiddles() {
+        return numOfMiddles;
+    }
+
+    //    public GraphDTO(Graph graph, long runTime) {
 //        this(graph);
 //        this.runTime = runTime;
 //    }
@@ -36,9 +89,6 @@ public class GraphDTO {
         return name;
     }
 
-    public int getNumOfTargets() {
-        return numOfTargets;
-    }
 
     public Map<String, TargetDTO> getTargets() {
         return targets;

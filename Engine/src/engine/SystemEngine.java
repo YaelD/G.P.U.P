@@ -3,6 +3,7 @@ package engine;
 import exceptions.*;
 import graph.Dependency;
 import graph.Graph;
+import schema.generated.GPUPConfiguration;
 import schema.generated.GPUPDescriptor;
 import target.Target;
 import task.*;
@@ -100,10 +101,23 @@ public class SystemEngine implements Engine{
             TargetNotExistException, InvalidDependencyException, DependencyConflictException {
         Map<String, Target> map = Graph.buildTargetGraph(gpupDescriptor.getGPUPTargets());
         String graphName = gpupDescriptor.getGPUPConfiguration().getGPUPGraphName();
+        Map<TaskType, Integer> taskPricePerTarget = new HashMap<>();
+        for(GPUPConfiguration.GPUPPricing.GPUPTask currTask :gpupDescriptor.getGPUPConfiguration().getGPUPPricing().getGPUPTask()) {
+            switch (currTask.getName()) {
+                case "Simulation":
+                    taskPricePerTarget.put(TaskType.SIMULATION_TASK, currTask.getPricePerTarget());
+                    break;
+                case "Compilation":
+                    taskPricePerTarget.put(TaskType.COMPILATION_TASK, currTask.getPricePerTarget());
+                    break;
+
+            }
+        }
+
         if(this.graphsInSystem.containsKey(graphName)){
             //TODO: THROW AN EXCEPTION
         }
-        this.graphsInSystem.put(graphName, new Graph(map, graphName));
+        this.graphsInSystem.put(graphName, new Graph(map, graphName, taskPricePerTarget));
 //        for(Target target : this.graph.getTargets()){
 //            target.updateWaitForTheseTargetsToBeFinished();
 //        }
