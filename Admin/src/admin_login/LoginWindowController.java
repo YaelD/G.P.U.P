@@ -53,7 +53,7 @@ public class LoginWindowController {
         String finalUrl = HttpUrl
                 .parse(Constants.LOGIN_PAGE)
                 .newBuilder()
-                .addQueryParameter("username", userName)
+                .addQueryParameter("username", userName).addQueryParameter("userType", "admin")
                 .build()
                 .toString();
 
@@ -81,6 +81,7 @@ public class LoginWindowController {
                         //TODO: ADD UPDATING USER NAME LABEL IN THE DASHBOARD ;)
                         //chatAppMainController.updateUserName(userName);
                         errorMessageProperty.set("logged in successfully");
+                        topContainerController.setUserName(userName);
                         topContainerController.switchToDashboard();
                         //chatAppMainController.switchToChatRoom();
                     });

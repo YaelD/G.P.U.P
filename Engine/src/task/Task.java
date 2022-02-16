@@ -149,38 +149,38 @@ public abstract class Task{
 //        return graphRunResult;
 //    }
 
-    private void addTargetToThreadPool(PausableThreadPoolExecutor threadPool, Target currTarget, List<Consumer<TargetDTO>> outputConsumers) {
-        threadPool.execute(new Runnable() {
-            @Override
-            public void run() {
-                TargetDTO targetResult;
-                synchronized (currTarget){
-                    while(currTarget.getRunStatus().equals(RunStatus.FROZEN)){
-                        try {
-                            currTarget.wait();
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }
-                if(currTarget.getRunStatus().equals(RunStatus.WAITING)){
-                    //currTarget.getSerialSetsMonitors();
-                    targetResult = executeTaskOnTarget(currTarget);
-                    if(targetResult.getRunResult().equals(RunResults.FAILURE)){
-                        currTarget.updateParentsStatus(targetResult.getSkippedFathers(), currTarget.getName()); //כל מי שסגרתי לריצה בגללי
-                    }
-                    getOpenedTargetsToRun(targetResult, currTarget);
-                }
-                else {
-                    targetResult = new TargetDTO(currTarget);
-                }
-                outputTargetResult(outputConsumers, targetResult);
-                latch.countDown();
-
-                //System.out.println("The latch value is=" + latch.toString());
-            }
-        });
-    }
+//    private void addTargetToThreadPool(PausableThreadPoolExecutor threadPool, Target currTarget, List<Consumer<TargetDTO>> outputConsumers) {
+//        threadPool.execute(new Runnable() {
+//            @Override
+//            public void run() {
+//                TargetDTO targetResult;
+//                synchronized (currTarget){
+//                    while(currTarget.getRunStatus().equals(RunStatus.FROZEN)){
+//                        try {
+//                            currTarget.wait();
+//                        } catch (InterruptedException e) {
+//                            e.printStackTrace();
+//                        }
+//                    }
+//                }
+//                if(currTarget.getRunStatus().equals(RunStatus.WAITING)){
+//                    //currTarget.getSerialSetsMonitors();
+//                    targetResult = executeTaskOnTarget(currTarget);
+//                    if(targetResult.getRunResult().equals(RunResults.FAILURE)){
+//                        currTarget.updateParentsStatus(targetResult.getSkippedFathers(), currTarget.getName()); //כל מי שסגרתי לריצה בגללי
+//                    }
+//                    getOpenedTargetsToRun(targetResult, currTarget);
+//                }
+//                else {
+//                    targetResult = new TargetDTO(currTarget);
+//                }
+//                outputTargetResult(outputConsumers, targetResult);
+//                latch.countDown();
+//
+//                //System.out.println("The latch value is=" + latch.toString());
+//            }
+//        });
+//    }
 
 
     private void getOpenedTargetsToRun(TargetDTO targetResult, Target target) {

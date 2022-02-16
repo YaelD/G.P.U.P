@@ -1,15 +1,16 @@
 package container;
 
-import admin_login.LoginWindowController;
-import dashboard.DashboardController;
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
+import worker_dashboard.DashboardController;
+import worker_login.LoginWindowController;
 
 import java.io.IOException;
 import java.net.URL;
@@ -22,11 +23,11 @@ public class TopContainerController {
     private LoginWindowController loginController;
     @FXML
     private BorderPane mainPane;
-
-    SimpleStringProperty userName;
-
     private BorderPane dashboard;
     private DashboardController dashboardController;
+
+    private SimpleStringProperty userName;
+    private SimpleIntegerProperty numOfThreads;
 
     @FXML
     private void initialize(){
@@ -37,6 +38,11 @@ public class TopContainerController {
     public TopContainerController() {
         userName = new SimpleStringProperty();
     }
+
+    public SimpleIntegerProperty getNumOfThreads() {
+        return numOfThreads;
+    }
+
 
     public void setUserName(String userName) {
         this.userName.set(userName);

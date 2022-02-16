@@ -36,7 +36,7 @@ public class  LoginServlet extends HttpServlet {
             }if(userTypeFromParameter == null || userTypeFromParameter.isEmpty()){
                 response.setStatus(HttpServletResponse.SC_CONFLICT);
             }
-            else if(!userTypeFromParameter.equals(Constants.ADMIN) || !userTypeFromParameter.equals(Constants.WORKER)){
+            else if(!userTypeFromParameter.equals(Constants.ADMIN) && !userTypeFromParameter.equals(Constants.WORKER)){
                 //TODO: SEND AN ERROR RESPONSE
             }
             else {
