@@ -2,6 +2,7 @@ package user;
 
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.Locale;
 import java.util.Set;
 
 public class UserManager {
@@ -22,8 +23,8 @@ public class UserManager {
 
 
 
-    public synchronized void addUser(String username) {
-        usersSet.add(new User(username));
+    public synchronized void addUser(String username, String userType) {
+        usersSet.add(new User(username, UserType.valueOf(userType.toUpperCase(Locale.ROOT)) ));
     }
 
     public synchronized void removeUser(String username) {

@@ -5,6 +5,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import user.UserManager;
 import utils.ServletUtils;
 import utils.SessionUtils;
@@ -18,25 +19,31 @@ public class  LoginServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         response.setContentType("text/plain;charset=UTF-8");
 
-
-
-        System.out.println("HEREEEEEE=======>>>>>>>>>>>>");
-
-
         String usernameFromSession = SessionUtils.getUsername(request);
         UserManager userManager = ServletUtils.getUserManager(getServletContext());
 
         if (usernameFromSession == null) { //user is not logged in yet
 
             String usernameFromParameter = request.getParameter(Constants.USERNAME);
+            String userTypeFromParameter = request.getParameter(Constants.USER_TYPE);
+
             if (usernameFromParameter == null || usernameFromParameter.isEmpty()) {
                 //no username in session and no username in parameter - not standard situation. it's a conflict
 
                 // stands for conflict in server state
                 response.setStatus(HttpServletResponse.SC_CONFLICT);
-            } else {
+
+            }if(userTypeFromParameter == null || userTypeFromParameter.isEmpty()){
+                response.setStatus(HttpServletResponse.SC_CONFLICT);
+            }
+            else if(!userTypeFromParameter.equals(Constants.ADMIN) || !userTypeFromParameter.equals(Constants.WORKER)){
+                //TODO: SEND AN ERROR RESPONSE
+            }
+            else {
+                //TODO: CHECK WHICH USER
                 //normalize the username value
                 usernameFromParameter = usernameFromParameter.trim();
+                userTypeFromParameter = userTypeFromParameter.trim();
 
                 synchronized (this) {
                     if (userManager.isUserExists(usernameFromParameter)) {
@@ -48,11 +55,13 @@ public class  LoginServlet extends HttpServlet {
                     }
                     else {
                         //add the new user to the users list
-                        userManager.addUser(usernameFromParameter);
+                        userManager.addUser(usernameFromParameter, userTypeFromParameter);
                         //set the username in a session so it will be available on each request
                         //the true parameter means that if a session object does not exists yet
                         //create a new one
-                        request.getSession(true).setAttribute(Constants.USERNAME, usernameFromParameter);
+                        HttpSession session = request.getSession(true);
+                        session.setAttribute(Constants.USERNAME, usernameFromParameter);
+                        session.setAttribute(Constants.USER_TYPE, userTypeFromParameter);
 
                         System.out.println("On login, request URI is: " + request.getRequestURI());
                         response.setStatus(HttpServletResponse.SC_OK);
