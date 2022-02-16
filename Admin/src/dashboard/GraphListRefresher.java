@@ -38,8 +38,11 @@ public class GraphListRefresher extends TimerTask {
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                 if(response.code() ==200){
                     String jsonArrayOfGraphsList = response.body().string();
-                    List<GraphDTO> graphs = new Gson().fromJson(jsonArrayOfGraphsList, List.class);
-                    graphListConsumer.accept(graphs);
+                    if(!jsonArrayOfGraphsList.equals("[]")){
+                        System.out.println("HELLO");
+                    }
+                    GraphDTO[] graphs = new Gson().fromJson(jsonArrayOfGraphsList, GraphDTO[].class);
+                    graphListConsumer.accept(Arrays.asList(graphs));
                 }
                 response.body().close();
 

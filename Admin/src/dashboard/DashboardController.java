@@ -84,6 +84,12 @@ public class DashboardController {
 
 
 
+    private void loadGraphTable(List<GraphDTO> graphs){
+        final ObservableList<GraphDTO> data = FXCollections.observableArrayList(graphs);
+        this.graphInSystemTableView.setItems(data);
+    }
+
+
     //TODO: function that calls the sever and get all the graphs
 
     private void loadGraphTableColumns() {
@@ -121,7 +127,7 @@ public class DashboardController {
             FXMLLoader fxmlLoader = new FXMLLoader();
             fxmlLoader.setLocation(resource);
             Parent root = fxmlLoader.load(resource.openStream());
-            Scene scene = new Scene(root, 600,600);
+            Scene scene = new Scene(root, 400, 400);
             Stage secondaryStage = new Stage();
             secondaryStage.initModality(Modality.APPLICATION_MODAL);
             secondaryStage.setScene(scene);
@@ -133,21 +139,22 @@ public class DashboardController {
 
     }
 
-    private void updateGraphsList(List<GraphDTO> graphs) {
+    private void updateUsersList(List<GraphDTO> graphs) {
         Platform.runLater(() -> {
-
-            ObservableList<GraphDTO> graphDTOS = FXCollections.observableArrayList(graphs);
-            this.graphInSystemTableView.setItems(graphDTOS);
-//            graphDTOS.clear();
-//            graphDTOS.addAll(graphs);
+            ObservableList<GraphDTO> graphDTOS = graphInSystemTableView.getItems();
+            graphDTOS.clear();
+            if(!graphs.isEmpty()){
+                boolean a = true;
+            }
+            graphDTOS.addAll(graphs);
         });
     }
 
     public void startListRefresher() {
         listRefresher = new GraphListRefresher(
-                this::updateGraphsList);
+                this::updateUsersList);
         timer = new Timer();
-        timer.schedule(listRefresher, 2, 20);
+        timer.schedule(listRefresher, 15000, 15000);
     }
 
 }
