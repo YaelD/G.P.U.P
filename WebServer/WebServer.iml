@@ -24,5 +24,6 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" scope="PROVIDED" name="Tomcat 10.0.16" level="application_server_libraries" />
     <orderEntry type="module" module-name="Engine" />
+    <orderEntry type="module" module-name="DTO" />
   </component>
 </module>

@@ -13,7 +13,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="660.0" prefWidth="1084.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="worker_dashboard.DashboardController">
+<BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="worker_dashboard.DashboardController">
    <left>
       <GridPane BorderPane.alignment="CENTER">
          <columnConstraints>
@@ -76,17 +76,21 @@
          <content>
             <TableView fx:id="taskInfoTable">
               <columns>
-                <TableColumn maxWidth="1.7976931348623157E308" minWidth="-1.0" prefWidth="150.0" resizable="false" text="Task name" />
-                <TableColumn maxWidth="1.7976931348623157E308" minWidth="-1.0" prefWidth="150.0" resizable="false" text="Creator name" />
-                  <TableColumn maxWidth="1.7976931348623157E308" minWidth="-1.0" prefWidth="150.0" resizable="false" text="Task type" />
-                  <TableColumn maxWidth="1.7976931348623157E308" minWidth="-1.0" prefWidth="150.0" resizable="false" text="Total number of Targets" />
-                  <TableColumn maxWidth="1.7976931348623157E308" minWidth="-1.0" prefWidth="150.0" resizable="false" text="Num of Leavse" />
-                  <TableColumn maxWidth="1.7976931348623157E308" minWidth="-1.0" prefWidth="150.0" resizable="false" text="Num of Middles" />
-                  <TableColumn maxWidth="1.7976931348623157E308" minWidth="-1.0" prefWidth="150.0" resizable="false" text="Num of Roots" />
-                  <TableColumn maxWidth="1.7976931348623157E308" minWidth="-1.0" prefWidth="150.0" resizable="false" text="Num of Independents" />
-                  <TableColumn maxWidth="1.7976931348623157E308" minWidth="-1.0" prefWidth="150.0" resizable="false" text="Price per Target" />
-                  <TableColumn maxWidth="1.7976931348623157E308" minWidth="-1.0" prefWidth="150.0" resizable="false" text="Task status" />
-                  <TableColumn maxWidth="1.7976931348623157E308" minWidth="-1.0" prefWidth="150.0" resizable="false" text="Number of Workers" />
+                <TableColumn maxWidth="1.7976931348623157E308" minWidth="-1.0" prefWidth="120.0" resizable="false" text="Task name" />
+                <TableColumn maxWidth="1.7976931348623157E308" minWidth="-1.0" prefWidth="120.0" resizable="false" text="Creator name" />
+                  <TableColumn maxWidth="1.7976931348623157E308" minWidth="-1.0" prefWidth="120.0" resizable="false" text="Task type" />
+                  <TableColumn maxWidth="1.7976931348623157E308" minWidth="-1.0" prefWidth="120.0" resizable="false" text="Price per Target" />
+                  <TableColumn maxWidth="1.7976931348623157E308" minWidth="-1.0" prefWidth="120.0" resizable="false" text="Task status" />
+                  <TableColumn maxWidth="1.7976931348623157E308" minWidth="-1.0" prefWidth="120.0" resizable="false" text="Number of Workers" />
+                  <TableColumn maxWidth="1.7976931348623157E308" minWidth="-1.0" prefWidth="542.666748046875" resizable="false" text="Number of Targets">
+                     <columns>
+                        <TableColumn maxWidth="90.0" minWidth="90.0" prefWidth="90.0" resizable="false" text="Total" />
+                        <TableColumn maxWidth="90.0" minWidth="90.0" prefWidth="90.0" resizable="false" text="Leaves" />
+                        <TableColumn maxWidth="90.0" minWidth="90.0" prefWidth="90.0" resizable="false" text="Middles" />
+                        <TableColumn maxWidth="90.0" minWidth="90.0" prefWidth="90.0" resizable="false" text="Roots" />
+                        <TableColumn maxWidth="90.0" minWidth="90.0" prefWidth="90.0" resizable="false" text="Independents" />
+                     </columns>
+                  </TableColumn>
               </columns>
             </TableView>
          </content>

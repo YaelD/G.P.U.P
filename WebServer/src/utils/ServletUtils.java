@@ -27,7 +27,7 @@ public class ServletUtils {
         return (UserManager) servletContext.getAttribute(USER_MANAGER_ATTRIBUTE);
     }
 
-    public static Engine getChatManager(ServletContext servletContext) {
+    public static Engine getEngine(ServletContext servletContext) {
         synchronized (engineManagerLock) {
             if (servletContext.getAttribute(ENGINE_ATTRIBUTE) == null) {
                 servletContext.setAttribute(ENGINE_ATTRIBUTE, new SystemEngine());

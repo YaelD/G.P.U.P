@@ -1,4 +1,4 @@
-package servlets;
+package servlets.login_servlets;
 
 import constants.Constants;
 import jakarta.servlet.annotation.WebServlet;
@@ -37,10 +37,9 @@ public class  LoginServlet extends HttpServlet {
                 response.setStatus(HttpServletResponse.SC_CONFLICT);
             }
             else if(!userTypeFromParameter.equals(Constants.ADMIN) && !userTypeFromParameter.equals(Constants.WORKER)){
-                //TODO: SEND AN ERROR RESPONSE
+                response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             }
             else {
-                //TODO: CHECK WHICH USER
                 //normalize the username value
                 usernameFromParameter = usernameFromParameter.trim();
                 userTypeFromParameter = userTypeFromParameter.trim();

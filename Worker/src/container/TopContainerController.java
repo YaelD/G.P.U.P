@@ -37,6 +37,7 @@ public class TopContainerController {
 
     public TopContainerController() {
         userName = new SimpleStringProperty();
+        numOfThreads = new SimpleIntegerProperty();
     }
 
     public SimpleIntegerProperty getNumOfThreads() {
@@ -49,7 +50,7 @@ public class TopContainerController {
     }
 
     private void loadLoginPage() {
-        URL loginPageUrl = LoginWindowController.class.getResource("login.fxml");
+        URL loginPageUrl = LoginWindowController.class.getResource("worker_login.fxml");
         try {
             FXMLLoader fxmlLoader = new FXMLLoader();
             fxmlLoader.setLocation(loginPageUrl);
@@ -63,7 +64,7 @@ public class TopContainerController {
     }
 
     private void loadDashboardPage() {
-        URL dashboardPageURL = DashboardController.class.getResource("dashboard.fxml");
+        URL dashboardPageURL = DashboardController.class.getResource("worker_dashboard.fxml");
         try {
             FXMLLoader fxmlLoader = new FXMLLoader();
             fxmlLoader.setLocation(dashboardPageURL);

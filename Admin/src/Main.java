@@ -18,7 +18,6 @@ public class Main extends Application {
         Parent root = fxmlLoader.load(resource.openStream());
         Scene scene = new Scene(root, 1000, 600);
         TopContainerController topController = fxmlLoader.getController();
-
         primaryStage.setScene(scene);
         primaryStage.setTitle("GPUP");
         primaryStage.setMinHeight(400);

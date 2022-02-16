@@ -5,6 +5,9 @@ import container.TopContainerController;
 import http_utils.HttpUtils;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
@@ -13,7 +16,6 @@ import javafx.scene.control.TextField;
 import okhttp3.*;
 import org.jetbrains.annotations.NotNull;
 
-import java.awt.event.ActionEvent;
 import java.io.IOException;
 
 public class LoginWindowController {
@@ -40,7 +42,7 @@ public class LoginWindowController {
     }
 
     @FXML
-    void OnLogin(ActionEvent event) {
+    void OnLoginClick(ActionEvent event) {
         String userName = userNameTextField.getText();
         if (userName.isEmpty()) {
             errorMessageProperty.set("User name is empty. You can't login with empty user name");
@@ -51,7 +53,8 @@ public class LoginWindowController {
         String finalUrl = HttpUrl
                 .parse(Constants.LOGIN_PAGE)
                 .newBuilder()
-                .addQueryParameter("username", userName).addQueryParameter("userType", "admin")
+                .addQueryParameter("username", userName)
+                .addQueryParameter("userType", "worker")
                 .build()
                 .toString();
 
@@ -92,12 +95,18 @@ public class LoginWindowController {
     @FXML
     private void initialize(){
         this.warningLabel.textProperty().bind(this.errorMessageProperty);
+        ObservableList<Integer> numOfThreads = FXCollections.observableArrayList();
+        numOfThreads.addAll(1,2,3,4,5);
+        numOfThreadsChoiceBox.setItems(numOfThreads);
+        numOfThreadsChoiceBox.getSelectionModel().select(0);
 
     }
 
     public void setTopContainerController(TopContainerController topContainerController) {
         this.topContainerController = topContainerController;
+        topContainerController.getNumOfThreads().bind(this.numOfThreadsChoiceBox.valueProperty());
     }
+
 
 
 }
