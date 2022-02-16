@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+
+<TableView fx:id="graphInSystemTableView" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="dashboard.GraphTableController">
+   <columns>
+      <TableColumn fx:id="graph_graphNameColumn" prefWidth="130.0" text="Graph name" />
+      <TableColumn fx:id="graph_uploaderNameColumn" prefWidth="107.0" text="Uploader name" />
+      <TableColumn maxWidth="741.0" prefWidth="693.0" text="Number of Targets">
+         <columns>
+            <TableColumn fx:id="graph_totalNumOfTargetsColumn" maxWidth="300.0" prefWidth="150.0" text="Total" />
+            <TableColumn fx:id="graph_numOfLeavesColumn" maxWidth="300.0" prefWidth="130.0" text="Leaves" />
+            <TableColumn fx:id="graph_numOfMiddlesColumn" maxWidth="300.0" prefWidth="130.0" text="Middles" />
+            <TableColumn fx:id="graph_numOfRootsColumn" maxWidth="300.0" prefWidth="130.0" text="Roots" />
+            <TableColumn fx:id="graph_numOfIndependentsColumn" maxWidth="300.0" prefWidth="130.0" text="Independents" />
+         </columns>
+      </TableColumn>
+      <TableColumn maxWidth="300.0" prefWidth="150.0" text="Target Price">
+         <columns>
+            <TableColumn fx:id="graph_simulationPriceColumn" maxWidth="300.0" prefWidth="150.0" text="Simulation" />
+            <TableColumn fx:id="graph_CompilationPriceColumn" maxWidth="300.0" prefWidth="150.0" text="Compilation" />
+         </columns>
+      </TableColumn>
+   </columns>
+</TableView>

@@ -24,8 +24,19 @@ public class GraphDTO {
     private int priceOfSimulationTask;
     private int priceOfCompilationTask;
 
+    public String getCreatorName() {
+        return creatorName;
+    }
 
-//    public GraphDTO(int numOfTargets, Map<String, TargetDTO> targets, String name){
+    public int getPriceOfSimulationTask() {
+        return priceOfSimulationTask;
+    }
+
+    public int getPriceOfCompilationTask() {
+        return priceOfCompilationTask;
+    }
+
+    //    public GraphDTO(int numOfTargets, Map<String, TargetDTO> targets, String name){
 ////        this.numOfTargets = numOfTargets;
 //        this.targets = targets;
 //        this.name = name;

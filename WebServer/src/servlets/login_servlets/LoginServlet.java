@@ -62,7 +62,6 @@ public class  LoginServlet extends HttpServlet {
                         session.setAttribute(Constants.USERNAME, usernameFromParameter);
                         session.setAttribute(Constants.USER_TYPE, userTypeFromParameter);
 
-                        System.out.println("On login, request URI is: " + request.getRequestURI());
                         response.setStatus(HttpServletResponse.SC_OK);
                     }
                 }

@@ -21,8 +21,6 @@ public class GraphListRefresher extends TimerTask {
 
     private final Consumer<List<GraphDTO>> graphListConsumer;
 
-
-
     public GraphListRefresher(Consumer<List<GraphDTO>> graphListConsumer) {
         this.graphListConsumer = graphListConsumer;
     }
@@ -31,7 +29,6 @@ public class GraphListRefresher extends TimerTask {
     public void run() {
 
         HttpUtils.runAsync(Constants.GRAPH_LIST, new Callback() {
-
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
                 //TODO
@@ -41,10 +38,11 @@ public class GraphListRefresher extends TimerTask {
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                 if(response.code() ==200){
                     String jsonArrayOfGraphsList = response.body().string();
-                    System.out.println("GOT THE GRAPHS====>" + jsonArrayOfGraphsList);
                     List<GraphDTO> graphs = new Gson().fromJson(jsonArrayOfGraphsList, List.class);
                     graphListConsumer.accept(graphs);
                 }
+                response.body().close();
+
             }
         });
     }

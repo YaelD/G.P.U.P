@@ -17,7 +17,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.*;
 
-@WebServlet(name = "GraphInfo", urlPatterns = {"/graph"})
+@WebServlet(name = "GraphInfo", urlPatterns = {"/graphs_list"})
 public class GraphsInfoServlet extends HttpServlet {
 
     @Override
@@ -36,6 +36,7 @@ public class GraphsInfoServlet extends HttpServlet {
 
         PrintWriter body = resp.getWriter();
         body.print(json);
+        body.flush();
 
     }
 }
