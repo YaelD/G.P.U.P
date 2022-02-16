@@ -51,22 +51,18 @@ public class TargetDTO {
 //
 //    }
 
-    public TargetDTO(Target target){
-
-        this.name = target.getName();
-        this.place = target.getPlace();
-        this.info = target.getInfo();
-        for(Target currTarget: target.getRequiredFor())
-        {
-            this.requiredFor.add(currTarget.getName());
-        }
-        for (Target currTarget: target.getDependsOn())
-        {
-            this.dependsOn.add(currTarget.getName());
-        }
-        target.getDependsOnAncestors(this.totalDependsOn);
-        target.getRequiredForAncestors(this.totalRequiredFor);
+    public TargetDTO(String name,
+                     PlaceInGraph place, Set<String> requiredFor, Set<String> dependsOn, String info,
+                     Set<String> totalRequiredFor, Set<String> totalDependsOn) {
+        this.name = name;
+        this.place = place;
+        this.requiredFor = requiredFor;
+        this.dependsOn = dependsOn;
+        this.info = info;
+        this.totalRequiredFor = totalRequiredFor;
+        this.totalDependsOn = totalDependsOn;
     }
+
 
 
 

@@ -1,4 +1,4 @@
-package target;
+package dto;
 
 public enum PlaceInGraph {
 

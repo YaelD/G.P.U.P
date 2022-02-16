@@ -1,5 +1,7 @@
 package target;
 
+import dto.PlaceInGraph;
+import dto.TargetDTO;
 import graph.Dependency;
 import schema.generated.GPUPTarget;
 
@@ -242,6 +244,24 @@ public class Target implements Cloneable {
             e.printStackTrace();
             return null;
         }
+    }
+
+    public TargetDTO makeDTO(){
+        Set<String> requiredForNames = new HashSet<>();
+        for(Target target: this.requiredFor){
+            requiredForNames.add(target.name);
+        }
+        Set<String> dependsOnName = new HashSet<>();
+        for(Target target: this.dependsOn){
+            dependsOnName.add(target.name);
+        }
+
+        Set<String> totalRequiredForNames = new HashSet<>();
+        Set<String> totalDependsOnNames = new HashSet<>();
+        this.getRequiredForAncestors(totalRequiredForNames);
+        this.getDependsOnAncestors(totalDependsOnNames);
+        return new TargetDTO(this.name, this.place, requiredForNames, dependsOnName,this.info, totalRequiredForNames, totalDependsOnNames);
+
     }
 
 

@@ -27,7 +27,7 @@ public class GraphsInfoServlet extends HttpServlet {
         Map<String, Graph> graphsInSystem = engine.getGraphsInSystem();
         Collection<Graph> graphsList = graphsInSystem.values();
         for(Graph graph: graphsList){
-            GraphDTO graphDTO = new GraphDTO(graph);
+            GraphDTO graphDTO = graph.makeDTO();
             graphsToSend.add(graphDTO);
         }
 

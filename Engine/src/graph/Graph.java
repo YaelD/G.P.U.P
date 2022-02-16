@@ -1,5 +1,7 @@
 package graph;
 
+import dto.GraphDTO;
+import dto.TargetDTO;
 import exceptions.DependencyConflictException;
 import exceptions.DuplicateTargetsException;
 import exceptions.InvalidDependencyException;
@@ -7,7 +9,7 @@ import exceptions.TargetNotExistException;
 import schema.generated.GPUPTarget;
 import schema.generated.GPUPTargetDependencies;
 import schema.generated.GPUPTargets;
-import target.PlaceInGraph;
+import dto.PlaceInGraph;
 import target.Target;
 import task.TaskType;
 
@@ -180,4 +182,32 @@ public class Graph implements Cloneable {
     public Target getTarget(String name){
         return targetGraph.get(name);
     }
+
+
+    public GraphDTO makeDTO(){
+        Map<String, TargetDTO> targetsDTOMap = new HashMap<>();
+        int numOfTargets = this.getTargets().size();
+        int numOfIndependents = 0, numOfRoots = 0, numOfMiddles = 0, numOfLeaves = 0;
+        for(Target target: this.getTargets()){
+            targetsDTOMap.put(target.getName(), target.makeDTO());
+            switch(target.getPlace()){
+                case INDEPENDENT:
+                    numOfIndependents++;
+                  break;
+                case ROOT:
+                    numOfRoots++;
+                    break;
+                case MIDDLE:
+                    numOfMiddles++;
+                    break;
+                case LEAF:
+                    numOfLeaves++;
+                    break;
+            }
+        }
+        return null;
+
+    }
+
+
 }

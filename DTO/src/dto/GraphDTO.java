@@ -1,10 +1,6 @@
 package dto;
 
 
-import graph.Graph;
-import target.PlaceInGraph;
-import target.Target;
-import task.TaskType;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -37,44 +33,23 @@ public class GraphDTO {
         return priceOfCompilationTask;
     }
 
-    //    public GraphDTO(int numOfTargets, Map<String, TargetDTO> targets, String name){
-////        this.numOfTargets = numOfTargets;
-//        this.targets = targets;
-//        this.name = name;
-//    }
 
-
-    public GraphDTO(Graph graph) {
-        this.creatorName = graph.getCreatorName();
-        Map<TaskType, Integer> prices = graph.getTaskPricePerTarget();
-        this.priceOfCompilationTask= prices.containsKey(TaskType.COMPILATION_TASK) ?
-                prices.get(TaskType.COMPILATION_TASK): 0;
-        this.priceOfSimulationTask= prices.containsKey(TaskType.SIMULATION_TASK) ?
-                prices.get(TaskType.SIMULATION_TASK): 0;
-        this.name = graph.getName();
-        this.totalNumOfTargets = graph.getTargets().size();
-        this.numOfLeaves = 0;
-        this.numOfIndependents = 0;
-        this.numOfMiddles = 0;
-        this.numOfRoots = 0;
-        for(Target target: graph.getTargets()) {
-            switch(target.getPlace()){
-                case INDEPENDENT:
-                    numOfIndependents++;
-                  break;
-                case ROOT:
-                    numOfRoots++;
-                    break;
-                case MIDDLE:
-                    numOfMiddles++;
-                    break;
-                case LEAF:
-                    numOfLeaves++;
-                    break;
-            }
-            this.targets.put(target.getName(), new TargetDTO(target));
-        }
+    public GraphDTO(String name, Map<String, TargetDTO> targets, String creatorName, int totalNumOfTargets,
+                    int numOfLeaves, int numOfRoots, int numOfIndependents,
+                    int numOfMiddles, int priceOfSimulationTask,
+                    int priceOfCompilationTask) {
+        this.name = name;
+        this.targets = targets;
+        this.creatorName = creatorName;
+        this.totalNumOfTargets = totalNumOfTargets;
+        this.numOfLeaves = numOfLeaves;
+        this.numOfRoots = numOfRoots;
+        this.numOfIndependents = numOfIndependents;
+        this.numOfMiddles = numOfMiddles;
+        this.priceOfSimulationTask = priceOfSimulationTask;
+        this.priceOfCompilationTask = priceOfCompilationTask;
     }
+
 
     public int getTotalNumOfTargets() {
         return totalNumOfTargets;
