@@ -5,7 +5,6 @@ import exceptions.*;
 import graph.Dependency;
 import graph.Graph;
 import target.Target;
-import task.PausableThreadPoolExecutor;
 import task.RunType;
 import task.Task;
 import task.TaskType;
@@ -15,7 +14,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.function.Consumer;
 
 public interface Engine {
 
