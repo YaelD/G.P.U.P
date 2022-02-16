@@ -20,12 +20,18 @@ public class Graph implements Cloneable {
     private String creatorName;
     private Map<TaskType, Integer> taskPricePerTarget = new HashMap<>();
 
-    public Graph(Map<String, Target> targetGraph, String name, Map<TaskType, Integer> taskPricePerTarget) {
+    public Graph(Map<String, Target> targetGraph, String name, Map<TaskType, Integer> taskPricePerTarget,
+                 String creatorName) {
         this.name = name;
         this.targetGraph = targetGraph;
         this.taskPricePerTarget = taskPricePerTarget;
+        this.creatorName = creatorName;
     }
 
+
+    public String getCreatorName() {
+        return creatorName;
+    }
 
     public Map<TaskType, Integer> getTaskPricePerTarget() {
         return taskPricePerTarget;

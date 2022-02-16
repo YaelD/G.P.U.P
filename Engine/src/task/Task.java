@@ -2,17 +2,13 @@ package task;
 
 import exceptions.CycleException;
 import graph.Graph;
-import graph.SerialSetsContainer;
 import target.RunResults;
 import target.RunStatus;
 import target.Target;
 
-import java.time.Duration;
 import java.time.LocalTime;
 import java.util.*;
 import java.util.concurrent.*;
-import java.util.function.Consumer;
-
 
 
 public abstract class Task{
@@ -216,7 +212,7 @@ public abstract class Task{
     private void createGraphOfFailedTargets() {
         String graphName = this.graph.getName();
 
-        Graph newGraph = new Graph(new HashMap<>(), graphName, this.graph.getTaskPricePerTarget());
+        Graph newGraph = new Graph(new HashMap<>(), graphName, this.graph.getTaskPricePerTarget(), creatorName);
         for(Target currTarget : this.graph.getTargets()){
             if(currTarget.getRunResult().equals(RunResults.FAILURE) ||
                     currTarget.getRunResult().equals(RunResults.SKIPPED)){

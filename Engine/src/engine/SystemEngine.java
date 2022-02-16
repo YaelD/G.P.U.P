@@ -72,7 +72,7 @@ public class SystemEngine implements Engine{
             JAXBContext jaxbContext = JAXBContext.newInstance(GPUPDescriptor.class);
             Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
             GPUPDescriptor gpupDescriptor = (GPUPDescriptor) jaxbUnmarshaller.unmarshal(stream);
-            initializeGraphSystem(gpupDescriptor);
+            initializeGraphSystem(gpupDescriptor, creatorName);
 
         } catch (JAXBException e) {
             e.printStackTrace();
@@ -97,7 +97,7 @@ public class SystemEngine implements Engine{
 //        return false;
 //    }
 
-    private void initializeGraphSystem(GPUPDescriptor gpupDescriptor) throws DuplicateTargetsException,
+    private void initializeGraphSystem(GPUPDescriptor gpupDescriptor, String creatorName) throws DuplicateTargetsException,
             TargetNotExistException, InvalidDependencyException, DependencyConflictException {
         Map<String, Target> map = Graph.buildTargetGraph(gpupDescriptor.getGPUPTargets());
         String graphName = gpupDescriptor.getGPUPConfiguration().getGPUPGraphName();
@@ -117,7 +117,7 @@ public class SystemEngine implements Engine{
         if(this.graphsInSystem.containsKey(graphName)){
             //TODO: THROW AN EXCEPTION
         }
-        this.graphsInSystem.put(graphName, new Graph(map, graphName, taskPricePerTarget));
+        this.graphsInSystem.put(graphName, new Graph(map, graphName, taskPricePerTarget, creatorName));
 //        for(Target target : this.graph.getTargets()){
 //            target.updateWaitForTheseTargetsToBeFinished();
 //        }

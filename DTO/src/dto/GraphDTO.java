@@ -4,6 +4,7 @@ package dto;
 import graph.Graph;
 import target.PlaceInGraph;
 import target.Target;
+import task.TaskType;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -44,8 +45,12 @@ public class GraphDTO {
 
 
     public GraphDTO(Graph graph) {
-        this.creatorName = graph.getName();
-
+        this.creatorName = graph.getCreatorName();
+        Map<TaskType, Integer> prices = graph.getTaskPricePerTarget();
+        this.priceOfCompilationTask= prices.containsKey(TaskType.COMPILATION_TASK) ?
+                prices.get(TaskType.COMPILATION_TASK): 0;
+        this.priceOfSimulationTask= prices.containsKey(TaskType.SIMULATION_TASK) ?
+                prices.get(TaskType.SIMULATION_TASK): 0;
         this.name = graph.getName();
         this.totalNumOfTargets = graph.getTargets().size();
         this.numOfLeaves = 0;
