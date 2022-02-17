@@ -14,7 +14,6 @@ public class GraphDTO {
     private Map<String, TargetDTO> targets = new HashMap<>();
     private long runTime;
     private String creatorName;
-
     private int totalNumOfTargets;
     private int numOfLeaves;
     private int numOfRoots;
@@ -91,14 +90,6 @@ public class GraphDTO {
         return runTime;
     }
 
-    public int getNumOfTargetsInPlace(PlaceInGraph place){
-        int counter = 0;
-        for(TargetDTO target: targets.values()){
-            if(target.getPlace() == place)
-                counter++;
-        }
-        return counter;
-    }
 
     public int getNumOfTargetsRunResult(RunResults runResult){
         int counter = 0;

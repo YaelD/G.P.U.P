@@ -1,5 +1,7 @@
 package task;
 
+import dto.GraphDTO;
+import dto.TaskDTO;
 import exceptions.CycleException;
 import general_enums.TaskStatus;
 import graph.Graph;
@@ -17,7 +19,7 @@ public abstract class Task{
     protected Graph graph;
     protected String taskName;
     protected String creatorName;
-    protected double totalTaskPrice;
+    protected int totalTaskPrice;
     protected Set<String> registeredWorkers = new HashSet<>();
     protected TaskStatus status;
     private CountDownLatch latch;
@@ -267,6 +269,7 @@ public abstract class Task{
 
 //    public abstract void updateParameters(TaskParamsDTO taskParamsDTO);
 
+    public abstract TaskDTO createTaskDTO();
 
 
 }
