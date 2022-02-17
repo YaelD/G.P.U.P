@@ -15,6 +15,7 @@ import utils.ServletUtils;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -27,14 +28,13 @@ public class TasksInfoServlet extends HttpServlet {
             Set<TaskDTO> taskDTOS = new HashSet<>();
             Gson gson = new Gson();
             Engine engine = ServletUtils.getEngine(getServletContext());
-            Map<String, Task> usersList = engine.getTasksInSystem();
-
-            Set<>
-            for(User user : usersList){
-                UserDTO userDTO = user.makeUserDTO();
-                userDTOS.add(userDTO);
+            Map<String, Task> tasksInSystem = engine.getTasksInSystem();
+            Collection<Task> tasks = tasksInSystem.values();
+            for(Task task : tasks){
+                TaskDTO taskDTO = task.createTaskDTO();
+                taskDTOS.add(taskDTO);
             }
-            String json = gson.toJson(userDTOS);
+            String json = gson.toJson(taskDTOS);
             body.print(json);
             body.flush();
         }

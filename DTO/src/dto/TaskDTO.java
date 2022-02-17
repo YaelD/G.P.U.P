@@ -1,6 +1,7 @@
 package dto;
 
 import general_enums.TaskStatus;
+import general_enums.TaskType;
 
 public class TaskDTO {
 
@@ -10,16 +11,18 @@ public class TaskDTO {
     private int numOfRegisteredWorkers;
     private TaskStatus taskStatus;
     private GraphDTO graphDTO;
+    private TaskType taskType;
 
 
-    public TaskDTO(String taskName, String creatorName, int taskTotalPrice,
-                   int numOfRegisteredWorkers, TaskStatus taskStatus, GraphDTO graphDTO) {
+    public TaskDTO(String taskName, String creatorName, int taskTotalPrice, int numOfRegisteredWorkers,
+                   TaskStatus taskStatus, GraphDTO graphDTO, TaskType taskType) {
         this.taskName = taskName;
         this.creatorName = creatorName;
         this.taskTotalPrice = taskTotalPrice;
         this.numOfRegisteredWorkers = numOfRegisteredWorkers;
         this.taskStatus = taskStatus;
         this.graphDTO = graphDTO;
+        this.taskType = taskType;
     }
 
     public String getTaskName() {
@@ -44,5 +47,9 @@ public class TaskDTO {
 
     public GraphDTO getGraphDTO() {
         return graphDTO;
+    }
+
+    public TaskType getTaskType() {
+        return taskType;
     }
 }

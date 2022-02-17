@@ -1,5 +1,8 @@
 package task;
 
+import dto.GraphDTO;
+import dto.TaskDTO;
+import general_enums.TaskType;
 import graph.Graph;
 
 public class CompilationTask extends Task{
@@ -103,5 +106,10 @@ public class CompilationTask extends Task{
     }
  */
 
-
+    public TaskDTO createTaskDTO(){
+        GraphDTO graphDTO = this.graph.makeDTO();
+        TaskDTO taskDTO = new TaskDTO(this.taskName, this.creatorName, this.totalTaskPrice,
+                this.registeredWorkers.size(), this.status, graphDTO, TaskType.COMPILATION_TASK);
+        return taskDTO;
+    }
 }
