@@ -1,6 +1,7 @@
 package header;
 
 import dto.GraphDTO;
+import dto.TaskDTO;
 import findcycles.FindCyclesController;
 import findpath.FindPathsController;
 import javafx.beans.binding.Bindings;
@@ -157,4 +158,5 @@ public class HeaderController {
     public void setGraphDTO(GraphDTO graphDTO) {
         this.graphDTO = graphDTO;
     }
+
 }

@@ -2,15 +2,13 @@ package servlets.dashboard_servlets;
 
 import com.google.gson.Gson;
 import dto.TaskDTO;
-import dto.UserDTO;
 import engine.Engine;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import task.Task;
-import user.User;
-import user.UserManager;
 import utils.ServletUtils;
 
 import java.io.IOException;
@@ -20,6 +18,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+@WebServlet(name = "TasksInfo", urlPatterns = {"/tasks_list"})
 public class TasksInfoServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

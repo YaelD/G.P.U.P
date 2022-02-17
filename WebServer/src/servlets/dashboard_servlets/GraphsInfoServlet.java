@@ -2,7 +2,6 @@ package servlets.dashboard_servlets;
 
 import com.google.gson.Gson;
 import dto.GraphDTO;
-import dto.TargetDTO;
 import engine.Engine;
 import graph.Graph;
 import jakarta.servlet.ServletException;
@@ -10,7 +9,6 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import target.Target;
 import utils.ServletUtils;
 
 import java.io.IOException;

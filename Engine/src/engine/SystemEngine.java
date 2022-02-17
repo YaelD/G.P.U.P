@@ -60,8 +60,25 @@ public class SystemEngine implements Engine{
     }
 
 
-    public boolean isGraphExistsInSystem(String graphName) {
-        return (this.graphsInSystem.containsKey(graphName));
+    public boolean isGraphExistsInSystem(String graphName) throws GraphNotExistException {
+        if(!this.graphsInSystem.containsKey(graphName)){
+            throw new GraphNotExistException(graphName);
+        }
+        return true;
+    }
+
+    private boolean checkIfTargetExistInGraph(String targetName, String graphName) throws TargetNotExistException {
+        if(!this.graphsInSystem.get(graphName).getTargetGraph().containsKey(targetName)){
+            throw new TargetNotExistException(targetName);
+        }
+        return true;
+    }
+
+    private boolean checkIfValidDependency(Dependency dependency) throws InvalidDependencyException {
+        if(!dependency.equals(Dependency.DEPENDS_ON) && !dependency.equals(Dependency.REQUIRED_FOR)){
+            throw new InvalidDependencyException(dependency.getDependency());
+        }
+        return true;
     }
 
 
@@ -140,22 +157,29 @@ public class SystemEngine implements Engine{
 
  */
     @Override
-    public List<String> findCycle(String targetName, String graphName) throws TargetNotExistException{
-        try {
-            Graph graph = this.graphsInSystem.get(graphName);
-            if(graph != null){
-                List<Target> lst = Task.topologicalSort(graph);
-            }
-            return null;
-        } catch (CycleException e) {
-            Collection<List<String>> cycles = new ArrayList<>();
-            cycles = getPaths(targetName, targetName, Dependency.DEPENDS_ON,graphName );
-            if (cycles.isEmpty()) {
+    public List<String> findCycle(String targetName, String graphName) throws TargetNotExistException, GraphNotExistException, InvalidDependencyException {
+        if(checkFindCycleParamsValidation(targetName, graphName)){
+            try {
+                Graph graph = this.graphsInSystem.get(graphName);
+                if(graph != null){
+                    List<Target> lst = Task.topologicalSort(graph);
+                }
                 return null;
-            } else {
-                return cycles.iterator().next();
+            } catch (CycleException e) {
+                Collection<List<String>> cycles = new ArrayList<>();
+                cycles = getPaths(targetName, targetName, Dependency.DEPENDS_ON, graphName);
+                if (cycles.isEmpty()) {
+                    return null;
+                } else {
+                    return cycles.iterator().next();
+                }
             }
         }
+        return null;
+    }
+
+    private boolean checkFindCycleParamsValidation(String targetName, String graphName) throws TargetNotExistException, GraphNotExistException {
+        return isGraphExistsInSystem(graphName) && checkIfTargetExistInGraph(targetName, graphName);
     }
 
 
@@ -185,40 +209,47 @@ public class SystemEngine implements Engine{
         return targetSet;
     }
 
-    public Set<String> whatIf(String targetName, Dependency dependency, String graphName){
+    public Set<String> whatIf(String targetName, Dependency dependency, String graphName)
+            throws GraphNotExistException, InvalidDependencyException, TargetNotExistException {
         Target target = null;
-        Graph graph = this.graphsInSystem.get(graphName);
-        target = graph.getTarget(targetName);
         Set<String> targetSet = new HashSet<>();
-        if(target != null) {
-            if (dependency.equals(Dependency.REQUIRED_FOR)) {
-                target.getRequiredForAncestors(targetSet);
-            } else {
-                target.getDependsOnAncestors(targetSet);
+        if(checkValidationWhatIfParams(targetName, dependency, graphName)){
+            Graph graph = this.graphsInSystem.get(graphName);
+            target = graph.getTarget(targetName);
+            if(target != null) {
+                if (dependency.equals(Dependency.REQUIRED_FOR)) {
+                    target.getRequiredForAncestors(targetSet);
+                } else {
+                    target.getDependsOnAncestors(targetSet);
+                }
             }
         }
         return targetSet;
     }
 
+    private boolean checkValidationWhatIfParams(String targetName, Dependency dependency, String graphName)
+            throws GraphNotExistException, InvalidDependencyException, TargetNotExistException {
 
-    //The function does validation og the targets and then call to find paths
-    public boolean checkTargetsValidation(String firstTargetName, String secondTargetName,
-                                          Graph graph) throws TargetNotExistException {
+        return checkIfTargetExistInGraph(targetName, graphName) && checkIfValidDependency(dependency)
+                && isGraphExistsInSystem(graphName);
+    }
 
-        if(!graph.getTargetGraph().containsKey(firstTargetName)){
-            throw new TargetNotExistException(firstTargetName);
-        }
-        if(!graph.getTargetGraph().containsKey(secondTargetName)){
-            throw new TargetNotExistException(secondTargetName);
-        }
-        return true;
+
+    //The function does validation of the targets and then call to find paths
+    public boolean checkValidationOfGetPathsParams(String firstTargetName, String secondTargetName,
+                                                   Dependency dependency, Graph graph) throws TargetNotExistException, GraphNotExistException, InvalidDependencyException {
+
+        return checkIfTargetExistInGraph(firstTargetName, graph.getName()) &&
+                checkIfTargetExistInGraph(secondTargetName, graph.getName()) &&
+                checkIfValidDependency(dependency) && isGraphExistsInSystem(graph.getName());
     }
 
     public Collection<List<String>> getPaths(String firstTargetName, String secondTargetName,
-                                              Dependency dependency, String graphName) throws TargetNotExistException {
+                                              Dependency dependency, String graphName)
+            throws TargetNotExistException, GraphNotExistException, InvalidDependencyException {
         List<List<String>> paths = new ArrayList<>();
         Graph graph = this.graphsInSystem.get(graphName);
-        if(checkTargetsValidation(firstTargetName, secondTargetName, graph)){
+        if(checkValidationOfGetPathsParams(firstTargetName, secondTargetName, dependency, graph)){
             Set<String> visitedTargets = new HashSet<>();
             List<String> currPath = new ArrayList<>();
             findPaths(firstTargetName, secondTargetName, dependency, paths, currPath, visitedTargets, graph);

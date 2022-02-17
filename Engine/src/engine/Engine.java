@@ -29,7 +29,7 @@ public interface Engine {
     public Target getTarget(String name, String graphName) throws TargetNotExistException;
 
     public Collection<List<String>> getPaths(String firstTargetName, String secondTargetName,
-                                              Dependency dependency, String graphName) throws TargetNotExistException ;
+                                              Dependency dependency, String graphName) throws TargetNotExistException, GraphNotExistException, InvalidDependencyException;
 
 //    public GraphDTO activateTask(Consumer<TargetDTO> consumerString,
 //                                 Consumer<PausableThreadPoolExecutor> threadPoolConsumer,
@@ -43,7 +43,7 @@ public interface Engine {
 
     public boolean isCycleInGraph(String graphName);
 
-    public List<String> findCycle(String targetName, String graphName) throws TargetNotExistException;
+    public List<String> findCycle(String targetName, String graphName) throws TargetNotExistException, GraphNotExistException, InvalidDependencyException;
 
     public Set<String> whatIfForRunningTask(String targetName, Dependency dependency, TaskType taskType,
                                             RunType runType, String graphName);
@@ -51,6 +51,10 @@ public interface Engine {
     //public Target getRunningTarget(String targetName);
 
     public Set<String> getTaskGraphInSystem(TaskType taskType);
+
+    public boolean isGraphExistsInSystem(String graphName) throws GraphNotExistException;
+
+    public Set<String> whatIf(String targetName, Dependency dependency, String graphName) throws GraphNotExistException, InvalidDependencyException, TargetNotExistException;
 
     //public Graph getGraphForRunning();
 }

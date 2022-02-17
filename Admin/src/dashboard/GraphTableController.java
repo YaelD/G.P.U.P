@@ -60,11 +60,6 @@ public class GraphTableController {
     }
 
 
-    private void loadGraphTable(List<GraphDTO> graphs){
-        final ObservableList<GraphDTO> data = FXCollections.observableArrayList(graphs);
-        this.graphInSystemTableView.setItems(data);
-    }
-
     //TODO: function that calls the sever and get all the graphs
 
     private void loadGraphTableColumns() {

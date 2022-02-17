@@ -11,5 +11,11 @@ public class Constants {
     public final static String UPLOAD_FILE_PAGE = FULL_SERVER_PATH + "/admin/upload_file";
     public final static String GRAPH_LIST = FULL_SERVER_PATH + "/graphs_list";
     public final static String USERS_LIST = FULL_SERVER_PATH + "/users_list";
+    public final static String TASK_LIST = FULL_SERVER_PATH + "/tasks_list";
+    public final static String FIND_PATH = FULL_SERVER_PATH + "/get_paths";
+    public final static String WHAT_IF = FULL_SERVER_PATH + "/what_if";
+    public final static String FIND_CYCLE = FULL_SERVER_PATH + "/find_cycle";
+
+
 
 }

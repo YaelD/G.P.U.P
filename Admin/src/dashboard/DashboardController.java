@@ -3,6 +3,7 @@ package dashboard;
 import RefreshingItems.GraphListRefresher;
 import RefreshingItems.UserListRefresher;
 import dto.GraphDTO;
+import dto.TaskDTO;
 import dto.UserDTO;
 import header.HeaderController;
 import javafx.application.Platform;
@@ -32,8 +33,6 @@ import java.util.TimerTask;
 
 public class DashboardController {
 
-    private Timer timer;
-    private TimerTask listRefresher;
 
     @FXML
     private TableView<GraphDTO> graphsTable;
