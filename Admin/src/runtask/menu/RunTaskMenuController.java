@@ -65,25 +65,16 @@ public class RunTaskMenuController {
 
 
     public RunTaskMenuController(){
-//        this.taskType = new SimpleObjectProperty<>(TaskType.SIMULATION_TASK);
-//        this.runType = new SimpleObjectProperty<>(RunType.FROM_SCRATCH);
+        this.taskType = new SimpleObjectProperty<>(TaskType.SIMULATION_TASK);
+        this.runType = new SimpleObjectProperty<>(RunType.FROM_SCRATCH);
         this.targetsList = new SimpleListProperty<>();
     }
 
 
 
-//
-//
-//    @FXML
-//    void checkTargetsWithWhatIf(ActionEvent event) {
-//
-////        Set<String> whatIfTargets = this.engine.whatIfForRunningTask(whatIf_targetsCB.getValue(),
-////                whatIf_DependencyCB.getValue(), taskType.getValue(), runType.getValue());
-//        selectedTargetsListView.getItems().clear();
-//        selectedTargetsListView.getItems().add(whatIf_targetsCB.getValue());
-//        //selectedTargetsListView.getItems().addAll(whatIfTargets);
-//
-//    }
+    @FXML
+    void checkTargetsWithWhatIf(ActionEvent event) {
+    }
 
 
     @FXML
@@ -291,6 +282,8 @@ public class RunTaskMenuController {
         }
         whatIf_targetsCB.setValue(whatIf_targetsCB.getItems().get(0));
     }
+
+
 
 
 }

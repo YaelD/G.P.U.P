@@ -109,23 +109,10 @@ public class HeaderController {
 
     }
 
+
+
     @FXML
     private void loadTaskRun(ActionEvent event) {
-        if(true){
-            base_BorderPane.setCenter(new Label("There is cycle in the graph, cannot run task"));
-            return;
-        }
-            URL resource = RunTaskMenuController.class.getResource("run_task_menu.fxml");
-        FXMLLoader fxmlLoader = new FXMLLoader();
-        fxmlLoader.setLocation(resource);
-        try {
-            Parent root = fxmlLoader.load(resource.openStream());
-            RunTaskMenuController runTaskMenuController = fxmlLoader.getController();
-            base_BorderPane.setCenter(root);
-            primaryStage.show();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
 
     }
 
@@ -146,6 +133,24 @@ public class HeaderController {
 
     @FXML
     void createTask(ActionEvent event) {
+        //TODO: Check for cycle
+//        if(true){
+//            base_BorderPane.setCenter(new Label("There is cycle in the graph, cannot run task"));
+//            return;
+//        }
+        URL resource = RunTaskMenuController.class.getResource("run_task_menu.fxml");
+        FXMLLoader fxmlLoader = new FXMLLoader();
+        fxmlLoader.setLocation(resource);
+        try {
+            Parent root = fxmlLoader.load(resource.openStream());
+            RunTaskMenuController runTaskMenuController = fxmlLoader.getController();
+            runTaskMenuController.setCurrGraph(graphDTO);
+            base_BorderPane.setCenter(root);
+            primaryStage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
 
     }
 

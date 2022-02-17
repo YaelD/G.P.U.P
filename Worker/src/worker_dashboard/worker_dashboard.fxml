@@ -85,9 +85,6 @@
          </children>
       </GridPane>
    </right>
-   <left>
-      <fx:include fx:id="usersList" source="../../../ClientCommon/src/components/users_list/users_list.fxml" />
-   </left>
    <top>
       <GridPane BorderPane.alignment="CENTER">
          <columnConstraints>
@@ -115,4 +112,7 @@
          </children>
       </GridPane>
    </top>
+   <left>
+      <fx:include fx:id="usersList" source="../../../ClientCommon/src/components/users_list/users_list.fxml" />
+   </left>
 </BorderPane>
