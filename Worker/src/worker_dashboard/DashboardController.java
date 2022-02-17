@@ -1,7 +1,6 @@
 package worker_dashboard;
 
 
-import components.users_list.UsersListController;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;

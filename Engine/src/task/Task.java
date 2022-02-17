@@ -23,6 +23,8 @@ public abstract class Task{
     private CountDownLatch latch;
     protected List<Target> sortedTargets = new ArrayList<>();
     private boolean isTaskFinished = false;
+
+
     //public static Object taskDummyLock = new Object();
 
     public Task(Graph graph, String creatorName, String taskName) {

@@ -113,6 +113,6 @@
       </GridPane>
    </top>
    <left>
-      <fx:include fx:id="usersList" source="../../../ClientCommon/src/components/users_list/users_list.fxml" />
+      <fx:include fx:id="usersList" source="users_list.fxml" />
    </left>
 </BorderPane>

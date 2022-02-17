@@ -1,4 +1,4 @@
-package components.users_list;
+package worker_dashboard;
 
 import RefreshingItems.UserListRefresher;
 import dto.UserDTO;

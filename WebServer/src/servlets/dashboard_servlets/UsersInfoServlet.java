@@ -28,7 +28,8 @@ public class UsersInfoServlet extends HttpServlet {
         try (PrintWriter body = response.getWriter()) {
             Set<UserDTO> userDTOS = new HashSet<>();
             Gson gson = new Gson();
-            UserManager userManager = ServletUtils.getUserManager(getServletContext());
+            Engine engine = ServletUtils.getEngine(getServletContext());
+
             Set<User> usersList = userManager.getUsers();
             for(User user : usersList){
                 UserDTO userDTO = user.makeUserDTO();
