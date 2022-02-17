@@ -37,10 +37,8 @@ public class GraphListRefresher extends TimerTask {
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                 if(response.code() == 200){
+                    System.out.println("HELLLO");
                     String jsonArrayOfGraphsList = response.body().string();
-                    if(!jsonArrayOfGraphsList.equals("[]")){
-                        System.out.println("HELLO");
-                    }
                     GraphDTO[] graphs = new Gson().fromJson(jsonArrayOfGraphsList, GraphDTO[].class);
                     graphListConsumer.accept(Arrays.asList(graphs));
                 }

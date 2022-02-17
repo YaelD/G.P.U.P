@@ -1,4 +1,4 @@
-package graph;
+package general_enums;
 
 public enum Dependency {
 

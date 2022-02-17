@@ -6,6 +6,7 @@ import exceptions.DependencyConflictException;
 import exceptions.DuplicateTargetsException;
 import exceptions.InvalidDependencyException;
 import exceptions.TargetNotExistException;
+import general_enums.Dependency;
 import schema.generated.GPUPTarget;
 import schema.generated.GPUPTargetDependencies;
 import schema.generated.GPUPTargets;

@@ -1,5 +1,7 @@
 package whatif;
 
+import dto.GraphDTO;
+import general_enums.Dependency;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -22,13 +24,13 @@ public class WhatIfMenuController {
     private WhatIfToggleController togglesMenuController;
 
 
-//    public void setEngine(Engine engine) {
-//        this.engine = engine;
-//        //togglesMenuController.initChoiceBoxes(this.engine.getGraphDTO());
-//        togglesMenuController.setWhatIfCallback(new WhatIfCallback() {
-//            @Override
-//            public void findWhatIf(String targetName, Dependency dependency) {
-//                targetsListView.getItems().clear();
+    public void setGraphDTO(GraphDTO graphDTO) {
+        togglesMenuController.initChoiceBoxes(graphDTO);
+        togglesMenuController.setWhatIfCallback(new WhatIfCallback() {
+            @Override
+            public void findWhatIf(String targetName, Dependency dependency) {
+                targetsListView.getItems().clear();
+                //TODO: make Whatif system call
 //                Set<String> targets = engine.whatIfForRunningTask(targetName, dependency, null, RunType.FROM_SCRATCH);
 //                if(targets.isEmpty()){
 //                    targetsListView.setPlaceholder(new Label("There are no targets to show"));
@@ -38,9 +40,9 @@ public class WhatIfMenuController {
 //                    data.addAll(targets);
 //                    targetsListView.setItems(data);
 //                }
-//            }
-//        });
-//    }
+            }
+        });
+    }
 
 
 }

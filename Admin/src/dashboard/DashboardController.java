@@ -18,8 +18,10 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.GridPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import kotlin.jvm.functions.Function2;
 import loadfile.LoadFileController;
 
 import java.io.IOException;
@@ -34,13 +36,32 @@ public class DashboardController {
     private TimerTask listRefresher;
 
     @FXML
-    private TableView<UserDTO> activeUsersTableView;
+    private TableView<GraphDTO> graphsTable;
 
     @FXML
-    private TableColumn<UserDTO, String> users_name_column;
+    private GraphTableController graphsTableController;
+
 
     @FXML
-    private TableColumn<UserDTO, String> rule_users_column;
+    private TableView<GraphDTO> tasksTable;
+
+    @FXML
+    private TaskTableController tasksTableController;
+
+    @FXML
+    private GridPane usersList;
+
+    @FXML
+    private UsersListController usersListController;
+
+//    @FXML
+//    private TableView<UserDTO> activeUsersTableView;
+//
+//    @FXML
+//    private TableColumn<UserDTO, String> users_name_column;
+//
+//    @FXML
+//    private TableColumn<UserDTO, String> rule_users_column;
 
     @FXML
     private Button taskDetailsButton;
@@ -51,76 +72,13 @@ public class DashboardController {
     @FXML
     private Button CreateNewTaskButton;
 
-    @FXML
-    private TableView<GraphDTO> graphInSystemTableView;
-
-    @FXML
-    private TableColumn<GraphDTO, String> graph_graphNameColumn;
-
-    @FXML
-    private TableColumn<GraphDTO, String> graph_uploaderNameColumn;
-
-    @FXML
-    private TableColumn<GraphDTO, Integer> graph_totalNumOfTargetsColumn;
-
-    @FXML
-    private TableColumn<GraphDTO, Integer> graph_numOfLeavesColumn;
-
-    @FXML
-    private TableColumn<GraphDTO, Integer> graph_numOfMiddlesColumn;
-
-    @FXML
-    private TableColumn<GraphDTO, Integer> graph_numOfRootsColumn;
-
-    @FXML
-    private TableColumn<GraphDTO, Integer> graph_numOfIndependentsColumn;
-
-    @FXML
-    private TableColumn<GraphDTO, Integer> graph_simulationPriceColumn;
-
-    @FXML
-    private TableColumn<GraphDTO, Integer> graph_CompilationPriceColumn;
-
 
     public DashboardController() {
 
     }
     @FXML
     private void initialize(){
-        loadGraphTableColumns();
-        startGraphListRefresher();
-    }
-
-
-    private void loadGraphTable(List<GraphDTO> graphs){
-        final ObservableList<GraphDTO> data = FXCollections.observableArrayList(graphs);
-        this.graphInSystemTableView.setItems(data);
-    }
-
-    //TODO: function that calls the sever and get all the graphs
-
-    private void loadGraphTableColumns() {
-        graphInSystemTableView.setRowFactory(tv-> {
-            TableRow<GraphDTO> row = new TableRow<>();
-            row.setOnMouseClicked(event -> {
-                if (event.getClickCount() == 2 && (! row.isEmpty()) ) {
-                    GraphDTO rowData = row.getItem();
-                    System.out.println("Clickedddd");
-                    loadGraphInfo(rowData);
-                }
-            });
-            return row;
-        });
-
-        graph_graphNameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
-        graph_uploaderNameColumn.setCellValueFactory(new PropertyValueFactory<>("creatorName"));
-        graph_totalNumOfTargetsColumn.setCellValueFactory(new PropertyValueFactory<>("totalNumOfTargets"));
-        graph_numOfRootsColumn.setCellValueFactory(new PropertyValueFactory<>("numOfRoots"));
-        graph_numOfIndependentsColumn.setCellValueFactory(new PropertyValueFactory<>("numOfIndependents"));
-        graph_numOfMiddlesColumn.setCellValueFactory(new PropertyValueFactory<>("numOfMiddles"));
-        graph_numOfLeavesColumn.setCellValueFactory(new PropertyValueFactory<>("numOfLeaves"));
-        graph_simulationPriceColumn.setCellValueFactory(new PropertyValueFactory<>("priceOfSimulationTask"));
-        graph_CompilationPriceColumn.setCellValueFactory(new PropertyValueFactory<>("priceOfCompilationTask"));
+        graphsTableController.setDashboardController(this);
     }
 
 
@@ -133,13 +91,13 @@ public class DashboardController {
 
 
 
-    private void loadGraphInfo(GraphDTO graph){
+    public void loadGraphInfo(GraphDTO graph){
         try {
             URL resource = HeaderController.class.getResource("head_and_missing_body.fxml");
             FXMLLoader fxmlLoader = new FXMLLoader();
             fxmlLoader.setLocation(resource);
             Parent root = fxmlLoader.load(resource.openStream());
-            Scene scene = new Scene(root, 600, 600);
+            Scene scene = new Scene(root,1000, 1000);
             Stage secondaryStage = new Stage();
             HeaderController headerController = fxmlLoader.getController();
             headerController.setPrimaryStage(secondaryStage);
@@ -162,7 +120,7 @@ public class DashboardController {
             FXMLLoader fxmlLoader = new FXMLLoader();
             fxmlLoader.setLocation(resource);
             Parent root = fxmlLoader.load(resource.openStream());
-            Scene scene = new Scene(root, 400, 400);
+            Scene scene = new Scene(root);
             Stage secondaryStage = new Stage();
             secondaryStage.initModality(Modality.APPLICATION_MODAL);
             secondaryStage.setScene(scene);
@@ -174,23 +132,6 @@ public class DashboardController {
 
     }
 
-    private void updateGraphsList(List<GraphDTO> graphs) {
-        Platform.runLater(() -> {
-            ObservableList<GraphDTO> graphDTOS = graphInSystemTableView.getItems();
-            graphDTOS.clear();
-            if(!graphs.isEmpty()){
-                boolean a = true;
-            }
-            graphDTOS.addAll(graphs);
-        });
-    }
-
-    public void startGraphListRefresher() {
-        listRefresher = new GraphListRefresher(
-                this::updateGraphsList);
-        timer = new Timer();
-        timer.schedule(listRefresher, 15000, 15000);
-    }
 
 
 

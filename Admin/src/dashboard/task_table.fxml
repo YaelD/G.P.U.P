@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+
+<TableView xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8.0.171" fx:controller="dashboard.TaskTableController">
+   <columns>
+      <TableColumn fx:id="taskname_column" maxWidth="300.0" prefWidth="130.0" text="Task name" />
+      <TableColumn fx:id="creator_name_column" maxWidth="300.0" prefWidth="130.0" text="Creator name" />
+      <TableColumn fx:id="graphName_column" maxWidth="300.0" prefWidth="130.0" text="Graph name" />
+      <TableColumn maxWidth="300.0" prefWidth="130.0" text="Number of Targets">
+         <columns>
+            <TableColumn fx:id="totalNumOfTargets_column" maxWidth="300.0" prefWidth="150.0" text="Total" />
+            <TableColumn fx:id="numOfLeaves_column" maxWidth="300.0" prefWidth="130.0" text="Leaves" />
+            <TableColumn fx:id="numOfMiddles_column" maxWidth="300.0" prefWidth="130.0" text="Middles" />
+            <TableColumn fx:id="numOfRoots_column" maxWidth="300.0" prefWidth="130.0" text="Roots" />
+            <TableColumn fx:id="numOfIndepepndens_column" maxWidth="300.0" prefWidth="130.0" text="Independents" />
+         </columns>
+      </TableColumn>
+      <TableColumn fx:id="totalTaskPrice_column" maxWidth="300.0" prefWidth="130.0" text="Total Task price" />
+      <TableColumn fx:id="numberOfWorkers_column" maxWidth="300.0" prefWidth="130.0" text="Number of Workers" />
+   </columns>
+</TableView>

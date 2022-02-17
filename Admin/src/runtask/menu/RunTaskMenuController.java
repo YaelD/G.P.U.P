@@ -70,6 +70,10 @@ public class RunTaskMenuController {
         this.targetsList = new SimpleListProperty<>();
     }
 
+    public void disableIncremental(boolean allowIncremental){
+        this.incrementalRadioButton.setDisable(!allowIncremental);
+    }
+
 
 
     @FXML
@@ -124,8 +128,6 @@ public class RunTaskMenuController {
         baseHBox.getChildren().remove(simulationTaskToggles);
         baseHBox.getChildren().remove(compilationTaskToggles);
         targetsList.bind(selectedTargetsListView.itemsProperty());
-//        initTaskChoiceController();
-//        initTargetChoiceControllers();
         ActiveTaskCallback activeTaskCallback = new ActiveTaskCallback() {
             @Override
             public void activeTask(TaskParamsDTO taskParams) {
@@ -156,7 +158,7 @@ public class RunTaskMenuController {
 
     private boolean validation() {
         Set<String> targetSet = new HashSet<>();
-//        targetSet.addAll(this.targetsList);
+        targetSet.addAll(this.targetsList);
 //        if(this.runType.getValue().equals(RunType.INCREMENTAL) && !engine.isRunInIncrementalMode(this.taskType.getValue(),targetSet )){
 //            warningLabel.setVisible(true);
 //            warningLabel.setText("The " + taskType.getValue().getTaskType() + " task cannot run incrementally" +
@@ -256,6 +258,7 @@ public class RunTaskMenuController {
 
     public void setCurrGraph(GraphDTO currGraph) {
         this.currGraph = currGraph;
+        initLists(currGraph);
         initTaskChoiceController();
         initTargetChoiceControllers();
     }

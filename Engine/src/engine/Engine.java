@@ -2,7 +2,7 @@ package engine;
 
 
 import exceptions.*;
-import graph.Dependency;
+import general_enums.Dependency;
 import graph.Graph;
 import target.Target;
 import general_enums.RunType;

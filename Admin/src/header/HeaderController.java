@@ -65,9 +65,9 @@ public class HeaderController {
         try {
             Parent root = fxmlLoader.load(resource.openStream());
             FindCyclesController findCyclesController = fxmlLoader.getController();
-//            findCyclesController.setEngine(this.engine);
+            findCyclesController.initTargetsChoiceBox(graphDTO);
             base_BorderPane.setCenter(root);
-            primaryStage.show();
+//            primaryStage.show();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -82,9 +82,9 @@ public class HeaderController {
         try {
             Parent root = fxmlLoader.load(resource.openStream());
             FindPathsController findPathsController = fxmlLoader.getController();
-//            findPathsController.setEngine(this.engine);
+            findPathsController.setGraph(graphDTO);
             base_BorderPane.setCenter(root);
-            primaryStage.show();
+//            primaryStage.show();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -101,7 +101,7 @@ public class HeaderController {
             GraphInfoController graphInfoController = fxmlLoader.getController();
             graphInfoController.setGraphInfo(graphDTO);
             base_BorderPane.setCenter(root);
-            primaryStage.show();
+//            primaryStage.show();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -109,12 +109,6 @@ public class HeaderController {
 
     }
 
-
-
-    @FXML
-    private void loadTaskRun(ActionEvent event) {
-
-    }
 
     @FXML
     private void loadWhatIf(ActionEvent event) {
@@ -124,6 +118,7 @@ public class HeaderController {
         try {
             Parent root = fxmlLoader.load(resource.openStream());
             WhatIfMenuController whatIfMenuController = fxmlLoader.getController();
+            whatIfMenuController.setGraphDTO(graphDTO);
             base_BorderPane.setCenter(root);
             primaryStage.show();
         } catch (IOException e) {
@@ -145,6 +140,7 @@ public class HeaderController {
             Parent root = fxmlLoader.load(resource.openStream());
             RunTaskMenuController runTaskMenuController = fxmlLoader.getController();
             runTaskMenuController.setCurrGraph(graphDTO);
+            runTaskMenuController.disableIncremental(false);
             base_BorderPane.setCenter(root);
             primaryStage.show();
         } catch (IOException e) {

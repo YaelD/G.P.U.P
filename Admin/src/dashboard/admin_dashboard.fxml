@@ -3,64 +3,12 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
-<?import javafx.scene.control.TableColumn?>
-<?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.layout.ColumnConstraints?>
-<?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
 <BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="dashboard.DashboardController">
-   <left>
-      <GridPane BorderPane.alignment="CENTER">
-        <columnConstraints>
-            <ColumnConstraints hgrow="NEVER" maxWidth="30.0" minWidth="30.0" prefWidth="30.0" />
-            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-          <ColumnConstraints hgrow="NEVER" maxWidth="30.0" minWidth="30.0" prefWidth="30.0" />
-        </columnConstraints>
-        <rowConstraints>
-          <RowConstraints maxHeight="30.0" minHeight="30.0" prefHeight="30.0" vgrow="NEVER" />
-            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-            <RowConstraints maxHeight="30.0" minHeight="30.0" prefHeight="30.0" vgrow="NEVER" />
-        </rowConstraints>
-         <children>
-            <TableView fx:id="activeUsersTableView" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="6" GridPane.rowSpan="7">
-              <columns>
-                <TableColumn fx:id="users_name_column" maxWidth="1.7976931348623157E308" prefWidth="97.0" resizable="false" text="Name" />
-                <TableColumn fx:id="rule_users_column" maxWidth="1.7976931348623157E308" prefWidth="102.0" resizable="false" text="Rule" />
-              </columns>
-            </TableView>
-            <Label layoutX="40.0" layoutY="40.0" maxWidth="1.7976931348623157E308" text="Active users" underline="true" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="5">
-               <font>
-                  <Font size="21.0" />
-               </font>
-            </Label>
-         </children>
-      </GridPane>
-   </left>
    <center>
       <VBox fillWidth="false" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" spacing="10.0" BorderPane.alignment="CENTER">
          <children>
@@ -76,27 +24,7 @@
             </HBox>
             <ScrollPane>
                <content>
-                  <TableView fx:id="graphInSystemTableView" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="376.0" prefWidth="1232.0">
-                     <columns>
-                        <TableColumn fx:id="graph_graphNameColumn" prefWidth="130.0" text="Graph name" />
-                        <TableColumn fx:id="graph_uploaderNameColumn" prefWidth="130.0" text="Uploader name" />
-                        <TableColumn maxWidth="300.0" prefWidth="130.0" text="Number of Targets">
-                           <columns>
-                              <TableColumn fx:id="graph_totalNumOfTargetsColumn" maxWidth="300.0" prefWidth="150.0" text="Total" />
-                              <TableColumn fx:id="graph_numOfLeavesColumn" maxWidth="300.0" prefWidth="130.0" text="Leaves" />
-                              <TableColumn fx:id="graph_numOfMiddlesColumn" maxWidth="300.0" prefWidth="130.0" text="Middles" />
-                              <TableColumn fx:id="graph_numOfRootsColumn" maxWidth="300.0" prefWidth="130.0" text="Roots" />
-                              <TableColumn fx:id="graph_numOfIndependentsColumn" maxWidth="300.0" prefWidth="130.0" text="Independents" />
-                           </columns>
-                        </TableColumn>
-                        <TableColumn maxWidth="300.0" prefWidth="150.0" text="Target Price">
-                           <columns>
-                              <TableColumn fx:id="graph_simulationPriceColumn" maxWidth="300.0" prefWidth="150.0" text="Simulation" />
-                              <TableColumn fx:id="graph_CompilationPriceColumn" maxWidth="300.0" prefWidth="150.0" text="Compilation" />
-                           </columns>
-                        </TableColumn>
-                     </columns>
-                  </TableView>
+                  <fx:include fx:id="graphsTable" source="graphs_table.fxml" />
                </content>
             </ScrollPane>
             <HBox alignment="CENTER" spacing="60.0">
@@ -111,27 +39,13 @@
             </HBox>
             <ScrollPane>
                <content>
-                  <TableView fx:id="tasksInSystemTableView" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308">
-                    <columns>
-                      <TableColumn maxWidth="300.0" prefWidth="130.0" text="Task name" />
-                      <TableColumn maxWidth="300.0" prefWidth="130.0" text="Creator name" />
-                        <TableColumn maxWidth="300.0" prefWidth="130.0" text="Graph name" />
-                        <TableColumn maxWidth="300.0" prefWidth="130.0" text="Number of Targets">
-                           <columns>
-                              <TableColumn maxWidth="300.0" prefWidth="150.0" text="Total" />
-                              <TableColumn maxWidth="300.0" prefWidth="130.0" text="Leaves" />
-                              <TableColumn maxWidth="300.0" prefWidth="130.0" text="Middles" />
-                              <TableColumn maxWidth="300.0" prefWidth="130.0" text="Roots" />
-                              <TableColumn maxWidth="300.0" prefWidth="130.0" text="Independents" />
-                           </columns>
-                        </TableColumn>
-                        <TableColumn maxWidth="300.0" prefWidth="130.0" text="Total Task price" />
-                        <TableColumn maxWidth="300.0" prefWidth="130.0" text="Number of Workers" />
-                    </columns>
-                  </TableView>
+                  <fx:include fx:id="tasksTable" source="task_table.fxml" />
                </content>
             </ScrollPane>
          </children>
       </VBox>
    </center>
+   <left>
+      <fx:include fx:id="usersList" source="users_list.fxml" />
+   </left>
 </BorderPane>

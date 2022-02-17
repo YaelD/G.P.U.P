@@ -2,7 +2,7 @@ package target;
 
 import dto.PlaceInGraph;
 import dto.TargetDTO;
-import graph.Dependency;
+import general_enums.Dependency;
 import schema.generated.GPUPTarget;
 
 import java.time.LocalTime;
