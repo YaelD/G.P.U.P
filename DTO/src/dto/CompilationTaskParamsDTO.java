@@ -1,10 +1,16 @@
 package dto;
 
-public class CompilationTaskParamsDTO implements TaskParamsDTO{
+import general_enums.RunType;
+import general_enums.TaskType;
+
+import java.util.List;
+
+public class CompilationTaskParamsDTO extends TaskParamsDTO{
     private String sourceDir;
     private String DestinationDir;
 
-    public CompilationTaskParamsDTO(String sourceDir, String destinationDir) {
+    public CompilationTaskParamsDTO(RunType runType, List<String> targets, String sourceDir, String destinationDir) {
+        super(TaskType.COMPILATION_TASK, runType, targets);
         this.sourceDir = sourceDir;
         DestinationDir = destinationDir;
     }

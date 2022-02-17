@@ -159,14 +159,14 @@ public class RunTaskMenuController {
     private boolean validation() {
         Set<String> targetSet = new HashSet<>();
         targetSet.addAll(this.targetsList);
-//        if(this.runType.getValue().equals(RunType.INCREMENTAL) && !engine.isRunInIncrementalMode(this.taskType.getValue(),targetSet )){
-//            warningLabel.setVisible(true);
-//            warningLabel.setText("The " + taskType.getValue().getTaskType() + " task cannot run incrementally" +
-//                    "\nSetting run From Scratch by default");
-//            this.runType.setValue(RunType.FROM_SCRATCH);
-//            this.runTypeToggle.selectToggle(fromScratchRadioButton);
-//            return false;
-//        }
+        if(!this.incrementalRadioButton.isDisabled()){
+            warningLabel.setVisible(true);
+            warningLabel.setText("The " + taskType.getValue().getTaskType() + " task cannot run incrementally" +
+                    "\nSetting run From Scratch by default");
+            this.runType.setValue(RunType.FROM_SCRATCH);
+            this.runTypeToggle.selectToggle(fromScratchRadioButton);
+            return false;
+        }
         if(targetSet.isEmpty()){
             warningLabel.setVisible(true);
             warningLabel.setText("Please choose targets");
@@ -206,8 +206,6 @@ public class RunTaskMenuController {
                 }
             }
         });
-//        whatIf_DependencyCB.getItems().addAll(Dependency.DEPENDS_ON, Dependency.REQUIRED_FOR);
-//        whatIf_DependencyCB.setValue(whatIf_DependencyCB.getItems().get(0));
 
     }
 

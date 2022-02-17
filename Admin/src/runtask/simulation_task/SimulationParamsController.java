@@ -1,6 +1,7 @@
 package runtask.simulation_task;
 
 //import dto.SimulationTaskParamsDTO;
+import dto.SimulationTaskParamsDTO;
 import javafx.beans.property.*;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
