@@ -86,7 +86,7 @@
       </GridPane>
    </right>
    <left>
-      <fx:include source="../../../ClientCommon/src/components/users_list/users_list.fxml" />
+      <fx:include fx:id="usersList" source="../../../ClientCommon/src/components/users_list/users_list.fxml" />
    </left>
    <top>
       <GridPane BorderPane.alignment="CENTER">
