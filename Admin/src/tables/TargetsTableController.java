@@ -47,7 +47,6 @@ public class TargetsTableController  {
 
     public void setTargets(GraphDTO graphDTO){
         final ObservableList<TableTargetProperties> data = FXCollections.observableArrayList();
-        System.out.println("THE GRAPH===>" + graphDTO.getTargets().get("A").getInfo());
         for(TargetDTO currTarget: graphDTO.getTargets().values()){
             data.add(new TableTargetProperties(currTarget));
         }

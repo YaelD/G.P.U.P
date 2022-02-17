@@ -23,7 +23,6 @@ public class TableTargetProperties {
         this.totalNumOfDependsOn = dto.getTotalDependsOn().size();
         this.totalNumOfRequiredFor = dto.getTotalRequiredFor().size();
         this.placeInGraph = new SimpleStringProperty(dto.getPlace().toString());
-        System.out.println("IN TABLE TARGET PROPERTY WITH INFO===>" + dto.getInfo());
 
     }
 
