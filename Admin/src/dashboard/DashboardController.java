@@ -110,7 +110,6 @@ public class DashboardController {
                     GraphDTO rowData = row.getItem();
                     System.out.println("Clickedddd");
                     loadGraphInfo(rowData);
-
                 }
             });
             return row;
