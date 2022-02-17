@@ -1,8 +1,8 @@
 package tables;
 
-//import dto.GraphDTO;
-//import dto.SerialSetDTO;
-//import dto.TargetDTO;
+
+import dto.GraphDTO;
+import dto.TargetDTO;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableView;
@@ -12,16 +12,13 @@ import java.util.List;
 
 public class GraphInfoController {
 
-//    @FXML
-//    private TableView<TargetDTO> targetsTableView;
+    @FXML
+    private TableView<TargetDTO> targetsTableView;
     @FXML
     private TargetsTableController targetsTableViewController;
 
-//    @FXML
-//    private TableView<TargetDTO> serialSetTableView;
-
     @FXML
-    private SerialSetTableController serialSetTableViewController;
+    private TableView<TargetDTO> serialSetTableView;
 
     @FXML
     private Label NumOfTargets_Label;
@@ -40,17 +37,14 @@ public class GraphInfoController {
     private Label NumOfIndependents_Label;
 
 
-//    public void setGraphInfo(GraphDTO graphInfo){
-//        this.NumOfIndependents_Label.setText(String.valueOf(graphInfo.getNumOfTargetsInPlace(PlaceInGraph.INDEPENDENT)));
-//        this.NumOfLeaves_Label.setText(String.valueOf(graphInfo.getNumOfTargetsInPlace(PlaceInGraph.LEAF)));
-//        this.NumOfMiddles_Label.setText(String.valueOf(graphInfo.getNumOfTargetsInPlace(PlaceInGraph.MIDDLE)));
-//        this.NumOfRoots_Label.setText(String.valueOf(graphInfo.getNumOfTargetsInPlace(PlaceInGraph.ROOT)));
-//        this.NumOfTargets_Label.setText(String.valueOf(graphInfo.getNumOfTargets()));
-//        targetsTableViewController.setTargets(graphInfo);
-//    }
-//
-//    public void setSerialSets(List<SerialSetDTO> serialSets){
-//        this.serialSetTableViewController.fillSerialSetsInfo(serialSets);
-//    }
+    public void setGraphInfo(GraphDTO graphInfo){
+        this.NumOfIndependents_Label.setText(String.valueOf(graphInfo.getNumOfIndependents()));
+        this.NumOfLeaves_Label.setText(String.valueOf(graphInfo.getNumOfLeaves()));
+        this.NumOfMiddles_Label.setText(String.valueOf(graphInfo.getNumOfMiddles()));
+        this.NumOfRoots_Label.setText(String.valueOf(graphInfo.getNumOfRoots()));
+        this.NumOfTargets_Label.setText(String.valueOf(graphInfo.getTotalNumOfTargets()));
+        targetsTableViewController.setTargets(graphInfo);
+    }
+
 
 }

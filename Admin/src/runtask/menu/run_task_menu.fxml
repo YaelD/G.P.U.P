@@ -49,24 +49,21 @@
                   <RowConstraints maxHeight="30.0" minHeight="30.0" prefHeight="30.0" vgrow="NEVER" />
               </rowConstraints>
                <children>
-                  <Label text="Choose Number of threads" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="2" />
-                  <ChoiceBox fx:id="numOfThreadsCB" prefWidth="150.0" GridPane.columnIndex="2" GridPane.rowIndex="3" />
-                  <Label layoutX="40.0" layoutY="77.0" text="Choose Task" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="4" />
-                  <RadioButton fx:id="simulationRadioButton" mnemonicParsing="false" selected="true" text="Simulation" GridPane.columnIndex="2" GridPane.rowIndex="5">
+                  <Label layoutX="40.0" layoutY="77.0" text="Choose Task" underline="true" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="1" />
+                  <RadioButton fx:id="simulationRadioButton" mnemonicParsing="false" selected="true" text="Simulation" GridPane.columnIndex="2" GridPane.rowIndex="2">
                      <toggleGroup>
                         <ToggleGroup fx:id="taskToggleGroup" />
                      </toggleGroup>
                   </RadioButton>
-                  <RadioButton fx:id="compilationRadioButton" layoutX="60.0" layoutY="197.0" mnemonicParsing="false" text="Compilation" toggleGroup="$taskToggleGroup" GridPane.columnIndex="2" GridPane.rowIndex="6" />
-                  <Label text="Choose run type:" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="8" />
-                  <RadioButton fx:id="fromScratchRadioButton" layoutX="60.0" layoutY="197.0" mnemonicParsing="false" selected="true" text="From Scratch" GridPane.columnIndex="2" GridPane.rowIndex="9">
+                  <RadioButton fx:id="compilationRadioButton" layoutX="60.0" layoutY="197.0" mnemonicParsing="false" text="Compilation" toggleGroup="$taskToggleGroup" GridPane.columnIndex="2" GridPane.rowIndex="3" />
+                  <Label text="Choose run type:" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="5" />
+                  <RadioButton fx:id="fromScratchRadioButton" layoutX="60.0" layoutY="197.0" mnemonicParsing="false" selected="true" text="From Scratch" GridPane.columnIndex="2" GridPane.rowIndex="6">
                      <toggleGroup>
                         <ToggleGroup fx:id="runTypeToggle" />
                      </toggleGroup>
                   </RadioButton>
-                  <RadioButton fx:id="incrementalRadioButton" layoutX="60.0" layoutY="227.0" mnemonicParsing="false" text="Incremental" toggleGroup="$runTypeToggle" GridPane.columnIndex="2" GridPane.rowIndex="10" />
+                  <RadioButton fx:id="incrementalRadioButton" layoutX="60.0" layoutY="227.0" mnemonicParsing="false" text="Incremental" toggleGroup="$runTypeToggle" GridPane.columnIndex="2" GridPane.rowIndex="7" />
                   <Label fx:id="warningLabel" prefWidth="150.0" text="Warning Label" visible="false" wrapText="true" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="15" GridPane.rowSpan="4" />
-                  <Label text="Choose Task Properties:" underline="true" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="1" />
                   <Label fx:id="warningLabel" prefWidth="170.0" text="warning label" textFill="RED" visible="false" wrapText="true" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="12" GridPane.rowSpan="5">
                      <font>
                         <Font size="14.0" />

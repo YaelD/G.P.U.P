@@ -27,12 +27,11 @@
          <children>
             <FlowPane hgap="10.0" vgap="5.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
                <children>
-                  <Button fx:id="graphInfo_btn" disable="true" mnemonicParsing="false" onAction="#loadGraphInfo" text="Graph Info" />
-                  <Button fx:id="findPath_btn" disable="true" mnemonicParsing="false" onAction="#loadFindPath" text="Find Path" />
-                  <Button fx:id="findCycle_btn" disable="true" mnemonicParsing="false" onAction="#loadFindCycle" text="Find Cycle" />
-                  <Button fx:id="whatIf_btn" disable="true" mnemonicParsing="false" onAction="#loadWhatIf" text="What if" />
-                  <Button fx:id="runTask_btn" disable="true" mnemonicParsing="false" onAction="#loadTaskRun" text="Run Task" />
-                  <Button fx:id="uploadFile_btn" mnemonicParsing="false" onAction="#loadFileLoader" text="Upload File" />
+                  <Button fx:id="graphInfo_btn" mnemonicParsing="false" onAction="#loadGraphInfo" text="Graph Info" />
+                  <Button fx:id="findPath_btn" mnemonicParsing="false" onAction="#loadFindPath" text="Find Path" />
+                  <Button fx:id="findCycle_btn" mnemonicParsing="false" onAction="#loadFindCycle" text="Find Cycle" />
+                  <Button fx:id="whatIf_btn" mnemonicParsing="false" onAction="#loadWhatIf" text="What if" />
+                  <Button fx:id="createTask_btn" mnemonicParsing="false" onAction="#createTask" text="Create Task" />
                </children>
             </FlowPane>
          </children>

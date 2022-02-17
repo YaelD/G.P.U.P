@@ -7,6 +7,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
@@ -77,8 +78,6 @@ public class TopContainerController {
     }
 
     public void switchToDashboard(){
-       // currentUserName.set(JHON_DOE);
-        //chatRoomComponentController.setInActive();
         setMainPanelTo(dashboard);
 
     }

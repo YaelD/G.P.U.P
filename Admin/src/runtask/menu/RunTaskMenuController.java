@@ -1,6 +1,8 @@
 package runtask.menu;
 
 import dto.*;
+import general_enums.RunType;
+import general_enums.TaskType;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.*;
 import javafx.beans.value.ChangeListener;
@@ -34,8 +36,8 @@ public class RunTaskMenuController {
     @FXML private CompilationParamsController compilationTaskTogglesController;
 
     private SimpleListProperty<String> targetsList;
-//    private SimpleObjectProperty<TaskType> taskType;
-//    private SimpleObjectProperty<RunType> runType;
+    private SimpleObjectProperty<TaskType> taskType;
+    private SimpleObjectProperty<RunType> runType;
 
     @FXML private VBox targetsSubMenu;
     @FXML private CheckBox chooseAllTargetsCheckBox;
@@ -239,13 +241,13 @@ public class RunTaskMenuController {
             @Override
             public void changed(ObservableValue<? extends Toggle> observable, Toggle oldValue, Toggle newValue) {
                 if(newValue == incrementalRadioButton){
-//                    runType.set(RunType.INCREMENTAL);
+                    runType.set(RunType.INCREMENTAL);
                     baseHBox.getChildren().remove(simulationTaskToggles);
                     baseHBox.getChildren().remove(compilationTaskToggles);
                 }
                 else if(newValue == fromScratchRadioButton){
                     initLists(currGraph);
-//                    runType.set(RunType.FROM_SCRATCH);
+                    runType.set(RunType.FROM_SCRATCH);
                     baseHBox.getChildren().remove(simulationTaskToggles);
                     baseHBox.getChildren().remove(compilationTaskToggles);
                 }

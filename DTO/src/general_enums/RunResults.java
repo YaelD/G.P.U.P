@@ -1,4 +1,4 @@
-package dto;
+package general_enums;
 
 public enum RunResults {
 

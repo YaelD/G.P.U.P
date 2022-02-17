@@ -4,6 +4,7 @@ import RefreshingItems.GraphListRefresher;
 import RefreshingItems.UserListRefresher;
 import dto.GraphDTO;
 import dto.UserDTO;
+import header.HeaderController;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -14,6 +15,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Modality;
@@ -80,8 +82,6 @@ public class DashboardController {
     private TableColumn<GraphDTO, Integer> graph_CompilationPriceColumn;
 
 
-
-
     public DashboardController() {
 
     }
@@ -103,6 +103,19 @@ public class DashboardController {
     //TODO: function that calls the sever and get all the graphs
 
     private void loadGraphTableColumns() {
+        graphInSystemTableView.setRowFactory(tv-> {
+            TableRow<GraphDTO> row = new TableRow<>();
+            row.setOnMouseClicked(event -> {
+                if (event.getClickCount() == 2 && (! row.isEmpty()) ) {
+                    GraphDTO rowData = row.getItem();
+                    System.out.println("Clickedddd");
+                    loadGraphInfo(rowData);
+
+                }
+            });
+            return row;
+        });
+
         graph_graphNameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
         graph_uploaderNameColumn.setCellValueFactory(new PropertyValueFactory<>("creatorName"));
         graph_totalNumOfTargetsColumn.setCellValueFactory(new PropertyValueFactory<>("totalNumOfTargets"));
@@ -125,15 +138,29 @@ public class DashboardController {
 
     }
 
-    @FXML
-    void onCreateNewTask(ActionEvent event) {
+
+
+    private void loadGraphInfo(GraphDTO graph){
+        try {
+            URL resource = HeaderController.class.getResource("head_and_missing_body.fxml");
+            FXMLLoader fxmlLoader = new FXMLLoader();
+            fxmlLoader.setLocation(resource);
+            Parent root = fxmlLoader.load(resource.openStream());
+            Scene scene = new Scene(root, 600, 600);
+            Stage secondaryStage = new Stage();
+            HeaderController headerController = fxmlLoader.getController();
+            headerController.setPrimaryStage(secondaryStage);
+            headerController.setGraphDTO(graph);
+            secondaryStage.initModality(Modality.APPLICATION_MODAL);
+            secondaryStage.setScene(scene);
+            secondaryStage.setTitle("Load file");
+            secondaryStage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
     }
 
-    @FXML
-    void onGraphInfoClick(ActionEvent event) {
-
-    }
 
     @FXML
     void onUploadGraphClick(ActionEvent event) {

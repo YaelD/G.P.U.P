@@ -1,6 +1,8 @@
 package engine;
 
 import exceptions.*;
+import general_enums.RunType;
+import general_enums.TaskType;
 import graph.Dependency;
 import graph.Graph;
 import schema.generated.GPUPConfiguration;

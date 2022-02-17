@@ -11,7 +11,7 @@ import schema.generated.GPUPTargetDependencies;
 import schema.generated.GPUPTargets;
 import dto.PlaceInGraph;
 import target.Target;
-import task.TaskType;
+import general_enums.TaskType;
 
 import java.util.*;
 
@@ -205,7 +205,12 @@ public class Graph implements Cloneable {
                     break;
             }
         }
-        return null;
+        int priceSimulation = this.taskPricePerTarget.containsKey(TaskType.SIMULATION_TASK) ? this.taskPricePerTarget.get(TaskType.SIMULATION_TASK) : 0;
+        int priceCompilation = this.taskPricePerTarget.containsKey(TaskType.COMPILATION_TASK) ? this.taskPricePerTarget.get(TaskType.COMPILATION_TASK) : 0;
+
+        return new GraphDTO(this.name, targetsDTOMap, this.creatorName, numOfTargets, numOfLeaves, numOfRoots,
+                numOfIndependents, numOfMiddles, priceSimulation, priceCompilation);
+
 
     }
 

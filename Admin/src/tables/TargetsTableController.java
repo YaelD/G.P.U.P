@@ -31,10 +31,6 @@ public class TargetsTableController  {
     @FXML
     private TableColumn<TableTargetProperties, String> Info_Column;
 
-    @FXML
-    private TableColumn<TableTargetProperties, Integer> SerialSet_Column;
-
-
     public void initialize(){
         Name_column.setCellValueFactory(new PropertyValueFactory<TableTargetProperties, String>("name"));
         Place_Column.setCellValueFactory(new PropertyValueFactory<TableTargetProperties, String>("placeInGraph"));
@@ -47,13 +43,13 @@ public class TargetsTableController  {
         requiredForDirect.setCellValueFactory(new PropertyValueFactory<TableTargetProperties, Integer>("numOfRequiredFor"));
         TableColumn requiredForIndirect = this.RequiredFor_Column.getColumns().get(1);
         requiredForIndirect.setCellValueFactory(new PropertyValueFactory<TableTargetProperties, Integer>("totalNumOfRequiredFor"));
-        SerialSet_Column.setCellValueFactory(new PropertyValueFactory<TableTargetProperties, Integer>("numOfSerialSet"));
     }
 
     public void setTargets(GraphDTO graphDTO){
         final ObservableList<TableTargetProperties> data = FXCollections.observableArrayList();
+        System.out.println("THE GRAPH===>" + graphDTO.getTargets().get("A").getInfo());
         for(TargetDTO currTarget: graphDTO.getTargets().values()){
-//            data.add(new TableTargetProperties(currTarget));
+            data.add(new TableTargetProperties(currTarget));
         }
         Targets_TableView.setItems(data);
     }

@@ -1,6 +1,7 @@
 package tables;
 
 //import dto.TargetDTO;
+import dto.TargetDTO;
 import javafx.beans.property.SimpleStringProperty;
 
 public class TableTargetProperties {
@@ -10,36 +11,28 @@ public class TableTargetProperties {
         private Integer totalNumOfDependsOn;
         private Integer numOfRequiredFor;
         private Integer totalNumOfRequiredFor;
-        private Integer numOfSerialSet;
         private SimpleStringProperty placeInGraph;
 
 
 
-//    public TableTargetProperties(TargetDTO dto) {
-//        this.name = new SimpleStringProperty(dto.getName());
-//        this.info = new SimpleStringProperty(dto.getInfo());
-//        this.numOfDependsOn = dto.getDependsOn().size();
-//        this.numOfRequiredFor = dto.getRequiredFor().size();
-//        this.totalNumOfDependsOn = dto.getTotalDependsOn().size();
-//        this.totalNumOfRequiredFor = dto.getTotalRequiredFor().size();
-//        this.numOfSerialSet = dto.getTotalNumOfSerialSets();
-//        this.placeInGraph = new SimpleStringProperty(dto.getPlace().toString());
-//    }
+    public TableTargetProperties(TargetDTO dto) {
+        this.name = new SimpleStringProperty(dto.getName());
+        this.info = new SimpleStringProperty(dto.getInfo());
+        this.numOfDependsOn = dto.getDependsOn().size();
+        this.numOfRequiredFor = dto.getRequiredFor().size();
+        this.totalNumOfDependsOn = dto.getTotalDependsOn().size();
+        this.totalNumOfRequiredFor = dto.getTotalRequiredFor().size();
+        this.placeInGraph = new SimpleStringProperty(dto.getPlace().toString());
+        System.out.println("IN TABLE TARGET PROPERTY WITH INFO===>" + dto.getInfo());
+
+    }
 
     public String getName() {
         return name.get();
     }
 
-    public SimpleStringProperty nameProperty() {
-        return name;
-    }
-
     public String getInfo() {
         return info.get();
-    }
-
-    public SimpleStringProperty infoProperty() {
-        return info;
     }
 
     public Integer getNumOfDependsOn() {
@@ -56,10 +49,6 @@ public class TableTargetProperties {
 
     public Integer getTotalNumOfRequiredFor() {
         return totalNumOfRequiredFor;
-    }
-
-    public Integer getNumOfSerialSet() {
-        return numOfSerialSet;
     }
 
     public String getPlaceInGraph() {

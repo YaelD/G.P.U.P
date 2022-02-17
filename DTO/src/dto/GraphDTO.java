@@ -2,6 +2,8 @@ package dto;
 
 
 
+import general_enums.RunResults;
+
 import java.util.HashMap;
 import java.util.Map;
 

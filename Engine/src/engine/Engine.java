@@ -5,9 +5,9 @@ import exceptions.*;
 import graph.Dependency;
 import graph.Graph;
 import target.Target;
-import task.RunType;
+import general_enums.RunType;
 import task.Task;
-import task.TaskType;
+import general_enums.TaskType;
 
 import java.io.InputStream;
 import java.util.Collection;

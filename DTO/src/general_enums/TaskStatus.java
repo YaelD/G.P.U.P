@@ -1,4 +1,4 @@
-package task;
+package general_enums;
 
 public enum TaskStatus {
 

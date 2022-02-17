@@ -1,14 +1,6 @@
 package task;
 
 import graph.Graph;
-import graph.SerialSetsContainer;
-import target.RunResults;
-import target.RunStatus;
-import target.Target;
-
-import java.time.Duration;
-import java.time.LocalTime;
-import java.util.*;
 
 public class SimulationTask extends Task{
 

@@ -32,12 +32,8 @@ public class Target implements Cloneable {
     private LocalTime endingCompileTime = null;
 
     public Target(GPUPTarget target) {
-        this.compilationRunResult = "";
-        this.compilationFileName = "";
-        this.compilerOperatingLine = "";
         this.name = target.getName();
         this.info = target.getGPUPUserData();
-        this.runStatus = RunStatus.FROZEN;
     }
 
     public LocalTime getStartingCompileTime() {

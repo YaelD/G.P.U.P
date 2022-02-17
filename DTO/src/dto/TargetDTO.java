@@ -2,6 +2,9 @@ package dto;
 
 //import target.*;
 
+import general_enums.RunResults;
+import general_enums.RunStatus;
+
 import java.time.Duration;
 import java.time.LocalTime;
 import java.util.*;

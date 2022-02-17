@@ -1,6 +1,7 @@
 package task;
 
 import exceptions.CycleException;
+import general_enums.TaskStatus;
 import graph.Graph;
 import target.RunResults;
 import target.RunStatus;
