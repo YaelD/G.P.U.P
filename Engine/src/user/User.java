@@ -1,5 +1,7 @@
 package user;
 
+import dto.UserDTO;
+
 public class User {
 
     private String userName;
@@ -16,5 +18,10 @@ public class User {
 
     public String getUserName() {
         return userName;
+    }
+
+    public UserDTO makeUserDTO(){
+        UserDTO userDTO = new UserDTO(this.userName, this.userType.toString());
+        return userDTO;
     }
 }

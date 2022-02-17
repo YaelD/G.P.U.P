@@ -1,7 +1,9 @@
 package dashboard;
 
 import RefreshingItems.GraphListRefresher;
+import RefreshingItems.UserListRefresher;
 import dto.GraphDTO;
+import dto.UserDTO;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -30,7 +32,13 @@ public class DashboardController {
     private TimerTask listRefresher;
 
     @FXML
-    private TableView<?> activeUsersTableView;
+    private TableView<UserDTO> activeUsersTableView;
+
+    @FXML
+    private TableColumn<UserDTO, String> users_name_column;
+
+    @FXML
+    private TableColumn<UserDTO, String> rule_users_column;
 
     @FXML
     private Button taskDetailsButton;
@@ -80,7 +88,9 @@ public class DashboardController {
     @FXML
     private void initialize(){
         loadGraphTableColumns();
-        startListRefresher();
+        loadUserTableColumns();
+        startGraphListRefresher();
+        startUserListRefresher();
     }
 
 
@@ -89,7 +99,6 @@ public class DashboardController {
         final ObservableList<GraphDTO> data = FXCollections.observableArrayList(graphs);
         this.graphInSystemTableView.setItems(data);
     }
-
 
     //TODO: function that calls the sever and get all the graphs
 
@@ -103,6 +112,11 @@ public class DashboardController {
         graph_numOfLeavesColumn.setCellValueFactory(new PropertyValueFactory<>("numOfLeaves"));
         graph_simulationPriceColumn.setCellValueFactory(new PropertyValueFactory<>("priceOfSimulationTask"));
         graph_CompilationPriceColumn.setCellValueFactory(new PropertyValueFactory<>("priceOfCompilationTask"));
+    }
+
+    private void loadUserTableColumns(){
+        users_name_column.setCellValueFactory(new PropertyValueFactory<>("userName"));
+        rule_users_column.setCellValueFactory(new PropertyValueFactory<>("userType"));
     }
 
 
@@ -140,7 +154,7 @@ public class DashboardController {
 
     }
 
-    private void updateUsersList(List<GraphDTO> graphs) {
+    private void updateGraphsList(List<GraphDTO> graphs) {
         Platform.runLater(() -> {
             ObservableList<GraphDTO> graphDTOS = graphInSystemTableView.getItems();
             graphDTOS.clear();
@@ -151,8 +165,23 @@ public class DashboardController {
         });
     }
 
-    public void startListRefresher() {
+    public void startGraphListRefresher() {
         listRefresher = new GraphListRefresher(
+                this::updateGraphsList);
+        timer = new Timer();
+        timer.schedule(listRefresher, 15000, 15000);
+    }
+
+    private void updateUsersList(List<UserDTO> users) {
+        Platform.runLater(() -> {
+            ObservableList<UserDTO> userDTOS = activeUsersTableView.getItems();
+            userDTOS.clear();
+            userDTOS.addAll(users);
+        });
+    }
+
+    public void startUserListRefresher() {
+        listRefresher = new UserListRefresher(
                 this::updateUsersList);
         timer = new Timer();
         timer.schedule(listRefresher, 15000, 15000);

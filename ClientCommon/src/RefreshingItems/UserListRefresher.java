@@ -2,6 +2,7 @@ package RefreshingItems;
 
 import com.google.gson.Gson;
 import constants.Constants;
+import dto.UserDTO;
 import http_utils.HttpUtils;
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -17,9 +18,9 @@ import java.util.function.Consumer;
 
 public class UserListRefresher extends TimerTask {
 
-    private final Consumer<List<String>> usersListConsumer;
+    private final Consumer<List<UserDTO>> usersListConsumer;
 
-    public UserListRefresher(Consumer<List<String>> usersListConsumer) {
+    public UserListRefresher(Consumer<List<UserDTO>> usersListConsumer) {
         this.usersListConsumer = usersListConsumer;
     }
 
@@ -35,9 +36,9 @@ public class UserListRefresher extends TimerTask {
 
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                String jsonArrayOfUsersNames = response.body().string();
-                String[] usersNames = new Gson().fromJson(jsonArrayOfUsersNames, String[].class);
-                usersListConsumer.accept(Arrays.asList(usersNames));
+                String jsonArrayOfUsers = response.body().string();
+                UserDTO[] usersList = new Gson().fromJson(jsonArrayOfUsers, UserDTO[].class);
+                usersListConsumer.accept(Arrays.asList(usersList));
             }
         });
     }

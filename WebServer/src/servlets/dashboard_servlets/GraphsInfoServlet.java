@@ -37,6 +37,5 @@ public class GraphsInfoServlet extends HttpServlet {
         PrintWriter body = resp.getWriter();
         body.print(json);
         body.flush();
-
     }
 }
