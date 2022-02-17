@@ -88,11 +88,8 @@ public class DashboardController {
     @FXML
     private void initialize(){
         loadGraphTableColumns();
-        loadUserTableColumns();
         startGraphListRefresher();
-        startUserListRefresher();
     }
-
 
 
     private void loadGraphTable(List<GraphDTO> graphs){
@@ -126,10 +123,7 @@ public class DashboardController {
         graph_CompilationPriceColumn.setCellValueFactory(new PropertyValueFactory<>("priceOfCompilationTask"));
     }
 
-    private void loadUserTableColumns(){
-        users_name_column.setCellValueFactory(new PropertyValueFactory<>("userName"));
-        rule_users_column.setCellValueFactory(new PropertyValueFactory<>("userType"));
-    }
+
 
 
     @FXML
@@ -198,19 +192,6 @@ public class DashboardController {
         timer.schedule(listRefresher, 15000, 15000);
     }
 
-    private void updateUsersList(List<UserDTO> users) {
-        Platform.runLater(() -> {
-            ObservableList<UserDTO> userDTOS = activeUsersTableView.getItems();
-            userDTOS.clear();
-            userDTOS.addAll(users);
-        });
-    }
 
-    public void startUserListRefresher() {
-        listRefresher = new UserListRefresher(
-                this::updateUsersList);
-        timer = new Timer();
-        timer.schedule(listRefresher, 15000, 15000);
-    }
 
 }

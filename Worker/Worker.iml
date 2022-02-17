@@ -18,5 +18,6 @@
       </library>
     </orderEntry>
     <orderEntry type="module" module-name="ClientCommon" />
+    <orderEntry type="module" module-name="DTO" />
   </component>
 </module>

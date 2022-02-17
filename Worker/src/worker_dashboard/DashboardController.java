@@ -1,15 +1,23 @@
 package worker_dashboard;
 
+
+import components.users_list.UsersListController;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
+import javafx.scene.layout.GridPane;
+
 
 public class DashboardController {
 
+
     @FXML
-    private TableView<?> activeUsersTableView;
+    private GridPane usersList;
+
+    @FXML
+    private UsersListController usersListController;
 
     @FXML
     private Label totalIncomeLabel;
@@ -34,6 +42,7 @@ public class DashboardController {
     void onTaskSighIn(ActionEvent event) {
 
     }
+
 
 }
 
