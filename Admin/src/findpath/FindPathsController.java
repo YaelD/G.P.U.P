@@ -4,15 +4,23 @@ package findpath;
 //import exceptions.InvalidDependencyException;
 //import exceptions.TargetNotExistException;
 //import graph.Dependency;
+import com.google.gson.Gson;
+import constants.Constants;
 import dto.GraphDTO;
 import general_enums.Dependency;
+import http_utils.HttpUtils;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.GridPane;
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.HttpUrl;
+import okhttp3.Response;
+import org.jetbrains.annotations.NotNull;
 
-import java.util.Collection;
-import java.util.List;
+import java.io.IOException;
+import java.util.*;
 
 public class FindPathsController {
 
@@ -34,7 +42,35 @@ public class FindPathsController {
         findPathsTogglesController.setFindPathCallback(new findPathCallback() {
             @Override
             public void findPaths(String sourceTargetName, String destinationTargetName, Dependency dependency) {
-                //TODO: Server call to find graph
+                String finalUrl = HttpUrl
+                        .parse(Constants.LOGIN_PAGE)
+                        .newBuilder()
+                        .addQueryParameter(Constants.SOURCE_TARGET, sourceTargetName)
+                        .addQueryParameter(Constants.DESTINATION_TARGET, destinationTargetName)
+                        .addQueryParameter(Constants.DEPENDENCY, dependency.getDependency())
+                        .build()
+                        .toString();
+                HttpUtils.runAsync(finalUrl, new Callback() {
+                    @Override
+                    public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                        findPathsTogglesController.getWarningLabel().setVisible(true);
+                        findPathsTogglesController.getWarningLabel().setText("Something went wrong..." + e.getMessage());
+                    }
+
+                    @Override
+                    public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                        if(response.code() != 200){
+                            findPathsTogglesController.getWarningLabel().setVisible(true);
+                            findPathsTogglesController.getWarningLabel().setText("Something went wrong..." + response.body().string());
+                        }
+                        else{
+                            String json = response.body().string();
+                            String[][] paths = new Gson().fromJson(json, String[][].class);
+                            findPathsTableController.setTableValues(paths);
+                        }
+                    }
+                });
+
                 findPathsTogglesController.getWarningLabel().setVisible(false);
                 findPathsTable.getItems().clear();
 //                if(null){

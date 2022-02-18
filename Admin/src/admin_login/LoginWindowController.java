@@ -54,7 +54,8 @@ public class LoginWindowController {
         String finalUrl = HttpUrl
                 .parse(Constants.LOGIN_PAGE)
                 .newBuilder()
-                .addQueryParameter("username", userName).addQueryParameter("userType", "admin")
+                .addQueryParameter(Constants.USERNAME, userName)
+                .addQueryParameter(Constants.USER_TYPE, "admin")
                 .build()
                 .toString();
 

@@ -37,7 +37,7 @@ public class FindPathTogglesController {
     @FXML
     private ToggleGroup dependencyToggleGroup;
 
-//
+    @FXML
     private void initialize(){
         dependsOnRadioButton.setUserData(Dependency.DEPENDS_ON.getDependency());
         requiredForRadioButton.setUserData(Dependency.REQUIRED_FOR.getDependency());
