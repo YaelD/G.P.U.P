@@ -1,11 +1,13 @@
 package container;
 
+import javafx.application.Platform;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
+import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
@@ -30,7 +32,14 @@ public class TopContainerController {
     private SimpleIntegerProperty numOfThreads;
 
     @FXML
+    private Label userNameLabel;
+
+    @FXML
+    private Label helloLabel;
+
+    @FXML
     private void initialize(){
+        userNameLabel.textProperty().bind(userName);
         loadLoginPage();
         loadDashboardPage();
     }
@@ -47,6 +56,10 @@ public class TopContainerController {
 
     public void setUserName(String userName) {
         this.userName.set(userName);
+        Platform.runLater(()->{
+            helloLabel.setVisible(true);
+            userNameLabel.setVisible(true);
+        });
     }
 
     private void loadLoginPage() {

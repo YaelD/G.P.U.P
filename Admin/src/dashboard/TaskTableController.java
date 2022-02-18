@@ -5,6 +5,7 @@ import RefreshingItems.TaskListRefresher;
 import dto.GraphDTO;
 import dto.TaskDTO;
 import javafx.application.Platform;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.TableColumn;
@@ -53,7 +54,7 @@ public class TaskTableController {
     private TableColumn<TaskDTO, String> totalTaskPrice_column;
 
     @FXML
-    private TableColumn<TaskDTO, String> numberOfWorkers_column;
+        private TableColumn<TaskDTO, String> numberOfWorkers_column;
 
     @FXML
     private void initialize(){
@@ -77,14 +78,32 @@ public class TaskTableController {
         //TODO: SEPARATE THE TABLE INTO TWO TABLES OF TaskDTO and GraphDTO
         taskname_column.setCellValueFactory(new PropertyValueFactory<>("taskName"));
         creator_name_column.setCellValueFactory(new PropertyValueFactory<>("creatorName"));
-        graphName_column.setCellValueFactory(new PropertyValueFactory<>("name"));
-        totalNumOfTargets_column.setCellValueFactory(new PropertyValueFactory<>("totalNumOfTargets"));
-        numOfLeaves_column.setCellValueFactory(new PropertyValueFactory<>("numOfLeaves"));
-        numOfMiddles_column.setCellValueFactory(new PropertyValueFactory<>("numOfMiddles"));
-        numOfRoots_column.setCellValueFactory(new PropertyValueFactory<>("numOfRoots"));
-        numOfIndepepndens_column.setCellValueFactory(new PropertyValueFactory<>("numOfIndependents"));
         totalTaskPrice_column.setCellValueFactory(new PropertyValueFactory<>("taskTotalPrice"));
         numberOfWorkers_column.setCellValueFactory(new PropertyValueFactory<>("numOfRegisteredWorkers"));
+        initGraphInfo();
+    }
+
+
+    private void initGraphInfo(){
+        graphName_column.setCellValueFactory( (callback)->{
+            return new SimpleStringProperty(callback.getValue().getGraphDTO().getName());
+        });
+        totalNumOfTargets_column.setCellValueFactory((callback)->{
+            return new SimpleStringProperty(String.valueOf(callback.getValue().getGraphDTO().getTotalNumOfTargets()));
+        });
+        numOfLeaves_column.setCellValueFactory((callback)->{
+            return new SimpleStringProperty(String.valueOf(callback.getValue().getGraphDTO().getNumOfLeaves()));
+        });;
+        numOfRoots_column.setCellValueFactory((callback)->{
+            return new SimpleStringProperty(String.valueOf(callback.getValue().getGraphDTO().getNumOfRoots()));
+        });;
+        numOfMiddles_column.setCellValueFactory((callback)->{
+            return new SimpleStringProperty(String.valueOf(callback.getValue().getGraphDTO().getNumOfMiddles()));
+        });;
+        numOfIndepepndens_column.setCellValueFactory((callback)->{
+            return new SimpleStringProperty(String.valueOf(callback.getValue().getGraphDTO().getNumOfIndependents()));
+        });;
+
     }
 
 

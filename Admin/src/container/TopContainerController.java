@@ -2,11 +2,13 @@ package container;
 
 import admin_login.LoginWindowController;
 import dashboard.DashboardController;
+import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
@@ -26,11 +28,18 @@ public class TopContainerController {
 
     SimpleStringProperty userName;
 
+    @FXML
+    private Label userNameLabel;
+
+    @FXML
+    private Label helloLabel;
+
     private BorderPane dashboard;
     private DashboardController dashboardController;
 
     @FXML
     private void initialize(){
+        userNameLabel.textProperty().bind(userName);
         loadLoginPage();
         loadDashboardPage();
     }
@@ -41,6 +50,10 @@ public class TopContainerController {
 
     public void setUserName(String userName) {
         this.userName.set(userName);
+        Platform.runLater(()->{
+            helloLabel.setVisible(true);
+            userNameLabel.setVisible(true);
+        });
     }
 
     private void loadLoginPage() {
@@ -78,6 +91,7 @@ public class TopContainerController {
     }
 
     public void switchToDashboard(){
+
         setMainPanelTo(dashboard);
 
     }

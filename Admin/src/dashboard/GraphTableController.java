@@ -65,10 +65,9 @@ public class GraphTableController {
     private void loadGraphTableColumns() {
         graphInSystemTableView.setRowFactory(tv-> {
             TableRow<GraphDTO> row = new TableRow<>();
+            GraphDTO rowData = row.getItem();
             row.setOnMouseClicked(event -> {
                 if (event.getClickCount() == 2 && (! row.isEmpty()) ) {
-                    GraphDTO rowData = row.getItem();
-                    System.out.println("Clickedddd");
                     dashboardController.loadGraphInfo(rowData);
                 }
             });
