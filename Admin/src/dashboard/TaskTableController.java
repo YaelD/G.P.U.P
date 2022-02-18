@@ -74,6 +74,7 @@ public class TaskTableController {
             return row;
         });
         //I wrote as string the members of the TaskDTO and GraphDTO
+        //TODO: SEPARATE THE TABLE INTO TWO TABLES OF TaskDTO and GraphDTO
         taskname_column.setCellValueFactory(new PropertyValueFactory<>("taskName"));
         creator_name_column.setCellValueFactory(new PropertyValueFactory<>("creatorName"));
         graphName_column.setCellValueFactory(new PropertyValueFactory<>("name"));

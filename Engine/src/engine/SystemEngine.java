@@ -230,8 +230,8 @@ public class SystemEngine implements Engine{
     private boolean checkValidationWhatIfParams(String targetName, Dependency dependency, String graphName)
             throws GraphNotExistException, InvalidDependencyException, TargetNotExistException {
 
-        return checkIfTargetExistInGraph(targetName, graphName) && checkIfValidDependency(dependency)
-                && isGraphExistsInSystem(graphName);
+        return isGraphExistsInSystem(graphName) && checkIfTargetExistInGraph(targetName, graphName)
+                && checkIfValidDependency(dependency);
     }
 
 
@@ -239,9 +239,9 @@ public class SystemEngine implements Engine{
     public boolean checkValidationOfGetPathsParams(String firstTargetName, String secondTargetName,
                                                    Dependency dependency, Graph graph) throws TargetNotExistException, GraphNotExistException, InvalidDependencyException {
 
-        return checkIfTargetExistInGraph(firstTargetName, graph.getName()) &&
+        return isGraphExistsInSystem(graph.getName()) && checkIfTargetExistInGraph(firstTargetName, graph.getName()) &&
                 checkIfTargetExistInGraph(secondTargetName, graph.getName()) &&
-                checkIfValidDependency(dependency) && isGraphExistsInSystem(graph.getName());
+                checkIfValidDependency(dependency);
     }
 
     public Collection<List<String>> getPaths(String firstTargetName, String secondTargetName,

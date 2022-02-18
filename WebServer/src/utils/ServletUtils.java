@@ -4,7 +4,11 @@ import engine.Engine;
 import engine.SystemEngine;
 
 import jakarta.servlet.ServletContext;
+import jakarta.servlet.http.HttpServletRequest;
 import user.UserManager;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class ServletUtils {
 
@@ -46,4 +50,16 @@ public class ServletUtils {
 //        }
 //        return INT_PARAMETER_ERROR;
 //    }
+
+    public static Map<String, String> validateRequestQueryParams (HttpServletRequest request, String[] paramsNames) throws Exception {
+        Map<String, String> paramsMap = new HashMap<>();
+        for(String paramType : paramsNames){
+            String param = request.getParameter(paramType).trim();
+            if( param == null || param.isEmpty()){
+                throw new Exception("The param" + paramType + "is invalid");
+            }
+            paramsMap.put(paramType, request.getParameter(paramType));
+        }
+        return paramsMap;
+    }
 }

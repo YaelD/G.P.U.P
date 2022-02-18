@@ -17,6 +17,7 @@ import utils.SessionUtils;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
+import java.util.Map;
 
 
 @WebServlet(name = "findCycle", urlPatterns = {"/find_cycle"})
@@ -30,45 +31,39 @@ public class FindCycleServlet extends HttpServlet {
             response.setStatus(HttpServletResponse.SC_CONFLICT);
         }
         else{
-            String sourceTargetParameter = request.getParameter(Constants.SOURCE_TARGET);
-            String graphNameParameter = request.getParameter(Constants.GRAPH_NAME);
-            Engine engine = ServletUtils.getEngine(getServletContext());
 
-            //if it's a valid request
-            if(requestValidation(sourceTargetParameter, graphNameParameter)){
+            String[] paramsNames = {Constants.SOURCE_TARGET, Constants.DEPENDENCY, Constants.DESTINATION_TARGET,
+                    Constants.GRAPH_NAME};
+            PrintWriter body = response.getWriter();
 
+            try{
+                Map<String, String> mapParams = ServletUtils.validateRequestQueryParams(request, paramsNames);
+                String sourceTargetParameter = mapParams.get(Constants.SOURCE_TARGET);
+                String graphNameParameter = mapParams.get(Constants.GRAPH_NAME);
+
+                Engine engine = ServletUtils.getEngine(getServletContext());
                 response.setContentType("application/json");
-                try (PrintWriter body = response.getWriter()) {
-                    Gson gson = new Gson();
-                    List<String> whatIf = engine.findCycle(sourceTargetParameter.trim(), graphNameParameter.trim());
-                    String json = gson.toJson(whatIf);
-                    body.print(json);
-                    body.flush();
-                    response.setStatus(HttpServletResponse.SC_OK); // Is that needed?
-                } catch (TargetNotExistException e) {
-                    e.printStackTrace(); //TODO: CHANGE IT
-                } catch (GraphNotExistException e) {
-                    e.printStackTrace(); //TODO: CHANGE IT
-                } catch (InvalidDependencyException e) {
-                    e.printStackTrace();  //TODO: CHANGE IT
-                }
-            }
-            else{
+                response.setStatus(HttpServletResponse.SC_OK);
+                Gson gson = new Gson();
+                List<String> findCycle = engine.findCycle(sourceTargetParameter, graphNameParameter);
+                String json = gson.toJson(findCycle);
+                body.print(json);
+                body.flush();
+
+            } catch(TargetNotExistException e){
                 response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                body.println("Target " + e.getName() + " not exist");
+            } catch(GraphNotExistException e){
+                response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                body.println("Graph " + e.getName() + " not exist");
+            } catch(InvalidDependencyException e){
+                response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                body.println("Dependency " + e.getDependency() + " not exist");
+            } catch(Exception e){
+                response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                body.println(e.getMessage());
             }
         }
-    }
-
-
-    private boolean requestValidation(String sourceTargetParameter, String graphNameParameter) {
-        boolean isValidRequest = true;
-
-        if (sourceTargetParameter == null || sourceTargetParameter.isEmpty()) {
-            isValidRequest = false;
-        }
-        if (graphNameParameter == null || graphNameParameter.isEmpty()) {
-            isValidRequest = false;
-        }
-        return isValidRequest;
     }
 }
+
