@@ -1,6 +1,10 @@
 package runtask.compilation_task;
 
 //import dto.CompilationTaskParamsDTO;
+import dto.CompilationTaskParamsDTO;
+import general_enums.RunType;
+import javafx.beans.property.SimpleListProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -26,9 +30,16 @@ public class CompilationParamsController {
     @FXML private TextField destinationTextArea;
     @FXML private Label warningLabel;
 
+    private SimpleListProperty<String> targetsList;
+    private SimpleObjectProperty<RunType> runType;
+
+
     public CompilationParamsController() {
         this.sourcePath = "";
         this.destinationPath = "";
+        this.runType = new SimpleObjectProperty<>(RunType.FROM_SCRATCH);
+        this.targetsList = new SimpleListProperty<>();
+
     }
 
     @FXML
@@ -43,7 +54,7 @@ public class CompilationParamsController {
             warningLabel.setText("There is no destination path");
         }
         else{
-//            callback.activeTask(new CompilationTaskParamsDTO(sourcePath, destinationPath));
+            callback.sendTask(new CompilationTaskParamsDTO(runType.get(), targetsList.get(), sourcePath, destinationPath));
         }
     }
 
@@ -86,4 +97,10 @@ public class CompilationParamsController {
     public void setReturnCallBack(ReturnCallback returnCallBack) {
         this.returnCallback = returnCallBack;
     }
+
+    public void bindProperties(SimpleListProperty<String> targetsList,SimpleObjectProperty<RunType> runType){
+        this.runType.bind(runType);
+        this.targetsList.bind(targetsList);
+    }
+
 }

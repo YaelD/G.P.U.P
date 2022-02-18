@@ -2,6 +2,8 @@ package runtask.simulation_task;
 
 //import dto.SimulationTaskParamsDTO;
 import dto.SimulationTaskParamsDTO;
+import general_enums.RunType;
+import general_enums.TaskType;
 import javafx.beans.property.*;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -21,6 +23,11 @@ public class SimulationParamsController {
     private ActiveTaskCallback activeTaskCallback;
 
     private ReturnCallback returnCallBack;
+
+
+    private SimpleListProperty<String> targetsList;
+    private SimpleObjectProperty<RunType> runType;
+
 
     @FXML private TextField processTimeTextArea;
     @FXML private CheckBox isRandomCheckBox;
@@ -42,9 +49,12 @@ public class SimulationParamsController {
 
     public SimulationParamsController() {
         this.successRate = new SimpleDoubleProperty(0.0);
-        successRateWithWarnings = new SimpleDoubleProperty(0.0);
+        this.successRateWithWarnings = new SimpleDoubleProperty(0.0);
         this.processTime = new SimpleIntegerProperty(1000);
         this.isRandomProcessTime = new SimpleBooleanProperty(false);
+        this.runType = new SimpleObjectProperty<>(RunType.FROM_SCRATCH);
+        this.targetsList = new SimpleListProperty<>();
+
 //        this.simulationTaskParams = new SimpleObjectProperty<>();
     }
 
@@ -91,8 +101,15 @@ public class SimulationParamsController {
 
     @FXML
     void onConfirm(ActionEvent event) {
-//        activeTaskCallback.activeTask(new SimulationTaskParamsDTO(this.processTime.intValue(),
-//                this.isRandomProcessTime.get(), this.successRate.doubleValue(), this.successRateWithWarnings.doubleValue()));
+        SimulationTaskParamsDTO taskParamsDTO = new SimulationTaskParamsDTO(this.runType.get(), this.targetsList.get(),
+                this.processTime.get(), this.isRandomProcessTime.get(),
+                this.successRate.get(), this.successRateWithWarnings.get());
+        activeTaskCallback.sendTask(taskParamsDTO);
+    }
+
+    public void bindProperties(SimpleListProperty<String> targetsList,SimpleObjectProperty<RunType> runType){
+        this.runType.bind(runType);
+        this.targetsList.bind(targetsList);
     }
 
 }

@@ -1,8 +1,11 @@
 package runtask.menu;
 
+import com.google.gson.Gson;
+import constants.Constants;
 import dto.*;
 import general_enums.RunType;
 import general_enums.TaskType;
+import http_utils.HttpUtils;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.*;
 import javafx.beans.value.ChangeListener;
@@ -13,9 +16,12 @@ import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import okhttp3.*;
+import org.jetbrains.annotations.NotNull;
 import runtask.compilation_task.CompilationParamsController;
 import runtask.simulation_task.SimulationParamsController;
 
+import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -38,6 +44,10 @@ public class RunTaskMenuController {
     private SimpleListProperty<String> targetsList;
     private SimpleObjectProperty<TaskType> taskType;
     private SimpleObjectProperty<RunType> runType;
+
+
+
+
 
     @FXML private VBox targetsSubMenu;
     @FXML private CheckBox chooseAllTargetsCheckBox;
@@ -68,6 +78,7 @@ public class RunTaskMenuController {
         this.taskType = new SimpleObjectProperty<>(TaskType.SIMULATION_TASK);
         this.runType = new SimpleObjectProperty<>(RunType.FROM_SCRATCH);
         this.targetsList = new SimpleListProperty<>();
+
     }
 
     public void disableIncremental(boolean allowIncremental){
@@ -127,11 +138,35 @@ public class RunTaskMenuController {
     private void initialize(){
         baseHBox.getChildren().remove(simulationTaskToggles);
         baseHBox.getChildren().remove(compilationTaskToggles);
+        simulationTaskTogglesController.bindProperties(this.targetsList,this.runType);
+        compilationTaskTogglesController.bindProperties(this.targetsList,this.runType);
         targetsList.bind(selectedTargetsListView.itemsProperty());
         ActiveTaskCallback activeTaskCallback = new ActiveTaskCallback() {
             @Override
-            public void activeTask(TaskParamsDTO taskParams) {
+            public void sendTask(TaskParamsDTO taskParams) {
+                Gson gson = new Gson();
+                String params = gson.toJson(taskParams);
+                Request request = new Request.Builder().url(Constants.TASK_LIST)
+                        .post(RequestBody.create(params.getBytes())).build();
+                HttpUtils.runAsyncPost(request, new Callback() {
+                    @Override
+                    public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                        //TODO: failure
+                    }
 
+                    @Override
+                    public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                        if(response.code() == 200){
+                            warningLabel.setVisible(true);
+                            warningLabel.setText("Yayyyyyyyyyyyy");
+                        }
+                        else{
+                            warningLabel.setVisible(true);
+                            warningLabel.setText(":(((((((((((((((((((");
+
+                        }
+                    }
+                });
             }
         };
         simulationTaskTogglesController.setActiveTaskCallback(activeTaskCallback);
