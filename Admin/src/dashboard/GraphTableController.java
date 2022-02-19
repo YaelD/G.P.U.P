@@ -92,10 +92,10 @@ public class GraphTableController {
     }
 
     public void startGraphListRefresher() {
-//        listRefresher = new GraphListRefresher(
-//                this::updateGraphsList);
-//        timer = new Timer(true);
-//        timer.schedule(listRefresher, 15000, 15000);
+        listRefresher = new GraphListRefresher(
+                this::updateGraphsList);
+        timer = new Timer(true);
+        timer.schedule(listRefresher, 15000, 15000);
     }
 
 

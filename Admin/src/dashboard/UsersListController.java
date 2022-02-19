@@ -50,10 +50,10 @@ public class UsersListController {
     }
 
     public void startUserListRefresher() {
-//        listRefresher = new UserListRefresher(
-//                this::updateUsersList);
-//        timer = new Timer();
-//        timer.schedule(listRefresher, 15000, 15000);
+        listRefresher = new UserListRefresher(
+                this::updateUsersList);
+        timer = new Timer(true);
+        timer.schedule(listRefresher, 15000, 15000);
     }
 
 

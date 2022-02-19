@@ -48,7 +48,7 @@ public class UsersListController {
     public void startUserListRefresher() {
         listRefresher = new UserListRefresher(
                 this::updateUsersList);
-        timer = new Timer();
+        timer = new Timer(true);
         timer.schedule(listRefresher, 15000, 15000);
     }
 
