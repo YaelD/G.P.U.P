@@ -32,8 +32,7 @@ public class FindCycleServlet extends HttpServlet {
         }
         else{
 
-            String[] paramsNames = {Constants.SOURCE_TARGET, Constants.DEPENDENCY, Constants.DESTINATION_TARGET,
-                    Constants.GRAPH_NAME};
+            String[] paramsNames = {Constants.SOURCE_TARGET, Constants.GRAPH_NAME};
             PrintWriter body = response.getWriter();
 
             try{
