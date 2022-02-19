@@ -37,4 +37,8 @@ public class HttpUtils {
 
         call.enqueue(callback);
     }
+
+    public static void ShutDown(){
+        HTTP_CLIENT.connectionPool().evictAll();
+    }
 }

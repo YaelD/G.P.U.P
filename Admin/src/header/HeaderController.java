@@ -67,6 +67,7 @@ public class HeaderController {
             Parent root = fxmlLoader.load(resource.openStream());
             FindCyclesController findCyclesController = fxmlLoader.getController();
             findCyclesController.initTargetsChoiceBox(graphDTO);
+            findCyclesController.setGraphDTO(graphDTO);
             base_BorderPane.setCenter(root);
 //            primaryStage.show();
         } catch (IOException e) {

@@ -31,7 +31,7 @@ public class WhatIfServlet extends HttpServlet {
         if (usernameFromSession == null) {    //user is not logged in - error!!
             response.setStatus(HttpServletResponse.SC_CONFLICT);
         } else {
-            String[] paramsNames = {Constants.SOURCE_TARGET, Constants.DEPENDENCY, Constants.DESTINATION_TARGET,
+            String[] paramsNames = {Constants.SOURCE_TARGET, Constants.DEPENDENCY,
                     Constants.GRAPH_NAME};
             PrintWriter body = response.getWriter();
 

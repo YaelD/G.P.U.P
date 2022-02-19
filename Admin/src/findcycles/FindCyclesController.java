@@ -6,6 +6,7 @@ import constants.Constants;
 import dto.GraphDTO;
 import dto.TargetDTO;
 import http_utils.HttpUtils;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -25,6 +26,8 @@ import java.util.List;
 
 public class FindCyclesController {
 
+    GraphDTO graphDTO;
+
     @FXML
     private ChoiceBox<String> targetsChoiceBox;
 
@@ -43,25 +46,42 @@ public class FindCyclesController {
             String targetName = this.targetsChoiceBox.getValue();
             warningLabel.setVisible(false);
             cyclesListView.getItems().clear();
-            List<String> cycle = null;
 
             String finalUrl = HttpUrl
-                    .parse(Constants.FIND_PATH)
+                    .parse(Constants.FIND_CYCLE)
                     .newBuilder()
                     .addQueryParameter(Constants.SOURCE_TARGET, targetName)
-//                    .addQueryParameter(Constants.GRAPH_NAME, .getName())
+                    .addQueryParameter(Constants.GRAPH_NAME, graphDTO.getName())
                     .build()
                     .toString();
+            HttpUtils.runAsync(finalUrl, new Callback() {
+                @Override
+                public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                    cyclesListView.setPlaceholder(new Label("Something went wrong" + e.getMessage()));
+                }
 
-            //TODO: Make The System call
-            if(cycle == null){
-                cyclesListView.setPlaceholder(new Label("This target does not take place in any cycle"));
-            }
-            else{
-                ObservableList<String> data = FXCollections.observableArrayList();
-                data.addAll(cycle);
-                cyclesListView.setItems(data);
-            }
+                @Override
+                public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                    if(response.code() == 200){
+                        String[] finalCycle = new Gson().fromJson(response.body().string(), String[].class);
+                        Platform.runLater(()->{
+                            if(finalCycle == null){
+                                cyclesListView.setPlaceholder(new Label("This target does not take place in any cycle"));
+                            }
+                            else{
+                                ObservableList<String> data = FXCollections.observableArrayList();
+                                data.addAll(finalCycle);
+                                cyclesListView.setItems(data);
+                            }
+                        });
+                    }
+                    else{
+                        System.out.println("Opps==>" + response.body().string());
+                    }
+
+                }
+            });
+
         }
     }
 
@@ -79,6 +99,10 @@ public class FindCyclesController {
         for(TargetDTO targetDTO: graphDTO.getTargets().values()){
             this.targetsChoiceBox.getItems().add(targetDTO.getName());
         }
+    }
+
+    public void setGraphDTO(GraphDTO graphDTO) {
+        this.graphDTO = graphDTO;
     }
 }
 

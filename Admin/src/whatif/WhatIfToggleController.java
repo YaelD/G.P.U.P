@@ -83,6 +83,8 @@ public class WhatIfToggleController {
 
     }
 
-
+    public Label getWarningLabel() {
+        return warningLabel;
+    }
 }
 
