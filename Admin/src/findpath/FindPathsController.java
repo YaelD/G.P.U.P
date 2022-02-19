@@ -43,11 +43,12 @@ public class FindPathsController {
             @Override
             public void findPaths(String sourceTargetName, String destinationTargetName, Dependency dependency) {
                 String finalUrl = HttpUrl
-                        .parse(Constants.LOGIN_PAGE)
+                        .parse(Constants.FIND_PATH)
                         .newBuilder()
                         .addQueryParameter(Constants.SOURCE_TARGET, sourceTargetName)
                         .addQueryParameter(Constants.DESTINATION_TARGET, destinationTargetName)
-                        .addQueryParameter(Constants.DEPENDENCY, dependency.getDependency())
+                        .addQueryParameter(Constants.DEPENDENCY, dependency.name())
+                        .addQueryParameter(Constants.GRAPH_NAME, graphDTO.getName())
                         .build()
                         .toString();
                 HttpUtils.runAsync(finalUrl, new Callback() {

@@ -116,10 +116,10 @@ public class TaskTableController {
     }
 
     public void startTaskListRefresher() {
-        listRefresher = new TaskListRefresher(
-                this::updateTasksList);
-        timer = new Timer(true);
-        timer.schedule(listRefresher, 15000, 15000);
+//        listRefresher = new TaskListRefresher(
+//                this::updateTasksList);
+//        timer = new Timer(true);
+//        timer.schedule(listRefresher, 15000, 15000);
     }
 
 }

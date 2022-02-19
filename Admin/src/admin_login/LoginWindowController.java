@@ -79,13 +79,14 @@ public class LoginWindowController {
                     );
                 } else {
                     Platform.runLater(() -> {
-                        //TODO: ADD UPDATING USER NAME LABEL IN THE DASHBOARD ;)
                         errorMessageProperty.set("logged in successfully");
                         topContainerController.setUserName(userName);
                         topContainerController.switchToDashboard();
+
                     });
                 }
             }
         });
     }
+
 }

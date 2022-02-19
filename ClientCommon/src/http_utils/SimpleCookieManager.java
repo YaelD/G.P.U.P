@@ -11,24 +11,17 @@ import java.util.function.Consumer;
 public class SimpleCookieManager implements CookieJar {
 
     Map<String, Map<String, Cookie>> cookies = new HashMap<>();
-    private Consumer<String> logData = System.out::println;
-
-    public void setLogData(Consumer<String> logData) {
-        this.logData = logData;
-    }
 
     @NotNull
     @Override
     public List<Cookie> loadForRequest(@NotNull HttpUrl httpUrl) {
         String host = httpUrl.host();
-        StringBuilder sb = new StringBuilder();
         List<Cookie> cookiesPerDomain = Collections.emptyList();
         synchronized (this) {
             if (cookies.containsKey(host)) {
                 cookiesPerDomain = new ArrayList<>(cookies.get(host).values());
             }
         }
-        logData.accept(sb.toString());
         return cookiesPerDomain;
     }
 

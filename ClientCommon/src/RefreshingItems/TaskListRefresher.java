@@ -35,7 +35,6 @@ public class TaskListRefresher extends TimerTask {
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                 if (response.code() == 200) {
-                    System.out.println("HELLLO");
                     String jsonArrayOfTasksList = response.body().string();
                     TaskDTO[] taskDTOS = new Gson().fromJson(jsonArrayOfTasksList, TaskDTO[].class);
                     taskListConsumer.accept(Arrays.asList(taskDTOS));
