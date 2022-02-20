@@ -3,8 +3,10 @@ package runtask.compilation_task;
 //import dto.CompilationTaskParamsDTO;
 import dto.CompilationTaskParamsDTO;
 import general_enums.RunType;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleListProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -13,6 +15,7 @@ import javafx.scene.control.TextField;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
 import runtask.menu.ActiveTaskCallback;
+import runtask.menu.CompilationParamsCallBack;
 import runtask.menu.ReturnCallback;
 
 import java.io.File;
@@ -21,7 +24,6 @@ public class CompilationParamsController {
 
     private String sourcePath;
     private String destinationPath;
-    private ActiveTaskCallback callback;
     private ReturnCallback returnCallback;
     @FXML private Button sourceFolderButton;
     @FXML private Button destinationFolderButtons;
@@ -30,15 +32,14 @@ public class CompilationParamsController {
     @FXML private TextField destinationTextArea;
     @FXML private Label warningLabel;
 
-    private SimpleListProperty<String> targetsList;
-    private SimpleObjectProperty<RunType> runType;
+
+    CompilationParamsCallBack callback;
 
 
     public CompilationParamsController() {
         this.sourcePath = "";
         this.destinationPath = "";
-        this.runType = new SimpleObjectProperty<>(RunType.FROM_SCRATCH);
-        this.targetsList = new SimpleListProperty<>();
+
 
     }
 
@@ -54,7 +55,7 @@ public class CompilationParamsController {
             warningLabel.setText("There is no destination path");
         }
         else{
-            callback.sendTask(new CompilationTaskParamsDTO(runType.get(), targetsList.get(), sourcePath, destinationPath));
+            callback.setCompilationParams(sourcePath, destinationPath);
         }
     }
 
@@ -90,7 +91,7 @@ public class CompilationParamsController {
         this.returnCallback.returnToPrev();
     }
 
-    public void setActiveTaskCallback(ActiveTaskCallback callback) {
+    public void setActiveTaskCallback(CompilationParamsCallBack callback) {
         this.callback = callback;
     }
 
@@ -98,9 +99,5 @@ public class CompilationParamsController {
         this.returnCallback = returnCallBack;
     }
 
-    public void bindProperties(SimpleListProperty<String> targetsList,SimpleObjectProperty<RunType> runType){
-        this.runType.bind(runType);
-        this.targetsList.bind(targetsList);
-    }
 
 }

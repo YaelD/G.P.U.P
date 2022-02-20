@@ -26,6 +26,8 @@ public class HeaderController {
 
     GraphDTO graphDTO;
 
+    String userName;
+
     private Stage primaryStage;
 
     @FXML
@@ -142,6 +144,7 @@ public class HeaderController {
             Parent root = fxmlLoader.load(resource.openStream());
             RunTaskMenuController runTaskMenuController = fxmlLoader.getController();
             runTaskMenuController.setCurrGraph(graphDTO);
+            runTaskMenuController.setUserName(userName);
             runTaskMenuController.disableIncremental(false);
             base_BorderPane.setCenter(root);
             primaryStage.show();
@@ -149,7 +152,11 @@ public class HeaderController {
             e.printStackTrace();
         }
 
+    }
 
+
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 
     public void setPrimaryStage(Stage primaryStage) {

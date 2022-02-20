@@ -33,6 +33,7 @@ import java.util.TimerTask;
 
 public class DashboardController {
 
+    private String userName;
 
     @FXML
     private TableView<GraphDTO> graphsTable;
@@ -89,6 +90,10 @@ public class DashboardController {
     }
 
 
+    public void setUserName(String userName) {
+        this.userName = userName;
+
+    }
 
     public void loadGraphInfo(GraphDTO graph){
         try {
@@ -101,6 +106,7 @@ public class DashboardController {
             HeaderController headerController = fxmlLoader.getController();
             headerController.setPrimaryStage(secondaryStage);
             headerController.setGraphDTO(graph);
+            headerController.setUserName(this.userName);
             secondaryStage.initModality(Modality.APPLICATION_MODAL);
             secondaryStage.setScene(scene);
             secondaryStage.setTitle("Load file");
@@ -130,6 +136,8 @@ public class DashboardController {
         }
 
     }
+
+
 
 
 

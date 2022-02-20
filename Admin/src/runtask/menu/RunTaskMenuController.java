@@ -6,10 +6,12 @@ import dto.*;
 import general_enums.RunType;
 import general_enums.TaskType;
 import http_utils.HttpUtils;
+import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.*;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -23,12 +25,14 @@ import runtask.simulation_task.SimulationParamsController;
 
 import java.io.IOException;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 public class RunTaskMenuController {
 
 
-    GraphDTO currGraph;
+    private GraphDTO currGraph;
+    private String userName;
 
 
     @FXML private HBox baseHBox;
@@ -44,11 +48,15 @@ public class RunTaskMenuController {
     private SimpleListProperty<String> targetsList;
     private SimpleObjectProperty<TaskType> taskType;
     private SimpleObjectProperty<RunType> runType;
+    private SimpleStringProperty taskName;
+    private SimpleStringProperty graphName;
+    private SimpleIntegerProperty taskPrice;
+    private SimpleStringProperty creatorName;
 
 
 
 
-
+    @FXML private TextField taskNameTextField;
     @FXML private VBox targetsSubMenu;
     @FXML private CheckBox chooseAllTargetsCheckBox;
     @FXML private ListView<CheckBox> targetsCheckBoxList;
@@ -78,6 +86,10 @@ public class RunTaskMenuController {
         this.taskType = new SimpleObjectProperty<>(TaskType.SIMULATION_TASK);
         this.runType = new SimpleObjectProperty<>(RunType.FROM_SCRATCH);
         this.targetsList = new SimpleListProperty<>();
+        this.taskName = new SimpleStringProperty();
+        this.graphName = new SimpleStringProperty();
+        this.taskPrice = new SimpleIntegerProperty();
+        this.creatorName = new SimpleStringProperty();
 
     }
 
@@ -85,7 +97,9 @@ public class RunTaskMenuController {
         this.incrementalRadioButton.setDisable(!allowIncremental);
     }
 
-
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
 
     @FXML
     void checkTargetsWithWhatIf(ActionEvent event) {
@@ -136,40 +150,35 @@ public class RunTaskMenuController {
 
     @FXML
     private void initialize(){
+        this.taskName.bind(this.taskNameTextField.textProperty());
         baseHBox.getChildren().remove(simulationTaskToggles);
         baseHBox.getChildren().remove(compilationTaskToggles);
-        simulationTaskTogglesController.bindProperties(this.targetsList,this.runType);
-        compilationTaskTogglesController.bindProperties(this.targetsList,this.runType);
         targetsList.bind(selectedTargetsListView.itemsProperty());
-        ActiveTaskCallback activeTaskCallback = new ActiveTaskCallback() {
+        selectedTargetsListView.itemsProperty().addListener(new ChangeListener<ObservableList<String>>() {
             @Override
-            public void sendTask(TaskParamsDTO taskParams) {
-                Gson gson = new Gson();
-                String params = gson.toJson(taskParams);
-                Request request = new Request.Builder().url(Constants.TASK_LIST)
-                        .post(RequestBody.create(params.getBytes())).build();
-                HttpUtils.runAsyncPost(request, new Callback() {
-                    @Override
-                    public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                        //TODO: failure
-                    }
-
-                    @Override
-                    public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                        if(response.code() == 200){
-                            warningLabel.setVisible(true);
-                            warningLabel.setText("Yayyyyyyyyyyyy");
-                        }
-                        else{
-                            warningLabel.setVisible(true);
-                            warningLabel.setText(":(((((((((((((((((((");
-
-                        }
-                    }
-                });
+            public void changed(ObservableValue<? extends ObservableList<String>> observable, ObservableList<String> oldValue, ObservableList<String> newValue) {
+                if(taskType.getValue().equals(TaskType.SIMULATION_TASK)){
+                    taskPrice.set(newValue.size()*currGraph.getPriceOfSimulationTask());
+                }
+                else{
+                    taskPrice.set(newValue.size()*currGraph.getPriceOfCompilationTask());
+                }
             }
-        };
-        simulationTaskTogglesController.setActiveTaskCallback(activeTaskCallback);
+        });
+        simulationTaskTogglesController.setTaskCallBack(new SimulationParamsCallBack() {
+            @Override
+            public void sendSimulationTaskParams(int processTime, boolean isRandom, double successRate, double successRateWithWarnings) {
+                RunType currRunType = runType.get();
+                List<String> currTargetList = targetsList.get();
+                String creatorName = userName;
+                String graphName = currGraph.getName();
+                String currTaskName = taskName.get();
+                int totalTaskPrice = taskPrice.get();
+
+                sendTaskToServer(new SimulationTaskParamsDTO(currRunType, currTargetList, creatorName, graphName,
+                        currTaskName, totalTaskPrice, processTime, isRandom, successRate, successRateWithWarnings));
+            }
+        });
         simulationTaskTogglesController.setReturnCallBack(new ReturnCallback() {
             @Override
             public void returnToPrev() {
@@ -179,7 +188,22 @@ public class RunTaskMenuController {
 
             }
         });
-        compilationTaskTogglesController.setActiveTaskCallback(activeTaskCallback);
+
+        compilationTaskTogglesController.setActiveTaskCallback(new CompilationParamsCallBack() {
+            @Override
+            public void setCompilationParams(String sourceDir, String destDir) {
+                RunType currRunType = runType.get();
+                List<String> currTargetList = targetsList.get();
+                String creatorName = userName;
+                String graphName = currGraph.getName();
+                String currTaskName = taskName.get();
+                int totalTaskPrice = taskPrice.get();
+                sendTaskToServer(new CompilationTaskParamsDTO(currRunType, currTargetList, creatorName, graphName,
+                        currTaskName,totalTaskPrice, sourceDir, destDir));
+            }
+        });
+
+
         compilationTaskTogglesController.setReturnCallBack(new ReturnCallback() {
             @Override
             public void returnToPrev() {
@@ -189,6 +213,39 @@ public class RunTaskMenuController {
             }
         });
 
+    }
+
+
+
+
+
+
+    private void sendTaskToServer(TaskParamsDTO taskParamsDTO){
+        Gson gson = new Gson();
+        String params = gson.toJson(taskParamsDTO);
+        Request request = new Request.Builder().url(Constants.TASK_LIST)
+                .post(RequestBody.create(params.getBytes())).build();
+        HttpUtils.runAsyncPost(request, new Callback() {
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                //TODO: failure
+            }
+
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                Platform.runLater(()->{
+                    if(response.code() == 200){
+                        warningLabel.setVisible(true);
+                        warningLabel.setText("Yayyyyyyyyyyyy");
+                    }
+                    else{
+                        warningLabel.setVisible(true);
+                        warningLabel.setText(":(((((((((((((((((((");
+
+                    }
+                });
+            }
+        });
     }
 
     private boolean validation() {
@@ -291,6 +348,8 @@ public class RunTaskMenuController {
 
     public void setCurrGraph(GraphDTO currGraph) {
         this.currGraph = currGraph;
+        this.graphName.set(currGraph.getName());
+
         initLists(currGraph);
         initTaskChoiceController();
         initTargetChoiceControllers();
