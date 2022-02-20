@@ -1,6 +1,8 @@
 package worker_dashboard;
 
 
+import dto.TaskDTO;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
@@ -22,24 +24,24 @@ public class DashboardController {
     private Label totalIncomeLabel;
 
     @FXML
-    private TableView<?> taskInfoTable;
+    private TableView<TaskDTO> taskInfoTable;
 
     @FXML
-    private TextArea taskDetailsTextArea;
+    private TaskTableController taskInfoTableController;
+
+
 
     @FXML
-    void onStartWork(ActionEvent event) {
+    private void initialize(){
 
     }
 
-    @FXML
-    void onTaskDetailsClick(ActionEvent event) {
+    public void setTaskInfo(TaskDTO taskDTO){
+        Platform.runLater(()->{
+            //TODO: show the task info
 
-    }
 
-    @FXML
-    void onTaskSighIn(ActionEvent event) {
-
+        });
     }
 
 

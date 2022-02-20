@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+
+<TableView fx:id="tasksInSystemTableView" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8.0.171" fx:controller="worker_dashboard.TaskTableController">
+   <columns>
+      <TableColumn fx:id="name_column" maxWidth="1.7976931348623157E308" minWidth="-1.0" prefWidth="120.0" resizable="false" text="Task name" />
+      <TableColumn fx:id="creator_name_column" maxWidth="1.7976931348623157E308" minWidth="-1.0" prefWidth="120.0" resizable="false" text="Creator name" />
+      <TableColumn fx:id="task_type_column" maxWidth="1.7976931348623157E308" minWidth="-1.0" prefWidth="120.0" resizable="false" text="Task type" />
+      <TableColumn fx:id="target_price_column" maxWidth="1.7976931348623157E308" minWidth="-1.0" prefWidth="120.0" resizable="false" text="Price per Target" />
+      <TableColumn fx:id="task_status_column" maxWidth="1.7976931348623157E308" minWidth="-1.0" prefWidth="120.0" resizable="false" text="Task status" />
+      <TableColumn fx:id="number_of_workers_column" maxWidth="1.7976931348623157E308" minWidth="-1.0" prefWidth="120.0" resizable="false" text="Number of Workers" />
+      <TableColumn maxWidth="1.7976931348623157E308" minWidth="-1.0" prefWidth="542.666748046875" resizable="false" text="Number of Targets">
+         <columns>
+            <TableColumn fx:id="totalNumOfTargets_column" maxWidth="90.0" minWidth="90.0" prefWidth="90.0" resizable="false" text="Total" />
+            <TableColumn fx:id="numOfLeaves_column" maxWidth="90.0" minWidth="90.0" prefWidth="90.0" resizable="false" text="Leaves" />
+            <TableColumn fx:id="numOfMiddles_column" maxWidth="90.0" minWidth="90.0" prefWidth="90.0" resizable="false" text="Middles" />
+            <TableColumn fx:id="numOfRoots_column" maxWidth="90.0" minWidth="90.0" prefWidth="90.0" resizable="false" text="Roots" />
+            <TableColumn fx:id="numOfIndependents_column" maxWidth="90.0" minWidth="90.0" prefWidth="90.0" resizable="false" text="Independents" />
+         </columns>
+      </TableColumn>
+   </columns>
+</TableView>

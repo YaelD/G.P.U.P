@@ -21,7 +21,7 @@ public class TaskTableController {
 
     private Timer timer;
     private TimerTask listRefresher;
-
+    private DashboardController dashboardController;
 
     @FXML
     private TableView<TaskDTO> tasksInSystemTableView;
@@ -65,17 +65,18 @@ public class TaskTableController {
     private void loadTaskTableColumns() {
         tasksInSystemTableView.setRowFactory(tv-> {
             TableRow<TaskDTO> row = new TableRow<>();
-            row.setOnMouseClicked(event -> {
-                if (event.getClickCount() == 2 && (! row.isEmpty()) ) {
-                    TaskDTO rowData = row.getItem();
-                    System.out.println("Clickedddd");
-                    //TODO: what we want to show when we clicking on a task
-                }
-            });
+            TaskDTO rowData = row.getItem();
+            if(rowData.getCreatorName().equals(dashboardController.getUserName())){
+                row.setStyle("-fx-background-color:#44f144");
+                row.setOnMouseClicked(event -> {
+                    if (event.getClickCount() == 2 && (! row.isEmpty()) ) {
+                        addNewTab(rowData);
+                    }
+                });
+            }
+
             return row;
         });
-        //I wrote as string the members of the TaskDTO and GraphDTO
-        //TODO: SEPARATE THE TABLE INTO TWO TABLES OF TaskDTO and GraphDTO
         taskname_column.setCellValueFactory(new PropertyValueFactory<>("taskName"));
         creator_name_column.setCellValueFactory(new PropertyValueFactory<>("creatorName"));
         totalTaskPrice_column.setCellValueFactory(new PropertyValueFactory<>("taskTotalPrice"));
@@ -106,6 +107,16 @@ public class TaskTableController {
 
     }
 
+    private void addNewTab(TaskDTO task){
+        //TODO: open a new tab with the new task details
+
+
+
+
+        //dashboardController.addTab(task.getTaskName(), );
+
+    }
+
 
     private void updateTasksList(List<TaskDTO> tasks) {
         Platform.runLater(() -> {
@@ -122,4 +133,7 @@ public class TaskTableController {
         timer.schedule(listRefresher, 15000, 15000);
     }
 
+    public void setDashboardController(DashboardController dashboardController) {
+        this.dashboardController = dashboardController;
+    }
 }

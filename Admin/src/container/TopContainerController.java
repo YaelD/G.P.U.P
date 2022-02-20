@@ -10,6 +10,8 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.Tab;
+import javafx.scene.control.TabPane;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
@@ -92,10 +94,22 @@ public class TopContainerController {
     }
 
     public void switchToDashboard(){
-
-        setMainPanelTo(dashboard);
+        TabPane tabs = new TabPane();
+        tabs.setTabClosingPolicy(TabPane.TabClosingPolicy.SELECTED_TAB);
+        Tab dashBoardTab = new Tab("Dashboard",dashboard);
+        dashboardController.setTopTabPane(tabs);
+        tabs.getTabs().add(dashBoardTab);
+        dashBoardTab.setClosable(false);
+        mainPane.centerProperty().set(tabs);
+        AnchorPane.setBottomAnchor(tabs, 1.0);
+        AnchorPane.setTopAnchor(tabs, 1.0);
+        AnchorPane.setLeftAnchor(tabs, 1.0);
+        AnchorPane.setRightAnchor(tabs, 1.0);
 
     }
+
+
+
 
 }
 

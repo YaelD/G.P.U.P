@@ -12,12 +12,10 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableRow;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Modality;
@@ -34,6 +32,8 @@ import java.util.TimerTask;
 public class DashboardController {
 
     private String userName;
+
+    private TabPane topTabPane;
 
     @FXML
     private TableView<GraphDTO> graphsTable;
@@ -53,15 +53,6 @@ public class DashboardController {
 
     @FXML
     private UsersListController usersListController;
-
-//    @FXML
-//    private TableView<UserDTO> activeUsersTableView;
-//
-//    @FXML
-//    private TableColumn<UserDTO, String> users_name_column;
-//
-//    @FXML
-//    private TableColumn<UserDTO, String> rule_users_column;
 
     @FXML
     private Button taskDetailsButton;
@@ -137,9 +128,15 @@ public class DashboardController {
 
     }
 
+    public void setTopTabPane(TabPane topTabPane) {
+        this.topTabPane = topTabPane;
+    }
 
+    public void addTab(String tabName, Node newNode){
+        this.topTabPane.getTabs().add(new Tab(tabName, newNode));
+    }
 
-
-
-
+    public String getUserName() {
+        return userName;
+    }
 }
