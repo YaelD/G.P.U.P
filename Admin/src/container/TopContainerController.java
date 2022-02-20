@@ -51,6 +51,7 @@ public class TopContainerController {
     public void setUserName(String userName) {
         this.userName.set(userName);
         Platform.runLater(()->{
+            dashboardController.setUserName(userName);
             helloLabel.setVisible(true);
             userNameLabel.setVisible(true);
         });
