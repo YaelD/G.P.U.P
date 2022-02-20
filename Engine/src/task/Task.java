@@ -31,13 +31,13 @@ public abstract class Task{
 
 
 
-    public Task(Graph graph, String creatorName, String taskName, int pricePerTarget) {
+    public Task(Graph graph, String creatorName, String taskName, int totalPriceTask) {
         this.graph = graph;
         this.creatorName = creatorName;
         this.latch = null;
         this.status = TaskStatus.NEW;
         this.taskName = taskName;
-        this.totalTaskPrice = pricePerTarget * this.graph.getTargets().size();
+        this.totalTaskPrice = totalPriceTask;
     }
 
     public boolean isTaskFinished() {

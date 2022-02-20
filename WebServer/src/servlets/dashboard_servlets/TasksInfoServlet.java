@@ -5,8 +5,10 @@ import dto.TaskDTO;
 import dto.TaskParamsDTO;
 import engine.Engine;
 import exceptions.GraphNotExistException;
+import exceptions.TargetNotExistException;
 import exceptions.TaskExistException;
 import general_enums.TaskType;
+import graph.Graph;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -54,39 +56,29 @@ public class TasksInfoServlet extends HttpServlet {
         TaskParamsDTO createdTaskParamsDTO = (TaskParamsDTO) new Gson().fromJson(request.getReader(), TaskParamsDTO.class);
 
         //TaskDTO createdTaskDTO = (TaskDTO) new Gson().fromJson(createdTask, TaskDTO.class);
-        //TODO: validate if task name is uniq and graph name is exist in the system
         //TODO: check if all the selected targets are valid
         try {
             if(engine.isGraphExistsInSystem(createdTaskParamsDTO.getGraphName())
-                    && !engine.isTaskExistInSystem(createdTaskParamsDTO.getTaskName())) {
+                    && !engine.isTaskExistInSystem(createdTaskParamsDTO.getTaskName())
+                    && engine.isTargetsExistsInGraph(createdTaskParamsDTO.getTargets(), createdTaskParamsDTO.getGraphName())) {
+                Graph graphForTask = engine.getGraphsInSystem().get(createdTaskParamsDTO.getGraphName());
                 if(createdTaskParamsDTO.getTaskType().equals(TaskType.COMPILATION_TASK)){
-                    task = CompilationTask.createCompilationTaskFromDTO(createdTaskParamsDTO);
+                    task = CompilationTask.createCompilationTaskFromDTO(createdTaskParamsDTO, graphForTask);
                 }
                 else{
-                    task = SimulationTask.createSimulationTaskFromDTO(createdTaskParamsDTO);
+                    task = SimulationTask.createSimulationTaskFromDTO(createdTaskParamsDTO, graphForTask);
                 }
-
+                engine.addTaskToSystem(task);
             }
         } catch (GraphNotExistException e) {
-            e.printStackTrace();
-        }
-
-
-        if(validateRequest(createdTaskParamsDTO.getGraphName(), createdTaskParamsDTO.getTaskName(), engine)){
-
-        }
-
-
-        try {
-            engine.addTaskToSystem(task);
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            response.getWriter().println("Graph " + e.getName() + " not exist");
         } catch (TaskExistException e) {
-            e.printStackTrace();
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            response.getWriter().println("Task " + e.getName() + " already exist");
+        } catch (TargetNotExistException e) {
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            response.getWriter().println("Target " + e.getName() + " not exist");
         }
-        //TODO: ENTER THE TASK INTO THE TASKS IN SYSTEM STRUCTURE
-
-    }
-
-    private boolean validateRequest(String graphName, String taskName, Engine engine) {
-        if(engine.isGraphExistsInSystem(graphName) && engine.)
     }
 }

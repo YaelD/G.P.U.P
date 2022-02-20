@@ -3,8 +3,12 @@ package task;
 import dto.GraphDTO;
 import dto.TaskDTO;
 import dto.TaskParamsDTO;
+import engine.SystemEngine;
 import general_enums.TaskType;
 import graph.Graph;
+
+import java.util.HashSet;
+import java.util.Set;
 
 public class CompilationTask extends Task{
 
@@ -114,9 +118,11 @@ public class CompilationTask extends Task{
         return taskDTO;
     }
 
-    //TODO: CHANGE THE MEMBER OF TOTAL PRICE TASK TO PRICE PER TARGET
-    public static CompilationTask createCompilationTaskFromDTO(TaskParamsDTO taskParamsDTODTO){
-        Graph graph = Graph.createGraphFromGraphDTO(taskDTO.getGraphDTO());
-        return new CompilationTask(graph, taskDTO.getCreatorName(), taskDTO.getTaskName(), taskDTO.getTaskTotalPrice());
+
+    public static CompilationTask createCompilationTaskFromDTO(TaskParamsDTO taskParamsDTO, Graph graphForTask){
+        Set<String> selectedTargets = new HashSet<>(taskParamsDTO.getTargets());
+        Graph graph = Graph.buildGraphForRunning(selectedTargets, graphForTask);
+        return new CompilationTask(graph, taskParamsDTO.getCreatorName(), taskParamsDTO.getTaskName(),
+                taskParamsDTO.getTotalTaskPrice());
     }
 }

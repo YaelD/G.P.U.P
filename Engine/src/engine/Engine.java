@@ -33,6 +33,9 @@ public interface Engine {
 
     public boolean isTaskExistInSystem(String taskName);
 
+    public boolean isTargetsExistsInGraph(List<String> targetsName, String graphName)
+            throws TargetNotExistException;
+
     public void addTaskToSystem(Task task) throws TaskExistException;
 
 //    public GraphDTO activateTask(Consumer<TargetDTO> consumerString,
