@@ -6,7 +6,7 @@ import general_enums.TaskType;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class TaskParamsDTO {
+public class TaskParamsDTO {
 
     protected String creatorName;
     protected TaskType taskType;
@@ -25,6 +25,9 @@ public abstract class TaskParamsDTO {
         this.taskName = taskName;
         this.graphName = graphName;
         this.totalTaskPrice = totalTaskPrice;
+    }
+
+    public TaskParamsDTO() {
     }
 
     public String getCreatorName() {

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+
+<TableView fx:id="taskInfoTable" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8.0.171" fx:controller="tasks_menu.TasksInfoTableController">
+  <columns>
+    <TableColumn fx:id="taskName_column" prefWidth="75.0" text="Task name" />
+    <TableColumn fx:id="numOfWorkers_column" prefWidth="114.0" text="Number of workers" />
+      <TableColumn fx:id="taskProgressColumn" prefWidth="87.0" text="Task progress" />
+      <TableColumn fx:id="myNumberOfTargets_column" prefWidth="129.0" text="My number of targets" />
+      <TableColumn fx:id="totalTaskCredits_column" prefWidth="114.0" text="Total task credits" />
+  </columns>
+</TableView>

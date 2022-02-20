@@ -18,6 +18,7 @@ public class SimulationTask extends Task{
 
     public SimulationTask(Graph graph, String creatorName, String taskName, int pricePerTarget) {
         super(graph, creatorName, taskName, pricePerTarget);
+
     }
 
 //    public SimulationTask(Graph graph, SimulationTaskParamsDTO simulationTaskDTO, SerialSetsContainer serialSetsContainer) {
