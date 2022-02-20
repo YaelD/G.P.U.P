@@ -28,6 +28,7 @@ import java.net.URL;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.function.Consumer;
 
 public class DashboardController {
 
@@ -69,7 +70,9 @@ public class DashboardController {
     }
     @FXML
     private void initialize(){
+
         graphsTableController.setDashboardController(this);
+        tasksTableController.setDashboardController(this);
     }
 
 
@@ -133,7 +136,13 @@ public class DashboardController {
     }
 
     public void addTab(String tabName, Node newNode){
-        this.topTabPane.getTabs().add(new Tab(tabName, newNode));
+        for(Tab tab: topTabPane.getTabs()){
+            if(tab.getText().equals(tabName)){
+                topTabPane.getSelectionModel().select(tab);
+                return;
+            }
+        }
+        topTabPane.getTabs().add(new Tab(tabName, newNode));
     }
 
     public String getUserName() {

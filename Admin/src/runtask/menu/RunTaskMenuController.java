@@ -173,8 +173,7 @@ public class RunTaskMenuController {
                 String creatorName = userName;
                 String graphName = currGraph.getName();
                 String currTaskName = taskName.get();
-                int totalTaskPrice = taskPrice.get();
-
+                int totalTaskPrice = currGraph.getPriceOfSimulationTask()*currTargetList.size();
                 sendTaskToServer(new SimulationTaskParamsDTO(currRunType, currTargetList, creatorName, graphName,
                         currTaskName, totalTaskPrice, processTime, isRandom, successRate, successRateWithWarnings));
             }
@@ -197,7 +196,7 @@ public class RunTaskMenuController {
                 String creatorName = userName;
                 String graphName = currGraph.getName();
                 String currTaskName = taskName.get();
-                int totalTaskPrice = taskPrice.get();
+                int totalTaskPrice = currGraph.getPriceOfCompilationTask()*currTargetList.size();
                 sendTaskToServer(new CompilationTaskParamsDTO(currRunType, currTargetList, creatorName, graphName,
                         currTaskName,totalTaskPrice, sourceDir, destDir));
             }
@@ -215,16 +214,21 @@ public class RunTaskMenuController {
 
     }
 
-
-
-
-
-
     private void sendTaskToServer(TaskParamsDTO taskParamsDTO){
         Gson gson = new Gson();
-        String params = gson.toJson(taskParamsDTO);
+        SimulationTaskParamsDTO simulationTaskParamsDTO;
+        CompilationTaskParamsDTO compilationTaskParamsDTO;
+        String param = "";
+        if(taskParamsDTO instanceof SimulationTaskParamsDTO){
+            simulationTaskParamsDTO = (SimulationTaskParamsDTO) taskParamsDTO;
+            param = gson.toJson(simulationTaskParamsDTO);
+        }
+        else{
+            compilationTaskParamsDTO = (CompilationTaskParamsDTO) taskParamsDTO;
+            param = gson.toJson(compilationTaskParamsDTO);
+        }
         Request request = new Request.Builder().url(Constants.TASK_LIST)
-                .post(RequestBody.create(params.getBytes())).build();
+                .post(RequestBody.create(param.getBytes())).build();
         HttpUtils.runAsyncPost(request, new Callback() {
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {

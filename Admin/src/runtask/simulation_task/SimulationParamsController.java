@@ -1,15 +1,12 @@
 package runtask.simulation_task;
 
 //import dto.SimulationTaskParamsDTO;
-import dto.SimulationTaskParamsDTO;
-import general_enums.RunType;
 import javafx.beans.property.*;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import runtask.menu.ActiveTaskCallback;
 import runtask.menu.ReturnCallback;
 import runtask.menu.SimulationParamsCallBack;
 
@@ -20,7 +17,6 @@ public class SimulationParamsController {
     private SimpleDoubleProperty successRateWithWarnings;
     private SimpleBooleanProperty isRandomProcessTime;
 //    private SimpleObjectProperty<SimulationTaskParamsDTO> simulationTaskParams;
-//    private ActiveTaskCallback activeTaskCallback;
 
     private SimulationParamsCallBack taskCallBack;
 

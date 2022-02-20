@@ -62,7 +62,7 @@
           <RowConstraints maxHeight="30.0" minHeight="30.0" prefHeight="30.0" vgrow="NEVER" />
         </rowConstraints>
          <children>
-            <ScrollPane fitToHeight="true" fitToWidth="true" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.columnSpan="5" GridPane.rowIndex="2" GridPane.rowSpan="9">
+            <ScrollPane fitToHeight="true" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.columnSpan="5" GridPane.rowIndex="2" GridPane.rowSpan="9">
                <content>
                   <TableView fx:id="targetsTable" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" nodeOrientation="LEFT_TO_RIGHT">
                      <columns>
@@ -266,7 +266,6 @@
          <children>
             <HBox alignment="CENTER" maxWidth="1.7976931348623157E308" prefHeight="51.0" prefWidth="600.0" spacing="10.0">
                <children>
-                  <Button fx:id="backButton" layoutX="896.0" layoutY="18.0" mnemonicParsing="false" onAction="#onBackToDashboard" prefHeight="35.0" prefWidth="127.0" text="Back to Dashboard" />
                   <Button fx:id="playButton" layoutX="221.0" layoutY="18.0" mnemonicParsing="false" onAction="#onPlay" prefHeight="35.0" prefWidth="95.0" text="Play" />
                   <Button fx:id="stopButton" layoutX="843.0" layoutY="18.0" mnemonicParsing="false" onAction="#onStop" prefHeight="35.0" prefWidth="95.0" text="Stop" />
                   <ToggleButton fx:id="pauseToggle" mnemonicParsing="false" prefHeight="35.0" prefWidth="95.0" text="Pause" />

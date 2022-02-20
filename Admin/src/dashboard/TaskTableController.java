@@ -2,17 +2,23 @@ package dashboard;
 
 import RefreshingItems.GraphListRefresher;
 import RefreshingItems.TaskListRefresher;
+import container.TopContainerController;
 import dto.GraphDTO;
 import dto.TaskDTO;
+import execution_details.RunWindowController;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableRow;
-import javafx.scene.control.TableView;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.AnchorPane;
 
+import java.io.IOException;
+import java.net.URL;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -66,15 +72,11 @@ public class TaskTableController {
         tasksInSystemTableView.setRowFactory(tv-> {
             TableRow<TaskDTO> row = new TableRow<>();
             TaskDTO rowData = row.getItem();
-            if(rowData.getCreatorName().equals(dashboardController.getUserName())){
-                row.setStyle("-fx-background-color:#44f144");
-                row.setOnMouseClicked(event -> {
-                    if (event.getClickCount() == 2 && (! row.isEmpty()) ) {
-                        addNewTab(rowData);
-                    }
-                });
-            }
-
+            row.setOnMouseClicked(event -> {
+                if (event.getClickCount() == 2 && (! row.isEmpty()) ) {
+                    addNewTab();
+                }
+            });
             return row;
         });
         taskname_column.setCellValueFactory(new PropertyValueFactory<>("taskName"));
@@ -107,14 +109,31 @@ public class TaskTableController {
 
     }
 
-    private void addNewTab(TaskDTO task){
+    private void addNewTab(){
         //TODO: open a new tab with the new task details
 
+        if(tasksInSystemTableView.getSelectionModel().getSelectedItem() != null){
+            TaskDTO task = tasksInSystemTableView.getSelectionModel().getSelectedItem();
 
+            if(task.getCreatorName().equals(this.dashboardController.getUserName()) ){
+                Parent scene = loadTaskRunScene(task);
+                dashboardController.addTab(task.getTaskName(),scene);
+            }
+        }
 
+    }
 
-        //dashboardController.addTab(task.getTaskName(), );
-
+    private Parent loadTaskRunScene(TaskDTO task) {
+        URL resource = RunWindowController.class.getResource("task_window_details.fxml");
+        FXMLLoader fxmlLoader = new FXMLLoader();
+        fxmlLoader.setLocation(resource);
+        Parent root = null;
+        try {
+            root = fxmlLoader.load(resource.openStream());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return root;
     }
 
 

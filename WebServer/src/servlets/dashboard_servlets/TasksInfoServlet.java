@@ -53,27 +53,20 @@ public class TasksInfoServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         Engine engine = ServletUtils.getEngine(getServletContext());
         Task task = null;
-        //String createdTask = ServletUtils.getRequestBody(request);
-        //we can do it also like this:
-        TaskParamsDTO createdTaskParamsDTO = (TaskParamsDTO) new Gson().fromJson(request.getReader(), TaskParamsDTO.class);
-
-        //TaskDTO createdTaskDTO = (TaskDTO) new Gson().fromJson(createdTask, TaskDTO.class);
+        String createdTask = ServletUtils.getRequestBody(request);
+        TaskParamsDTO createdTaskParamsDTO = (TaskParamsDTO) new Gson().fromJson(createdTask, TaskParamsDTO.class);
         try {
             if(engine.isGraphExistsInSystem(createdTaskParamsDTO.getGraphName())
                     && !engine.isTaskExistInSystem(createdTaskParamsDTO.getTaskName())
                     && engine.isTargetsExistsInGraph(createdTaskParamsDTO.getTargets(), createdTaskParamsDTO.getGraphName())) {
                 Graph graphForTask = engine.getGraphsInSystem().get(createdTaskParamsDTO.getGraphName());
                 if(createdTaskParamsDTO.getTaskType().equals(TaskType.COMPILATION_TASK)){
-                    if(createdTaskParamsDTO instanceof CompilationTaskParamsDTO){
-                        CompilationTaskParamsDTO compilationTaskParamsDTO = (CompilationTaskParamsDTO) createdTaskParamsDTO;
-                        task = CompilationTask.createCompilationTaskFromDTO(compilationTaskParamsDTO, graphForTask);
-                    }
+                    CompilationTaskParamsDTO compilationTaskParamsDTO = (CompilationTaskParamsDTO) new Gson().fromJson(createdTask, CompilationTaskParamsDTO.class);
+                    task = CompilationTask.createCompilationTaskFromDTO(compilationTaskParamsDTO, graphForTask);
                 }
                 else{
-                    if(createdTaskParamsDTO instanceof SimulationTaskParamsDTO){
-                        SimulationTaskParamsDTO simulationTaskParamsDTO = (SimulationTaskParamsDTO) createdTaskParamsDTO;
-                        task = SimulationTask.createSimulationTaskFromDTO(simulationTaskParamsDTO, graphForTask);
-                    }
+                    SimulationTaskParamsDTO simulationTaskParamsDTO = (SimulationTaskParamsDTO) new Gson().fromJson(createdTask, SimulationTaskParamsDTO.class);
+                    task = SimulationTask.createSimulationTaskFromDTO(simulationTaskParamsDTO, graphForTask);
                 }
                 engine.addTaskToSystem(task);
             }

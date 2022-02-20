@@ -30,8 +30,6 @@ import java.util.function.Consumer;
 
 public class RunWindowController {
 
-//    private Engine engine;
-//    private Graph graph;
 
     @FXML
     private GridPane runResultsPane;
@@ -121,10 +119,6 @@ public class RunWindowController {
     @FXML
     private Button stopButton;
 
-    @FXML
-    void onBackToDashboard(ActionEvent event) {
-
-    }
 
     @FXML
     void onPlay(ActionEvent event) {

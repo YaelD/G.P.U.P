@@ -8,9 +8,13 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.control.Tab;
+import javafx.scene.control.TabPane;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
+import tasks_menu.TaskMenuController;
 import worker_dashboard.DashboardController;
 import worker_login.LoginWindowController;
 
@@ -28,6 +32,9 @@ public class TopContainerController {
     private BorderPane dashboard;
     private DashboardController dashboardController;
 
+    private BorderPane taskMenu;
+    private TaskMenuController taskMenuController;
+
     private SimpleStringProperty userName;
     private SimpleIntegerProperty numOfThreads;
 
@@ -42,7 +49,9 @@ public class TopContainerController {
         userNameLabel.textProperty().bind(userName);
         loadLoginPage();
         loadDashboardPage();
+        loadTaskMenu();
     }
+
 
     public TopContainerController() {
         userName = new SimpleStringProperty();
@@ -61,6 +70,22 @@ public class TopContainerController {
             userNameLabel.setVisible(true);
         });
     }
+
+    private void loadTaskMenu() {
+        URL loginPageUrl = TaskMenuController.class.getResource("task_menu.fxml");
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader();
+            fxmlLoader.setLocation(loginPageUrl);
+            taskMenu = fxmlLoader.load();
+            taskMenuController = fxmlLoader.getController();
+            taskMenuController.setTotalNumOfThreads(this.numOfThreads);
+            taskMenuController.setUserName(this.userName);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
 
     private void loadLoginPage() {
         URL loginPageUrl = LoginWindowController.class.getResource("worker_login.fxml");
@@ -81,7 +106,8 @@ public class TopContainerController {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader();
             fxmlLoader.setLocation(dashboardPageURL);
-            this.dashboard = fxmlLoader.load(dashboardPageURL.openStream());
+            ScrollPane scrollPane = fxmlLoader.load(dashboardPageURL.openStream());
+            this.dashboard = (BorderPane) scrollPane.contentProperty().get();
             this.dashboardController = fxmlLoader.getController();
         } catch (IOException e) {
             e.printStackTrace();
@@ -97,9 +123,20 @@ public class TopContainerController {
     }
 
     public void switchToDashboard(){
-       // currentUserName.set(JHON_DOE);
-        //chatRoomComponentController.setInActive();
-        setMainPanelTo(dashboard);
+        TabPane tabs = new TabPane();
+        tabs.setTabClosingPolicy(TabPane.TabClosingPolicy.SELECTED_TAB);
+        Tab dashBoardTab = new Tab("Dashboard",dashboard);
+        Tab taskInfoTab = new Tab("Task menu", taskMenu);
+        dashBoardTab.setClosable(false);
+        taskInfoTab.setClosable(false);
+        dashboardController.setTopTabPane(tabs);
+        tabs.getTabs().add(dashBoardTab);
+        tabs.getTabs().add(taskInfoTab);
+        mainPane.centerProperty().set(tabs);
+        AnchorPane.setBottomAnchor(tabs, 1.0);
+        AnchorPane.setTopAnchor(tabs, 1.0);
+        AnchorPane.setLeftAnchor(tabs, 1.0);
+        AnchorPane.setRightAnchor(tabs, 1.0);
 
     }
 
