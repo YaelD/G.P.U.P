@@ -31,6 +31,8 @@ public interface Engine {
     public Collection<List<String>> getPaths(String firstTargetName, String secondTargetName,
                                               Dependency dependency, String graphName) throws TargetNotExistException, GraphNotExistException, InvalidDependencyException;
 
+    public boolean isTaskExistInSystem(String taskName);
+
     public void addTaskToSystem(Task task) throws TaskExistException;
 
 //    public GraphDTO activateTask(Consumer<TargetDTO> consumerString,

@@ -2,6 +2,7 @@ package task;
 
 import dto.GraphDTO;
 import dto.TaskDTO;
+import dto.TaskParamsDTO;
 import general_enums.TaskType;
 import graph.Graph;
 
@@ -114,7 +115,7 @@ public class CompilationTask extends Task{
     }
 
     //TODO: CHANGE THE MEMBER OF TOTAL PRICE TASK TO PRICE PER TARGET
-    public static CompilationTask createCompilationTaskFromDTO(TaskDTO taskDTO){
+    public static CompilationTask createCompilationTaskFromDTO(TaskParamsDTO taskParamsDTODTO){
         Graph graph = Graph.createGraphFromGraphDTO(taskDTO.getGraphDTO());
         return new CompilationTask(graph, taskDTO.getCreatorName(), taskDTO.getTaskName(), taskDTO.getTaskTotalPrice());
     }

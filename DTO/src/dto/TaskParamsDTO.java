@@ -26,4 +26,32 @@ public abstract class TaskParamsDTO {
         this.graphName = graphName;
         this.totalTaskPrice = totalTaskPrice;
     }
+
+    public String getCreatorName() {
+        return creatorName;
+    }
+
+    public TaskType getTaskType() {
+        return taskType;
+    }
+
+    public RunType getRunType() {
+        return runType;
+    }
+
+    public List<String> getTargets() {
+        return targets;
+    }
+
+    public String getTaskName() {
+        return taskName;
+    }
+
+    public String getGraphName() {
+        return graphName;
+    }
+
+    public int getTotalTaskPrice() {
+        return totalTaskPrice;
+    }
 }

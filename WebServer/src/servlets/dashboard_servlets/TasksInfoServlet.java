@@ -2,7 +2,9 @@ package servlets.dashboard_servlets;
 
 import com.google.gson.Gson;
 import dto.TaskDTO;
+import dto.TaskParamsDTO;
 import engine.Engine;
+import exceptions.GraphNotExistException;
 import exceptions.TaskExistException;
 import general_enums.TaskType;
 import jakarta.servlet.ServletException;
@@ -49,15 +51,32 @@ public class TasksInfoServlet extends HttpServlet {
         Task task = null;
         //String createdTask = ServletUtils.getRequestBody(request);
         //we can do it also like this:
-        TaskDTO createdTaskDTO = (TaskDTO) new Gson().fromJson(request.getReader(), TaskDTO.class);
+        TaskParamsDTO createdTaskParamsDTO = (TaskParamsDTO) new Gson().fromJson(request.getReader(), TaskParamsDTO.class);
 
         //TaskDTO createdTaskDTO = (TaskDTO) new Gson().fromJson(createdTask, TaskDTO.class);
-        if(createdTaskDTO.getTaskType().equals(TaskType.COMPILATION_TASK)){
-            task = CompilationTask.createCompilationTaskFromDTO(createdTaskDTO);
+        //TODO: validate if task name is uniq and graph name is exist in the system
+        //TODO: check if all the selected targets are valid
+        try {
+            if(engine.isGraphExistsInSystem(createdTaskParamsDTO.getGraphName())
+                    && !engine.isTaskExistInSystem(createdTaskParamsDTO.getTaskName())) {
+                if(createdTaskParamsDTO.getTaskType().equals(TaskType.COMPILATION_TASK)){
+                    task = CompilationTask.createCompilationTaskFromDTO(createdTaskParamsDTO);
+                }
+                else{
+                    task = SimulationTask.createSimulationTaskFromDTO(createdTaskParamsDTO);
+                }
+
+            }
+        } catch (GraphNotExistException e) {
+            e.printStackTrace();
         }
-        else{
-            task = SimulationTask.createSimulationTaskFromDTO(createdTaskDTO);
+
+
+        if(validateRequest(createdTaskParamsDTO.getGraphName(), createdTaskParamsDTO.getTaskName(), engine)){
+
         }
+
+
         try {
             engine.addTaskToSystem(task);
         } catch (TaskExistException e) {
@@ -65,5 +84,9 @@ public class TasksInfoServlet extends HttpServlet {
         }
         //TODO: ENTER THE TASK INTO THE TASKS IN SYSTEM STRUCTURE
 
+    }
+
+    private boolean validateRequest(String graphName, String taskName, Engine engine) {
+        if(engine.isGraphExistsInSystem(graphName) && engine.)
     }
 }

@@ -67,12 +67,11 @@ public class SystemEngine implements Engine{
     }
 
 
-    public boolean isTaskExistInSystem(String taskName) throws TaskNotExistException {
-        if(!this.tasksInSystem.containsKey(taskName)){
-            throw new TaskNotExistException(taskName);
-        }
-        return true;
+    public boolean isTaskExistInSystem(String taskName) {
+        return this.tasksInSystem.containsKey(taskName);
     }
+
+
 
 
     public boolean isGraphExistsInSystem(String graphName) throws GraphNotExistException {
