@@ -7,8 +7,11 @@ import jakarta.servlet.ServletContext;
 import jakarta.servlet.http.HttpServletRequest;
 import user.UserManager;
 
+import java.io.BufferedReader;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class ServletUtils {
 
@@ -61,5 +64,10 @@ public class ServletUtils {
             paramsMap.put(paramType, request.getParameter(paramType));
         }
         return paramsMap;
+    }
+
+    public static String getRequestBody(HttpServletRequest request) throws IOException {
+        BufferedReader reader = request.getReader();
+        return (reader.lines().collect(Collectors.joining()));
     }
 }

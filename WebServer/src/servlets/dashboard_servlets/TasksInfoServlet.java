@@ -3,11 +3,15 @@ package servlets.dashboard_servlets;
 import com.google.gson.Gson;
 import dto.TaskDTO;
 import engine.Engine;
+import exceptions.TaskExistException;
+import general_enums.TaskType;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import task.CompilationTask;
+import task.SimulationTask;
 import task.Task;
 import utils.ServletUtils;
 
@@ -37,5 +41,29 @@ public class TasksInfoServlet extends HttpServlet {
             body.print(json);
             body.flush();
         }
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        Engine engine = ServletUtils.getEngine(getServletContext());
+        Task task = null;
+        //String createdTask = ServletUtils.getRequestBody(request);
+        //we can do it also like this:
+        TaskDTO createdTaskDTO = (TaskDTO) new Gson().fromJson(request.getReader(), TaskDTO.class);
+
+        //TaskDTO createdTaskDTO = (TaskDTO) new Gson().fromJson(createdTask, TaskDTO.class);
+        if(createdTaskDTO.getTaskType().equals(TaskType.COMPILATION_TASK)){
+            task = CompilationTask.createCompilationTaskFromDTO(createdTaskDTO);
+        }
+        else{
+            task = SimulationTask.createSimulationTaskFromDTO(createdTaskDTO);
+        }
+        try {
+            engine.addTaskToSystem(task);
+        } catch (TaskExistException e) {
+            e.printStackTrace();
+        }
+        //TODO: ENTER THE TASK INTO THE TASKS IN SYSTEM STRUCTURE
+
     }
 }

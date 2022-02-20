@@ -215,4 +215,18 @@ public class Graph implements Cloneable {
 
     }
 
+    //todo: maybe it will be better if the graph will also contains the number of targets, root, middle..
+    public static Graph createGraphFromGraphDTO(GraphDTO graphDTO){
+        Map<String, Target> targetGraph = new HashMap<>();
+        Map<String, TargetDTO> targetsGraphDTO = graphDTO.getTargets();
+        for(TargetDTO targetDTO: targetsGraphDTO.values()){
+            Target target = Target.createTargetFromTargetDTO(targetDTO);
+            targetGraph.put(targetDTO.getName(), target);
+        }
+        Map<TaskType, Integer> taskPricePerTarget = new HashMap<>();
+        taskPricePerTarget.put(TaskType.SIMULATION_TASK, graphDTO.getPriceOfSimulationTask());
+        taskPricePerTarget.put(TaskType.COMPILATION_TASK, graphDTO.getPriceOfCompilationTask());
+
+        return new Graph(targetGraph, graphDTO.getName(), taskPricePerTarget, graphDTO.getCreatorName());
+    }
 }

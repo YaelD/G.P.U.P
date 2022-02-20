@@ -12,8 +12,8 @@ public class SimulationTask extends Task{
     private double successRate;
     private double successWithWarningsRate;
 
-    public SimulationTask(Graph graph, String creatorName, String taskName) {
-        super(graph, creatorName, taskName);
+    public SimulationTask(Graph graph, String creatorName, String taskName, int pricePerTarget) {
+        super(graph, creatorName, taskName, pricePerTarget);
     }
 
 //    public SimulationTask(Graph graph, SimulationTaskParamsDTO simulationTaskDTO, SerialSetsContainer serialSetsContainer) {
@@ -90,6 +90,12 @@ public class SimulationTask extends Task{
         TaskDTO taskDTO = new TaskDTO(this.taskName, this.creatorName, this.totalTaskPrice,
                 this.registeredWorkers.size(), this.status, graphDTO, TaskType.SIMULATION_TASK);
         return taskDTO;
+    }
+
+    //TODO: CHANGE THE MEMBER OF TOTAL PRICE TASK TO PRICE PER TARGET
+    public static SimulationTask createSimulationTaskFromDTO(TaskDTO taskDTO){
+        Graph graph = Graph.createGraphFromGraphDTO(taskDTO.getGraphDTO());
+        return new SimulationTask(graph, taskDTO.getCreatorName(), taskDTO.getTaskName(), taskDTO.getTaskTotalPrice());
     }
 
 }

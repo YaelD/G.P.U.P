@@ -59,6 +59,21 @@ public class SystemEngine implements Engine{
         return graph.getTarget(name);
     }
 
+    public synchronized void addTaskToSystem(Task task) throws TaskExistException {
+        if (this.tasksInSystem.containsKey(task.getTaskName())) {
+            throw new TaskExistException(task.getTaskName());
+        }
+        tasksInSystem.put(task.getTaskName(), task);
+    }
+
+
+    public boolean isTaskExistInSystem(String taskName) throws TaskNotExistException {
+        if(!this.tasksInSystem.containsKey(taskName)){
+            throw new TaskNotExistException(taskName);
+        }
+        return true;
+    }
+
 
     public boolean isGraphExistsInSystem(String graphName) throws GraphNotExistException {
         if(!this.graphsInSystem.containsKey(graphName)){

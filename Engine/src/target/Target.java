@@ -260,6 +260,11 @@ public class Target implements Cloneable {
 
     }
 
+    public static Target createTargetFromTargetDTO(TargetDTO targetDTO){
+        //TODO: create the function
+        return null;
+    }
+
 
 
 }

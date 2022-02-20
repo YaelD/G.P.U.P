@@ -29,12 +29,15 @@ public abstract class Task{
 
     //public static Object taskDummyLock = new Object();
 
-    public Task(Graph graph, String creatorName, String taskName) {
+
+
+    public Task(Graph graph, String creatorName, String taskName, int pricePerTarget) {
         this.graph = graph;
         this.creatorName = creatorName;
         this.latch = null;
         this.status = TaskStatus.NEW;
         this.taskName = taskName;
+        this.totalTaskPrice = pricePerTarget * this.graph.getTargets().size();
     }
 
     public boolean isTaskFinished() {
@@ -43,6 +46,10 @@ public abstract class Task{
 
     public Graph getGraph() {
         return graph;
+    }
+
+    public String getTaskName() {
+        return taskName;
     }
 
     public void setGraph(Graph graph) {

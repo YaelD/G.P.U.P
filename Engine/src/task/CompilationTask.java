@@ -13,8 +13,8 @@ public class CompilationTask extends Task{
     private String sourceDir;
     private String destinationDir;
 
-    public CompilationTask(Graph graph, String creatorName, String taskName) {
-        super(graph, creatorName, taskName);
+    public CompilationTask(Graph graph, String creatorName, String taskName, int pricePerTarget) {
+        super(graph, creatorName, taskName, pricePerTarget);
     }
 
 
@@ -111,5 +111,11 @@ public class CompilationTask extends Task{
         TaskDTO taskDTO = new TaskDTO(this.taskName, this.creatorName, this.totalTaskPrice,
                 this.registeredWorkers.size(), this.status, graphDTO, TaskType.COMPILATION_TASK);
         return taskDTO;
+    }
+
+    //TODO: CHANGE THE MEMBER OF TOTAL PRICE TASK TO PRICE PER TARGET
+    public static CompilationTask createCompilationTaskFromDTO(TaskDTO taskDTO){
+        Graph graph = Graph.createGraphFromGraphDTO(taskDTO.getGraphDTO());
+        return new CompilationTask(graph, taskDTO.getCreatorName(), taskDTO.getTaskName(), taskDTO.getTaskTotalPrice());
     }
 }
