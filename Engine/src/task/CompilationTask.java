@@ -1,8 +1,6 @@
 package task;
 
-import dto.GraphDTO;
-import dto.TaskDTO;
-import dto.TaskParamsDTO;
+import dto.*;
 import engine.SystemEngine;
 import general_enums.TaskType;
 import graph.Graph;
@@ -12,14 +10,22 @@ import java.util.Set;
 
 public class CompilationTask extends Task{
 
-    final String JAVA_COMPILER = "javac";
-    final String SOURCE_DIR_REF_PARAM = "-cp";
-    final String DESTINATION_DIR_REF_PARAM = "-d";
+    private final String JAVA_COMPILER = "javac";
+    private final String SOURCE_DIR_REF_PARAM = "-cp";
+    private final String DESTINATION_DIR_REF_PARAM = "-d";
+
     private String sourceDir;
     private String destinationDir;
 
     public CompilationTask(Graph graph, String creatorName, String taskName, int pricePerTarget) {
         super(graph, creatorName, taskName, pricePerTarget);
+    }
+
+    public CompilationTask(CompilationTaskParamsDTO compilationTaskParamsDTO, Graph graph) {
+        super(graph, compilationTaskParamsDTO.getCreatorName(),
+                compilationTaskParamsDTO.getTaskName(), compilationTaskParamsDTO.getTotalTaskPrice());
+        this.destinationDir = compilationTaskParamsDTO.getDestinationDir();
+        this.sourceDir = compilationTaskParamsDTO.getSourceDir();
     }
 
 
@@ -119,10 +125,9 @@ public class CompilationTask extends Task{
     }
 
 
-    public static CompilationTask createCompilationTaskFromDTO(TaskParamsDTO taskParamsDTO, Graph graphForTask){
-        Set<String> selectedTargets = new HashSet<>(taskParamsDTO.getTargets());
+    public static CompilationTask createCompilationTaskFromDTO(CompilationTaskParamsDTO compilationTaskParamsDTO, Graph graphForTask){
+        Set<String> selectedTargets = new HashSet<>(compilationTaskParamsDTO.getTargets());
         Graph graph = Graph.buildGraphForRunning(selectedTargets, graphForTask);
-        return new CompilationTask(graph, taskParamsDTO.getCreatorName(), taskParamsDTO.getTaskName(),
-                taskParamsDTO.getTotalTaskPrice());
+        return new CompilationTask(compilationTaskParamsDTO, graph);
     }
 }

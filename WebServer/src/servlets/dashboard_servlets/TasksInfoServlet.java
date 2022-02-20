@@ -1,6 +1,8 @@
 package servlets.dashboard_servlets;
 
 import com.google.gson.Gson;
+import dto.CompilationTaskParamsDTO;
+import dto.SimulationTaskParamsDTO;
 import dto.TaskDTO;
 import dto.TaskParamsDTO;
 import engine.Engine;
@@ -56,17 +58,22 @@ public class TasksInfoServlet extends HttpServlet {
         TaskParamsDTO createdTaskParamsDTO = (TaskParamsDTO) new Gson().fromJson(request.getReader(), TaskParamsDTO.class);
 
         //TaskDTO createdTaskDTO = (TaskDTO) new Gson().fromJson(createdTask, TaskDTO.class);
-        //TODO: check if all the selected targets are valid
         try {
             if(engine.isGraphExistsInSystem(createdTaskParamsDTO.getGraphName())
                     && !engine.isTaskExistInSystem(createdTaskParamsDTO.getTaskName())
                     && engine.isTargetsExistsInGraph(createdTaskParamsDTO.getTargets(), createdTaskParamsDTO.getGraphName())) {
                 Graph graphForTask = engine.getGraphsInSystem().get(createdTaskParamsDTO.getGraphName());
                 if(createdTaskParamsDTO.getTaskType().equals(TaskType.COMPILATION_TASK)){
-                    task = CompilationTask.createCompilationTaskFromDTO(createdTaskParamsDTO, graphForTask);
+                    if(createdTaskParamsDTO instanceof CompilationTaskParamsDTO){
+                        CompilationTaskParamsDTO compilationTaskParamsDTO = (CompilationTaskParamsDTO) createdTaskParamsDTO;
+                        task = CompilationTask.createCompilationTaskFromDTO(compilationTaskParamsDTO, graphForTask);
+                    }
                 }
                 else{
-                    task = SimulationTask.createSimulationTaskFromDTO(createdTaskParamsDTO, graphForTask);
+                    if(createdTaskParamsDTO instanceof SimulationTaskParamsDTO){
+                        SimulationTaskParamsDTO simulationTaskParamsDTO = (SimulationTaskParamsDTO) createdTaskParamsDTO;
+                        task = SimulationTask.createSimulationTaskFromDTO(simulationTaskParamsDTO, graphForTask);
+                    }
                 }
                 engine.addTaskToSystem(task);
             }

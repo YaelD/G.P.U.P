@@ -1,6 +1,7 @@
 package task;
 
 import dto.GraphDTO;
+import dto.SimulationTaskParamsDTO;
 import dto.TaskDTO;
 import dto.TaskParamsDTO;
 import general_enums.TaskType;
@@ -18,10 +19,18 @@ public class SimulationTask extends Task{
 
     public SimulationTask(Graph graph, String creatorName, String taskName, int pricePerTarget) {
         super(graph, creatorName, taskName, pricePerTarget);
-
     }
 
-//    public SimulationTask(Graph graph, SimulationTaskParamsDTO simulationTaskDTO, SerialSetsContainer serialSetsContainer) {
+    public SimulationTask(SimulationTaskParamsDTO simulationTaskParamsDTO, Graph graph) {
+        super(graph, simulationTaskParamsDTO.getCreatorName(),
+                simulationTaskParamsDTO.getTaskName(), simulationTaskParamsDTO.getTotalTaskPrice());
+        this.isRandom = simulationTaskParamsDTO.isRandom();
+        this.processTime = simulationTaskParamsDTO.getProcessTime();
+        this.successRate = simulationTaskParamsDTO.getSuccessRate();
+        this.successWithWarningsRate = simulationTaskParamsDTO.getSuccessWithWarningsRate();
+    }
+
+    //    public SimulationTask(Graph graph, SimulationTaskParamsDTO simulationTaskDTO, SerialSetsContainer serialSetsContainer) {
 //        super(graph, "", "");
 //        this.processTime = simulationTaskDTO.getProcessTime();
 //        this.isRandom = simulationTaskDTO.isRandom();
@@ -97,11 +106,10 @@ public class SimulationTask extends Task{
         return taskDTO;
     }
 
-    public static SimulationTask createSimulationTaskFromDTO(TaskParamsDTO taskParamsDTO, Graph graphForTask){
+    public static SimulationTask createSimulationTaskFromDTO(SimulationTaskParamsDTO taskParamsDTO, Graph graphForTask){
         Set<String> selectedTargets = new HashSet<>(taskParamsDTO.getTargets());
         Graph graph = Graph.buildGraphForRunning(selectedTargets, graphForTask);
-        return new SimulationTask(graph, taskParamsDTO.getCreatorName(), taskParamsDTO.getTaskName(),
-                taskParamsDTO.getTotalTaskPrice());
+        return new SimulationTask(taskParamsDTO, graph);
     }
 
 }
