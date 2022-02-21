@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+
+<TableView fx:id="targetsTable" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="execution_details.RunningTargetsTableController">
+   <columns>
+      <TableColumn fx:id="frozenColumn" editable="false" maxWidth="1.7976931348623157E308" minWidth="100.0" prefWidth="100.0" sortable="false" text="Frozen" />
+      <TableColumn fx:id="waitingColumn" editable="false" maxWidth="1.7976931348623157E308" minWidth="100.0" prefWidth="100.0" sortable="false" text="Waiting" />
+      <TableColumn fx:id="inProcessColumn" editable="false" maxWidth="1.7976931348623157E308" minWidth="100.0" prefWidth="100.0" sortable="false" text="In process" />
+      <TableColumn fx:id="finishedColumn" editable="false" maxWidth="1.7976931348623157E308" minWidth="100.0" prefWidth="100.0" sortable="false" text="Finished" />
+      <TableColumn fx:id="skippedColumn" editable="false" maxWidth="1.7976931348623157E308" minWidth="100.0" prefWidth="100.0" sortable="false" text="Skipped" />
+   </columns>
+</TableView>

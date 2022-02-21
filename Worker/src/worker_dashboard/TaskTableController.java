@@ -1,8 +1,6 @@
 package worker_dashboard;
 
-import RefreshingItems.TaskListRefresher;
-import com.sun.rowset.internal.Row;
-import container.TopContainerController;
+import RefreshingItems.TaskListRefresherTimer;
 import dto.TaskDTO;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
@@ -124,10 +122,11 @@ public class TaskTableController {
     }
 
     public void startTaskListRefresher() {
-        listRefresher = new TaskListRefresher(
-                this::updateTasksList);
-        timer = new Timer(true);
-        timer.schedule(listRefresher, 15000, 15000);
+        TaskListRefresherTimer.getInstance().addConsumer(this::updateTasksList);
+//        listRefresher = new TaskListRefresher(
+//                this::updateTasksList);
+//        timer = new Timer(true);
+//        timer.schedule(listRefresher, 15000, 15000);
     }
 
 

@@ -1,5 +1,6 @@
 package execution_details;
 
+import dto.TargetDTO;
 import general_enums.RunResults;
 import general_enums.RunStatus;
 import javafx.application.Platform;
@@ -30,9 +31,10 @@ public class TargetsTableButtonsHandler {
     private Map<RunStatus, Button> buttonsMap = new HashMap<>();
 
 
-    public TargetsTableButtonsHandler(String name) {
-        runResults = new SimpleObjectProperty<>(RunResults.SUCCESS);
-        runStatus = new SimpleObjectProperty<>(RunStatus.FROZEN);
+    public TargetsTableButtonsHandler(TargetDTO targetDTO){
+        this.name = targetDTO.getName();
+        runResults = new SimpleObjectProperty<>(targetDTO.getRunResult());
+        runStatus = new SimpleObjectProperty<>(targetDTO.getRunStatus());
         runStatus.addListener(new ChangeListener<RunStatus>() {
             @Override
             public void changed(ObservableValue<? extends RunStatus> observable, RunStatus oldValue, RunStatus newValue) {
@@ -40,19 +42,21 @@ public class TargetsTableButtonsHandler {
                     Platform.runLater(new Runnable() {
                         @Override
                         public void run() {
-                            buttonsMap.get(oldValue).setVisible(false);
-                            buttonsMap.get(newValue).setVisible(true);
-                            if(newValue.equals(RunStatus.FINISHED)){
-                                switch (runResults.getValue()){
-                                    case SUCCESS:
-                                        buttonsMap.get(RunStatus.FINISHED).setStyle("-fx-background-color: #63ff46; ");
-                                        break;
-                                    case FAILURE:
-                                        buttonsMap.get(RunStatus.FINISHED).setStyle("-fx-background-color: #ff3d3d; ");
-                                        break;
-                                    case WARNING:
-                                        buttonsMap.get(RunStatus.FINISHED).setStyle("-fx-background-color: #ff8337; ");
-                                        break;
+                            if(!oldValue.equals(newValue)){
+                                buttonsMap.get(oldValue).setVisible(false);
+                                buttonsMap.get(newValue).setVisible(true);
+                                if(newValue.equals(RunStatus.FINISHED)){
+                                    switch (runResults.getValue()){
+                                        case SUCCESS:
+                                            buttonsMap.get(RunStatus.FINISHED).setStyle("-fx-background-color: #63ff46; ");
+                                            break;
+                                        case FAILURE:
+                                            buttonsMap.get(RunStatus.FINISHED).setStyle("-fx-background-color: #ff3d3d; ");
+                                            break;
+                                        case WARNING:
+                                            buttonsMap.get(RunStatus.FINISHED).setStyle("-fx-background-color: #ff8337; ");
+                                            break;
+                                    }
                                 }
                             }
                         }
@@ -60,7 +64,6 @@ public class TargetsTableButtonsHandler {
                 }
             }
         });
-        this.name = name;
         frozenBtn = new Button(name);
         waitingBtn = new Button(name);
         inProcessBtn = new Button(name);
@@ -75,7 +78,55 @@ public class TargetsTableButtonsHandler {
         inProcessBtn.setVisible(false);
         finishedBtn.setVisible(false);
         skippedBtn.setVisible(false);
+
     }
+
+//    public TargetsTableButtonsHandler(String name) {
+////        runResults = new SimpleObjectProperty<>(RunResults.SUCCESS);
+////        runStatus = new SimpleObjectProperty<>(RunStatus.FROZEN);
+////        runStatus.addListener(new ChangeListener<RunStatus>() {
+////            @Override
+////            public void changed(ObservableValue<? extends RunStatus> observable, RunStatus oldValue, RunStatus newValue) {
+////                if(!oldValue.equals(newValue)){
+////                    Platform.runLater(new Runnable() {
+////                        @Override
+////                        public void run() {
+////                            buttonsMap.get(oldValue).setVisible(false);
+////                            buttonsMap.get(newValue).setVisible(true);
+////                            if(newValue.equals(RunStatus.FINISHED)){
+////                                switch (runResults.getValue()){
+////                                    case SUCCESS:
+////                                        buttonsMap.get(RunStatus.FINISHED).setStyle("-fx-background-color: #63ff46; ");
+////                                        break;
+////                                    case FAILURE:
+////                                        buttonsMap.get(RunStatus.FINISHED).setStyle("-fx-background-color: #ff3d3d; ");
+////                                        break;
+////                                    case WARNING:
+////                                        buttonsMap.get(RunStatus.FINISHED).setStyle("-fx-background-color: #ff8337; ");
+////                                        break;
+////                                }
+////                            }
+////                        }
+////                    });
+////                }
+////            }
+////        });
+////        this.name = name;
+////        frozenBtn = new Button(name);
+////        waitingBtn = new Button(name);
+////        inProcessBtn = new Button(name);
+////        finishedBtn = new Button(name);
+////        skippedBtn = new Button(name);
+////        buttonsMap.put(RunStatus.FINISHED, finishedBtn);
+////        buttonsMap.put(RunStatus.FROZEN, frozenBtn);
+////        buttonsMap.put(RunStatus.WAITING, waitingBtn);
+////        buttonsMap.put(RunStatus.IN_PROCESS, inProcessBtn);
+////        buttonsMap.put(RunStatus.SKIPPED, skippedBtn);
+////        waitingBtn.setVisible(false);
+////        inProcessBtn.setVisible(false);
+////        finishedBtn.setVisible(false);
+////        skippedBtn.setVisible(false);
+//    }
 
     public Map<RunStatus, Button> getButtonsMap() {
         return buttonsMap;

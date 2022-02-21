@@ -1,6 +1,6 @@
 package dashboard;
 
-import RefreshingItems.GraphListRefresher;
+import RefreshingItems.GraphListRefresherTimer;
 import dto.GraphDTO;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -92,10 +92,12 @@ public class GraphTableController {
     }
 
     public void startGraphListRefresher() {
-        listRefresher = new GraphListRefresher(
-                this::updateGraphsList);
-        timer = new Timer(true);
-        timer.schedule(listRefresher, 15000, 15000);
+        GraphListRefresherTimer.getInstance().addConsumer(this::updateGraphsList);
+
+//        listRefresher = new GraphListRefresher(
+//                this::updateGraphsList);
+//        timer = new Timer(true);
+//        timer.schedule(listRefresher, 15000, 15000);
     }
 
 

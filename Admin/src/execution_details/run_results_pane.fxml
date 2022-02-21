@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.text.Font?>
+
+
+<GridPane fx:id="runResultsPane" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="execution_details.RunResultsController">
+   <columnConstraints>
+      <ColumnConstraints hgrow="SOMETIMES" maxWidth="10.0" minWidth="10.0" prefWidth="10.0" />
+      <ColumnConstraints hgrow="SOMETIMES" maxWidth="171.0" minWidth="10.0" prefWidth="170.0" />
+      <ColumnConstraints hgrow="SOMETIMES" maxWidth="107.0" minWidth="10.0" prefWidth="80.0" />
+      <ColumnConstraints hgrow="SOMETIMES" maxWidth="10.0" minWidth="10.0" prefWidth="10.0" />
+   </columnConstraints>
+   <rowConstraints>
+      <RowConstraints maxHeight="10.0" minHeight="10.0" prefHeight="10.0" vgrow="SOMETIMES" />
+      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+      <RowConstraints maxHeight="10.0" minHeight="10.0" prefHeight="10.0" vgrow="SOMETIMES" />
+   </rowConstraints>
+   <children>
+      <Label text="Skipped " GridPane.columnIndex="1" GridPane.rowIndex="4">
+         <font>
+            <Font name="System Bold" size="14.0" />
+         </font>
+      </Label>
+      <Label layoutX="10.0" layoutY="12.0" text="Finished with warnings" textFill="#ff9447" GridPane.columnIndex="1" GridPane.rowIndex="3">
+         <font>
+            <Font name="System Bold" size="14.0" />
+         </font>
+      </Label>
+      <Label layoutX="10.0" layoutY="52.0" text="Finished successfully" textFill="#3a9428" GridPane.columnIndex="1" GridPane.rowIndex="2">
+         <font>
+            <Font name="System Bold" size="14.0" />
+         </font>
+      </Label>
+      <Label layoutX="10.0" layoutY="72.0" text="Finished with failure" textFill="#ff3d3d" GridPane.columnIndex="1" GridPane.rowIndex="5">
+         <font>
+            <Font name="System Bold" size="14.0" />
+         </font>
+      </Label>
+      <Label fx:id="numFinishedSuccessLabel" layoutX="10.0" layoutY="92.0" text="Label" GridPane.columnIndex="2" GridPane.rowIndex="2">
+         <font>
+            <Font size="15.0" />
+         </font>
+      </Label>
+      <Label fx:id="numFinishedWarningsLabel" layoutX="10.0" layoutY="32.0" text="Label" GridPane.columnIndex="2" GridPane.rowIndex="3">
+         <font>
+            <Font size="15.0" />
+         </font>
+      </Label>
+      <Label fx:id="numSkippedLabel" layoutX="135.0" layoutY="52.0" text="Label" GridPane.columnIndex="2" GridPane.rowIndex="4">
+         <font>
+            <Font size="15.0" />
+         </font>
+      </Label>
+      <Label fx:id="numFailureLabel" layoutX="135.0" layoutY="72.0" text="Label" GridPane.columnIndex="2" GridPane.rowIndex="5">
+         <font>
+            <Font size="15.0" />
+         </font>
+      </Label>
+      <Label layoutX="10.0" layoutY="72.0" text="Run Results" underline="true" GridPane.columnIndex="1" GridPane.rowIndex="1">
+         <font>
+            <Font name="System Bold" size="18.0" />
+         </font>
+      </Label>
+   </children>
+</GridPane>

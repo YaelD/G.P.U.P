@@ -1,6 +1,6 @@
 package dashboard;
 
-import RefreshingItems.UserListRefresher;
+import RefreshingItems.UserListRefresherTimer;
 import dto.UserDTO;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
@@ -50,10 +50,13 @@ public class UsersListController {
     }
 
     public void startUserListRefresher() {
-        listRefresher = new UserListRefresher(
-                this::updateUsersList);
-        timer = new Timer(true);
-        timer.schedule(listRefresher, 15000, 15000);
+
+        UserListRefresherTimer.getInstance().addConsumer(this::updateUsersList);
+
+//        listRefresher = new UserListRefresher(
+//                this::updateUsersList);
+//        timer = new Timer(true);
+//        timer.schedule(listRefresher, 15000, 15000);
     }
 
 

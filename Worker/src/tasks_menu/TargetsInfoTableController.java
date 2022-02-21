@@ -1,26 +1,32 @@
 package tasks_menu;
 
+import dto.TargetDTO;
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 
 public class TargetsInfoTableController {
 
     @FXML
-    private TableColumn<?, ?> targetName_column;
+    private TableView<TargetDTO> targetTable;
 
     @FXML
-    private TableColumn<?, ?> taskName_column;
+    private TableColumn<TargetDTO, String> targetName_column;
 
     @FXML
-    private TableColumn<?, ?> taskType_column;
+    private TableColumn<TargetDTO, String> taskName_column;
 
     @FXML
-    private TableColumn<?, ?> runStatus_Column;
+    private TableColumn<TargetDTO, String> taskType_column;
 
     @FXML
-    private TableColumn<?, ?> price_column;
+    private TableColumn<TargetDTO, String> runStatus_Column;
 
     @FXML
-    private TableColumn<?, ?> logs_column;
+    private TableColumn<TargetDTO, Integer> price_column;
+
+    @FXML
+    private TableColumn<TargetDTO, Button> logs_column;
 
 }

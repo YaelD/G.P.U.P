@@ -1,5 +1,6 @@
 package tasks_menu;
 
+import dto.TaskDTO;
 import javafx.fxml.FXML;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -7,21 +8,21 @@ import javafx.scene.control.TableView;
 public class TasksInfoTableController {
 
     @FXML
-    private TableView<?> taskInfoTable;
+    private TableView<TaskDTO> taskInfoTable;
 
     @FXML
-    private TableColumn<?, ?> taskName_column;
+    private TableColumn<TaskDTO, String> taskName_column;
 
     @FXML
-    private TableColumn<?, ?> numOfWorkers_column;
+    private TableColumn<TaskDTO, Integer> numOfWorkers_column;
 
     @FXML
-    private TableColumn<?, ?> taskProgressColumn;
+    private TableColumn<TaskDTO, String> taskProgressColumn;
 
     @FXML
-    private TableColumn<?, ?> myNumberOfTargets_column;
+    private TableColumn<TaskDTO, Integer> myNumberOfTargets_column;
 
     @FXML
-    private TableColumn<?, ?> totalTaskCredits_column;
+    private TableColumn<TaskDTO, Integer> totalTaskCredits_column;
 
 }

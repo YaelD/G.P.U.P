@@ -1,7 +1,5 @@
 package dashboard;
 
-import RefreshingItems.GraphListRefresher;
-import RefreshingItems.UserListRefresher;
 import dto.GraphDTO;
 import dto.TaskDTO;
 import dto.UserDTO;

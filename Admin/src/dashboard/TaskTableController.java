@@ -1,9 +1,6 @@
 package dashboard;
 
-import RefreshingItems.GraphListRefresher;
-import RefreshingItems.TaskListRefresher;
-import container.TopContainerController;
-import dto.GraphDTO;
+import RefreshingItems.TaskListRefresherTimer;
 import dto.TaskDTO;
 import execution_details.RunWindowController;
 import javafx.application.Platform;
@@ -12,10 +9,8 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.layout.AnchorPane;
 
 import java.io.IOException;
 import java.net.URL;
@@ -114,9 +109,9 @@ public class TaskTableController {
 
         if(tasksInSystemTableView.getSelectionModel().getSelectedItem() != null){
             TaskDTO task = tasksInSystemTableView.getSelectionModel().getSelectedItem();
-
             if(task.getCreatorName().equals(this.dashboardController.getUserName()) ){
                 Parent scene = loadTaskRunScene(task);
+
                 dashboardController.addTab(task.getTaskName(),scene);
             }
         }
@@ -130,6 +125,8 @@ public class TaskTableController {
         Parent root = null;
         try {
             root = fxmlLoader.load(resource.openStream());
+            RunWindowController runWindowController = fxmlLoader.getController();
+            runWindowController.setTask(task);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -146,10 +143,14 @@ public class TaskTableController {
     }
 
     public void startTaskListRefresher() {
-        listRefresher = new TaskListRefresher(
-                this::updateTasksList);
-        timer = new Timer(true);
-        timer.schedule(listRefresher, 15000, 15000);
+        TaskListRefresherTimer.getInstance().addConsumer(this::updateTasksList);
+
+
+
+//        listRefresher = new TaskListRefresher(
+//                this::updateTasksList);
+//        timer = new Timer(true);
+//        timer.schedule(listRefresher, 15000, 15000);
     }
 
     public void setDashboardController(DashboardController dashboardController) {
