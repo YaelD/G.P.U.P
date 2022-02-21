@@ -126,7 +126,7 @@ public class TaskTableController {
         try {
             root = fxmlLoader.load(resource.openStream());
             RunWindowController runWindowController = fxmlLoader.getController();
-            runWindowController.setTask(task);
+            runWindowController.setTaskDTOProperty(task);
         } catch (IOException e) {
             e.printStackTrace();
         }

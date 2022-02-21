@@ -5,24 +5,16 @@ package execution_details;
 //import dto.TaskParamsDTO;
 //import engine.Engine;
 //import graph.Graph;
+import RefreshingItems.TaskListRefresherTimer;
 import dto.TargetDTO;
 import dto.TaskDTO;
-import dto.TaskParamsDTO;
 import general_enums.RunResults;
-import general_enums.RunType;
-import general_enums.TaskType;
-import javafx.application.Platform;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 //import runtask.running_task_window.TargetsTableButtonsHandler;
 //import target.RunResults;
@@ -31,14 +23,12 @@ import javafx.scene.layout.GridPane;
 //import task.RunType;
 //import task.TaskType;
 
-import java.util.Map;
-import java.util.Set;
-import java.util.function.Consumer;
+import java.util.List;
 
 
 public class RunWindowController {
 
-    SimpleObjectProperty<TaskDTO> task;
+    SimpleObjectProperty<TaskDTO> taskDTOProperty;
 
 
     @FXML
@@ -94,9 +84,23 @@ public class RunWindowController {
 
     }
 
+    private void getTask(List<TaskDTO> taskDTOS){
+        for(TaskDTO taskDTO: taskDTOS){
+            if(taskDTO.getTaskName().equals(taskDTOProperty.get().getTaskName())){
+                taskDTOProperty.set(taskDTO);
+                return;
+            }
+        }
+    }
+
+    public RunWindowController() {
+        this.taskDTOProperty = new SimpleObjectProperty<>();
+    }
 
     @FXML
     private void initialize(){
+
+        TaskListRefresherTimer.getInstance().addConsumer(this::getTask);
 
         progressBar.setProgress(0);
         progressBar.progressProperty().addListener(new ChangeListener<Number>() {
@@ -105,13 +109,21 @@ public class RunWindowController {
                 percentLabel.setText(String.valueOf(Integer.valueOf((int)(newValue.doubleValue()*100))  + "%"));
             }
         });
+
+        taskDTOProperty.addListener(new ChangeListener<TaskDTO>() {
+            @Override
+            public void changed(ObservableValue<? extends TaskDTO> observable, TaskDTO oldValue, TaskDTO newValue) {
+                taskTableController.setTaskDTO(taskDTOProperty);
+                taskDetailsController.setTaskDTO(taskDTOProperty.getValue());
+            }
+        });
+
+
     }
 
 
-    public void setTask(TaskDTO task) {
-//        this.task.set(task);
-//        this.taskDetailsController.setTaskDTO(task);
-
+    public void setTaskDTOProperty(TaskDTO taskDTOProperty) {
+       this.taskDTOProperty.set(taskDTOProperty);
     }
 
     private void runTask() {

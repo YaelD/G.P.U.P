@@ -83,7 +83,7 @@ public class RunningTargetsTableController {
 
     }
 
-    public void setItems(SimpleObjectProperty<TaskDTO> taskProperty){
+    public void setTaskDTO(SimpleObjectProperty<TaskDTO> taskProperty){
         this.taskDTO.bind(taskProperty);
     }
 
