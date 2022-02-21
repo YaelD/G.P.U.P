@@ -7,6 +7,8 @@ import dto.SimulationTaskParamsDTO;
 import dto.TaskDTO;
 import dto.TaskParamsDTO;
 import engine.Engine;
+import engine.GraphsManager;
+import engine.TasksManager;
 import exceptions.GraphNotExistException;
 import exceptions.TargetNotExistException;
 import exceptions.TaskExistException;
@@ -42,8 +44,8 @@ public class TasksInfoServlet extends HttpServlet {
             try (PrintWriter body = response.getWriter()) {
                 Set<TaskDTO> taskDTOS = new HashSet<>();
                 Gson gson = new Gson();
-                Engine engine = ServletUtils.getEngine(getServletContext());
-                Map<String, Task> tasksInSystem = engine.getTasksInSystem();
+                TasksManager tasksManager = ServletUtils.getTasksManager(getServletContext());
+                Map<String, Task> tasksInSystem = tasksManager.getTasksInSystem();
                 Collection<Task> tasks = tasksInSystem.values();
                 for(Task task : tasks){
                     TaskDTO taskDTO = task.createTaskDTO();
@@ -70,15 +72,16 @@ public class TasksInfoServlet extends HttpServlet {
             response.setStatus(HttpServletResponse.SC_CONFLICT);
         }
         else{
-            Engine engine = ServletUtils.getEngine(getServletContext());
+            GraphsManager graphsManager = ServletUtils.getGraphsManager(getServletContext());
+            TasksManager tasksManager = ServletUtils.getTasksManager(getServletContext());
             Task task = null;
             String createdTask = ServletUtils.getRequestBody(request);
             TaskParamsDTO createdTaskParamsDTO = (TaskParamsDTO) new Gson().fromJson(createdTask, TaskParamsDTO.class);
             try {
-                if(engine.isGraphExistsInSystem(createdTaskParamsDTO.getGraphName())
-                        && !engine.isTaskExistInSystem(createdTaskParamsDTO.getTaskName())
-                        && engine.isTargetsExistsInGraph(createdTaskParamsDTO.getTargets(), createdTaskParamsDTO.getGraphName())) {
-                    Graph graphForTask = engine.getGraphsInSystem().get(createdTaskParamsDTO.getGraphName());
+                if(graphsManager.isGraphExistsInSystem(createdTaskParamsDTO.getGraphName())
+                        && !tasksManager.isTaskExistInSystem(createdTaskParamsDTO.getTaskName())
+                        && graphsManager.isTargetsExistsInGraph(createdTaskParamsDTO.getTargets(), createdTaskParamsDTO.getGraphName())) {
+                    Graph graphForTask = graphsManager.getGraphsInSystem().get(createdTaskParamsDTO.getGraphName());
                     if(createdTaskParamsDTO.getTaskType().equals(TaskType.COMPILATION_TASK)){
                         CompilationTaskParamsDTO compilationTaskParamsDTO = (CompilationTaskParamsDTO) new Gson().fromJson(createdTask, CompilationTaskParamsDTO.class);
                         task = CompilationTask.createCompilationTaskFromDTO(compilationTaskParamsDTO, graphForTask);
@@ -87,18 +90,12 @@ public class TasksInfoServlet extends HttpServlet {
                         SimulationTaskParamsDTO simulationTaskParamsDTO = (SimulationTaskParamsDTO) new Gson().fromJson(createdTask, SimulationTaskParamsDTO.class);
                         task = SimulationTask.createSimulationTaskFromDTO(simulationTaskParamsDTO, graphForTask);
                     }
-                    engine.addTaskToSystem(task);
+                    tasksManager.addTaskToSystem(task);
                     SessionUtils.setUserTasks(request, task, Constants.ADD_TASK);
                 }
-            } catch (GraphNotExistException e) {
+            } catch(Exception e){
                 response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-                response.getWriter().println("Graph " + e.getName() + " not exist");
-            } catch (TaskExistException e) {
-                response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-                response.getWriter().println("Task " + e.getName() + " already exist");
-            } catch (TargetNotExistException e) {
-                response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-                response.getWriter().println("Target " + e.getName() + " not exist");
+                response.getWriter().println(e.getMessage());
             }
         }
 
@@ -120,11 +117,11 @@ public class TasksInfoServlet extends HttpServlet {
             try(PrintWriter body = response.getWriter()){
                 Map<String, String> mapParams = null;
                 mapParams = ServletUtils.validateRequestQueryParams(request, paramsNames);
-                Engine engine = ServletUtils.getEngine(getServletContext());
+                TasksManager tasksManager = ServletUtils.getTasksManager(getServletContext());
                 String taskName = mapParams.get(Constants.TASK_NAME).trim();
                 String taskStatus = mapParams.get(Constants.TASK_STATUS).trim();
-                if(engine.isTaskExistInSystem(taskName) && TaskStatus.contains(taskStatus)){
-                    Task task = engine.updateTaskStatus(taskName, TaskStatus.valueOf(taskStatus.toUpperCase(Locale.ROOT)));
+                if(tasksManager.isTaskExistInSystem(taskName) && TaskStatus.contains(taskStatus)){
+                    Task task = tasksManager.updateTaskStatus(taskName, TaskStatus.valueOf(taskStatus.toUpperCase(Locale.ROOT)));
                     if(task == null){
                         response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
                         body.println("Invalid status");
@@ -136,7 +133,8 @@ public class TasksInfoServlet extends HttpServlet {
                 }
             }
             catch (Exception e) {
-                e.printStackTrace();
+                response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                response.getWriter().println(e.getMessage());
             }
         }
     }

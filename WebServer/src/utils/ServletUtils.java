@@ -1,8 +1,10 @@
 package utils;
 
 import engine.Engine;
+import engine.GraphsManager;
 import engine.SystemEngine;
 
+import engine.TasksManager;
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.http.HttpServletRequest;
 import user.UserManager;
@@ -17,6 +19,8 @@ public class ServletUtils {
 
     private static final String USER_MANAGER_ATTRIBUTE = "userManager";
     private static final String ENGINE_ATTRIBUTE = "engine";
+    private static final String TASKS_MANAGER_ATTRIBUTE = "taskManager";
+    private static final String GRAPHS_MANAGER_ATTRIBUTE = "graphsManager";
 
     /*
     Note how the synchronization is done only on the question and\or creation of the relevant managers and once they exists -
@@ -24,6 +28,8 @@ public class ServletUtils {
      */
     private static final Object userManagerLock = new Object();
     private static final Object engineManagerLock = new Object();
+    private static final Object tasksManagerLock = new Object();
+    private static final Object graphsManagerLock = new Object();
 
     public static UserManager getUserManager(ServletContext servletContext) {
         synchronized (userManagerLock) {
@@ -41,6 +47,24 @@ public class ServletUtils {
             }
         }
         return (Engine) servletContext.getAttribute(ENGINE_ATTRIBUTE);
+    }
+
+    public static GraphsManager getGraphsManager(ServletContext servletContext) {
+        synchronized (graphsManagerLock) {
+            if (servletContext.getAttribute(GRAPHS_MANAGER_ATTRIBUTE) == null) {
+                servletContext.setAttribute(GRAPHS_MANAGER_ATTRIBUTE, new GraphsManager());
+            }
+        }
+        return (GraphsManager) servletContext.getAttribute(GRAPHS_MANAGER_ATTRIBUTE);
+    }
+
+    public static TasksManager getTasksManager(ServletContext servletContext) {
+        synchronized (tasksManagerLock) {
+            if (servletContext.getAttribute(TASKS_MANAGER_ATTRIBUTE) == null) {
+                servletContext.setAttribute(TASKS_MANAGER_ATTRIBUTE, new TasksManager());
+            }
+        }
+        return (TasksManager) servletContext.getAttribute(TASKS_MANAGER_ATTRIBUTE);
     }
 
 //    public static int getIntParameter(HttpServletRequest request, String name) {

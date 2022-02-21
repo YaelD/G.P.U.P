@@ -2,6 +2,7 @@ package graph;
 
 import dto.GraphDTO;
 import dto.TargetDTO;
+import engine.ExceptionMessages;
 import exceptions.DependencyConflictException;
 import exceptions.DuplicateTargetsException;
 import exceptions.InvalidDependencyException;
@@ -77,13 +78,12 @@ public class Graph implements Cloneable {
 
     }
 
-    public static Map<String, Target> buildTargetGraph(GPUPTargets gpupTargets)
-            throws TargetNotExistException, DependencyConflictException, InvalidDependencyException, DuplicateTargetsException {
+    public static Map<String, Target> buildTargetGraph(GPUPTargets gpupTargets) throws Exception{
         Map<String, Target> graph = new HashMap<>();
 
         for(GPUPTarget gpupTarget : gpupTargets.getGPUPTarget()){
             if(graph.containsKey(gpupTarget.getName())){
-                throw new DuplicateTargetsException(gpupTarget.getName());
+                throw new Exception(ExceptionMessages.TARGET + gpupTarget.getName()+ ExceptionMessages.ALREADY_EXIST);
             }
             graph.put(gpupTarget.getName(), new Target(gpupTarget));
         }
@@ -111,13 +111,14 @@ public class Graph implements Cloneable {
     }
 
     private static void checkDuplicateTargets(GPUPTargets gpupTargets, Map<String, Target> graph)
-            throws TargetNotExistException, DependencyConflictException, InvalidDependencyException {
+            throws Exception{
         for(GPUPTarget gpupTarget : gpupTargets.getGPUPTarget()){
             if(gpupTarget.getGPUPTargetDependencies() != null){
                 for(GPUPTargetDependencies.GPUGDependency dependency:
                         gpupTarget.getGPUPTargetDependencies().getGPUGDependency()){
                     if(!graph.containsKey(dependency.getValue())){
-                        throw new TargetNotExistException(dependency.getValue());
+                        throw new Exception(ExceptionMessages.TARGET + dependency.getValue() +
+                                ExceptionMessages.NOT_EXIST);
                     }
                     Target currTarget = graph.get(gpupTarget.getName());
                     Target checkTarget = graph.get(dependency.getValue());
@@ -129,25 +130,27 @@ public class Graph implements Cloneable {
     }
 
     private static void checkDependencies(Target currTarget, Target checkTarget, String currDependency)
-    throws DependencyConflictException, InvalidDependencyException{
+    throws Exception{
         if(currDependency.equals(Dependency.REQUIRED_FOR.getDependency()))
         {
             if(checkTarget.getRequiredFor().contains(currTarget)) {
-                throw new DependencyConflictException(currTarget.getName(), checkTarget.getName(),currDependency);
+                throw new Exception(ExceptionMessages.DEPENDENCY_CONFLICT + currTarget.getName() + ", " +
+                        checkTarget.getName());
             }
             currTarget.getRequiredFor().add(checkTarget);
             checkTarget.getDependsOn().add(currTarget);
         }
         else if(currDependency.equals(Dependency.DEPENDS_ON.getDependency())) {
             if(checkTarget.getDependsOn().contains(currTarget)) {
-                throw new DependencyConflictException(currTarget.getName(), checkTarget.getName(),currDependency);
+                throw new Exception(ExceptionMessages.DEPENDENCY_CONFLICT + currTarget.getName()+ ", " +
+                        checkTarget.getName());
             }
             currTarget.getDependsOn().add(checkTarget);
             checkTarget.getRequiredFor().add(currTarget);
         }
         else
         {
-            throw new InvalidDependencyException(currDependency);
+            throw new Exception(ExceptionMessages.DEPENDENCY + currDependency + ExceptionMessages.INVALID);
         }
     }
 

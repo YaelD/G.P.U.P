@@ -1,6 +1,7 @@
 package servlets.dashboard_servlets;
 
 import engine.Engine;
+import engine.GraphsManager;
 import exceptions.DependencyConflictException;
 import exceptions.DuplicateTargetsException;
 import exceptions.InvalidDependencyException;
@@ -22,23 +23,17 @@ public class UploadFileServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-        Engine engine = ServletUtils.getEngine(getServletContext());
+        GraphsManager graphsManager = ServletUtils.getGraphsManager(getServletContext());
         String usernameFromSession = SessionUtils.getUsername(request);
 
         if(usernameFromSession != null){
             Collection<Part> parts = request.getParts();
             for(Part part :parts){
                 try {
-                    engine.loadFile(part.getInputStream(), usernameFromSession);
-                    //TODO: FILL THE EXCEPTIONS
-                } catch (DependencyConflictException e) {
-                    e.printStackTrace();
-                } catch (DuplicateTargetsException e) {
-                    e.printStackTrace();
-                } catch (InvalidDependencyException e) {
-                    e.printStackTrace();
-                } catch (TargetNotExistException e) {
-                    e.printStackTrace();
+                    graphsManager.loadFile(part.getInputStream(), usernameFromSession);
+                } catch(Exception e){
+                    response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                    response.getWriter().println(e.getMessage());
                 }
             }
             response.setStatus(HttpServletResponse.SC_OK);

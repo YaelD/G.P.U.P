@@ -3,6 +3,7 @@ package servlets.dashboard_servlets;
 import com.google.gson.Gson;
 import constants.Constants;
 import engine.Engine;
+import engine.GraphsManager;
 import exceptions.GraphNotExistException;
 import exceptions.InvalidDependencyException;
 import exceptions.TargetNotExistException;
@@ -39,24 +40,15 @@ public class FindCycleServlet extends HttpServlet {
                 String sourceTargetParameter = mapParams.get(Constants.SOURCE_TARGET);
                 String graphNameParameter = mapParams.get(Constants.GRAPH_NAME);
 
-                Engine engine = ServletUtils.getEngine(getServletContext());
+                GraphsManager graphsManager = ServletUtils.getGraphsManager(getServletContext());
                 response.setContentType("application/json");
                 response.setStatus(HttpServletResponse.SC_OK);
                 Gson gson = new Gson();
-                List<String> findCycle = engine.findCycle(sourceTargetParameter, graphNameParameter);
+                List<String> findCycle = graphsManager.findCycle(sourceTargetParameter, graphNameParameter);
                 String json = gson.toJson(findCycle);
                 body.print(json);
                 body.flush();
 
-            } catch(TargetNotExistException e){
-                response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-                body.println("Target " + e.getName() + " not exist");
-            } catch(GraphNotExistException e){
-                response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-                body.println("Graph " + e.getName() + " not exist");
-            } catch(InvalidDependencyException e){
-                response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-                body.println("Dependency " + e.getDependency() + " not exist");
             } catch(Exception e){
                 response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
                 body.println(e.getMessage());

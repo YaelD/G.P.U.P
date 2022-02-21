@@ -3,6 +3,7 @@ package servlets.dashboard_servlets;
 import com.google.gson.Gson;
 import constants.Constants;
 import engine.Engine;
+import engine.GraphsManager;
 import exceptions.GraphNotExistException;
 import exceptions.InvalidDependencyException;
 import exceptions.TargetNotExistException;
@@ -31,38 +32,28 @@ public class WhatIfServlet extends HttpServlet {
         if (usernameFromSession == null) {    //user is not logged in - error!!
             response.setStatus(HttpServletResponse.SC_CONFLICT);
         } else {
-            String[] paramsNames = {Constants.SOURCE_TARGET, Constants.DEPENDENCY,
-                    Constants.GRAPH_NAME};
-            PrintWriter body = response.getWriter();
+            String[] paramsNames = {Constants.SOURCE_TARGET, Constants.DEPENDENCY, Constants.GRAPH_NAME};
 
-            try {
+            try (PrintWriter body = response.getWriter()){
                 Map<String, String> mapParams = ServletUtils.validateRequestQueryParams(request, paramsNames);
                 String sourceTargetParameter = mapParams.get(Constants.SOURCE_TARGET);
                 String graphNameParameter = mapParams.get(Constants.GRAPH_NAME);
                 String dependencyParameter = mapParams.get(Constants.DEPENDENCY);
 
-                Engine engine = ServletUtils.getEngine(getServletContext());
+                GraphsManager graphsManager = ServletUtils.getGraphsManager(getServletContext());
                 response.setContentType("application/json");
                 response.setStatus(HttpServletResponse.SC_OK);
                 Gson gson = new Gson();
-                Set<String> whatIf = engine.whatIf(sourceTargetParameter,
+                Set<String> whatIf = graphsManager.whatIf(sourceTargetParameter,
                         Dependency.valueOf(dependencyParameter.toUpperCase(Locale.ROOT)), graphNameParameter);
                 String json = gson.toJson(whatIf);
                 body.print(json);
                 body.flush();
 
-            } catch(TargetNotExistException e){
-                response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-                body.println("Target " + e.getName() + " not exist");
-            } catch(GraphNotExistException e){
-                response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-                body.println("Graph " + e.getName() + " not exist");
-            } catch(InvalidDependencyException e){
-                response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-                body.println("Dependency " + e.getDependency() + " not exist");
+
             } catch(Exception e){
                 response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-                body.println(e.getMessage());
+                response.getWriter().println(e.getMessage());
             }
         }
     }

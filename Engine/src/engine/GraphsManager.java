@@ -2,7 +2,6 @@ package engine;
 
 import exceptions.*;
 import general_enums.Dependency;
-import general_enums.RunType;
 import general_enums.TaskType;
 import graph.Graph;
 import schema.generated.GPUPConfiguration;
@@ -24,41 +23,35 @@ public class GraphsManager {
         return graphsInSystem;
     }
 
-    public Target getTarget(String name, String graphName) throws TargetNotExistException {
+    public Target getTarget(String name, String graphName) throws Exception {
         Graph graph = this.graphsInSystem.get(graphName);
         return graph.getTarget(name);
     }
 
-    public boolean isGraphExistsInSystem(String graphName) throws GraphNotExistException {
-        if(!this.graphsInSystem.containsKey(graphName)){
-            throw new GraphNotExistException(graphName);
-        }
-        return true;
+    public boolean isGraphExistsInSystem(String graphName){
+        return (this.graphsInSystem.containsKey(graphName));
     }
 
-    public boolean isTargetsExistsInGraph(List<String> targetsName, String graphName) throws TargetNotExistException {
+    public boolean isTargetsExistsInGraph(List<String> targetsName, String graphName) throws Exception {
         for(String currTarget : targetsName){
             checkIfTargetExistInGraph(currTarget, graphName);
         }
         return true;
     }
 
-    private boolean checkIfTargetExistInGraph(String targetName, String graphName) throws TargetNotExistException {
-        if(!this.graphsInSystem.get(graphName).getTargetGraph().containsKey(targetName)){
-            throw new TargetNotExistException(targetName);
-        }
-        return true;
+    private boolean checkIfTargetExistInGraph(String targetName, String graphName){
+        return (this.graphsInSystem.get(graphName).getTargetGraph().containsKey(targetName));
     }
 
-    private boolean checkIfValidDependency(Dependency dependency) throws InvalidDependencyException {
+    private boolean checkIfValidDependency(Dependency dependency) throws Exception {
         if(!dependency.equals(Dependency.DEPENDS_ON) && !dependency.equals(Dependency.REQUIRED_FOR)){
-            throw new InvalidDependencyException(dependency.getDependency());
+            throw new Exception(ExceptionMessages.DEPENDENCY + dependency.getDependency() +
+                    ExceptionMessages.INVALID);
         }
         return true;
     }
 
-    public boolean loadFile(InputStream stream, String creatorName) throws
-            DuplicateTargetsException, TargetNotExistException, InvalidDependencyException, DependencyConflictException {
+    public boolean loadFile(InputStream stream, String creatorName) throws Exception {
         try {
             JAXBContext jaxbContext = JAXBContext.newInstance(GPUPDescriptor.class);
             Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
@@ -71,33 +64,32 @@ public class GraphsManager {
         return false;
     }
 
-    private void initializeGraphSystem(GPUPDescriptor gpupDescriptor, String creatorName) throws DuplicateTargetsException,
-            TargetNotExistException, InvalidDependencyException, DependencyConflictException {
+    private void initializeGraphSystem(GPUPDescriptor gpupDescriptor, String creatorName) throws Exception {
         Map<String, Target> map = Graph.buildTargetGraph(gpupDescriptor.getGPUPTargets());
         String graphName = gpupDescriptor.getGPUPConfiguration().getGPUPGraphName();
         Map<TaskType, Integer> taskPricePerTarget = new HashMap<>();
-        for(GPUPConfiguration.GPUPPricing.GPUPTask currTask :gpupDescriptor.getGPUPConfiguration().getGPUPPricing().getGPUPTask()) {
-            switch (currTask.getName()) {
-                case "Simulation":
-                    taskPricePerTarget.put(TaskType.SIMULATION_TASK, currTask.getPricePerTarget());
-                    break;
-                case "Compilation":
-                    taskPricePerTarget.put(TaskType.COMPILATION_TASK, currTask.getPricePerTarget());
-                    break;
-
+        if(isGraphExistsInSystem(graphName)) {
+            throw new Exception(ExceptionMessages.GRAPH + graphName + ExceptionMessages.ALREADY_EXIST);
+        }
+        else{
+            for (GPUPConfiguration.GPUPPricing.GPUPTask currTask : gpupDescriptor.getGPUPConfiguration().getGPUPPricing().getGPUPTask()) {
+                switch (currTask.getName()) {
+                    case "Simulation":
+                        taskPricePerTarget.put(TaskType.SIMULATION_TASK, currTask.getPricePerTarget());
+                        break;
+                    case "Compilation":
+                        taskPricePerTarget.put(TaskType.COMPILATION_TASK, currTask.getPricePerTarget());
+                        break;
+                }
             }
+            this.graphsInSystem.put(graphName, new Graph(map, graphName, taskPricePerTarget, creatorName));
         }
-
-        if(this.graphsInSystem.containsKey(graphName)){
-            //TODO: THROW AN EXCEPTION
-        }
-        this.graphsInSystem.put(graphName, new Graph(map, graphName, taskPricePerTarget, creatorName));
 //        for(Target target : this.graph.getTargets()){
 //            target.updateWaitForTheseTargetsToBeFinished();
 //        }
     }
 
-    public List<String> findCycle(String targetName, String graphName) throws TargetNotExistException, GraphNotExistException, InvalidDependencyException {
+    public List<String> findCycle(String targetName, String graphName) throws Exception {
         if(checkFindCycleParamsValidation(targetName, graphName)){
             try {
                 Graph graph = this.graphsInSystem.get(graphName);
@@ -118,8 +110,14 @@ public class GraphsManager {
         return null;
     }
 
-    private boolean checkFindCycleParamsValidation(String targetName, String graphName) throws TargetNotExistException, GraphNotExistException {
-        return isGraphExistsInSystem(graphName) && checkIfTargetExistInGraph(targetName, graphName);
+    private boolean checkFindCycleParamsValidation(String targetName, String graphName) throws Exception {
+        if(!isGraphExistsInSystem(graphName)){
+            throw new Exception(ExceptionMessages.GRAPH + graphName + ExceptionMessages.NOT_EXIST);
+        }
+        else if(!checkIfTargetExistInGraph(targetName, graphName)){
+            throw new Exception(ExceptionMessages.TARGET + targetName + ExceptionMessages.NOT_EXIST);
+        }
+        return true;
     }
 
 
@@ -149,7 +147,7 @@ public class GraphsManager {
 //    }
 
     public Set<String> whatIf(String targetName, Dependency dependency, String graphName)
-            throws GraphNotExistException, InvalidDependencyException, TargetNotExistException {
+            throws Exception {
         Target target = null;
         Set<String> targetSet = new HashSet<>();
         if(checkValidationWhatIfParams(targetName, dependency, graphName)){
@@ -166,26 +164,42 @@ public class GraphsManager {
         return targetSet;
     }
 
-    private boolean checkValidationWhatIfParams(String targetName, Dependency dependency, String graphName)
-            throws GraphNotExistException, InvalidDependencyException, TargetNotExistException {
-
-        return isGraphExistsInSystem(graphName) && checkIfTargetExistInGraph(targetName, graphName)
-                && checkIfValidDependency(dependency);
+    private boolean checkValidationWhatIfParams(String targetName, Dependency dependency,
+                                                String graphName) throws Exception {
+        if(!isGraphExistsInSystem(graphName)){
+            throw new Exception(ExceptionMessages.GRAPH + graphName + ExceptionMessages.NOT_EXIST);
+        }
+        else if(!checkIfTargetExistInGraph(targetName, graphName)){
+            throw new Exception(ExceptionMessages.TARGET + targetName + ExceptionMessages.NOT_EXIST);
+        }
+        else if(!checkIfValidDependency(dependency)){
+            throw new Exception(ExceptionMessages.DEPENDENCY + dependency + ExceptionMessages.INVALID);
+        }
+        return true;
     }
 
 
     //The function does validation of the targets and then call to find paths
     public boolean checkValidationOfGetPathsParams(String firstTargetName, String secondTargetName,
-                                                   Dependency dependency, Graph graph) throws TargetNotExistException, GraphNotExistException, InvalidDependencyException {
+                                                   Dependency dependency, Graph graph) throws Exception {
 
-        return isGraphExistsInSystem(graph.getName()) && checkIfTargetExistInGraph(firstTargetName, graph.getName()) &&
-                checkIfTargetExistInGraph(secondTargetName, graph.getName()) &&
-                checkIfValidDependency(dependency);
+        if(!isGraphExistsInSystem(graph.getName())){
+            throw new Exception(ExceptionMessages.GRAPH + graph.getName() + ExceptionMessages.NOT_EXIST);
+        }
+        else if(!checkIfTargetExistInGraph(firstTargetName, graph.getName())){
+            throw new Exception(ExceptionMessages.TARGET + firstTargetName + ExceptionMessages.NOT_EXIST);
+        }
+        else if(!checkIfTargetExistInGraph(secondTargetName, graph.getName())){
+            throw new Exception(ExceptionMessages.TARGET + secondTargetName + ExceptionMessages.NOT_EXIST);
+        }
+        else if(!checkIfValidDependency(dependency)){
+            throw new Exception(ExceptionMessages.DEPENDENCY + dependency.getDependency() + ExceptionMessages.INVALID);
+        }
+        return true;
     }
 
     public Collection<List<String>> getPaths(String firstTargetName, String secondTargetName,
-                                             Dependency dependency, String graphName)
-            throws TargetNotExistException, GraphNotExistException, InvalidDependencyException {
+                                             Dependency dependency, String graphName) throws Exception {
         List<List<String>> paths = new ArrayList<>();
         Graph graph = this.graphsInSystem.get(graphName);
         if(checkValidationOfGetPathsParams(firstTargetName, secondTargetName, dependency, graph)){

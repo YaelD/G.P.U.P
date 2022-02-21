@@ -1,8 +1,5 @@
 package engine;
 
-import exceptions.CycleException;
-import exceptions.TaskExistException;
-import exceptions.TaskNotExistException;
 import general_enums.TaskStatus;
 import general_enums.TaskType;
 import task.Task;
@@ -21,7 +18,7 @@ public class TasksManager {
 
     public synchronized void addTaskToSystem(Task task) throws Exception {
         if (isTaskExistInSystem(task.getTaskName())) {
-            throw new Exception("The task " + task.getTaskName() + " is already exist");
+            throw new Exception(ExceptionMessages.TASK + task.getTaskName() + ExceptionMessages.ALREADY_EXIST);
         }
         tasksInSystem.put(task.getTaskName(), task);
     }
@@ -50,7 +47,7 @@ public class TasksManager {
     public Task updateTaskStatus(String taskName, TaskStatus newStatus) throws Exception {
         Task task = null;
         if(!isTaskExistInSystem(taskName)){
-            throw new Exception("The task " + taskName + " is not found in system");
+            throw new Exception(ExceptionMessages.TASK + taskName + ExceptionMessages.NOT_EXIST);
         }
         if(this.tasksInSystem.get(taskName).updateTaskStatus(newStatus)){
             task = getTasksInSystem().get(taskName);

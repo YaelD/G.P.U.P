@@ -3,6 +3,7 @@ package servlets.dashboard_servlets;
 import com.google.gson.Gson;
 import dto.GraphDTO;
 import engine.Engine;
+import engine.GraphsManager;
 import graph.Graph;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -21,8 +22,8 @@ public class GraphsInfoServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         List<GraphDTO> graphsToSend = new ArrayList<>();
-        Engine engine = ServletUtils.getEngine(getServletContext());
-        Map<String, Graph> graphsInSystem = engine.getGraphsInSystem();
+        GraphsManager graphsManager = ServletUtils.getGraphsManager(getServletContext());
+        Map<String, Graph> graphsInSystem = graphsManager.getGraphsInSystem();
         Collection<Graph> graphsList = graphsInSystem.values();
         for(Graph graph: graphsList){
             GraphDTO graphDTO = graph.makeDTO();
