@@ -3,6 +3,7 @@ package task;
 import dto.TargetDTO;
 import dto.TaskDTO;
 import dto.TaskParamsDTO;
+import engine.ExceptionMessages;
 import exceptions.CycleException;
 import general_enums.RunResults;
 import general_enums.RunStatus;
@@ -317,5 +318,12 @@ public abstract class Task {
                 break;
         }
         return isStatusChanged;
+    }
+
+    public synchronized void addWorkerToTask(String workerName) throws Exception {
+        if(this.status.equals(TaskStatus.STOPPED) || this.status.equals(TaskStatus.FINISHED)){
+            throw new Exception(ExceptionMessages.INVALID_TASK_STATUS);
+        }
+        this.registeredWorkers.add(workerName);
     }
 }

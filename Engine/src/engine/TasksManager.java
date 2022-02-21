@@ -54,4 +54,12 @@ public class TasksManager {
         }
         return task;
     }
+
+    public Task workerRegistrationToTask(String taskName, String workerName) throws Exception {
+        if(!isTaskExistInSystem(taskName)){
+            throw new Exception(ExceptionMessages.TASK + taskName + ExceptionMessages.NOT_EXIST);
+        }
+        this.tasksInSystem.get(taskName).addWorkerToTask(workerName);
+        return this.tasksInSystem.get(taskName);
+    }
 }
