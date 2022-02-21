@@ -1,12 +1,13 @@
 package task;
 
-import dto.GraphDTO;
+import dto.TargetDTO;
 import dto.TaskDTO;
+import dto.TaskParamsDTO;
 import exceptions.CycleException;
+import general_enums.RunResults;
+import general_enums.RunStatus;
 import general_enums.TaskStatus;
 import graph.Graph;
-import target.RunResults;
-import target.RunStatus;
 import target.Target;
 
 import java.time.LocalTime;
@@ -225,7 +226,7 @@ public abstract class Task {
 //    }
 
 
-    //protected abstract TargetDTO executeTaskOnTarget(Target currTarget);
+    protected abstract void executeTaskOnTarget(Target currTarget);
 
     private void createGraphOfFailedTargets() {
         String graphName = this.graph.getName();
@@ -255,6 +256,7 @@ public abstract class Task {
         List<Target> sourceTargets = new LinkedList<>();
         for (Target target : targets) {
             target.setRunStatus(RunStatus.FROZEN);
+            target.updateWaitForTheseTargetsToBeFinished();
             if (target.getDependsOn().isEmpty()) {
                 target.setRunStatus(RunStatus.WAITING);
                 target.setStartWaitingTime(LocalTime.now());
@@ -280,7 +282,7 @@ public abstract class Task {
         return targetsInDegree;
     }
 
-//    public abstract void updateParameters(TaskParamsDTO taskParamsDTO);
+    public abstract void updateParameters(TaskParamsDTO taskParamsDTO);
 
     public abstract TaskDTO createTaskDTO();
 

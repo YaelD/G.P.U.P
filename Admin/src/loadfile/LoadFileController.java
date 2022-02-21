@@ -67,7 +67,7 @@ public class LoadFileController {
         Request request = new Request.Builder().url(Constants.UPLOAD_FILE_PAGE)
                 .post(requestBody).build();
 
-        HttpUtils.runAsyncPost(request, new Callback() {
+        HttpUtils.runAsyncWithRequest(request, new Callback() {
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
                 Platform.runLater(()->{

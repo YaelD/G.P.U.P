@@ -27,6 +27,9 @@ public class Constants {
     public static final String DESTINATION_TARGET = "destTarget";
     public static final String GRAPH_NAME = "graphName";
     public static final String DEPENDENCY = "dependency";
+    public static final String TASK_NAME = "taskName";
+    public static final String TASK_STATUS = "taskStatus";
+
 
     public static final int TWO_SECS = 2000;
 

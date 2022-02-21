@@ -6,9 +6,12 @@ package execution_details;
 //import engine.Engine;
 //import graph.Graph;
 import RefreshingItems.TaskListRefresherTimer;
+import constants.Constants;
 import dto.TargetDTO;
 import dto.TaskDTO;
 import general_enums.RunResults;
+import general_enums.TaskStatus;
+import http_utils.HttpUtils;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -16,6 +19,8 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
+import okhttp3.*;
+import org.jetbrains.annotations.NotNull;
 //import runtask.running_task_window.TargetsTableButtonsHandler;
 //import target.RunResults;
 //import target.RunStatus;
@@ -23,7 +28,9 @@ import javafx.scene.layout.GridPane;
 //import task.RunType;
 //import task.TaskType;
 
+import java.io.IOException;
 import java.util.List;
+import java.util.Objects;
 
 
 public class RunWindowController {
@@ -76,7 +83,25 @@ public class RunWindowController {
 
     @FXML
     void onPlay(ActionEvent event) {
+        String finalUrl = Objects.requireNonNull(HttpUrl
+                        .parse(Constants.TASK_LIST)).newBuilder()
+                .addQueryParameter(Constants.TASK_STATUS, TaskStatus.ACTIVE.name())
+                .addQueryParameter(Constants.TASK_NAME, taskDTOProperty.get().getTaskName())
+                .build()
+                .toString();
+        Request  request= new Request.Builder().url(finalUrl).put(RequestBody.create(new byte[0])).build();
 
+        HttpUtils.runAsyncWithRequest(request, new Callback() {
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                System.out.println(":((((((((((((((((((((((((((");
+            }
+
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                System.out.println(":]]]]]]]]]]]]]]]]]]]]]]]]]");
+            }
+        });
     }
 
     @FXML
@@ -276,9 +301,9 @@ public class RunWindowController {
                 }
             }
         }
-        if(targetDTO.getTaskRunResult() != null && !(targetDTO.getTaskRunResult().isEmpty())){
-            currStr +=("Run result:\n" + targetDTO.getTaskRunResult());
-        }
+//        if(targetDTO.getTaskRunResult() != null && !(targetDTO.getTaskRunResult().isEmpty())){
+//            currStr +=("Run result:\n" + targetDTO.getTaskRunResult());
+//        }
 
         currStr +=(PRINT_LINE);
         return currStr;

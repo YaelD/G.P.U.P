@@ -1,13 +1,17 @@
 package task;
 
-import dto.GraphDTO;
-import dto.SimulationTaskParamsDTO;
-import dto.TaskDTO;
-import dto.TaskParamsDTO;
+import dto.*;
+import general_enums.RunResults;
+import general_enums.RunStatus;
 import general_enums.TaskType;
 import graph.Graph;
+import target.Target;
 
+import java.time.Duration;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.HashSet;
+import java.util.Random;
 import java.util.Set;
 
 public class SimulationTask extends Task{
@@ -37,7 +41,6 @@ public class SimulationTask extends Task{
 //        this.successRate = simulationTaskDTO.getSuccessRate();
 //        this.successWithWarningsRate = simulationTaskDTO.getSuccessWithWarningsRate();
 //    }
-/*
 
 
 
@@ -53,21 +56,24 @@ public class SimulationTask extends Task{
     }
 
     @Override
-    protected TargetDTO executeTaskOnTarget(Target target) {
-        TargetDTO targetDTO = null;
-        //LocalTime startTime, endTime;
+    protected void executeTaskOnTarget(Target target) {
+        LocalTime startTime, endTime;
         int currTargetProcessTime = this.processTime;
 
         if(this.isRandom){
             currTargetProcessTime = getRandomProcessTime();
         }
         try {
-            target.setStartingProcessTime(LocalTime.now());
+            target.setTaskSpecificLogs("Simulation task: ");
+//            target.setStartingProcessTime(LocalTime.now());
+
+            startTime = LocalTime.now();
+            target.setTaskSpecificLogs("Start time: " + startTime.format(DateTimeFormatter.ofPattern("H:mm:ss")));
             target.setRunStatus(RunStatus.IN_PROCESS);
-            //startTime = LocalTime.now();
             Thread.sleep(currTargetProcessTime);
-            //endTime = LocalTime.now();
-            target.setEndingProcessTime(LocalTime.now());
+            endTime = LocalTime.now();
+            target.setTaskSpecificLogs("End time: " + endTime.format(DateTimeFormatter.ofPattern("H:mm:ss")));
+//            target.setEndingProcessTime(LocalTime.now());
             if(getRandomNumber() <= this.successRate){
                 if(getRandomNumber() <= this.successWithWarningsRate){
                     target.setRunResult(RunResults.WARNING);
@@ -77,14 +83,12 @@ public class SimulationTask extends Task{
             }else{
                 target.setRunResult(RunResults.FAILURE);
             }
-            target.setRunningTime(Duration.between(target.getStartingProcessTime(), target.getEndingProcessTime()).toMillis());
+//            target.setRunningTime(Duration.between(target.getStartingProcessTime(), target.getEndingProcessTime()).toMillis());
+            target.setTaskSpecificLogs("Running time: " + Duration.between(startTime, endTime).toMillis() + "Milliseconds");
             target.setRunStatus(RunStatus.FINISHED);
-            targetDTO = new TargetDTO(target, null);
-
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        return targetDTO;
     }
 
     private int getRandomProcessTime(){
@@ -97,7 +101,6 @@ public class SimulationTask extends Task{
         return random.nextDouble();
     }
 
- */
 
     public TaskDTO createTaskDTO(){
         GraphDTO graphDTO = this.graph.makeDTO();

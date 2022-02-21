@@ -229,7 +229,7 @@ public class RunTaskMenuController {
         }
         Request request = new Request.Builder().url(Constants.TASK_LIST)
                 .post(RequestBody.create(param.getBytes())).build();
-        HttpUtils.runAsyncPost(request, new Callback() {
+        HttpUtils.runAsyncWithRequest(request, new Callback() {
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
                 //TODO: failure

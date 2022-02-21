@@ -1,10 +1,19 @@
 package task;
 
 import dto.*;
-import engine.SystemEngine;
+import general_enums.RunResults;
+import general_enums.RunStatus;
 import general_enums.TaskType;
 import graph.Graph;
+import target.Target;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.time.Duration;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -17,10 +26,6 @@ public class CompilationTask extends Task{
     private String sourceDir;
     private String destinationDir;
 
-    public CompilationTask(Graph graph, String creatorName, String taskName, int pricePerTarget) {
-        super(graph, creatorName, taskName, pricePerTarget);
-    }
-
     public CompilationTask(CompilationTaskParamsDTO compilationTaskParamsDTO, Graph graph) {
         super(graph, compilationTaskParamsDTO.getCreatorName(),
                 compilationTaskParamsDTO.getTaskName(), compilationTaskParamsDTO.getTotalTaskPrice());
@@ -28,43 +33,37 @@ public class CompilationTask extends Task{
         this.sourceDir = compilationTaskParamsDTO.getSourceDir();
     }
 
-
-//    public CompilationTask(Graph graph, CompilationTaskParamsDTO compilationTaskDTO, SerialSetsContainer serialSetsContainer) {
-//        super(graph, "", "");
-//        this.sourceDir = compilationTaskDTO.getSourceDir();
-//        this.destinationDir = compilationTaskDTO.getDestinationDir();
-//    }
-/*
-
-
     @Override
-    protected TargetDTO executeTaskOnTarget(Target target) {
-        TargetDTO targetDTO = null;
+    protected void executeTaskOnTarget(Target target) {
+        LocalTime startTime, endTime;
         try {
-            target.setStartingProcessTime(LocalTime.now());
+            target.setTaskSpecificLogs("Compilation task: ");
+            startTime = LocalTime.now();
+            target.setTaskSpecificLogs("Start time: " + startTime.format(DateTimeFormatter.ofPattern("H:mm:ss")));
             target.setRunStatus(RunStatus.IN_PROCESS);
             String localSourceDir = buildPaths(target);
-            Process process = CompileTarget(target, localSourceDir);
+            String filePath = "/" + target.getInfo().replace('.', '/');
+            Process process = CompileTarget(target, localSourceDir, filePath);
             String processResult = getProcessResult(process);
             int exitCode = process.waitFor();
-            target.setEndingProcessTime(LocalTime.now());
+            endTime = LocalTime.now();
+            target.setTaskSpecificLogs("End time: " + endTime.format(DateTimeFormatter.ofPattern("H:mm:ss")));
             if(exitCode != 0){    //means that the process has failed
                 target.setRunResult(RunResults.FAILURE);
-                target.setCompilationRunResult("\nJavac output: " + processResult);
+
+                target.setTaskSpecificLogs("Javac output: " + processResult);
             }
             else {
                 target.setRunResult(RunResults.SUCCESS);
-                target.setCompilationRunResult(processResult);
+                target.setTaskSpecificLogs( "Compilation run result: "+processResult);
             }
 
-            target.setRunningTime(Duration.between(target.getStartingProcessTime(), target.getEndingProcessTime()).toMillis());
+            target.setTaskSpecificLogs("Running time: " + Duration.between(startTime, endTime).toMillis() + "Milliseconds");
             target.setRunStatus(RunStatus.FINISHED);
-            targetDTO = new TargetDTO(target);
 
         } catch (InterruptedException | IOException e) {
             e.printStackTrace();
         }
-        return targetDTO;
     }
 
     private String getProcessResult(Process process) throws IOException {
@@ -79,30 +78,22 @@ public class CompilationTask extends Task{
 
         return result;
     }
-    //private Process CompileTarget(Target target, String runResult) throws IOException {
-
     private String buildPaths(Target target){
         String filePath = "/" + target.getInfo().replace('.', '/');
         int indexOfLastSlash = filePath.lastIndexOf('/');
         String dirPath = filePath.substring(0,indexOfLastSlash);
-        String fileName= filePath.substring(indexOfLastSlash);
         String localSourceDir = this.sourceDir + dirPath;
-//        filePath = localSourceDir +  fileName + ".java";
-//        target.setCompilationFileName(filePath);
-//        target.setCompilerOperatingLine("Compiler's operating line: "+
-//        JAVA_COMPILER+ " "+DESTINATION_DIR_REF_PARAM+ " " + this.destinationDir +
-//                " " + SOURCE_DIR_REF_PARAM+ " " + localSourceDir + " " + filePath);
         return localSourceDir;
     }
 
-    private Process CompileTarget(Target target, String localSourceDir) throws IOException {
-        target.setStartingCompileTime(LocalTime.now());
+    private Process CompileTarget(Target target, String localSourceDir, String filePath) throws IOException {
+        target.setTaskSpecificLogs("Start compilation time: " + LocalTime.now().format(DateTimeFormatter.ofPattern("H:mm:ss")));
         Process process = new ProcessBuilder(JAVA_COMPILER, DESTINATION_DIR_REF_PARAM, this.destinationDir,
-                SOURCE_DIR_REF_PARAM ,localSourceDir, target.getCompilationFileName())
+                SOURCE_DIR_REF_PARAM ,localSourceDir, filePath)
                 .directory(new File(this.sourceDir))
                 .redirectErrorStream(true)
                 .start();
-        target.setEndingCompileTime(LocalTime.now());
+        target.setTaskSpecificLogs("End compilation time: " + LocalTime.now().format(DateTimeFormatter.ofPattern("H:mm:ss")));
         return process;
 
     }
@@ -115,7 +106,6 @@ public class CompilationTask extends Task{
             this.destinationDir = compilationTaskParamsDTO.getDestinationDir();
         }
     }
- */
 
     public TaskDTO createTaskDTO(){
         GraphDTO graphDTO = this.graph.makeDTO();

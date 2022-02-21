@@ -3,8 +3,11 @@ package target;
 import dto.PlaceInGraph;
 import dto.TargetDTO;
 import general_enums.Dependency;
+import general_enums.RunResults;
+import general_enums.RunStatus;
 import schema.generated.GPUPTarget;
 
+import java.time.Duration;
 import java.time.LocalTime;
 import java.util.*;
 
@@ -16,65 +19,25 @@ public class Target implements Cloneable {
     private Set<Target> dependsOn = new HashSet<>();// This target.Target is dependsOn the Set's targets
     private String info;
     private RunResults runResult;
-    private long runningTime;
+
     private RunStatus runStatus;
     private LocalTime startingProcessTime = null;
     private LocalTime endingProcessTime = null;
     private LocalTime startWaitingTime = null;
     private Set<String> failedChildTargets = new HashSet<>();
     private Set<String> waitForThisTargetsToBeFinished = new HashSet<>();
+    private Set<String> targetsThatCanBeRun = new HashSet<>();
+    private Set<String> skippedFathers = new HashSet<>();
 
-    //CompilationParams
-    private String compilationRunResult;
-    private String compilationFileName;
-    private String compilerOperatingLine;
-    private LocalTime startingCompileTime = null;
-    private LocalTime endingCompileTime = null;
+    private String taskSpecificLogs;
+
 
     public Target(GPUPTarget target) {
         this.name = target.getName();
         this.info = target.getGPUPUserData();
+        this.taskSpecificLogs = "";
     }
 
-    public LocalTime getStartingCompileTime() {
-        return startingCompileTime;
-    }
-
-    public void setStartingCompileTime(LocalTime startingCompileTime) {
-        this.startingCompileTime = startingCompileTime;
-    }
-
-    public LocalTime getEndingCompileTime() {
-        return endingCompileTime;
-    }
-
-    public void setEndingCompileTime(LocalTime endingCompileTime) {
-        this.endingCompileTime = endingCompileTime;
-    }
-
-    public String getCompilationRunResult() {
-        return compilationRunResult;
-    }
-
-    public String getCompilationFileName() {
-        return compilationFileName;
-    }
-
-    public String getCompilerOperatingLine() {
-        return compilerOperatingLine;
-    }
-
-    public synchronized void setCompilationFileName(String compilationFileName) {
-        this.compilationFileName = compilationFileName;
-    }
-
-    public synchronized void setCompilerOperatingLine(String compilerOperatingLine) {
-        this.compilerOperatingLine = compilerOperatingLine;
-    }
-
-    public synchronized void setCompilationRunResult(String compilationRunResult) {
-        this.compilationRunResult = compilationRunResult;
-    }
 
 
     public String getName() {
@@ -110,7 +73,6 @@ public class Target implements Cloneable {
         }
     }
 
-
     public RunResults getRunResult() {
         return runResult;
     }
@@ -119,13 +81,6 @@ public class Target implements Cloneable {
         this.runResult = runResult;
     }
 
-    public long getRunningTime() {
-        return runningTime;
-    }
-
-    public synchronized void setRunningTime(long runningTime) {
-        this.runningTime = runningTime;
-    }
 
     public RunStatus getRunStatus() {
         return runStatus;
@@ -134,26 +89,6 @@ public class Target implements Cloneable {
     public synchronized void setRunStatus(RunStatus runStatus) {
         this.runStatus = runStatus;
         notifyAll();
-    }
-
-    public LocalTime getStartingProcessTime() {
-        return startingProcessTime;
-    }
-
-    public LocalTime getEndingProcessTime() {
-        return endingProcessTime;
-    }
-
-    public synchronized void setStartingProcessTime(LocalTime startingProcessTime) {
-        this.startingProcessTime = startingProcessTime;
-    }
-
-    public synchronized void setEndingProcessTime(LocalTime endingProcessTime) {
-        this.endingProcessTime = endingProcessTime;
-    }
-
-    public LocalTime getStartWaitingTime() {
-        return startWaitingTime;
     }
 
     public synchronized void setStartWaitingTime(LocalTime startWaitingTime) {
@@ -256,8 +191,8 @@ public class Target implements Cloneable {
         Set<String> totalDependsOnNames = new HashSet<>();
         this.getRequiredForAncestors(totalRequiredForNames);
         this.getDependsOnAncestors(totalDependsOnNames);
-        return new TargetDTO(this.name, this.place, requiredForNames, dependsOnName,this.info, totalRequiredForNames, totalDependsOnNames);
-
+        return new TargetDTO(this.name, this.place, requiredForNames, dependsOnName,this.info, totalRequiredForNames, totalDependsOnNames,
+                this.getRunTaskLog());
     }
 
     public static Target createTargetFromTargetDTO(TargetDTO targetDTO){
@@ -265,6 +200,50 @@ public class Target implements Cloneable {
         return null;
     }
 
+    public synchronized void updateTarget(TargetDTO targetDTO){
+        this.runStatus = targetDTO.getRunStatus();
+        this.runResult = targetDTO.getRunResult();
+    }
 
 
+
+    public synchronized void setTaskSpecificLogs(String taskSpecificLogs){
+        this.taskSpecificLogs += taskSpecificLogs + "\n";
+    }
+
+    public synchronized String getRunTaskLog() {
+        if(this.runStatus == null){
+            return "";
+        }
+        StringBuilder stringBuilder = new StringBuilder("");
+        stringBuilder.append("Target: " + this.name);
+        stringBuilder.append(this.info!= null ? "\nInfo: " + this.info : "");
+        stringBuilder.append("\nPlace: " + this.place.name());
+        stringBuilder.append("\nRun status: " + this.runStatus);
+        stringBuilder.append("\n");
+        switch (this.runStatus){
+            case FROZEN:
+                stringBuilder.append("Waiting for targets: " + this.waitForThisTargetsToBeFinished.toString() + " to finish their running.") ;
+                break;
+            case WAITING:
+                stringBuilder.append("Waiting time: " + Duration.between(this.startWaitingTime, LocalTime.now()).toMillis() + " ms");
+                break;
+            case SKIPPED:
+                stringBuilder.append("Skipped because of: " + this.failedChildTargets.toString());
+                break;
+            case IN_PROCESS:
+                stringBuilder.append("Process time: " + Duration.between(this.startingProcessTime, LocalTime.now()).toMillis() + " millisecond");
+                break;
+            case FINISHED:
+                stringBuilder.append("Run result: " + this.runResult.name());
+                stringBuilder.append("Opened Targets to run: " + targetsThatCanBeRun.toString());
+                if(this.runResult.equals(RunResults.FAILURE)){
+                    stringBuilder.append("Skipped fathers: " + this.skippedFathers.toString());
+                }
+        }
+        stringBuilder.append(this.taskSpecificLogs);
+        return stringBuilder.toString();
+
+
+    }
 }

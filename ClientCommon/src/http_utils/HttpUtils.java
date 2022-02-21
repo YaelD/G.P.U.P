@@ -5,8 +5,6 @@ import okhttp3.Callback;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 
-import java.util.function.Consumer;
-
 public class HttpUtils {
 
     private final static SimpleCookieManager simpleCookieManager = new SimpleCookieManager();
@@ -31,7 +29,7 @@ public class HttpUtils {
         call.enqueue(callback);
     }
 
-    public static void runAsyncPost(Request request, Callback callback) {
+    public static void runAsyncWithRequest(Request request, Callback callback) {
 
         Call call = HttpUtils.HTTP_CLIENT.newCall(request);
 
