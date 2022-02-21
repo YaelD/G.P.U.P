@@ -21,6 +21,8 @@ import java.util.Map;
 public class RunningTargetsTableController {
 
     SimpleObjectProperty<TaskDTO> taskDTO;
+    RunWindowController runWindowController;
+
 
     @FXML
     private TableView<TargetsTableButtonsHandler> targetsTable;
@@ -54,16 +56,14 @@ public class RunningTargetsTableController {
                 ObservableList<TargetsTableButtonsHandler> data = FXCollections.observableArrayList();
                 for(TargetDTO currTarget: targetsMap.values()){
                     TargetsTableButtonsHandler targetDraw = new TargetsTableButtonsHandler(currTarget);
+                    data.add(targetDraw);
                     for(Button currButton: targetDraw.getButtonsMap().values()){
                         currButton.addEventFilter(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
                             @Override
                             public void handle(MouseEvent event) {
                                 TargetDTO targetDTO = newValue.getGraphDTO().getTargets().get(targetDraw.getName());
-                                String str = targetDTO.getRunningTargetStatus();
-                                if(str.equals("")){
-//                                    str = createRunResultString(targetDTO);
-                                }
-//                                targetInfoConsole.setText(str);
+                                String str = targetDTO.getTaskLog();
+                                runWindowController.writeToTargetDetails(str);
 
                             }
                         });
@@ -87,4 +87,7 @@ public class RunningTargetsTableController {
         this.taskDTO.bind(taskProperty);
     }
 
+    public void setRunWindowController(RunWindowController runWindowController) {
+        this.runWindowController = runWindowController;
+    }
 }

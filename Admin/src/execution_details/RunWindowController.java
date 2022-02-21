@@ -12,6 +12,7 @@ import dto.TaskDTO;
 import general_enums.RunResults;
 import general_enums.TaskStatus;
 import http_utils.HttpUtils;
+import javafx.application.Platform;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -124,7 +125,8 @@ public class RunWindowController {
 
     @FXML
     private void initialize(){
-
+        taskTableController.setRunWindowController(this);
+        taskTableController.setTaskDTO(taskDTOProperty);
         TaskListRefresherTimer.getInstance().addConsumer(this::getTask);
 
         progressBar.setProgress(0);
@@ -138,7 +140,6 @@ public class RunWindowController {
         taskDTOProperty.addListener(new ChangeListener<TaskDTO>() {
             @Override
             public void changed(ObservableValue<? extends TaskDTO> observable, TaskDTO oldValue, TaskDTO newValue) {
-                taskTableController.setTaskDTO(taskDTOProperty);
                 taskDetailsController.setTaskDTO(taskDTOProperty.getValue());
             }
         });
@@ -307,6 +308,12 @@ public class RunWindowController {
 
         currStr +=(PRINT_LINE);
         return currStr;
+    }
+
+    public void writeToTargetDetails(String str){
+        Platform.runLater(()->{
+            this.targetInfoConsole.setText(str);
+        });
     }
 
 
