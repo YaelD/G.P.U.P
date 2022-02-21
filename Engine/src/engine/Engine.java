@@ -3,6 +3,7 @@ package engine;
 
 import exceptions.*;
 import general_enums.Dependency;
+import general_enums.TaskStatus;
 import graph.Graph;
 import target.Target;
 import general_enums.RunType;
@@ -38,6 +39,7 @@ public interface Engine {
 
     public void addTaskToSystem(Task task) throws TaskExistException;
 
+    public Task updateTaskStatus(String taskName, TaskStatus newStatus) throws TaskNotExistException, CycleException;
 //    public GraphDTO activateTask(Consumer<TargetDTO> consumerString,
 //                                 Consumer<PausableThreadPoolExecutor> threadPoolConsumer,
 //                                 TaskParamsDTO taskParams, TaskType taskType, boolean isIncremental,

@@ -31,7 +31,6 @@ public class FindCycleServlet extends HttpServlet {
             response.setStatus(HttpServletResponse.SC_CONFLICT);
         }
         else{
-
             String[] paramsNames = {Constants.SOURCE_TARGET, Constants.GRAPH_NAME};
             PrintWriter body = response.getWriter();
 

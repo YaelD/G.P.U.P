@@ -6,6 +6,15 @@ public enum TaskStatus {
     ACTIVE,
     SUSPENDED,
     STOPPED,
-    FINISHED
+    FINISHED;
 
+    public static boolean contains(String type){
+        boolean isContain = false;
+        for(TaskStatus taskStatus : values()){
+            if(taskStatus.name().equals(type)){
+                isContain = true;
+            }
+        }
+        return isContain;
+    }
 }

@@ -14,7 +14,7 @@ import java.util.*;
 import java.util.concurrent.*;
 
 
-public abstract class Task{
+public abstract class Task {
 
     protected Graph graph;
     protected String taskName;
@@ -28,7 +28,6 @@ public abstract class Task{
 
 
     //public static Object taskDummyLock = new Object();
-
 
 
     public Task(Graph graph, String creatorName, String taskName, int totalPriceTask) {
@@ -54,6 +53,14 @@ public abstract class Task{
 
     public void setGraph(Graph graph) {
         this.graph = graph;
+    }
+
+    public synchronized void setStatus(TaskStatus status) {
+        this.status = status;
+    }
+
+    public void setSortedTargets(List<Target> sortedTargets) {
+        this.sortedTargets = sortedTargets;
     }
 
     public static List<Target> topologicalSort(Graph graph) throws CycleException {
@@ -82,29 +89,28 @@ public abstract class Task{
         //executeTaskOnGraph(sortedTargets);
     }
 
-    public void pauseTask(){
+    public void pauseTask() {
 
     }
 
-    public void resumeTask(){
+    public void resumeTask() {
 
     }
 
-    public void stopTask(){
+    public void stopTask() {
 
     }
 
     //this function will be called when a worker wants to get a target to work on.
-    public Target getTargetForRunning(){
+    public Target getTargetForRunning() {
         Target target = null;
-        if(!this.sortedTargets.isEmpty()) {
+        if (!this.sortedTargets.isEmpty()) {
             target = this.sortedTargets.get(0);
             if (target.getRunStatus().equals(RunStatus.WAITING)) {
                 this.sortedTargets.remove(0);
                 return target;
             }
-        }
-        else{
+        } else {
             this.isTaskFinished = true;
         }
         return null;
@@ -119,7 +125,7 @@ public abstract class Task{
 //        getOpenedTargetsToRun(targetDTO, currTarget);
 //    }
 
-    public void executeTaskOnGraph(List<Target> sortedTargets){
+    public void executeTaskOnGraph(List<Target> sortedTargets) {
 
     }
 
@@ -225,9 +231,9 @@ public abstract class Task{
         String graphName = this.graph.getName();
 
         Graph newGraph = new Graph(new HashMap<>(), graphName, this.graph.getTaskPricePerTarget(), creatorName);
-        for(Target currTarget : this.graph.getTargets()){
-            if(currTarget.getRunResult().equals(RunResults.FAILURE) ||
-                    currTarget.getRunResult().equals(RunResults.SKIPPED)){
+        for (Target currTarget : this.graph.getTargets()) {
+            if (currTarget.getRunResult().equals(RunResults.FAILURE) ||
+                    currTarget.getRunResult().equals(RunResults.SKIPPED)) {
                 Target clonedTarget = currTarget.clone();
                 clonedTarget.setRunResult(null);
                 clonedTarget.setRunStatus(RunStatus.FROZEN);
@@ -247,9 +253,9 @@ public abstract class Task{
 
     private static List<Target> initSourceQueue(Collection<Target> targets) {
         List<Target> sourceTargets = new LinkedList<>();
-        for(Target target : targets){
+        for (Target target : targets) {
             target.setRunStatus(RunStatus.FROZEN);
-            if(target.getDependsOn().isEmpty()){
+            if (target.getDependsOn().isEmpty()) {
                 target.setRunStatus(RunStatus.WAITING);
                 target.setStartWaitingTime(LocalTime.now());
                 sourceTargets.add(target);
@@ -259,16 +265,16 @@ public abstract class Task{
     }
 
     private static void checkingForCycle(Map<String, Integer> targetsInDegree) throws CycleException {
-        for(Map.Entry<String,Integer> targetEntry : targetsInDegree.entrySet()){
-            if((targetEntry.getValue()) != 0){
+        for (Map.Entry<String, Integer> targetEntry : targetsInDegree.entrySet()) {
+            if ((targetEntry.getValue()) != 0) {
                 throw new CycleException(targetEntry.getKey());
             }
         }
     }
 
-    private static Map<String, Integer> getTargetsInDegree(Map<String, Target> graphMap){
+    private static Map<String, Integer> getTargetsInDegree(Map<String, Target> graphMap) {
         Map<String, Integer> targetsInDegree = new HashMap<>();
-        for(Map.Entry<String, Target> targetEntry : graphMap.entrySet()){
+        for (Map.Entry<String, Target> targetEntry : graphMap.entrySet()) {
             targetsInDegree.put(targetEntry.getKey(), targetEntry.getValue().getDependsOn().size());
         }
         return targetsInDegree;
@@ -279,4 +285,35 @@ public abstract class Task{
     public abstract TaskDTO createTaskDTO();
 
 
+    //if stopped-> can't change the status
+    //if suspended-> can be changed to stopped or active
+    //if active-> can be changed to stopped or suspended
+    //if new-> can be changed to active
+    public boolean updateTaskStatus(TaskStatus newStatus) throws CycleException {
+        boolean isStatusChanged = false;
+        switch (this.status) {
+            case NEW:
+                if (newStatus.equals(TaskStatus.ACTIVE)) {
+                    this.status = newStatus;
+                    setSortedTargets(topologicalSort(this.graph));
+                    isStatusChanged = true;
+                }
+                break;
+            case ACTIVE:
+                if (newStatus.equals(TaskStatus.STOPPED) || (newStatus.equals(TaskStatus.SUSPENDED))) {
+                    isStatusChanged = true;
+                }
+                break;
+            case SUSPENDED:
+                if (newStatus.equals(TaskStatus.STOPPED) || (newStatus.equals(TaskStatus.ACTIVE))) {
+                    isStatusChanged = true;
+                }
+                break;
+            case STOPPED:
+            case FINISHED:
+                isStatusChanged = false;
+                break;
+        }
+        return isStatusChanged;
+    }
 }
