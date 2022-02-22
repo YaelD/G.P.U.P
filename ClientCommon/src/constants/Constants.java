@@ -16,7 +16,7 @@ public class Constants {
     public final static String WHAT_IF = FULL_SERVER_PATH + "/what_if";
     public final static String FIND_CYCLE = FULL_SERVER_PATH + "/find_cycle";
     public final static String REGISTER_TO_TASK = FULL_SERVER_PATH + "/task_execution";
-
+    public final static String UPDATE_TARGET_RUN_STATUS = FULL_SERVER_PATH + "/target";
 
     //QUERY PARAMS:
     public static final String USERNAME = "username";

@@ -184,12 +184,12 @@ public class Graph implements Cloneable {
     }
 
 
-    public GraphDTO makeDTO(){
+    public GraphDTO makeDTO(String taskName){
         Map<String, TargetDTO> targetsDTOMap = new HashMap<>();
         int numOfTargets = this.getTargets().size();
         int numOfIndependents = 0, numOfRoots = 0, numOfMiddles = 0, numOfLeaves = 0;
         for(Target target: this.getTargets()){
-            targetsDTOMap.put(target.getName(), target.makeDTO());
+            targetsDTOMap.put(target.getName(), target.makeDTO(taskName!= null ? taskName : ""));
             switch(target.getPlace()){
                 case INDEPENDENT:
                     numOfIndependents++;

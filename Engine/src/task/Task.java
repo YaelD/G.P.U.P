@@ -334,7 +334,7 @@ public abstract class Task {
             switch (this.sortedTargets.get(0).getRunStatus()){
                 case WAITING:
                     Target targetToSend = this.sortedTargets.remove(0);
-                    targetDTO = targetToSend.makeDTO();
+                    targetDTO = targetToSend.makeDTO(this.taskName);
                     break;
                 case FROZEN:
                     break;

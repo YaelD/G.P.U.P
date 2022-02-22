@@ -181,7 +181,7 @@ public class Target implements Cloneable {
         }
     }
 
-    public TargetDTO makeDTO(){
+    public TargetDTO makeDTO(String taskName){
         Set<String> requiredForNames = new HashSet<>();
         for(Target target: this.requiredFor){
             requiredForNames.add(target.name);
@@ -195,8 +195,9 @@ public class Target implements Cloneable {
         Set<String> totalDependsOnNames = new HashSet<>();
         this.getRequiredForAncestors(totalRequiredForNames);
         this.getDependsOnAncestors(totalDependsOnNames);
-        return new TargetDTO(this.name, this.place, requiredForNames, dependsOnName,this.info, totalRequiredForNames, totalDependsOnNames,
-                this.getRunTaskLog(), this.runStatus, this.runResult);
+        return new TargetDTO(this.name, this.place, requiredForNames, dependsOnName,
+                this.info, totalRequiredForNames, totalDependsOnNames,
+                this.getRunTaskLog(),taskName, this.runStatus, this.runResult);
     }
 
     public static Target createTargetFromTargetDTO(TargetDTO targetDTO){

@@ -10,22 +10,25 @@ import java.time.LocalTime;
 
 public class ExecutionTarget {
 
+    private String taskName;
     private RunResults runResult;
     private RunStatus runStatus;
     private String taskLog;
     private String info;
 
     public ExecutionTarget(TargetDTO targetDTO){
+        this.taskName = targetDTO.getTaskName();
         this.runResult = targetDTO.getRunResult();
         this.runStatus = targetDTO.getRunStatus();
         this.taskLog = "";
         this.info = targetDTO.getInfo();
+
     }
 
 
 
     public ExecutionTargetDTO makeDTO(){
-        return new ExecutionTargetDTO(this.runResult, this.runStatus, this.taskLog);
+        return new ExecutionTargetDTO(this.runResult, this.runStatus, this.taskLog, this.taskName);
     }
 
     public void setSpecificTaskLog(String str){

@@ -103,7 +103,7 @@ public class SimulationTask extends Task{
 
 
     public TaskDTO createTaskDTO(){
-        GraphDTO graphDTO = this.graph.makeDTO();
+        GraphDTO graphDTO = this.graph.makeDTO(this.taskName);
         TaskDTO taskDTO = new TaskDTO(this.taskName, this.creatorName, this.totalTaskPrice,
                 this.registeredWorkers.size(), this.status, graphDTO, TaskType.SIMULATION_TASK);
         return taskDTO;

@@ -43,7 +43,6 @@ public class GraphListRefresherTimer extends Timer {
 
     private class GraphListRefresher extends TimerTask {
 
-
         private final List<Consumer<List<GraphDTO>>> consumersList;
 
         public GraphListRefresher() {
@@ -71,11 +70,8 @@ public class GraphListRefresherTimer extends Timer {
                         consumersList.forEach(consumer -> {consumer.accept(Arrays.asList(graphs));});
                     }
                     response.body().close();
-
                 }
             });
         }
-
-
     }
 }

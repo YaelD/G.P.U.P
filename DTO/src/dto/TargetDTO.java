@@ -12,6 +12,7 @@ public class TargetDTO {
 
 
     private String name;
+    private String taskName;
     private PlaceInGraph place;
     private Set<String> requiredFor = new HashSet<>();
     private Set<String> dependsOn = new HashSet<>();
@@ -26,10 +27,10 @@ public class TargetDTO {
 
 
 
-    public TargetDTO(String name,
-                     PlaceInGraph place, Set<String> requiredFor, Set<String> dependsOn, String info,
-                     Set<String> totalRequiredFor, Set<String> totalDependsOn, String taskRunResult,
-                     RunStatus runStatus, RunResults runResult) {
+    public TargetDTO(String name, PlaceInGraph place, Set<String> requiredFor,
+                     Set<String> dependsOn, String info, Set<String> totalRequiredFor,
+                     Set<String> totalDependsOn, String taskRunResult,
+                     String taskName, RunStatus runStatus, RunResults runResult) {
         this.name = name;
         this.place = place;
         this.requiredFor = requiredFor;
@@ -40,8 +41,13 @@ public class TargetDTO {
         this.taskLog = taskRunResult;
         this.runStatus = runStatus;
         this.runResult = runResult;
+        this.taskName = taskName;
     }
 
+
+    public String getTaskName() {
+        return taskName;
+    }
 
     public String getTaskLog() {
         return taskLog;
