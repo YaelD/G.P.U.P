@@ -20,6 +20,13 @@ public class Constants {
     public static final String DEPENDENCY = "dependency";
     public static final String TASK_NAME = "taskName";
     public static final String TASK_STATUS = "taskStatus";
+    public static final String NUMBER_OF_TARGETS = "numOfTargets";
+
+
+
+    //error messages
+    public static final String WORKER_NOT_REGISTER_TASK = "The worker has not yet registered to any task";
+
 
 
 

@@ -1,12 +1,11 @@
 package engine;
 
+import dto.TargetDTO;
 import general_enums.TaskStatus;
 import general_enums.TaskType;
 import task.Task;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class TasksManager {
 
@@ -61,5 +60,31 @@ public class TasksManager {
         }
         this.tasksInSystem.get(taskName).addWorkerToTask(workerName);
         return this.tasksInSystem.get(taskName);
+    }
+
+    public Set<TargetDTO> getTaskTargetForExecution(Collection<Task> workerTasks, int requiredNumOfTargets){
+        Set<TargetDTO> targetsForWorker = new HashSet<>();
+        boolean isFinished = false;
+        int numOfReadyForRunningTargets = 0;
+
+        while (!isFinished){
+
+            for(Task currTask : workerTasks){
+                if(targetsForWorker.size() < requiredNumOfTargets){
+                    TargetDTO targetDTO = currTask.getTargetReadyForRunning();
+                    if(targetDTO != null){
+                        targetsForWorker.add(targetDTO);
+                    }
+                }
+            }
+            if(targetsForWorker.size() == requiredNumOfTargets ||
+                    numOfReadyForRunningTargets == targetsForWorker.size()){
+                isFinished = true;
+            }
+            else if(numOfReadyForRunningTargets < targetsForWorker.size()){
+                numOfReadyForRunningTargets = targetsForWorker.size();
+            }
+        }
+        return targetsForWorker;
     }
 }

@@ -2,6 +2,7 @@ package utils;
 
 
 import constants.Constants;
+import engine.ExceptionMessages;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import task.Task;
@@ -42,6 +43,14 @@ public class SessionUtils {
         }
        session.setAttribute(Constants.USER_TASKS, userTasks);
     }
+
+//    public static boolean isTaskExistInSession(HttpServletRequest request, String taskName){
+//        Map<String, Task> userTasks = getUserTasks(request);
+//        if(userTasks == null){
+//            return false;
+//        }
+//        return userTasks.containsKey(taskName);
+//    }
 
     public static void clearSession (HttpServletRequest request) {
         request.getSession().invalidate();

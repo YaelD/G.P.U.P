@@ -41,4 +41,7 @@
    <center>
       <fx:include fx:id="taskInfoTable" source="task_list.fxml" />
    </center>
+   <bottom>
+      <fx:include fx:id="registerToTaskPane" source="register_task.fxml" />
+   </bottom>
 </BorderPane>

@@ -28,6 +28,8 @@ public class TaskTableController {
     private Timer timer;
     private TimerTask listRefresher;
 
+    private SimpleStringProperty selectedTaskName;
+
     @FXML
     private TableView<TaskDTO> tasksInSystemTableView;
 
@@ -65,6 +67,10 @@ public class TaskTableController {
     private TableColumn<TaskDTO, String> numOfIndependents_column;
 
 
+    public TaskTableController() {
+        this.selectedTaskName = new SimpleStringProperty();
+    }
+
     @FXML
     private void initialize(){
         tasksInSystemTableView.setRowFactory(tv-> {
@@ -72,6 +78,7 @@ public class TaskTableController {
             row.setOnMouseClicked(event -> {
                 if (event.getClickCount() == 2 && (! row.isEmpty()) ) {
                     TaskDTO rowData = row.getItem();
+                    this.selectedTaskName.set(rowData.getTaskName());
                     showTaskDetails(rowData);
                     //TODO: what we want to show when we clicking on a task
                 }
@@ -129,7 +136,16 @@ public class TaskTableController {
 //        timer.schedule(listRefresher, 15000, 15000);
     }
 
+    public String getSelectedTaskName() {
+        return selectedTaskName.get();
+    }
 
+    public SimpleStringProperty selectedTaskNameProperty() {
+        return selectedTaskName;
+    }
+
+
+    //taksNameTosend = selecteTaskName
     private void showTaskDetails(TaskDTO taskDTO){
         try {
             URL resource = TaskDetailsPopupController.class.getResource("task_details_popup.fxml");

@@ -26,6 +26,7 @@ public abstract class Task {
     protected TaskStatus status;
     private CountDownLatch latch;
     protected List<Target> sortedTargets = new ArrayList<>();
+    protected List<Target> finishedTargets = new ArrayList<>();
     private boolean isTaskFinished = false;
 
 
@@ -61,7 +62,7 @@ public abstract class Task {
         this.status = status;
     }
 
-    public void setSortedTargets(List<Target> sortedTargets) {
+    public synchronized void setSortedTargets(List<Target> sortedTargets) {
         this.sortedTargets = sortedTargets;
     }
 
@@ -325,5 +326,28 @@ public abstract class Task {
             throw new Exception(ExceptionMessages.INVALID_TASK_STATUS);
         }
         this.registeredWorkers.add(workerName);
+    }
+
+    public synchronized TargetDTO getTargetReadyForRunning(){
+        TargetDTO targetDTO = null;
+        if(this.status.equals(TaskStatus.ACTIVE)){
+            switch (this.sortedTargets.get(0).getRunStatus()){
+                case WAITING:
+                    Target targetToSend = this.sortedTargets.remove(0);
+                    targetDTO = targetToSend.makeDTO();
+                    break;
+                case FROZEN:
+                    break;
+                case SKIPPED:
+                case FINISHED:
+                    this.finishedTargets.add(this.sortedTargets.remove(0));
+                    break;
+            }
+        }
+        return targetDTO;
+    }
+
+    public TaskParamsDTO toTaskParamsDTO(){
+
     }
 }
