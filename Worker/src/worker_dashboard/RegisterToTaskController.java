@@ -57,25 +57,27 @@ public class RegisterToTaskController {
         HttpUtils.runAsyncWithRequest(request, new Callback() {
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                System.out.println("nayyyyyyyyyyyyyyy :(");
+                //TODO: FILL THIS SECTION!!!
             }
 
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                String taskParams;
                 String jsonOfTaskParamsDTO = response.body().string();
                 TaskParamsDTO taskParamsDTOS = new Gson().fromJson(jsonOfTaskParamsDTO, TaskParamsDTO.class);
                 if(taskParamsDTOS.getTaskType().equals(TaskType.COMPILATION_TASK)){
                     CompilationTaskParamsDTO compilationTaskParamsDTO = new Gson().fromJson(jsonOfTaskParamsDTO, CompilationTaskParamsDTO.class);
+                    taskParams = compilationTaskParamsDTO.toString();
                 }
                 else{
                     SimulationTaskParamsDTO simulationTaskParamsDTO = new Gson().fromJson(jsonOfTaskParamsDTO, SimulationTaskParamsDTO.class);
+                    taskParams = simulationTaskParamsDTO.toString();
                 }
                 response.body().close();
+                taskInfoTextArea.textProperty().set(taskParams);
             }
         });
     }
-
-
 
     public SimpleStringProperty taskNameProperty() {
         return taskName;

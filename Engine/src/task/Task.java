@@ -347,7 +347,4 @@ public abstract class Task {
         return targetDTO;
     }
 
-    public TaskParamsDTO toTaskParamsDTO(){
-
-    }
 }

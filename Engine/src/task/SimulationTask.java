@@ -115,4 +115,8 @@ public class SimulationTask extends Task{
         return new SimulationTask(taskParamsDTO, graph);
     }
 
+    public SimulationTaskParamsDTO createSimulationTaskParamsDTO(SimulationTask simulationTask){
+        return  new SimulationTaskParamsDTO(this.processTime, this.isRandom, this.successRate, this.successWithWarningsRate);
+    }
+
 }

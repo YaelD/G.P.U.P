@@ -7,13 +7,19 @@ import java.util.List;
 
 public class CompilationTaskParamsDTO extends TaskParamsDTO{
     private String sourceDir;
-    private String DestinationDir;
+    private String destinationDir;
 
     public CompilationTaskParamsDTO(RunType runType, List<String> targets, String creatorName, String graphName, String taskName, int totalTaskPrice,
                                     String sourceDir, String destinationDir) {
         super(creatorName,TaskType.SIMULATION_TASK, runType, targets, taskName, graphName, totalTaskPrice);
         this.sourceDir = sourceDir;
-        DestinationDir = destinationDir;
+        this.destinationDir = destinationDir;
+    }
+
+    public CompilationTaskParamsDTO(String sourceDir, String destinationDir) {
+        this.sourceDir = sourceDir;
+        this.destinationDir = destinationDir;
+        this.taskType = TaskType.COMPILATION_TASK;
     }
 
     public String getSourceDir() {
@@ -21,6 +27,13 @@ public class CompilationTaskParamsDTO extends TaskParamsDTO{
     }
 
     public String getDestinationDir() {
-        return DestinationDir;
+        return destinationDir;
+    }
+
+    @Override
+    public String toString() {
+        return "Task type: Compilation" + "\n" +
+                "Source Directory:'" + sourceDir + '\'' + "\n" +
+                "Destination Directory:'" + destinationDir + '\'' + "\n";
     }
 }

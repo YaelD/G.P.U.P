@@ -1,8 +1,13 @@
 package engine;
 
+import dto.CompilationTaskParamsDTO;
+import dto.SimulationTaskParamsDTO;
 import dto.TargetDTO;
+import dto.TaskParamsDTO;
 import general_enums.TaskStatus;
 import general_enums.TaskType;
+import task.CompilationTask;
+import task.SimulationTask;
 import task.Task;
 
 import java.util.*;
@@ -86,5 +91,18 @@ public class TasksManager {
             }
         }
         return targetsForWorker;
+    }
+
+    public TaskParamsDTO toTaskParamsDTO(Task task){
+        TaskParamsDTO taskParamsDTO = null;
+        if(task instanceof SimulationTask){
+            SimulationTask simulationTask = (SimulationTask) task;
+            taskParamsDTO = simulationTask.createSimulationTaskParamsDTO(simulationTask);
+        }
+        else if(task instanceof CompilationTask){
+            CompilationTask compilationTask = (CompilationTask) task;
+            taskParamsDTO = compilationTask.createCompilationTaskParamsDTO(compilationTask);
+        }
+        return taskParamsDTO;
     }
 }

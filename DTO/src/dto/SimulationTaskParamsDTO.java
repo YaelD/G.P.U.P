@@ -24,6 +24,14 @@ public class SimulationTaskParamsDTO extends TaskParamsDTO {
         this.successWithWarningsRate = successWithWarningsRate;
     }
 
+    public SimulationTaskParamsDTO(int processTime, boolean isRandom, double successRate, double successWithWarningsRate) {
+        this.processTime = processTime;
+        this.isRandom = isRandom;
+        this.successRate = successRate;
+        this.successWithWarningsRate = successWithWarningsRate;
+        this.taskType = TaskType.SIMULATION_TASK;
+    }
+
     public int getProcessTime() {
         return processTime;
     }
@@ -38,5 +46,14 @@ public class SimulationTaskParamsDTO extends TaskParamsDTO {
 
     public double getSuccessWithWarningsRate() {
         return successWithWarningsRate;
+    }
+
+    @Override
+    public String toString() {
+        return "Task type: Simulation" + "\n" +
+                "Process Time:" + processTime + "\n" +
+                "Is Random:" + isRandom + "\n" +
+                "Success Rate:" + successRate + "\n" +
+                "Success With Warnings Rate:" + successWithWarningsRate + "\n";
     }
 }

@@ -47,7 +47,7 @@ public class TaskExecutionServlet extends HttpServlet {
                     body.println("The user already registered to the task");
                 } else {
                     Task task = tasksManager.workerRegistrationToTask(taskName, usernameFromSession);
-                    TaskParamsDTO taskParamsDTO = task.toTaskParamsDTO();
+                    TaskParamsDTO taskParamsDTO = tasksManager.toTaskParamsDTO(task);
                     SessionUtils.setUserTasks(request, task, Constants.ADD_TASK);
                     response.setStatus(HttpServletResponse.SC_OK);
                     Gson gson = new Gson();

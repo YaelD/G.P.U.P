@@ -120,4 +120,8 @@ public class CompilationTask extends Task{
         Graph graph = Graph.buildGraphForRunning(selectedTargets, graphForTask);
         return new CompilationTask(compilationTaskParamsDTO, graph);
     }
+
+    public CompilationTaskParamsDTO createCompilationTaskParamsDTO(CompilationTask compilationTask){
+        return new CompilationTaskParamsDTO(this.sourceDir, this.destinationDir);
+    }
 }
