@@ -72,10 +72,6 @@ public class GraphDTO {
         return numOfMiddles;
     }
 
-    //    public GraphDTO(Graph graph, long runTime) {
-//        this(graph);
-//        this.runTime = runTime;
-//    }
 
     public String getName() {
         return name;
@@ -85,11 +81,6 @@ public class GraphDTO {
     public Map<String, TargetDTO> getTargets() {
         return targets;
     }
-
-    public long getRunTime() {
-        return runTime;
-    }
-
 
     public int getNumOfTargetsRunResult(RunResults runResult){
         int counter = 0;

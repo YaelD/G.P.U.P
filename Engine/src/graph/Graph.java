@@ -3,15 +3,11 @@ package graph;
 import dto.GraphDTO;
 import dto.TargetDTO;
 import engine.ExceptionMessages;
-import exceptions.DependencyConflictException;
-import exceptions.DuplicateTargetsException;
-import exceptions.InvalidDependencyException;
-import exceptions.TargetNotExistException;
 import general_enums.Dependency;
 import schema.generated.GPUPTarget;
 import schema.generated.GPUPTargetDependencies;
 import schema.generated.GPUPTargets;
-import dto.PlaceInGraph;
+import general_enums.PlaceInGraph;
 import target.Target;
 import general_enums.TaskType;
 

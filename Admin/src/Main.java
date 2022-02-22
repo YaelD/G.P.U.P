@@ -1,3 +1,6 @@
+import RefreshingItems.GraphListRefresherTimer;
+import RefreshingItems.TaskListRefresherTimer;
+import RefreshingItems.UserListRefresherTimer;
 import container.TopContainerController;
 import http_utils.HttpUtils;
 import javafx.application.Application;
@@ -11,6 +14,17 @@ import java.net.URL;
 
 public class Main extends Application {
 
+    public static void main(String[] args) {
+        launch();
+        System.out.println("Got back to main!!");
+        HttpUtils.ShutDown();
+        TaskListRefresherTimer.getInstance().cancel();
+        GraphListRefresherTimer.getInstance().cancel();
+        UserListRefresherTimer.getInstance().cancel();
+
+    }
+
+
     @Override
     public void start(Stage primaryStage) throws Exception {
         URL resource = TopContainerController.class.getResource("top_container.fxml");
@@ -23,9 +37,6 @@ public class Main extends Application {
         primaryStage.setTitle("GPUP");
         primaryStage.setMinHeight(400);
         primaryStage.setMinWidth(400);
-
         primaryStage.show();
-
-        HttpUtils.ShutDown();
     }
 }

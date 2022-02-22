@@ -106,9 +106,9 @@ public class TopContainerController {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader();
             fxmlLoader.setLocation(dashboardPageURL);
-            ScrollPane scrollPane = fxmlLoader.load(dashboardPageURL.openStream());
-            this.dashboard = (BorderPane) scrollPane.contentProperty().get();
+            BorderPane borderPane = fxmlLoader.load(dashboardPageURL.openStream());
             this.dashboardController = fxmlLoader.getController();
+            this.dashboard = borderPane;
         } catch (IOException e) {
             e.printStackTrace();
         }

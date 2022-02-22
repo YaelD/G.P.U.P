@@ -57,7 +57,7 @@ public class RunningTargetsTableController {
                 for(TargetDTO currTarget: targetsMap.values()){
                     TargetsTableButtonsHandler targetDraw = new TargetsTableButtonsHandler(currTarget);
                     data.add(targetDraw);
-                    for(Button currButton: targetDraw.getButtonsMap().values()){
+                    for(Button currButton: targetDraw.getButtonSet()){
                         currButton.addEventFilter(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
                             @Override
                             public void handle(MouseEvent event) {

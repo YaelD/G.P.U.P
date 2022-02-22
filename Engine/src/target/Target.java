@@ -1,6 +1,6 @@
 package target;
 
-import dto.PlaceInGraph;
+import general_enums.PlaceInGraph;
 import dto.TargetDTO;
 import general_enums.Dependency;
 import general_enums.RunResults;
@@ -28,6 +28,10 @@ public class Target implements Cloneable {
     private Set<String> waitForThisTargetsToBeFinished = new HashSet<>();
     private Set<String> targetsThatCanBeRun = new HashSet<>();
     private Set<String> skippedFathers = new HashSet<>();
+
+    public void setStartingProcessTime(LocalTime startingProcessTime) {
+        this.startingProcessTime = startingProcessTime;
+    }
 
     private String taskSpecificLogs;
 
@@ -192,7 +196,7 @@ public class Target implements Cloneable {
         this.getRequiredForAncestors(totalRequiredForNames);
         this.getDependsOnAncestors(totalDependsOnNames);
         return new TargetDTO(this.name, this.place, requiredForNames, dependsOnName,this.info, totalRequiredForNames, totalDependsOnNames,
-                this.getRunTaskLog());
+                this.getRunTaskLog(), this.runStatus, this.runResult);
     }
 
     public static Target createTargetFromTargetDTO(TargetDTO targetDTO){
@@ -203,6 +207,7 @@ public class Target implements Cloneable {
     public synchronized void updateTarget(TargetDTO targetDTO){
         this.runStatus = targetDTO.getRunStatus();
         this.runResult = targetDTO.getRunResult();
+
     }
 
 
@@ -246,4 +251,6 @@ public class Target implements Cloneable {
 
 
     }
+
+
 }

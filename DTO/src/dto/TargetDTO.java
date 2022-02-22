@@ -2,12 +2,10 @@ package dto;
 
 //import target.*;
 
+import general_enums.PlaceInGraph;
 import general_enums.RunResults;
 import general_enums.RunStatus;
 
-import java.time.Duration;
-import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 public class TargetDTO {
@@ -30,7 +28,8 @@ public class TargetDTO {
 
     public TargetDTO(String name,
                      PlaceInGraph place, Set<String> requiredFor, Set<String> dependsOn, String info,
-                     Set<String> totalRequiredFor, Set<String> totalDependsOn, String taskRunResult) {
+                     Set<String> totalRequiredFor, Set<String> totalDependsOn, String taskRunResult,
+                     RunStatus runStatus, RunResults runResult) {
         this.name = name;
         this.place = place;
         this.requiredFor = requiredFor;
@@ -39,6 +38,8 @@ public class TargetDTO {
         this.totalRequiredFor = totalRequiredFor;
         this.totalDependsOn = totalDependsOn;
         this.taskLog = taskRunResult;
+        this.runStatus = runStatus;
+        this.runResult = runResult;
     }
 
 
