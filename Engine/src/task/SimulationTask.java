@@ -65,7 +65,7 @@ public class SimulationTask extends Task{
         }
         try {
             target.setTaskSpecificLogs("Simulation task: ");
-            target.setStartingProcessTime(LocalTime.now());
+//            target.setStartingProcessTime(LocalTime.now());
 
             startTime = LocalTime.now();
             target.setTaskSpecificLogs("Start time: " + startTime.format(DateTimeFormatter.ofPattern("H:mm:ss")));
