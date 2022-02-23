@@ -3,6 +3,8 @@ package dto;
 import general_enums.TaskStatus;
 import general_enums.TaskType;
 
+import java.util.Set;
+
 public class TaskDTO {
 
     private String taskName;
@@ -12,10 +14,11 @@ public class TaskDTO {
     private TaskStatus taskStatus;
     private GraphDTO graphDTO;
     private TaskType taskType;
+    private Set<String> registeredWorkers;
 
 
     public TaskDTO(String taskName, String creatorName, int taskTotalPrice, int numOfRegisteredWorkers,
-                   TaskStatus taskStatus, GraphDTO graphDTO, TaskType taskType) {
+                   TaskStatus taskStatus, GraphDTO graphDTO, TaskType taskType, Set<String> registeredWorkers) {
         this.taskName = taskName;
         this.creatorName = creatorName;
         this.taskTotalPrice = taskTotalPrice;
@@ -23,6 +26,11 @@ public class TaskDTO {
         this.taskStatus = taskStatus;
         this.graphDTO = graphDTO;
         this.taskType = taskType;
+        this.registeredWorkers = registeredWorkers;
+    }
+
+    public Set<String> getRegisteredWorkers() {
+        return registeredWorkers;
     }
 
     public String getTaskName() {

@@ -11,6 +11,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.util.Callback;
 
 import java.io.IOException;
 import java.net.URL;
@@ -64,16 +65,43 @@ public class TaskTableController {
     }
 
     private void loadTaskTableColumns() {
-        tasksInSystemTableView.setRowFactory(tv-> {
-            TableRow<TaskDTO> row = new TableRow<>();
-            TaskDTO rowData = row.getItem();
-            row.setOnMouseClicked(event -> {
-                if (event.getClickCount() == 2 && (! row.isEmpty()) ) {
-                    addNewTab();
-                }
-            });
-            return row;
+//        tasksInSystemTableView.setRowFactory(tv-> {
+//            TableRow<TaskDTO> row = new TableRow<>();
+//            TaskDTO rowData = row.getItem();
+//            row.setOnMouseClicked(event -> {
+//                if (event.getClickCount() == 2 && (! row.isEmpty()) ) {
+//                    addNewTab();
+//                }
+//            });
+//            return row;
+//        });
+        tasksInSystemTableView.setRowFactory(new Callback<TableView<TaskDTO>, TableRow<TaskDTO>>() {
+            @Override
+            public TableRow<TaskDTO> call(TableView<TaskDTO> param) {
+                TableRow<TaskDTO> row = new TableRow<TaskDTO>(){
+                    @Override
+                    protected void updateItem(TaskDTO item, boolean empty) {
+                        super.updateItem(item, empty);
+                        if(item != null && item.getCreatorName().equals(dashboardController.getUserName())){
+                            System.out.println("IN CREATOR NAME: " + item.getCreatorName() + " Equals" + dashboardController.getUserName());
+                            setStyle("-fx-background-color: #1fff22;");
+                        }
+                        else {
+                            System.out.println("They are not equals!!");
+                            this.setStyle(null);
+
+                        }
+                    }
+                };
+                row.setOnMouseClicked(event -> {
+                    if (event.getClickCount() == 2 && (! row.isEmpty()) ) {
+                        addNewTab();
+                    }
+                });
+                return row;
+            }
         });
+
         taskname_column.setCellValueFactory(new PropertyValueFactory<>("taskName"));
         creator_name_column.setCellValueFactory(new PropertyValueFactory<>("creatorName"));
         totalTaskPrice_column.setCellValueFactory(new PropertyValueFactory<>("taskTotalPrice"));
@@ -139,6 +167,7 @@ public class TaskTableController {
             ObservableList<TaskDTO> taskDTOS = tasksInSystemTableView.getItems();
             taskDTOS.clear();
             taskDTOS.addAll(tasks);
+
         });
     }
 

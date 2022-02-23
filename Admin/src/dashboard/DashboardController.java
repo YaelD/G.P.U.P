@@ -140,7 +140,9 @@ public class DashboardController {
                 return;
             }
         }
-        topTabPane.getTabs().add(new Tab(tabName, newNode));
+        Tab newTab = new Tab(tabName, newNode);
+        topTabPane.getTabs().add(newTab);
+        topTabPane.getSelectionModel().select(newTab);
     }
 
     public String getUserName() {

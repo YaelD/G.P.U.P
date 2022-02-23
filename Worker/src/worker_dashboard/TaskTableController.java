@@ -25,8 +25,7 @@ import java.util.TimerTask;
 
 public class TaskTableController {
 
-    private Timer timer;
-    private TimerTask listRefresher;
+    private DashboardController dashboardController;
 
     private SimpleStringProperty selectedTaskName;
 
@@ -74,12 +73,22 @@ public class TaskTableController {
     @FXML
     private void initialize(){
         tasksInSystemTableView.setRowFactory(tv-> {
-            TableRow<TaskDTO> row = new TableRow<>();
+            TableRow<TaskDTO> row = new TableRow<TaskDTO>() {
+                @Override
+                protected void updateItem(TaskDTO item, boolean empty) {
+                    super.updateItem(item, empty);
+                    if(item != null && item.getRegisteredWorkers().contains(dashboardController.getUserName())){
+                        setStyle("-fx-background-color: #1fff22;");
+                    }
+                    else {
+                        setStyle(null);
+                    }
+                }
+            };
             row.setOnMouseClicked(event -> {
                 if (event.getClickCount() == 2 && (! row.isEmpty()) ) {
                     TaskDTO rowData = row.getItem();
                     this.selectedTaskName.set(rowData.getTaskName());
-                    //TODO: what we want to show when we clicking on a task
                 }
             });
             return row;
@@ -129,10 +138,6 @@ public class TaskTableController {
 
     public void startTaskListRefresher() {
         TaskListRefresherTimer.getInstance().addConsumer(this::updateTasksList);
-//        listRefresher = new TaskListRefresher(
-//                this::updateTasksList);
-//        timer = new Timer(true);
-//        timer.schedule(listRefresher, 15000, 15000);
     }
 
     public String getSelectedTaskName() {
@@ -164,10 +169,9 @@ public class TaskTableController {
             e.printStackTrace();
         }
 
-
     }
 
-
-
-
+    public void setDashboardController(DashboardController dashboardController) {
+        this.dashboardController = dashboardController;
+    }
 }

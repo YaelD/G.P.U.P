@@ -14,6 +14,8 @@ import javafx.scene.layout.GridPane;
 
 public class DashboardController {
 
+    private String userName;
+
     @FXML
     private GridPane registerToTaskPane;
 
@@ -41,6 +43,8 @@ public class DashboardController {
     @FXML
     private void initialize(){
         registerToTaskPaneController.taskNameProperty().bind(taskInfoTableController.selectedTaskNameProperty());
+        taskInfoTableController.setDashboardController(this);
+
     }   //LABEL = taskNameProperty(RegisterPane) = selectedTaskNamePropery(Table)
 
     public void setTaskInfo(TaskDTO taskDTO){
@@ -54,6 +58,14 @@ public class DashboardController {
 
     public void setTopTabPane(TabPane tabs) {
         this.topTabPane = tabs;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 }
 
