@@ -15,7 +15,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import okhttp3.*;
 import org.jetbrains.annotations.NotNull;
-import worker_engine.SimulationTaskExecution;
+import worker_engine.ExecutionTargetsRefresherTimer;
 import worker_engine.WorkerEngine;
 
 import java.io.IOException;
@@ -46,7 +46,7 @@ public class RegisterToTaskController {
     @FXML
     void OnClickRegisterButton(ActionEvent event) {
         String finalUrl = Objects.requireNonNull(HttpUrl
-                .parse(Constants.REGISTER_TO_TASK)).newBuilder()
+                .parse(Constants.TASK_EXECUTION)).newBuilder()
                 .addQueryParameter(Constants.TASK_NAME, taskName.getValue())
                 .build()
                 .toString();
@@ -66,15 +66,16 @@ public class RegisterToTaskController {
                 TaskParamsDTO taskParamsDTOS = new Gson().fromJson(jsonOfTaskParamsDTO, TaskParamsDTO.class);
                 if(taskParamsDTOS.getTaskType().equals(TaskType.COMPILATION_TASK)){
                     CompilationTaskParamsDTO compilationTaskParamsDTO = new Gson().fromJson(jsonOfTaskParamsDTO, CompilationTaskParamsDTO.class);
-                    WorkerEngine.getInstance(1).getRegisteredTasksParams().put(compilationTaskParamsDTO.getTaskName(), compilationTaskParamsDTO);
+                    WorkerEngine.getInstance().getRegisteredTasksParams().put(compilationTaskParamsDTO.getTaskName(), compilationTaskParamsDTO);
                     taskParams = compilationTaskParamsDTO.toString();
                 }
                 else{
                     SimulationTaskParamsDTO simulationTaskParamsDTO = new Gson().fromJson(jsonOfTaskParamsDTO, SimulationTaskParamsDTO.class);
-                    WorkerEngine.getInstance(1).getRegisteredTasksParams().put(simulationTaskParamsDTO.getTaskName(), simulationTaskParamsDTO);
+                    WorkerEngine.getInstance().getRegisteredTasksParams().put(simulationTaskParamsDTO.getTaskName(), simulationTaskParamsDTO);
                     taskParams = simulationTaskParamsDTO.toString();
                 }
                 response.body().close();
+                ExecutionTargetsRefresherTimer.getInstance();
                 taskInfoTextArea.textProperty().set(taskParams);
             }
         });

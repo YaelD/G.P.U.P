@@ -1,7 +1,6 @@
 package worker_engine;
 
 import dto.TargetDTO;
-import dto.TaskParamsDTO;
 
 public class TaskExecution {
 
@@ -9,5 +8,6 @@ public class TaskExecution {
 
     public TaskExecution(TargetDTO targetDTO) {
         executionTarget = new ExecutionTarget(targetDTO);
+        SendExecutionTargetRefresherTimer.getInstance().addTarget(executionTarget);
     }
 }

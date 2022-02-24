@@ -4,31 +4,29 @@ import dto.TaskParamsDTO;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.*;
 
 public class WorkerEngine {
 
-    private ThreadPoolExecutor threadPool;
-
     private PausableThreadPoolExecutor pausableThreadPoolExecutor;
-
-
     private static WorkerEngine instance;
 
     private Map<String, TaskParamsDTO> registeredTasksParams;
 
 
-    private WorkerEngine(int numOfThreads){
-        this.pausableThreadPoolExecutor = new PausableThreadPoolExecutor(numOfThreads, new ArrayBlockingQueue<Runnable>(8));
+    private WorkerEngine(){
         this.registeredTasksParams = new HashMap<>();
     }
 
-    public static WorkerEngine getInstance(int numOfThreads){
+    public void setPausableThreadPoolExecutor(PausableThreadPoolExecutor pausableThreadPoolExecutor) {
+        if(this.pausableThreadPoolExecutor == null){
+            this.pausableThreadPoolExecutor = pausableThreadPoolExecutor;
+        }
+    }
+
+    public static WorkerEngine getInstance(){
         if(instance == null){
-            instance = new WorkerEngine(numOfThreads);
+            instance = new WorkerEngine();
         }
         return instance;
     }
@@ -38,13 +36,17 @@ public class WorkerEngine {
     }
 
     public void addTask(Runnable run){
-        threadPool.execute(run);
+        if(pausableThreadPoolExecutor == null){
+            return;
+        }
+        pausableThreadPoolExecutor.execute(run);
     }
 
     public int getNumOfFreeThreads(){
-        return 1;
+        if(pausableThreadPoolExecutor == null){
+            return 0;
+        }
+        return pausableThreadPoolExecutor.getMaximumPoolSize() - pausableThreadPoolExecutor.getActiveCount();
     }
-
-
 
 }

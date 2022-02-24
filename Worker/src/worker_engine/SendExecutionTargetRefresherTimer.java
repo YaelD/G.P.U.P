@@ -1,10 +1,8 @@
-package RefreshingItems;
+package worker_engine;
 
 import com.google.gson.Gson;
 import constants.Constants;
 import dto.ExecutionTargetDTO;
-import dto.GraphDTO;
-import general_enums.TaskStatus;
 import http_utils.HttpUtils;
 import okhttp3.*;
 import org.jetbrains.annotations.NotNull;
@@ -22,41 +20,41 @@ public class SendExecutionTargetRefresherTimer extends Timer {
             instance = new SendExecutionTargetRefresherTimer();
         }
         return instance;
+
     }
 
     private SendExecutionTargetRefresherTimer() {
         super(true);
-//        taskListRefresher = TaskListRefresher.getInstance();
         executionTargetRefresher = new SendExecutionTargetRefresher();
         this.schedule(executionTargetRefresher, Constants.TWO_SECS, Constants.TWO_SECS);
+    }
+
+    public void addTarget(ExecutionTarget target){
+            this.executionTargetRefresher.targetet.add(target);
     }
 
 
 
         private class SendExecutionTargetRefresher extends TimerTask {
 
-            //Map TaskName->ExecutionTarget
-//            private Map<String, ExecutionTargetDTO> executionTargetDTOMap;
-            private Set<ExecutionTargetDTO> targetDTOSet;
+            private Set<ExecutionTarget> targetet;
 
             public SendExecutionTargetRefresher() {
-                this.targetDTOSet = new HashSet<>();
+                this.targetet = new HashSet<>();
             }
 
-            public void addExecutionTarget(ExecutionTargetDTO executionTargetDTO){
-                this.targetDTOSet.add(executionTargetDTO);
-            }
+
 
             @Override
             public void run() {
-                for(ExecutionTargetDTO targetDTO : this.targetDTOSet){
-                    //TODO: change the URL of the request!
+                for(ExecutionTarget target : this.targetet){
+                    ExecutionTargetDTO dto = target.makeDTO();
                     String finalUrl = Objects.requireNonNull(HttpUrl
                             .parse(Constants.TASK_LIST)).newBuilder()
-                            .addQueryParameter(Constants.TASK_NAME, targetDTO.getTaskName())
+                            .addQueryParameter(Constants.TASK_NAME, dto.getTaskName())
                             .build()
                             .toString();
-                    String targetJson = new Gson().toJson(targetDTO);
+                    String targetJson = new Gson().toJson(dto);
                     Request request= new Request.Builder().url(finalUrl).put(RequestBody.create(targetJson.getBytes())).build();
                     HttpUtils.runAsyncWithRequest(request, new Callback() {
                         @Override

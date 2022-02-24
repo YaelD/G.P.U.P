@@ -1,5 +1,6 @@
 package target;
 
+import dto.ExecutionTargetDTO;
 import general_enums.PlaceInGraph;
 import dto.TargetDTO;
 import general_enums.Dependency;
@@ -205,9 +206,11 @@ public class Target implements Cloneable {
         return null;
     }
 
-    public synchronized void updateTarget(TargetDTO targetDTO){
+    public synchronized void updateTarget(ExecutionTargetDTO targetDTO){
         this.runStatus = targetDTO.getRunStatus();
-        this.runResult = targetDTO.getRunResult();
+        this.runResult = targetDTO.getRunResults();
+        this.taskSpecificLogs = targetDTO.getTaskLog();
+
 
     }
 

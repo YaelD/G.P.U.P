@@ -15,7 +15,7 @@ public class Constants {
     public final static String FIND_PATH = FULL_SERVER_PATH + "/get_paths";
     public final static String WHAT_IF = FULL_SERVER_PATH + "/what_if";
     public final static String FIND_CYCLE = FULL_SERVER_PATH + "/find_cycle";
-    public final static String REGISTER_TO_TASK = FULL_SERVER_PATH + "/task_execution";
+    public final static String TASK_EXECUTION = FULL_SERVER_PATH + "/task_execution";
     public final static String UPDATE_TARGET_RUN_STATUS = FULL_SERVER_PATH + "/target";
 
     //QUERY PARAMS:
@@ -30,6 +30,7 @@ public class Constants {
     public static final String DEPENDENCY = "dependency";
     public static final String TASK_NAME = "taskName";
     public static final String TASK_STATUS = "taskStatus";
+    public static final String NUMBER_OF_TARGETS = "numOfTargets";
 
 
     public static final int TWO_SECS = 2000;

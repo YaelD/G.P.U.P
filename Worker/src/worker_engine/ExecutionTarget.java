@@ -25,21 +25,19 @@ public class ExecutionTarget {
 
     }
 
-
-
-    public ExecutionTargetDTO makeDTO(){
+    public synchronized ExecutionTargetDTO makeDTO(){
         return new ExecutionTargetDTO(this.runResult, this.runStatus, this.taskLog, this.taskName);
     }
 
-    public void setSpecificTaskLog(String str){
+    public synchronized void setSpecificTaskLog(String str){
         taskLog += str + "\n";
     }
 
-    public void setRunResult(RunResults runResult) {
+    public synchronized void setRunResult(RunResults runResult) {
         this.runResult = runResult;
     }
 
-    public void setRunStatus(RunStatus runStatus) {
+    public synchronized void setRunStatus(RunStatus runStatus) {
         this.runStatus = runStatus;
     }
 

@@ -142,7 +142,7 @@ public abstract class Task {
 ////        List<Target> sortedTargets = topologicalSort(this.graph);
 ////        this.status = TaskStatus.ACTIVE;
 //
-////        BlockingQueue<Runnable> workingQueue = new LinkedBlockingQueue<>();
+        BlockingQueue<Runnable> workingQueue = new LinkedBlockingQueue<>();
 //        PausableThreadPoolExecutor threadPool = new PausableThreadPoolExecutor(threadNumber, workingQueue);
 ////        threadPoolConsumer.accept(threadPool);
 ////        this.latch = new CountDownLatch(sortedTargets.size());
