@@ -92,6 +92,7 @@ public class TaskExecutionServlet extends HttpServlet {
                         response.setStatus(HttpServletResponse.SC_NO_CONTENT);
                     }
                     else{
+                        response.setStatus(HttpServletResponse.SC_OK);
                         Gson gson = new Gson();
                         String json = gson.toJson(targetDTOs);
                         body.print(json);
