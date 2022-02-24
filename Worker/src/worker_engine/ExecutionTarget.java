@@ -15,6 +15,7 @@ public class ExecutionTarget {
     private RunStatus runStatus;
     private String taskLog;
     private String info;
+    private String targetName;
 
     public ExecutionTarget(TargetDTO targetDTO){
         this.taskName = targetDTO.getTaskName();
@@ -22,11 +23,12 @@ public class ExecutionTarget {
         this.runStatus = targetDTO.getRunStatus();
         this.taskLog = "";
         this.info = targetDTO.getInfo();
+        this.targetName = targetDTO.getName();
 
     }
 
     public synchronized ExecutionTargetDTO makeDTO(){
-        return new ExecutionTargetDTO(this.runResult, this.runStatus, this.taskLog, this.taskName);
+        return new ExecutionTargetDTO(this.runResult, this.runStatus, this.taskLog, this.taskName, this.targetName);
     }
 
     public synchronized void setSpecificTaskLog(String str){

@@ -24,7 +24,8 @@ public class SimulationTaskParamsDTO extends TaskParamsDTO {
         this.successWithWarningsRate = successWithWarningsRate;
     }
 
-    public SimulationTaskParamsDTO(int processTime, boolean isRandom, double successRate, double successWithWarningsRate) {
+    public SimulationTaskParamsDTO(String taskName,int processTime, boolean isRandom, double successRate, double successWithWarningsRate) {
+        this.taskName = taskName;
         this.processTime = processTime;
         this.isRandom = isRandom;
         this.successRate = successRate;

@@ -184,7 +184,7 @@ public class Graph implements Cloneable {
     }
 
 
-    public GraphDTO makeDTO(String taskName){
+    public synchronized GraphDTO makeDTO(String taskName){
         Map<String, TargetDTO> targetsDTOMap = new HashMap<>();
         int numOfTargets = this.getTargets().size();
         int numOfIndependents = 0, numOfRoots = 0, numOfMiddles = 0, numOfLeaves = 0;

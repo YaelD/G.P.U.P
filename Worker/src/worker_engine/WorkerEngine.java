@@ -49,4 +49,8 @@ public class WorkerEngine {
         return pausableThreadPoolExecutor.getMaximumPoolSize() - pausableThreadPoolExecutor.getActiveCount();
     }
 
+    public void closeThreadPool(){
+        pausableThreadPoolExecutor.shutdown();
+    }
+
 }

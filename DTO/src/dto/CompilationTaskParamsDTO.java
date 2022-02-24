@@ -16,7 +16,8 @@ public class CompilationTaskParamsDTO extends TaskParamsDTO{
         this.destinationDir = destinationDir;
     }
 
-    public CompilationTaskParamsDTO(String sourceDir, String destinationDir) {
+    public CompilationTaskParamsDTO(String taskName,String sourceDir, String destinationDir) {
+        this.taskName = taskName;
         this.sourceDir = sourceDir;
         this.destinationDir = destinationDir;
         this.taskType = TaskType.COMPILATION_TASK;

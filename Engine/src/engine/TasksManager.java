@@ -72,8 +72,10 @@ public class TasksManager {
         int numOfReadyForRunningTargets = 0;
 
         while (!isFinished){
-
             for(Task currTask : workerTasks){
+                if(currTask.getTaskName().equals("Task2")){
+                    System.out.println("STOP!!");
+                }
                 if(targetsForWorker.size() < requiredNumOfTargets){
                     TargetDTO targetDTO = currTask.getTargetReadyForRunning();
                     if(targetDTO != null){
@@ -96,11 +98,11 @@ public class TasksManager {
         TaskParamsDTO taskParamsDTO = null;
         if(task instanceof SimulationTask){
             SimulationTask simulationTask = (SimulationTask) task;
-            taskParamsDTO = simulationTask.createSimulationTaskParamsDTO(simulationTask);
+            taskParamsDTO = simulationTask.createSimulationTaskParamsDTO();
         }
         else if(task instanceof CompilationTask){
             CompilationTask compilationTask = (CompilationTask) task;
-            taskParamsDTO = compilationTask.createCompilationTaskParamsDTO(compilationTask);
+            taskParamsDTO = compilationTask.createCompilationTaskParamsDTO();
         }
         return taskParamsDTO;
     }
@@ -109,9 +111,7 @@ public class TasksManager {
         if(this.tasksInSystem.containsKey(executionTargetDTO.getTaskName())){
             Graph taskGraph = this.tasksInSystem.get(executionTargetDTO.getTaskName()).getGraph();
             Target taskTarget = taskGraph.getTarget(executionTargetDTO.getTargetName());
-            taskTarget.setRunResult(executionTargetDTO.getRunResults());
-            taskTarget.setRunStatus(executionTargetDTO.getRunStatus());
-            taskTarget.setTaskSpecificLogs(executionTargetDTO.getTaskLog());
+            taskTarget.updateTarget(executionTargetDTO);
         }
         else{
             throw new Exception(ExceptionMessages.TASK + executionTargetDTO.getTaskName() +

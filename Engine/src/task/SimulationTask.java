@@ -3,6 +3,7 @@ package task;
 import dto.*;
 import general_enums.RunResults;
 import general_enums.RunStatus;
+import general_enums.RunType;
 import general_enums.TaskType;
 import graph.Graph;
 import target.Target;
@@ -10,9 +11,7 @@ import target.Target;
 import java.time.Duration;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
-import java.util.HashSet;
-import java.util.Random;
-import java.util.Set;
+import java.util.*;
 
 public class SimulationTask extends Task{
 
@@ -21,13 +20,13 @@ public class SimulationTask extends Task{
     private double successRate;
     private double successWithWarningsRate;
 
-    public SimulationTask(Graph graph, String creatorName, String taskName, int pricePerTarget) {
-        super(graph, creatorName, taskName, pricePerTarget);
+    public SimulationTask(Graph graph, String creatorName, String taskName, int pricePerTarget, RunType runType) {
+        super(graph, creatorName, taskName, pricePerTarget, runType);
     }
 
     public SimulationTask(SimulationTaskParamsDTO simulationTaskParamsDTO, Graph graph) {
         super(graph, simulationTaskParamsDTO.getCreatorName(),
-                simulationTaskParamsDTO.getTaskName(), simulationTaskParamsDTO.getTotalTaskPrice());
+                simulationTaskParamsDTO.getTaskName(), simulationTaskParamsDTO.getTotalTaskPrice(), simulationTaskParamsDTO.getRunType());
         this.isRandom = simulationTaskParamsDTO.isRandom();
         this.processTime = simulationTaskParamsDTO.getProcessTime();
         this.successRate = simulationTaskParamsDTO.getSuccessRate();
@@ -115,8 +114,10 @@ public class SimulationTask extends Task{
         return new SimulationTask(taskParamsDTO, graph);
     }
 
-    public SimulationTaskParamsDTO createSimulationTaskParamsDTO(SimulationTask simulationTask){
-        return  new SimulationTaskParamsDTO(this.processTime, this.isRandom, this.successRate, this.successWithWarningsRate);
+    public SimulationTaskParamsDTO createSimulationTaskParamsDTO(){
+        return new SimulationTaskParamsDTO(this.taskName,this.processTime, this.isRandom, this.successRate, this.successWithWarningsRate);
+
     }
+
 
 }

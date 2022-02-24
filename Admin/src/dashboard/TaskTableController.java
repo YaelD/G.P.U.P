@@ -83,11 +83,9 @@ public class TaskTableController {
                     protected void updateItem(TaskDTO item, boolean empty) {
                         super.updateItem(item, empty);
                         if(item != null && item.getCreatorName().equals(dashboardController.getUserName())){
-                            System.out.println("IN CREATOR NAME: " + item.getCreatorName() + " Equals" + dashboardController.getUserName());
                             setStyle("-fx-background-color: #1fff22;");
                         }
                         else {
-                            System.out.println("They are not equals!!");
                             this.setStyle(null);
 
                         }

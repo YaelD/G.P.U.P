@@ -20,6 +20,7 @@ public class UserListRefresherTimer extends Timer {
     private UserListRefresher userListRefresher;
 
     private UserListRefresherTimer(){
+        super(true);
         userListRefresher = new UserListRefresher();
         this.schedule(userListRefresher, Constants.TWO_SECS, Constants.TWO_SECS);
     }
@@ -59,9 +60,12 @@ public class UserListRefresherTimer extends Timer {
 
                 @Override
                 public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                    String jsonArrayOfUsers = response.body().string();
-                    UserDTO[] usersList = new Gson().fromJson(jsonArrayOfUsers, UserDTO[].class);
-                    consumers.forEach(consumer -> {consumer.accept(Arrays.asList(usersList));});
+                    if(response.code() == 200){
+                        String jsonArrayOfUsers = response.body().string();
+                        UserDTO[] usersList = new Gson().fromJson(jsonArrayOfUsers, UserDTO[].class);
+                        consumers.forEach(consumer -> {consumer.accept(Arrays.asList(usersList));});
+                    }
+                    response.body().close();
                 }
             });
         }

@@ -7,6 +7,7 @@ import dto.TargetDTO;
 import dto.TaskParamsDTO;
 import engine.ExceptionMessages;
 import engine.TasksManager;
+import general_enums.RunStatus;
 import general_enums.TaskStatus;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -130,6 +131,9 @@ public class TaskExecutionServlet extends HttpServlet {
                 }
                 String executionTargetDtoStr = ServletUtils.getRequestBody(request);
                 ExecutionTargetDTO executionTargetDTO = new Gson().fromJson(executionTargetDtoStr, ExecutionTargetDTO.class);
+                if(!executionTargetDTO.getRunStatus().equals(RunStatus.WAITING)){
+                    System.out.println("STOP!!!");
+                }
                 tasksManager.updateTargetRunResult(executionTargetDTO);
                 response.setStatus(HttpServletResponse.SC_OK);
 

@@ -28,7 +28,7 @@ public class CompilationTask extends Task{
 
     public CompilationTask(CompilationTaskParamsDTO compilationTaskParamsDTO, Graph graph) {
         super(graph, compilationTaskParamsDTO.getCreatorName(),
-                compilationTaskParamsDTO.getTaskName(), compilationTaskParamsDTO.getTotalTaskPrice());
+                compilationTaskParamsDTO.getTaskName(), compilationTaskParamsDTO.getTotalTaskPrice(), compilationTaskParamsDTO.getRunType());
         this.destinationDir = compilationTaskParamsDTO.getDestinationDir();
         this.sourceDir = compilationTaskParamsDTO.getSourceDir();
     }
@@ -121,7 +121,7 @@ public class CompilationTask extends Task{
         return new CompilationTask(compilationTaskParamsDTO, graph);
     }
 
-    public CompilationTaskParamsDTO createCompilationTaskParamsDTO(CompilationTask compilationTask){
-        return new CompilationTaskParamsDTO(this.sourceDir, this.destinationDir);
+    public CompilationTaskParamsDTO createCompilationTaskParamsDTO(){
+        return new CompilationTaskParamsDTO(this.taskName,this.sourceDir, this.destinationDir);
     }
 }
