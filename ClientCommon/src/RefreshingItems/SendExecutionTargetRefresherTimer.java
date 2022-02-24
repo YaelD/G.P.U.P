@@ -35,27 +35,28 @@ public class SendExecutionTargetRefresherTimer extends Timer {
 
         private class SendExecutionTargetRefresher extends TimerTask {
 
-            private Map<String, ExecutionTargetDTO> executionTargetDTOMap;
-
+            //Map TaskName->ExecutionTarget
+//            private Map<String, ExecutionTargetDTO> executionTargetDTOMap;
+            private Set<ExecutionTargetDTO> targetDTOSet;
 
             public SendExecutionTargetRefresher() {
-                this.executionTargetDTOMap = new HashMap<>();
+                this.targetDTOSet = new HashSet<>();
             }
 
             public void addExecutionTarget(ExecutionTargetDTO executionTargetDTO){
-                this.executionTargetDTOMap.put(executionTargetDTO.getTaskName(), executionTargetDTO);
+                this.targetDTOSet.add(executionTargetDTO);
             }
 
             @Override
             public void run() {
-                for(Map.Entry<String, ExecutionTargetDTO> entry : this.executionTargetDTOMap.entrySet()){
+                for(ExecutionTargetDTO targetDTO : this.targetDTOSet){
                     //TODO: change the URL of the request!
                     String finalUrl = Objects.requireNonNull(HttpUrl
                             .parse(Constants.TASK_LIST)).newBuilder()
-                            .addQueryParameter(Constants.TASK_NAME, entry.getKey())
+                            .addQueryParameter(Constants.TASK_NAME, targetDTO.getTaskName())
                             .build()
                             .toString();
-                    String targetJson = new Gson().toJson(entry.getValue());
+                    String targetJson = new Gson().toJson(targetDTO);
                     Request request= new Request.Builder().url(finalUrl).put(RequestBody.create(targetJson.getBytes())).build();
                     HttpUtils.runAsyncWithRequest(request, new Callback() {
                         @Override

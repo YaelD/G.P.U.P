@@ -13,7 +13,7 @@ import java.time.Duration;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 
-public class CompilationTaskExecution implements Runnable{
+public class CompilationTaskExecution extends TaskExecution implements Runnable{
 
     private final String JAVA_COMPILER = "javac";
     private final String SOURCE_DIR_REF_PARAM = "-cp";
@@ -25,9 +25,9 @@ public class CompilationTaskExecution implements Runnable{
 
 
     public CompilationTaskExecution(CompilationTaskParamsDTO taskParamsDTO, TargetDTO targetDTO){
+        super(targetDTO);
         this.sourceDir = taskParamsDTO.getSourceDir();
         this.destinationDir = taskParamsDTO.getDestinationDir();
-        this.executionTarget = new ExecutionTarget(targetDTO);
     }
 
 //    protected void executeTaskOnTarget() {

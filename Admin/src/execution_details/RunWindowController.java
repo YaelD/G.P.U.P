@@ -101,6 +101,7 @@ public class RunWindowController {
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                 System.out.println(":]]]]]]]]]]]]]]]]]]]]]]]]]");
+                response.body().close();
             }
         });
     }
@@ -125,6 +126,7 @@ public class RunWindowController {
 
     @FXML
     private void initialize(){
+
         taskTableController.setRunWindowController(this);
         taskTableController.setTaskDTO(taskDTOProperty);
         TaskListRefresherTimer.getInstance().addConsumer(this::getTask);

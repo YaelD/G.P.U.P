@@ -3,10 +3,8 @@ package worker_dashboard;
 import com.google.gson.Gson;
 import constants.Constants;
 import dto.CompilationTaskParamsDTO;
-import dto.GraphDTO;
 import dto.SimulationTaskParamsDTO;
 import dto.TaskParamsDTO;
-import general_enums.TaskStatus;
 import general_enums.TaskType;
 import http_utils.HttpUtils;
 import javafx.beans.property.SimpleStringProperty;
@@ -17,9 +15,10 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import okhttp3.*;
 import org.jetbrains.annotations.NotNull;
+import worker_engine.SimulationTaskExecution;
+import worker_engine.WorkerEngine;
 
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.Objects;
 
 public class RegisterToTaskController {
@@ -67,10 +66,12 @@ public class RegisterToTaskController {
                 TaskParamsDTO taskParamsDTOS = new Gson().fromJson(jsonOfTaskParamsDTO, TaskParamsDTO.class);
                 if(taskParamsDTOS.getTaskType().equals(TaskType.COMPILATION_TASK)){
                     CompilationTaskParamsDTO compilationTaskParamsDTO = new Gson().fromJson(jsonOfTaskParamsDTO, CompilationTaskParamsDTO.class);
+                    WorkerEngine.getInstance(1).getRegisteredTasksParams().put(compilationTaskParamsDTO.getTaskName(), compilationTaskParamsDTO);
                     taskParams = compilationTaskParamsDTO.toString();
                 }
                 else{
                     SimulationTaskParamsDTO simulationTaskParamsDTO = new Gson().fromJson(jsonOfTaskParamsDTO, SimulationTaskParamsDTO.class);
+                    WorkerEngine.getInstance(1).getRegisteredTasksParams().put(simulationTaskParamsDTO.getTaskName(), simulationTaskParamsDTO);
                     taskParams = simulationTaskParamsDTO.toString();
                 }
                 response.body().close();

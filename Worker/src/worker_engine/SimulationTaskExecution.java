@@ -10,53 +10,21 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Random;
 
-public class SimulationTaskExecution implements Runnable{
+public class SimulationTaskExecution extends TaskExecution implements Runnable{
 
     private int processTime;
     private boolean isRandom;
     private double successRate;
     private double successWithWarningsRate;
-    private ExecutionTarget executionTarget;
 
     public SimulationTaskExecution(SimulationTaskParamsDTO taskParamsDTO, TargetDTO targetDTO){
+        super(targetDTO);
         this.processTime = taskParamsDTO.getProcessTime();
         this.successRate = taskParamsDTO.getSuccessRate();
         this.isRandom = taskParamsDTO.isRandom();
         this.successWithWarningsRate = taskParamsDTO.getSuccessWithWarningsRate();
-        this.executionTarget = new ExecutionTarget(targetDTO);
     }
 
-
-//    public void executeTaskOnTarget(ExecutionTarget target) {
-//        LocalTime startTime, endTime;
-//        int currTargetProcessTime = this.processTime;
-//
-//        if(this.isRandom){
-//            currTargetProcessTime = getRandomProcessTime();
-//        }
-//        try {
-//            target.setSpecificTaskLog("Simulation task: ");
-//            startTime = LocalTime.now();
-//            target.setSpecificTaskLog("Start time: " + startTime.format(DateTimeFormatter.ofPattern("H:mm:ss")));
-//            target.setRunStatus(RunStatus.IN_PROCESS);
-//            Thread.sleep(currTargetProcessTime);
-//            endTime = LocalTime.now();
-//            target.setSpecificTaskLog("End time: " + endTime.format(DateTimeFormatter.ofPattern("H:mm:ss")));
-//            if(getRandomNumber() <= this.successRate){
-//                if(getRandomNumber() <= this.successWithWarningsRate){
-//                    target.setRunResult(RunResults.WARNING);
-//                }else{
-//                    target.setRunResult(RunResults.SUCCESS);
-//                }
-//            }else{
-//                target.setRunResult(RunResults.FAILURE);
-//            }
-//            target.setSpecificTaskLog("Running time: " + Duration.between(startTime, endTime).toMillis() + "Milliseconds");
-//            target.setRunStatus(RunStatus.FINISHED);
-//        } catch (InterruptedException e) {
-//            e.printStackTrace();
-//        }
-//    }
 
     private int getRandomProcessTime(){
         Random random = new Random();

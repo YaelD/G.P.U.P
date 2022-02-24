@@ -45,7 +45,7 @@ public class DashboardController {
         registerToTaskPaneController.taskNameProperty().bind(taskInfoTableController.selectedTaskNameProperty());
         taskInfoTableController.setDashboardController(this);
 
-    }   //LABEL = taskNameProperty(RegisterPane) = selectedTaskNamePropery(Table)
+    }
 
     public void setTaskInfo(TaskDTO taskDTO){
         Platform.runLater(()->{

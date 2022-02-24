@@ -149,28 +149,6 @@ public class TaskTableController {
     }
 
 
-    //taksNameTosend = selecteTaskName
-    private void showTaskDetails(TaskDTO taskDTO){
-        try {
-            URL resource = TaskDetailsPopupController.class.getResource("task_details_popup.fxml");
-            FXMLLoader fxmlLoader = new FXMLLoader();
-            fxmlLoader.setLocation(resource);
-            Parent root = fxmlLoader.load(resource.openStream());
-            Scene scene = new Scene(root, 1000, 600);
-            TaskDetailsPopupController taskDetailsPopupController = fxmlLoader.getController();
-            taskDetailsPopupController.setTaskDTO(taskDTO);
-            Stage secondaryStage = new Stage();
-            secondaryStage.setScene(scene);
-            secondaryStage.setTitle(taskDTO.getTaskName());
-            secondaryStage.setMinHeight(400);
-            secondaryStage.setMinWidth(400);
-            secondaryStage.show();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-    }
-
     public void setDashboardController(DashboardController dashboardController) {
         this.dashboardController = dashboardController;
     }
