@@ -109,9 +109,11 @@ public class TasksManager {
 
     public void updateTargetRunResult(ExecutionTargetDTO executionTargetDTO) throws Exception {
         if(this.tasksInSystem.containsKey(executionTargetDTO.getTaskName())){
-            Graph taskGraph = this.tasksInSystem.get(executionTargetDTO.getTaskName()).getGraph();
+            Task task = this.tasksInSystem.get(executionTargetDTO.getTaskName());
+            Graph taskGraph = task.getGraph();
             Target taskTarget = taskGraph.getTarget(executionTargetDTO.getTargetName());
             taskTarget.updateTarget(executionTargetDTO);
+            task.updateTargetsRunResult(taskTarget);
         }
         else{
             throw new Exception(ExceptionMessages.TASK + executionTargetDTO.getTaskName() +

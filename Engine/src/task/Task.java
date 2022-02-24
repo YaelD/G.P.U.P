@@ -7,6 +7,7 @@ import engine.ExceptionMessages;
 import exceptions.CycleException;
 import general_enums.RunResults;
 import general_enums.RunStatus;
+import general_enums.RunType;
 import general_enums.TaskStatus;
 import graph.Graph;
 import target.Target;
@@ -33,7 +34,7 @@ public abstract class Task {
     //public static Object taskDummyLock = new Object();
 
 
-    public Task(Graph graph, String creatorName, String taskName, int totalPriceTask) {
+    public Task(Graph graph, String creatorName, String taskName, int totalPriceTask, RunType runType) {
         this.graph = graph;
         this.creatorName = creatorName;
         this.latch = null;
@@ -119,18 +120,14 @@ public abstract class Task {
         return null;
     }
 
-//    //this function will be called when a worker sends the run result of a target.
-//    public void updateTargetsRunResult(TargetDTO targetDTO){
-//        Target currTarget = this.graph.getTarget(targetDTO.getName());
-//        if(targetDTO.getRunResult().equals(RunResults.FAILURE)){
-//            currTarget.updateParentsStatus(targetDTO.getSkippedFathers(), currTarget.getName()); //כל מי שסגרתי לריצה בגללי
-//        }
-//        getOpenedTargetsToRun(targetDTO, currTarget);
-//    }
-
-    public void executeTaskOnGraph(List<Target> sortedTargets) {
-
+    //this function will be called when a worker sends the run result of a target.
+    public void updateTargetsRunResult(Target target){
+        if(target.getRunResult().equals(RunResults.FAILURE)){
+            target.updateParentsStatus(target.getSkippedFathers(), target.getName()); //כל מי שסגרתי לריצה בגללי
+        }
+        getOpenedTargetsToRun(target);
     }
+
 
 
     //main Thread
@@ -142,7 +139,7 @@ public abstract class Task {
 ////        List<Target> sortedTargets = topologicalSort(this.graph);
 ////        this.status = TaskStatus.ACTIVE;
 //
-        BlockingQueue<Runnable> workingQueue = new LinkedBlockingQueue<>();
+       // BlockingQueue<Runnable> workingQueue = new LinkedBlockingQueue<>();
 //        PausableThreadPoolExecutor threadPool = new PausableThreadPoolExecutor(threadNumber, workingQueue);
 ////        threadPoolConsumer.accept(threadPool);
 ////        this.latch = new CountDownLatch(sortedTargets.size());
@@ -199,33 +196,33 @@ public abstract class Task {
 //    }
 
 
-//    private void getOpenedTargetsToRun(TargetDTO targetResult, Target target) {
-//        boolean isOpenedToRun = true;
-//        for(Target currParent : target.getRequiredFor()){
-//            for(Target childOfTheCurrParent : currParent.getDependsOn()){
-//                if (childOfTheCurrParent.getRunStatus().equals(RunStatus.FROZEN)
-//                || childOfTheCurrParent.getRunStatus().equals(RunStatus.WAITING)) {
-//
-//                    //currParent.getWaitForThisTargetsToBeFinished().add(childOfTheCurrParent.getName());
-//                    isOpenedToRun = false;
-//                }
-//                else{
-//                    currParent.getWaitForThisTargetsToBeFinished().remove(childOfTheCurrParent.getName());
-//                    isOpenedToRun = true;
-//                }
-//            }
-//            if (isOpenedToRun) {
-//                if(!currParent.getRunStatus().equals(RunStatus.SKIPPED)){
-//                    currParent.setRunStatus(RunStatus.WAITING);
-//                    currParent.setStartWaitingTime(LocalTime.now());
-//                }
-//                //targetResult.getTargetsThatCanBeRun().add(currParent.getName());
-//            }
-//            else{
-//                isOpenedToRun = true;
-//            }
-//        }
-//    }
+    private void getOpenedTargetsToRun(Target target) {
+        boolean isOpenedToRun = true;
+        for(Target currParent : target.getRequiredFor()){
+            for(Target childOfTheCurrParent : currParent.getDependsOn()){
+                if (childOfTheCurrParent.getRunStatus().equals(RunStatus.FROZEN)
+                || childOfTheCurrParent.getRunStatus().equals(RunStatus.WAITING)) {
+
+                    currParent.getWaitForThisTargetsToBeFinished().add(childOfTheCurrParent.getName());
+                    isOpenedToRun = false;
+                }
+                else{
+                    currParent.getWaitForThisTargetsToBeFinished().remove(childOfTheCurrParent.getName());
+                    isOpenedToRun = true;
+                }
+            }
+            if (isOpenedToRun) {
+                if(!currParent.getRunStatus().equals(RunStatus.SKIPPED)){
+                    currParent.setRunStatus(RunStatus.WAITING);
+                    currParent.setStartWaitingTime(LocalTime.now());
+                }
+                target.getTargetsThatCanBeRun().add(currParent.getName());
+            }
+            else{
+                isOpenedToRun = true;
+            }
+        }
+    }
 
 
     protected abstract void executeTaskOnTarget(Target currTarget);
@@ -336,19 +333,14 @@ public abstract class Task {
                     Target targetToSend = this.sortedTargets.remove(0);
                     targetDTO = targetToSend.makeDTO(this.taskName);
                     break;
-                case IN_PROCESS:
-                case FROZEN:
-                    break;
                 case SKIPPED:
-                    this.finishedTargets.add(this.sortedTargets.remove(0));
                 case FINISHED:
-                    Target currTarget = this.sortedTargets.remove(0);
-                    this.finishedTargets.add(currTarget);
-                    currTarget.updateParentsStatus(currTarget.getSkippedFathers(), currTarget.getName());
+                    this.finishedTargets.add(this.sortedTargets.remove(0));
                     break;
             }
         }
         return targetDTO;
     }
+
 
 }

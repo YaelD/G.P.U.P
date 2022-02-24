@@ -119,7 +119,11 @@ public class Target implements Cloneable {
         return skippedFathers;
     }
 
-    public void updateParentsStatus(Set<String> skippedFathers, String sourceTargetName) {
+    public Set<String> getTargetsThatCanBeRun() {
+        return targetsThatCanBeRun;
+    }
+
+    public synchronized void updateParentsStatus(Set<String> skippedFathers, String sourceTargetName) {
         if(this.getRequiredFor().isEmpty()){
             return;
         }
