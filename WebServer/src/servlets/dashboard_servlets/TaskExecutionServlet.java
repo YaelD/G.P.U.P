@@ -89,7 +89,7 @@ public class TaskExecutionServlet extends HttpServlet {
                     TasksManager tasksManager = ServletUtils.getTasksManager(getServletContext());
                     Set<TargetDTO> targetDTOs  = tasksManager.getTaskTargetForExecution(userTasks.values(), Integer.parseInt(numOfTargets));
                     if (targetDTOs.isEmpty()) {
-                        response.setStatus(HttpServletResponse.SC_NO_CONTENT);
+                        response.setStatus(HttpServletResponse.SC_OK);
                     }
                     else{
                         response.setStatus(HttpServletResponse.SC_OK);
