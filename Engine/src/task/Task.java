@@ -336,11 +336,15 @@ public abstract class Task {
                     Target targetToSend = this.sortedTargets.remove(0);
                     targetDTO = targetToSend.makeDTO(this.taskName);
                     break;
+                case IN_PROCESS:
                 case FROZEN:
                     break;
                 case SKIPPED:
-                case FINISHED:
                     this.finishedTargets.add(this.sortedTargets.remove(0));
+                case FINISHED:
+                    Target currTarget = this.sortedTargets.remove(0);
+                    this.finishedTargets.add(currTarget);
+                    currTarget.updateParentsStatus(currTarget.getSkippedFathers(), currTarget.getName());
                     break;
             }
         }

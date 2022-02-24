@@ -115,6 +115,10 @@ public class Target implements Cloneable {
     }
 
 
+    public Set<String> getSkippedFathers() {
+        return skippedFathers;
+    }
+
     public void updateParentsStatus(Set<String> skippedFathers, String sourceTargetName) {
         if(this.getRequiredFor().isEmpty()){
             return;
