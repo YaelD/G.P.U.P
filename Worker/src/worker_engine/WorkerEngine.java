@@ -4,12 +4,17 @@ import dto.TaskParamsDTO;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadPoolExecutor;
 
 public class WorkerEngine {
 
-    private ExecutorService threadPool;
+    private ThreadPoolExecutor threadPool;
+
+    private PausableThreadPoolExecutor pausableThreadPoolExecutor;
+
 
     private static WorkerEngine instance;
 
@@ -17,7 +22,7 @@ public class WorkerEngine {
 
 
     private WorkerEngine(int numOfThreads){
-        this.threadPool = Executors.newFixedThreadPool(numOfThreads);
+        this.pausableThreadPoolExecutor = new PausableThreadPoolExecutor(numOfThreads, new ArrayBlockingQueue<Runnable>(8));
         this.registeredTasksParams = new HashMap<>();
     }
 
@@ -33,8 +38,11 @@ public class WorkerEngine {
     }
 
     public void addTask(Runnable run){
-        threadPool.submit(run);
+        threadPool.execute(run);
+    }
 
+    public int getNumOfFreeThreads(){
+        return 1;
     }
 
 

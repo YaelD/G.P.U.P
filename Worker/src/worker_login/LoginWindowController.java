@@ -15,6 +15,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import okhttp3.*;
 import org.jetbrains.annotations.NotNull;
+import worker_engine.WorkerEngine;
 
 import java.io.IOException;
 
@@ -82,6 +83,7 @@ public class LoginWindowController {
                         //TODO: ADD UPDATING USER NAME LABEL IN THE DASHBOARD ;)
                         errorMessageProperty.set("logged in successfully");
                         topContainerController.setUserName(userName);
+                        WorkerEngine.getInstance(numOfThreadsChoiceBox.getSelectionModel().getSelectedItem());
                         topContainerController.switchToDashboard();
                     });
                 }

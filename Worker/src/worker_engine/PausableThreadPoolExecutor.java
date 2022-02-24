@@ -15,6 +15,10 @@ public class PausableThreadPoolExecutor extends ThreadPoolExecutor {
         super(threadNumber, threadNumber, Long.MAX_VALUE, TimeUnit.NANOSECONDS, workingQueue);
     }
 
+    public int getActiveThreads() {
+        return super.getActiveCount();
+    }
+
     protected void beforeExecute(Thread t, Runnable r) {
         super.beforeExecute(t, r);
         pauseLock.lock();
