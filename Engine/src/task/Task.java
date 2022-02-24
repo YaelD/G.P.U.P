@@ -125,7 +125,9 @@ public abstract class Task {
         if(target.getRunResult().equals(RunResults.FAILURE)){
             target.updateParentsStatus(target.getSkippedFathers(), target.getName()); //כל מי שסגרתי לריצה בגללי
         }
-        getOpenedTargetsToRun(target);
+        if(target.getRunStatus().equals(RunStatus.FINISHED)){
+            getOpenedTargetsToRun(target);
+        }
     }
 
 
