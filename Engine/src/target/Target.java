@@ -29,12 +29,8 @@ public class Target implements Cloneable {
     private Set<String> waitForThisTargetsToBeFinished = new HashSet<>();
     private Set<String> targetsThatCanBeRun = new HashSet<>();
     private Set<String> skippedFathers = new HashSet<>();
-
-    public void setStartingProcessTime(LocalTime startingProcessTime) {
-        this.startingProcessTime = startingProcessTime;
-    }
-
     private String taskSpecificLogs;
+
 
 
     public Target(GPUPTarget target) {
@@ -42,8 +38,6 @@ public class Target implements Cloneable {
         this.info = target.getGPUPUserData();
         this.taskSpecificLogs = "";
     }
-
-
 
     public String getName() {
         return name;
@@ -65,7 +59,7 @@ public class Target implements Cloneable {
         return info;
     }
 
-    public void setPlace(PlaceInGraph place) {
+    public synchronized void setPlace(PlaceInGraph place) {
         this.place = place;
     }
 
@@ -108,12 +102,16 @@ public class Target implements Cloneable {
         return waitForThisTargetsToBeFinished;
     }
 
-    public void setRequiredFor(Set<Target> requiredFor) {
+    public synchronized void setRequiredFor(Set<Target> requiredFor) {
         this.requiredFor = requiredFor;
     }
 
-    public void setDependsOn(Set<Target> dependsOn) {
+    public synchronized void setDependsOn(Set<Target> dependsOn) {
         this.dependsOn = dependsOn;
+    }
+
+    public synchronized void setStartingProcessTime(LocalTime startingProcessTime) {
+        this.startingProcessTime = startingProcessTime;
     }
 
 
@@ -213,8 +211,6 @@ public class Target implements Cloneable {
 
 
     }
-
-
 
     public synchronized void setTaskSpecificLogs(String taskSpecificLogs){
         this.taskSpecificLogs += taskSpecificLogs + "\n";

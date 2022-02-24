@@ -8,12 +8,16 @@ public class ExecutionTargetDTO {
     private RunStatus runStatus;
     private String taskLog;
     private String taskName;
+    private String targetName;
 
-    public ExecutionTargetDTO(RunResults runResults, RunStatus runStatus, String taskLog, String taskName) {
+
+
+    public ExecutionTargetDTO(RunResults runResults, RunStatus runStatus, String taskLog, String taskName, String targetName) {
         this.runResults = runResults;
         this.runStatus = runStatus;
         this.taskLog = taskLog;
         this.taskName = taskName;
+        this.targetName = targetName;
     }
 
     public RunResults getRunResults() {
@@ -30,5 +34,9 @@ public class ExecutionTargetDTO {
 
     public String getTaskName() {
         return taskName;
+    }
+
+    public String getTargetName() {
+        return targetName;
     }
 }

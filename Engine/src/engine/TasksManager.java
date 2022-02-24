@@ -1,11 +1,10 @@
 package engine;
 
-import dto.CompilationTaskParamsDTO;
-import dto.SimulationTaskParamsDTO;
-import dto.TargetDTO;
-import dto.TaskParamsDTO;
+import dto.*;
 import general_enums.TaskStatus;
 import general_enums.TaskType;
+import graph.Graph;
+import target.Target;
 import task.CompilationTask;
 import task.SimulationTask;
 import task.Task;
@@ -104,5 +103,19 @@ public class TasksManager {
             taskParamsDTO = compilationTask.createCompilationTaskParamsDTO(compilationTask);
         }
         return taskParamsDTO;
+    }
+
+    public void updateTargetRunResult(ExecutionTargetDTO executionTargetDTO) throws Exception {
+        if(this.tasksInSystem.containsKey(executionTargetDTO.getTaskName())){
+            Graph taskGraph = this.tasksInSystem.get(executionTargetDTO.getTaskName()).getGraph();
+            Target taskTarget = taskGraph.getTarget(executionTargetDTO.getTargetName());
+            taskTarget.setRunResult(executionTargetDTO.getRunResults());
+            taskTarget.setRunStatus(executionTargetDTO.getRunStatus());
+            taskTarget.setTaskSpecificLogs(executionTargetDTO.getTaskLog());
+        }
+        else{
+            throw new Exception(ExceptionMessages.TASK + executionTargetDTO.getTaskName() +
+                    ExceptionMessages.NOT_EXIST);
+        }
     }
 }

@@ -2,8 +2,10 @@ package servlets.dashboard_servlets;
 
 import com.google.gson.Gson;
 import constants.Constants;
+import dto.ExecutionTargetDTO;
 import dto.TargetDTO;
 import dto.TaskParamsDTO;
+import engine.ExceptionMessages;
 import engine.TasksManager;
 import general_enums.TaskStatus;
 import jakarta.servlet.ServletException;
@@ -95,6 +97,42 @@ public class TaskExecutionServlet extends HttpServlet {
                         body.flush();
                     }
                 }
+            } catch (Exception e) {
+                response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                response.getWriter().println(e.getMessage());
+            }
+        }
+    }
+
+    //servlet that gets target during their running and update the targets in the system
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        String usernameFromSession = SessionUtils.getUsername(request);
+        String userTypeFromSession = SessionUtils.getUserType(request);
+        Map<String, Task> userTasks = SessionUtils.getUserTasks(request);
+        if (usernameFromSession == null) {    //user is not logged in - error!!
+            response.setStatus(HttpServletResponse.SC_CONFLICT);
+        } else if (userTypeFromSession == null || !userTypeFromSession.equals(Constants.WORKER)) {
+            response.setStatus(HttpServletResponse.SC_CONFLICT);
+        } else if (userTasks == null) {
+            response.setStatus(HttpServletResponse.SC_CONFLICT);
+            response.getWriter().println("The user has not registered to any task yet");
+        } else {
+            String[] paramsNames = {Constants.TASK_NAME};
+            try (PrintWriter body = response.getWriter()) {
+                Map<String, String> mapParams = null;
+                mapParams = ServletUtils.validateRequestQueryParams(request, paramsNames);
+                TasksManager tasksManager = ServletUtils.getTasksManager(getServletContext());
+                String taskName = mapParams.get(Constants.TASK_NAME).trim();
+                if (!userTasks.containsKey(taskName)) {
+                    response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                    body.println("The user has not registered to the task");
+                }
+                String executionTargetDtoStr = ServletUtils.getRequestBody(request);
+                ExecutionTargetDTO executionTargetDTO = new Gson().fromJson(executionTargetDtoStr, ExecutionTargetDTO.class);
+                tasksManager.updateTargetRunResult(executionTargetDTO);
+                response.setStatus(HttpServletResponse.SC_OK);
+
             } catch (Exception e) {
                 response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
                 response.getWriter().println(e.getMessage());
