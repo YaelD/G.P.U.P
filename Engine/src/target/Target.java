@@ -87,7 +87,6 @@ public class Target implements Cloneable {
 
     public synchronized void setRunStatus(RunStatus runStatus) {
         this.runStatus = runStatus;
-        notifyAll();
     }
 
     public synchronized void setStartWaitingTime(LocalTime startWaitingTime) {
@@ -123,7 +122,7 @@ public class Target implements Cloneable {
         return targetsThatCanBeRun;
     }
 
-    public synchronized void updateParentsStatus(Set<String> skippedFathers, String sourceTargetName) {
+    public void updateParentsStatus(Set<String> skippedFathers, String sourceTargetName) {
         if(this.getRequiredFor().isEmpty()){
             return;
         }
@@ -188,7 +187,7 @@ public class Target implements Cloneable {
         }
     }
 
-    public TargetDTO makeDTO(String taskName){
+    public synchronized TargetDTO makeDTO(String taskName){
         Set<String> requiredForNames = new HashSet<>();
         for(Target target: this.requiredFor){
             requiredForNames.add(target.name);
@@ -216,6 +215,7 @@ public class Target implements Cloneable {
         this.runStatus = targetDTO.getRunStatus();
         this.runResult = targetDTO.getRunResults();
         this.taskSpecificLogs = targetDTO.getTaskLog();
+        this.startingProcessTime = targetDTO.getStartProcessTime();
 
 
     }
@@ -236,25 +236,26 @@ public class Target implements Cloneable {
         stringBuilder.append("\n");
         switch (this.runStatus){
             case FROZEN:
-                stringBuilder.append("Waiting for targets: " + this.waitForThisTargetsToBeFinished.toString() + " to finish their running.") ;
+                stringBuilder.append("\nWaiting for targets: " + this.waitForThisTargetsToBeFinished.toString() + " to finish their running.") ;
                 break;
             case WAITING:
-                stringBuilder.append("Waiting time: " + Duration.between(this.startWaitingTime, LocalTime.now()).toMillis() + " ms");
+                stringBuilder.append("\nWaiting time: " + Duration.between(this.startWaitingTime, LocalTime.now()).toMillis() + " ms");
                 break;
             case SKIPPED:
-                stringBuilder.append("Skipped because of: " + this.failedChildTargets.toString());
+                stringBuilder.append("\nSkipped because of: " + this.failedChildTargets.toString());
                 break;
             case IN_PROCESS:
-                stringBuilder.append("Process time: " + Duration.between(this.startingProcessTime, LocalTime.now()).toMillis() + " millisecond");
+                stringBuilder.append("\nProcess time: " + Duration.between(this.startingProcessTime, LocalTime.now()).toMillis() + " millisecond");
                 break;
             case FINISHED:
-                stringBuilder.append("Run result: " + this.runResult.name());
-                stringBuilder.append("Opened Targets to run: " + targetsThatCanBeRun.toString());
+                stringBuilder.append("\nRun result: " + this.runResult.name());
+                stringBuilder.append("\nOpened Targets to run: " + targetsThatCanBeRun.toString());
                 if(this.runResult.equals(RunResults.FAILURE)){
-                    stringBuilder.append("Skipped fathers: " + this.skippedFathers.toString());
+                    stringBuilder.append("\nSkipped fathers: " + this.skippedFathers.toString());
                 }
         }
-        stringBuilder.append(this.taskSpecificLogs);
+
+        stringBuilder.append("\n"+this.taskSpecificLogs);
         return stringBuilder.toString();
 
 

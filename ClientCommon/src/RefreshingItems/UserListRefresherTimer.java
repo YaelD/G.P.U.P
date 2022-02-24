@@ -63,7 +63,14 @@ public class UserListRefresherTimer extends Timer {
                     if(response.code() == 200){
                         String jsonArrayOfUsers = response.body().string();
                         UserDTO[] usersList = new Gson().fromJson(jsonArrayOfUsers, UserDTO[].class);
-                        consumers.forEach(consumer -> {consumer.accept(Arrays.asList(usersList));});
+                        List<UserDTO> userDTOS = Arrays.asList(usersList);
+                        userDTOS.sort(new Comparator<UserDTO>() {
+                            @Override
+                            public int compare(UserDTO o1, UserDTO o2) {
+                                return o1.getUserName().compareToIgnoreCase(o2.getUserName());
+                            }
+                        });
+                        consumers.forEach(consumer -> {consumer.accept(userDTOS);});
                     }
                     response.body().close();
                 }

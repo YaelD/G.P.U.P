@@ -107,10 +107,10 @@ public class CompilationTask extends Task{
         }
     }
 
-    public TaskDTO createTaskDTO(){
+    public synchronized TaskDTO createTaskDTO(){
         GraphDTO graphDTO = this.graph.makeDTO(this.taskName);
         TaskDTO taskDTO = new TaskDTO(this.taskName, this.creatorName, this.totalTaskPrice,
-                this.registeredWorkers.size(), this.status, graphDTO, TaskType.COMPILATION_TASK, this.registeredWorkers);
+                this.registeredWorkers.size(), this.status, graphDTO, TaskType.COMPILATION_TASK, this.registeredWorkers, this.sortedTargets.size());
         return taskDTO;
     }
 

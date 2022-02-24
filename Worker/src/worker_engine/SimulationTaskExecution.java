@@ -49,9 +49,11 @@ public class SimulationTaskExecution extends TaskExecution implements Runnable{
             executionTarget.setSpecificTaskLog("Simulation task: ");
             startTime = LocalTime.now();
             executionTarget.setSpecificTaskLog("Start time: " + startTime.format(DateTimeFormatter.ofPattern("H:mm:ss")));
+            executionTarget.setStartProcessTime(startTime);
             executionTarget.setRunStatus(RunStatus.IN_PROCESS);
             Thread.sleep(currTargetProcessTime);
             endTime = LocalTime.now();
+
             executionTarget.setSpecificTaskLog("End time: " + endTime.format(DateTimeFormatter.ofPattern("H:mm:ss")));
             if(getRandomNumber() <= this.successRate){
                 if(getRandomNumber() <= this.successWithWarningsRate){

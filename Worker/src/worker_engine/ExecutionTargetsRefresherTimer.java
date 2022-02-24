@@ -69,24 +69,26 @@ public class ExecutionTargetsRefresherTimer extends Timer {
                 public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                     if(response.code() == 200){
                         String jsonArr = response.body().string();
-                        System.out.println("IN GOOD RESPONSE==>" + jsonArr);
+                        response.body().close();
+                        System.out.println("IN GOOD RESPONSE==>" + response);
+                        if(!jsonArr.isEmpty()){
+                            TargetDTO[] targetDTOS = new Gson().fromJson(jsonArr, TargetDTO[].class);
+                            for(TargetDTO targetDTO: targetDTOS){
+                                WorkerEngine.getInstance().getWorkerTargets().add(targetDTO);
+                                String taskName = targetDTO.getTaskName();
+                                TaskParamsDTO taskParamsDTO = WorkerEngine.getInstance().getRegisteredTasksParams().get(taskName);
+                                if(taskParamsDTO instanceof SimulationTaskParamsDTO){
+                                    SimulationTaskExecution simulationTaskExecution = new SimulationTaskExecution((SimulationTaskParamsDTO)taskParamsDTO, targetDTO);
+                                    WorkerEngine.getInstance().addTask(simulationTaskExecution);
+                                }
+                                if(taskParamsDTO instanceof CompilationTaskParamsDTO){
+                                    CompilationTaskExecution compilationTaskExecution = new CompilationTaskExecution((CompilationTaskParamsDTO)taskParamsDTO, targetDTO);
+                                    WorkerEngine.getInstance().addTask(compilationTaskExecution);
 
-                        TargetDTO[] targetDTOS = new Gson().fromJson(jsonArr, TargetDTO[].class);
-
-                        for(TargetDTO targetDTO: targetDTOS){
-                            String taskName = targetDTO.getTaskName();
-                            TaskParamsDTO taskParamsDTO = WorkerEngine.getInstance().getRegisteredTasksParams().get(taskName);
-                            if(taskParamsDTO instanceof SimulationTaskParamsDTO){
-                                SimulationTaskExecution simulationTaskExecution = new SimulationTaskExecution((SimulationTaskParamsDTO)taskParamsDTO, targetDTO);
-                                WorkerEngine.getInstance().addTask(simulationTaskExecution);
+                                }
                             }
-                            if(taskParamsDTO instanceof CompilationTaskParamsDTO){
-                                CompilationTaskExecution compilationTaskExecution = new CompilationTaskExecution((CompilationTaskParamsDTO)taskParamsDTO, targetDTO);
-                                WorkerEngine.getInstance().addTask(compilationTaskExecution);
 
-                            }
                         }
-
                     }
                  }
             });

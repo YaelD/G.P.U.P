@@ -45,6 +45,10 @@ public class RegisterToTaskController {
 
     @FXML
     void OnClickRegisterButton(ActionEvent event) {
+        if(taskName.getValue().isEmpty()){
+            taskInfoTextArea.setText("Please choose a task to register to");
+            return;
+        }
         String finalUrl = Objects.requireNonNull(HttpUrl
                 .parse(Constants.TASK_EXECUTION)).newBuilder()
                 .addQueryParameter(Constants.TASK_NAME, taskName.getValue())

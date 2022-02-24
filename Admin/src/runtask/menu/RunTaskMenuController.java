@@ -1,5 +1,6 @@
 package runtask.menu;
 
+import RefreshingItems.TaskListRefresherTimer;
 import com.google.gson.Gson;
 import constants.Constants;
 import dto.*;
@@ -24,6 +25,7 @@ import runtask.compilation_task.CompilationParamsController;
 import runtask.simulation_task.SimulationParamsController;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -34,6 +36,7 @@ public class RunTaskMenuController {
     private GraphDTO currGraph;
     private String userName;
 
+    private List<TaskDTO> currTasksInSystem;
 
     @FXML private HBox baseHBox;
 
@@ -150,6 +153,7 @@ public class RunTaskMenuController {
 
     @FXML
     private void initialize(){
+        TaskListRefresherTimer.getInstance().addConsumer(this::setCurrTasksInSystem);
         this.taskName.bind(this.taskNameTextField.textProperty());
         baseHBox.getChildren().remove(simulationTaskToggles);
         baseHBox.getChildren().remove(compilationTaskToggles);
@@ -259,6 +263,16 @@ public class RunTaskMenuController {
     private boolean validation() {
         Set<String> targetSet = new HashSet<>();
         targetSet.addAll(this.targetsList);
+        if(taskName.getValue().isEmpty()){
+            warningLabel.setVisible(true);
+            warningLabel.setText("Please enter task name");
+            return false;
+        }
+        if(!this.checkIfNameIsOk()){
+            warningLabel.setVisible(true);
+            warningLabel.setText("Task name already in use");
+            return false;
+        }
         if(!this.incrementalRadioButton.isDisabled()){
             warningLabel.setVisible(true);
             warningLabel.setText("The " + taskType.getValue().getTaskType() + " task cannot run incrementally" +
@@ -271,6 +285,15 @@ public class RunTaskMenuController {
             warningLabel.setVisible(true);
             warningLabel.setText("Please choose targets");
             return false;
+        }
+        return true;
+    }
+
+    private boolean checkIfNameIsOk() {
+        for(TaskDTO taskDTO: this.currTasksInSystem){
+            if(taskDTO.getTaskName().equals(this.taskName)){
+                return false;
+            }
         }
         return true;
     }
@@ -387,6 +410,7 @@ public class RunTaskMenuController {
     }
 
 
-
-
+    public void setCurrTasksInSystem(List<TaskDTO> currTasksInSystem) {
+        this.currTasksInSystem = currTasksInSystem;
+    }
 }

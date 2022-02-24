@@ -67,7 +67,14 @@ public class GraphListRefresherTimer extends Timer {
                     if (response.code() == 200) {
                         String jsonArrayOfGraphsList = response.body().string();
                         GraphDTO[] graphs = new Gson().fromJson(jsonArrayOfGraphsList, GraphDTO[].class);
-                        consumersList.forEach(consumer -> {consumer.accept(Arrays.asList(graphs));});
+                        List<GraphDTO> graphDTOS = Arrays.asList(graphs);
+                        graphDTOS.sort(new Comparator<GraphDTO>() {
+                            @Override
+                            public int compare(GraphDTO o1, GraphDTO o2) {
+                                return o1.getName().compareToIgnoreCase(o2.getName());
+                            }
+                        });
+                        consumersList.forEach(consumer -> {consumer.accept(graphDTOS);});
                     }
                     response.body().close();
                 }

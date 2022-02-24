@@ -13,6 +13,7 @@ import general_enums.RunResults;
 import general_enums.TaskStatus;
 import http_utils.HttpUtils;
 import javafx.application.Platform;
+import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -37,6 +38,7 @@ import java.util.Objects;
 public class RunWindowController {
 
     SimpleObjectProperty<TaskDTO> taskDTOProperty;
+    SimpleDoubleProperty finishedTargetsProgress;
 
 
     @FXML
@@ -115,6 +117,7 @@ public class RunWindowController {
         for(TaskDTO taskDTO: taskDTOS){
             if(taskDTO.getTaskName().equals(taskDTOProperty.get().getTaskName())){
                 taskDTOProperty.set(taskDTO);
+                finishedTargetsProgress.set(1-(Double.valueOf(taskDTO.getNumOfTargetsInQueue()) /Double.valueOf(taskDTO.getGraphDTO().getTotalNumOfTargets())));
                 return;
             }
         }
@@ -126,7 +129,7 @@ public class RunWindowController {
 
     @FXML
     private void initialize(){
-
+        progressBar.progressProperty().bind(finishedTargetsProgress);
         taskTableController.setRunWindowController(this);
         taskTableController.setTaskDTO(taskDTOProperty);
         TaskListRefresherTimer.getInstance().addConsumer(this::getTask);

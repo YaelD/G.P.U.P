@@ -48,17 +48,18 @@ public class SendExecutionTargetRefresherTimer extends Timer {
 
             @Override
             public void run() {
+                Set<ExecutionTarget> targetsToRemove = new HashSet<>();
                 for(ExecutionTarget target : this.targets){
                     ExecutionTargetDTO dto = target.makeDTO();
-                    if(!dto.getRunStatus().equals(RunStatus.WAITING)) {
-                        System.out.println("STOP");
-                    }
                     String finalUrl = Objects.requireNonNull(HttpUrl
                             .parse(Constants.TASK_EXECUTION)).newBuilder()
                             .addQueryParameter(Constants.TASK_NAME, dto.getTaskName())
                             .build()
                             .toString();
                     String targetJson = new Gson().toJson(dto);
+                    if(dto.getRunStatus().equals(RunStatus.FINISHED)){
+                        targetsToRemove.add(target);
+                    }
                     Request request= new Request.Builder().url(finalUrl).post(RequestBody.create(targetJson.getBytes())).build();
                     HttpUtils.runAsyncWithRequest(request, new Callback() {
                         @Override
@@ -80,6 +81,11 @@ public class SendExecutionTargetRefresherTimer extends Timer {
                     });
 
                 }
+
+                for(ExecutionTarget target: targetsToRemove){
+                    this.targets.remove(target);
+                }
+
 
 
             }

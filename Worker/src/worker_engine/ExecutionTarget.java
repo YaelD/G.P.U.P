@@ -16,6 +16,7 @@ public class ExecutionTarget {
     private String taskLog;
     private String info;
     private String targetName;
+    private LocalTime startProcessTime;
 
     public ExecutionTarget(TargetDTO targetDTO){
         this.taskName = targetDTO.getTaskName();
@@ -28,7 +29,7 @@ public class ExecutionTarget {
     }
 
     public synchronized ExecutionTargetDTO makeDTO(){
-        return new ExecutionTargetDTO(this.runResult, this.runStatus, this.taskLog, this.taskName, this.targetName);
+        return new ExecutionTargetDTO(this.runResult, this.runStatus, this.taskLog, this.taskName, this.targetName, this.startProcessTime);
     }
 
     public synchronized void setSpecificTaskLog(String str){
@@ -42,6 +43,11 @@ public class ExecutionTarget {
     public synchronized void setRunStatus(RunStatus runStatus) {
         this.runStatus = runStatus;
     }
+
+    public void setStartProcessTime(LocalTime startProcessTime) {
+        this.startProcessTime = startProcessTime;
+    }
+
 
     public String getInfo() {
         return info;

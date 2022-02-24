@@ -47,9 +47,8 @@ public class TaskDetailsPaneController {
             this.numOfLeavesLabel.setText(String.valueOf(taskDTO.getGraphDTO().getNumOfLeaves()));
             this.numOfIndependentsLabel.setText(String.valueOf(taskDTO.getGraphDTO().getNumOfIndependents()));
             this.numOfWorkersLabel.setText(String.valueOf(taskDTO.getNumOfRegisteredWorkers()));
+            this.numOfTargetsInQueueLabel.setText(String.valueOf(taskDTO.getNumOfTargetsInQueue()));
         });
-        //TODO: get the queue from the server
-        //this.numOfTargetsInQueueLabel.setText();
 
     }
 }

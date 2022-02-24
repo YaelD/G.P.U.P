@@ -15,10 +15,11 @@ public class TaskDTO {
     private GraphDTO graphDTO;
     private TaskType taskType;
     private Set<String> registeredWorkers;
+    private int numOfTargetsInQueue;
 
 
     public TaskDTO(String taskName, String creatorName, int taskTotalPrice, int numOfRegisteredWorkers,
-                   TaskStatus taskStatus, GraphDTO graphDTO, TaskType taskType, Set<String> registeredWorkers) {
+                   TaskStatus taskStatus, GraphDTO graphDTO, TaskType taskType, Set<String> registeredWorkers, int numOfTargetsInQueue) {
         this.taskName = taskName;
         this.creatorName = creatorName;
         this.taskTotalPrice = taskTotalPrice;
@@ -27,6 +28,11 @@ public class TaskDTO {
         this.graphDTO = graphDTO;
         this.taskType = taskType;
         this.registeredWorkers = registeredWorkers;
+        this.numOfTargetsInQueue = numOfTargetsInQueue;
+    }
+
+    public int getNumOfTargetsInQueue() {
+        return numOfTargetsInQueue;
     }
 
     public Set<String> getRegisteredWorkers() {

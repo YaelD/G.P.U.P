@@ -1,9 +1,12 @@
 package worker_engine;
 
+import dto.TargetDTO;
 import dto.TaskParamsDTO;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.*;
 
 public class WorkerEngine {
@@ -12,10 +15,12 @@ public class WorkerEngine {
     private static WorkerEngine instance;
 
     private Map<String, TaskParamsDTO> registeredTasksParams;
+    private Set<TargetDTO> workerTargets;
 
 
     private WorkerEngine(){
         this.registeredTasksParams = new HashMap<>();
+        workerTargets = new HashSet<>();
     }
 
     public void setPausableThreadPoolExecutor(PausableThreadPoolExecutor pausableThreadPoolExecutor) {
@@ -33,6 +38,10 @@ public class WorkerEngine {
 
     public Map<String, TaskParamsDTO> getRegisteredTasksParams() {
         return registeredTasksParams;
+    }
+
+    public Set<TargetDTO> getWorkerTargets() {
+        return workerTargets;
     }
 
     public void addTask(Runnable run){

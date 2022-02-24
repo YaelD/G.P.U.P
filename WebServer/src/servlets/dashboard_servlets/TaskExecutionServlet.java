@@ -88,16 +88,13 @@ public class TaskExecutionServlet extends HttpServlet {
                 else {
                     TasksManager tasksManager = ServletUtils.getTasksManager(getServletContext());
                     Set<TargetDTO> targetDTOs  = tasksManager.getTaskTargetForExecution(userTasks.values(), Integer.parseInt(numOfTargets));
-                    if (targetDTOs.isEmpty()) {
-                        response.setStatus(HttpServletResponse.SC_OK);
-                    }
-                    else{
-                        response.setStatus(HttpServletResponse.SC_OK);
-                        Gson gson = new Gson();
-                        String json = gson.toJson(targetDTOs);
-                        body.print(json);
-                        body.flush();
-                    }
+                    response.setStatus(HttpServletResponse.SC_OK);
+                    Gson gson = new Gson();
+                    String json = gson.toJson(targetDTOs);
+                    System.out.println("IN GET TARGETS TO RUN===>" + json);
+                    body.print(json);
+                    body.flush();
+
                 }
             } catch (Exception e) {
                 response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
@@ -132,9 +129,6 @@ public class TaskExecutionServlet extends HttpServlet {
                 }
                 String executionTargetDtoStr = ServletUtils.getRequestBody(request);
                 ExecutionTargetDTO executionTargetDTO = new Gson().fromJson(executionTargetDtoStr, ExecutionTargetDTO.class);
-                if(!executionTargetDTO.getRunStatus().equals(RunStatus.WAITING)){
-                    System.out.println("STOP!!!");
-                }
                 tasksManager.updateTargetRunResult(executionTargetDTO);
                 response.setStatus(HttpServletResponse.SC_OK);
 

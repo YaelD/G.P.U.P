@@ -52,6 +52,7 @@ public class TasksInfoServlet extends HttpServlet {
                     taskDTOS.add(taskDTO);
                 }
                 String json = gson.toJson(taskDTOS);
+                System.out.println("IN GET TASK LIST===>" + json);
                 body.print(json);
                 body.flush();
             }

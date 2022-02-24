@@ -54,13 +54,8 @@ public class DashboardController {
     private UsersListController usersListController;
 
     @FXML
-    private Button taskDetailsButton;
-
-    @FXML
     private TableView<?> tasksInSystemTableView;
 
-    @FXML
-    private Button CreateNewTaskButton;
 
 
     public DashboardController() {
@@ -75,13 +70,6 @@ public class DashboardController {
 
 
 
-
-    @FXML
-    void onClickTaskDetails(ActionEvent event) {
-
-    }
-
-
     public void setUserName(String userName) {
         this.userName = userName;
 
@@ -93,7 +81,7 @@ public class DashboardController {
             FXMLLoader fxmlLoader = new FXMLLoader();
             fxmlLoader.setLocation(resource);
             Parent root = fxmlLoader.load(resource.openStream());
-            Scene scene = new Scene(root,500, 500);
+            Scene scene = new Scene(root,700, 700);
             Stage secondaryStage = new Stage();
             HeaderController headerController = fxmlLoader.getController();
             headerController.setPrimaryStage(secondaryStage);

@@ -67,7 +67,14 @@ public class TaskListRefresherTimer extends Timer {
                     if (response.code() == 200) {
                         String jsonArrayOfTasksList = response.body().string();
                         TaskDTO[] taskDTOS = new Gson().fromJson(jsonArrayOfTasksList, TaskDTO[].class);
-                        consumersList.forEach(consumer -> {consumer.accept(Arrays.asList(taskDTOS));});
+                        List<TaskDTO> taskDTOList = Arrays.asList(taskDTOS);
+                        taskDTOList.sort(new Comparator<TaskDTO>() {
+                            @Override
+                            public int compare(TaskDTO o1, TaskDTO o2) {
+                                return o1.getTaskName().compareToIgnoreCase(o2.getTaskName());
+                            }
+                        });
+                        consumersList.forEach(consumer -> {consumer.accept(taskDTOList);});
                     }
                     response.body().close();
                 }
