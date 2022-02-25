@@ -4,6 +4,7 @@ import RefreshingItems.TaskListRefresherTimer;
 import com.google.gson.Gson;
 import constants.Constants;
 import dto.*;
+import general_enums.Dependency;
 import general_enums.RunType;
 import general_enums.TaskType;
 import http_utils.HttpUtils;
@@ -25,6 +26,7 @@ import okhttp3.*;
 import org.jetbrains.annotations.NotNull;
 import runtask.compilation_task.CompilationParamsController;
 import runtask.simulation_task.SimulationParamsController;
+import whatif.WhatIfCallback;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -77,7 +79,7 @@ public class RunTaskMenuController {
     @FXML private RadioButton chooseWhatIfRB;
     @FXML private VBox whatIfSubMenu;
     @FXML private ChoiceBox<String> whatIf_targetsCB;
-//    @FXML private ChoiceBox<Dependency> whatIf_DependencyCB;
+    @FXML private ChoiceBox<Dependency> whatIf_DependencyCB;
     @FXML private Button WhatIfButton;
     @FXML private ListView<String> selectedTargetsListView;
     @FXML private Button continueButton;
@@ -114,6 +116,7 @@ public class RunTaskMenuController {
 
     @FXML
     void checkTargetsWithWhatIf(ActionEvent event) {
+
     }
 
 
@@ -158,6 +161,9 @@ public class RunTaskMenuController {
 
     @FXML
     private void initialize(){
+        whatIf_DependencyCB.getItems().add(Dependency.DEPENDS_ON);
+        whatIf_DependencyCB.getItems().add(Dependency.REQUIRED_FOR);
+        whatIf_DependencyCB.getSelectionModel().select(0);
         TaskListRefresherTimer.getInstance().addConsumer(this::setCurrTasksInSystem);
         continueButton.disableProperty().bind(Bindings.or(warningChosenTargetsLabel.visibleProperty(),Bindings.or(warningTaskNameLabel.visibleProperty(), warningRunTypeLabel.visibleProperty())));
 
@@ -311,35 +317,6 @@ public class RunTaskMenuController {
                 });
             }
         });
-    }
-
-    private boolean validation() {
-        Set<String> targetSet = new HashSet<>();
-        targetSet.addAll(this.targetsList);
-        if(taskName.getValue().isEmpty()){
-//            warningLabel.setVisible(true);
-//            warningLabel.setText("Please enter task name");
-            return false;
-        }
-        if(!this.checkIfNameIsOk()){
-//            warningLabel.setVisible(true);
-//            warningLabel.setText("Task name already in use");
-            return false;
-        }
-        if(!this.incrementalRadioButton.isDisabled()){
-//            warningLabel.setVisible(true);
-//            warningLabel.setText("The " + taskType.getValue().getTaskType() + " task cannot run incrementally" +
-//                    "\nSetting run From Scratch by default");
-            this.runType.setValue(RunType.FROM_SCRATCH);
-            this.runTypeToggle.selectToggle(fromScratchRadioButton);
-            return false;
-        }
-        if(targetSet.isEmpty()){
-//            warningLabel.setVisible(true);
-//            warningLabel.setText("Please choose targets");
-            return false;
-        }
-        return true;
     }
 
     private boolean checkIfNameIsOk() {

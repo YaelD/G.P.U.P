@@ -3,6 +3,7 @@ package dto;
 
 
 import general_enums.RunResults;
+import general_enums.RunStatus;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -87,6 +88,16 @@ public class GraphDTO {
         for(TargetDTO target: targets.values()){
             if(target.getRunResult() == runResult)
                 counter++;
+        }
+        return counter;
+    }
+
+    public int getNumOfTargetsByRunStatus(RunStatus runStatus){
+        int counter = 0;
+        for(TargetDTO targetDTO: targets.values()){
+            if(targetDTO.getRunStatus().equals(runStatus)){
+                counter++;
+            }
         }
         return counter;
     }

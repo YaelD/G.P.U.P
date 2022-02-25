@@ -3,6 +3,7 @@ package tasks_menu;
 import RefreshingItems.TaskListRefresherTimer;
 import dto.TargetDTO;
 import dto.TaskDTO;
+import general_enums.RunStatus;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableValue;
@@ -57,9 +58,10 @@ public class TasksInfoTableController {
             @Override
             public ObservableValue<String> call(TableColumn.CellDataFeatures<TaskDTO, String> param) {
                 double numOfTargets = Double.valueOf(param.getValue().getGraphDTO().getTotalNumOfTargets());
-                double numOfTargetInQueue = Double.valueOf(param.getValue().getNumOfTargetsInQueue());
-
-                return new SimpleStringProperty(String.valueOf(100*(1.0 - numOfTargetInQueue/numOfTargets)) + "%");
+                double numOfFinished = param.getValue().getGraphDTO().getNumOfTargetsByRunStatus(RunStatus.FINISHED);
+                double numOfSkipped = param.getValue().getGraphDTO().getNumOfTargetsByRunStatus(RunStatus.SKIPPED);
+                double totalFinishedTargets = numOfFinished + numOfSkipped;
+                return new SimpleStringProperty(String.valueOf(100*( totalFinishedTargets/numOfTargets)) + "%");
             }
         });
         myNumberOfTargets_column.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<TaskDTO, String>, ObservableValue<String>>() {
