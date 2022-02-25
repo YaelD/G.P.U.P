@@ -130,8 +130,11 @@ public class Target implements Cloneable {
             for(Target currTarget : this.getRequiredFor()){
                 currTarget.setRunStatus(RunStatus.SKIPPED);
                 currTarget.setRunResult(RunResults.SKIPPED);
-                currTarget.getFailedChildTargets().add(sourceTargetName);
-                skippedFathers.add(currTarget.getName());
+                //TODO: check if the next two lines should be synchronized
+                synchronized (currTarget){
+                    currTarget.getFailedChildTargets().add(sourceTargetName);
+                    skippedFathers.add(currTarget.getName());
+                }
                 currTarget.updateParentsStatus(skippedFathers, sourceTargetName);
             }
         }

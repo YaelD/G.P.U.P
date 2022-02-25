@@ -121,15 +121,33 @@ public abstract class Task {
     }
 
     //this function will be called when a worker sends the run result of a target.
-    public void updateTargetsRunResult(Target target){
+    public int updateTargetsRunResult(Target target){
+        int priceForTarget = 0;
         if(target.getRunResult().equals(RunResults.FAILURE)){
             target.updateParentsStatus(target.getSkippedFathers(), target.getName()); //כל מי שסגרתי לריצה בגללי
         }
         if(target.getRunStatus().equals(RunStatus.FINISHED)){
+            priceForTarget = this.totalTaskPrice/this.graph.getTargets().size();
             getOpenedTargetsToRun(target);
         }
+        checkIfTaskIsFinished();
+        return priceForTarget;
     }
 
+    //The function over on all the targets in the task and check if they finished-
+    //if so, the function changes the task status to finished.
+    private void checkIfTaskIsFinished() {
+        isTaskFinished = true;
+        for(Target target : this.graph.getTargets()){
+            if(!target.getRunStatus().equals(RunStatus.FINISHED) && !target.getRunStatus().equals(RunStatus.SKIPPED)){
+                isTaskFinished = false;
+                break;
+            }
+        }
+        if(isTaskFinished){
+            this.setStatus(TaskStatus.FINISHED);
+        }
+    }
 
 
     //main Thread
@@ -297,7 +315,7 @@ public abstract class Task {
         switch (this.status) {
             case NEW:
                 if (newStatus.equals(TaskStatus.ACTIVE)) {
-                    this.status = newStatus;
+                    this.setStatus(newStatus);
                     setSortedTargets(topologicalSort(this.graph));
                     isStatusChanged = true;
                 }
@@ -338,6 +356,8 @@ public abstract class Task {
                 case SKIPPED:
                 case FINISHED:
                     this.finishedTargets.add(this.sortedTargets.remove(0));
+                    break;
+                default:
                     break;
             }
         }

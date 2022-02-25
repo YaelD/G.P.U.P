@@ -107,17 +107,22 @@ public class TasksManager {
         return taskParamsDTO;
     }
 
-    public void updateTargetRunResult(ExecutionTargetDTO executionTargetDTO) throws Exception {
+    public int updateTargetRunResult(ExecutionTargetDTO executionTargetDTO) throws Exception {
+        int priceForTarget = 0;
         if(this.tasksInSystem.containsKey(executionTargetDTO.getTaskName())){
             Task task = this.tasksInSystem.get(executionTargetDTO.getTaskName());
             Graph taskGraph = task.getGraph();
             Target taskTarget = taskGraph.getTarget(executionTargetDTO.getTargetName());
             taskTarget.updateTarget(executionTargetDTO);
-            task.updateTargetsRunResult(taskTarget);
+            priceForTarget = task.updateTargetsRunResult(taskTarget);
         }
         else{
             throw new Exception(ExceptionMessages.TASK + executionTargetDTO.getTaskName() +
                     ExceptionMessages.NOT_EXIST);
         }
+        return priceForTarget;
     }
+
+
+
 }

@@ -129,8 +129,14 @@ public class TaskExecutionServlet extends HttpServlet {
                 }
                 String executionTargetDtoStr = ServletUtils.getRequestBody(request);
                 ExecutionTargetDTO executionTargetDTO = new Gson().fromJson(executionTargetDtoStr, ExecutionTargetDTO.class);
-                tasksManager.updateTargetRunResult(executionTargetDTO);
-                response.setStatus(HttpServletResponse.SC_OK);
+                int priceForTarget = tasksManager.updateTargetRunResult(executionTargetDTO);
+                if(priceForTarget == 0){
+                    response.setStatus(HttpServletResponse.SC_NO_CONTENT);
+                }
+                else{
+                    response.setStatus(HttpServletResponse.SC_OK);
+                    response.getWriter().println(priceForTarget);
+                }
 
             } catch (Exception e) {
                 response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
