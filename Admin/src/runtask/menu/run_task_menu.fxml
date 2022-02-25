@@ -18,7 +18,7 @@
 
 <ScrollPane xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="runtask.menu.RunTaskMenuController">
    <content>
-      <HBox fx:id="baseHBox" alignment="CENTER" fillHeight="false" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" spacing="10.0">
+      <HBox fx:id="bigHBox" alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" spacing="10.0">
          <children>
             <GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity">
               <columnConstraints>
@@ -157,8 +157,21 @@
                   </Label>
                </children>
             </GridPane>
-            <fx:include fx:id="simulationTaskToggles" source="../simulation_task/simlation_task_toggles.fxml" HBox.hgrow="NEVER" />
-            <fx:include fx:id="compilationTaskToggles" source="../compilation_task/compilation_task_toggles.fxml" HBox.hgrow="NEVER" />
+            <VBox alignment="TOP_CENTER" fillWidth="false" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308">
+               <children>
+                  <HBox fx:id="baseHBox" alignment="TOP_CENTER" fillHeight="false" VBox.vgrow="ALWAYS">
+                     <children>
+                        <fx:include fx:id="simulationTaskToggles" source="../simulation_task/simlation_task_toggles.fxml" HBox.hgrow="NEVER" />
+                        <fx:include fx:id="compilationTaskToggles" source="../compilation_task/compilation_task_toggles.fxml" HBox.hgrow="NEVER" />
+                     </children>
+                  </HBox>
+                  <Label fx:id="serverResponseLabel" alignment="TOP_CENTER" text="Label" visible="false" wrapText="true" VBox.vgrow="ALWAYS">
+                     <font>
+                        <Font size="21.0" />
+                     </font>
+                  </Label>
+               </children>
+            </VBox>
          </children>
       </HBox>
    </content>

@@ -20,6 +20,7 @@ import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import okhttp3.*;
 import org.jetbrains.annotations.NotNull;
 import runtask.compilation_task.CompilationParamsController;
@@ -40,6 +41,7 @@ public class RunTaskMenuController {
     private List<TaskDTO> currTasksInSystem;
 
     @FXML private HBox baseHBox;
+    @FXML private HBox bigHBox;
 
 
 
@@ -63,6 +65,7 @@ public class RunTaskMenuController {
     @FXML private Label warningTaskNameLabel;
     @FXML private Label warningRunTypeLabel;
     @FXML private Label warningChosenTargetsLabel;
+    @FXML private Label serverResponseLabel;
 
 
     @FXML private TextField taskNameTextField;
@@ -129,8 +132,8 @@ public class RunTaskMenuController {
             baseHBox.getChildren().remove(compilationTaskToggles);
             try{
                 baseHBox.getChildren().add(simulationTaskToggles);
-                baseHBox.getChildren().get(0).setDisable(true);
-                baseHBox.getChildren().get(1).setDisable(true);
+                bigHBox.getChildren().get(0).setDisable(true);
+                bigHBox.getChildren().get(1).setDisable(true);
                 simulationTaskToggles.setMaxHeight(Double.MAX_VALUE);
                 simulationTaskToggles.setMaxWidth(Double.MAX_VALUE);
             }catch (IllegalArgumentException e){
@@ -141,8 +144,8 @@ public class RunTaskMenuController {
             baseHBox.getChildren().remove(simulationTaskToggles);
             try{
                 baseHBox.getChildren().add(compilationTaskToggles);
-                baseHBox.getChildren().get(0).setDisable(true);
-                baseHBox.getChildren().get(1).setDisable(true);
+                bigHBox.getChildren().get(0).setDisable(true);
+                bigHBox.getChildren().get(1).setDisable(true);
                 compilationTaskToggles.setMaxHeight(Double.MAX_VALUE);
                 compilationTaskToggles.setMaxWidth(Double.MAX_VALUE);
             }catch (IllegalArgumentException e){
@@ -205,19 +208,6 @@ public class RunTaskMenuController {
 
             }
         });
-//        simulationTaskTogglesController.setTaskCallBack(new SimulationParamsCallBack() {
-//            @Override
-//            public void sendSimulationTaskParams(int processTime, boolean isRandom, double successRate, double successRateWithWarnings, Label taskCreateLabel) {
-//                RunType currRunType = runType.get();
-//                List<String> currTargetList = targetsList.get();
-//                String creatorName = userName;
-//                String graphName = currGraph.getName();
-//                String currTaskName = taskName.get();
-//                int totalTaskPrice = currGraph.getPriceOfSimulationTask()*currTargetList.size();
-//                sendTaskToServer(new SimulationTaskParamsDTO(currRunType, currTargetList, creatorName, graphName,
-//                        currTaskName, totalTaskPrice, processTime, isRandom, successRate, successRateWithWarnings));
-//            }
-//        });
         simulationTaskTogglesController.setTaskCallBack(new SimulationParamsCallBack() {
             @Override
             public void sendSimulationTaskParams(int processTime, boolean isRandom, double successRate, double successRateWithWarnings) {
@@ -227,6 +217,7 @@ public class RunTaskMenuController {
                 String graphName = currGraph.getName();
                 String currTaskName = taskName.get();
                 int totalTaskPrice = currGraph.getPriceOfSimulationTask()*currTargetList.size();
+                serverResponseLabel.setVisible(false);
                 sendTaskToServer(new SimulationTaskParamsDTO(currRunType, currTargetList, creatorName, graphName,
                         currTaskName, totalTaskPrice, processTime, isRandom, successRate, successRateWithWarnings));
 
@@ -236,9 +227,10 @@ public class RunTaskMenuController {
         simulationTaskTogglesController.setReturnCallBack(new ReturnCallback() {
             @Override
             public void returnToPrev() {
+                serverResponseLabel.setVisible(false);
                 baseHBox.getChildren().remove(simulationTaskToggles);
-                baseHBox.getChildren().get(0).setDisable(false);
-                baseHBox.getChildren().get(1).setDisable(false);
+                bigHBox.getChildren().get(0).setDisable(false);
+                bigHBox.getChildren().get(1).setDisable(false);
 
             }
         });
@@ -252,6 +244,7 @@ public class RunTaskMenuController {
                 String graphName = currGraph.getName();
                 String currTaskName = taskName.get();
                 int totalTaskPrice = currGraph.getPriceOfCompilationTask()*currTargetList.size();
+                serverResponseLabel.setVisible(false);
                 sendTaskToServer(new CompilationTaskParamsDTO(currRunType, currTargetList, creatorName, graphName,
                         currTaskName,totalTaskPrice, sourceDir, destDir));
             }
@@ -261,15 +254,17 @@ public class RunTaskMenuController {
         compilationTaskTogglesController.setReturnCallBack(new ReturnCallback() {
             @Override
             public void returnToPrev() {
+                serverResponseLabel.setVisible(false);
                 baseHBox.getChildren().remove(compilationTaskToggles);
-                baseHBox.getChildren().get(0).setDisable(false);
-                baseHBox.getChildren().get(1).setDisable(false);
+                bigHBox.getChildren().get(0).setDisable(false);
+                bigHBox.getChildren().get(1).setDisable(false);
             }
         });
 
     }
 
     private void sendTaskToServer(TaskParamsDTO taskParamsDTO){
+
         Gson gson = new Gson();
         SimulationTaskParamsDTO simulationTaskParamsDTO;
         CompilationTaskParamsDTO compilationTaskParamsDTO;
@@ -287,15 +282,31 @@ public class RunTaskMenuController {
         HttpUtils.runAsyncWithRequest(request, new Callback() {
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                //TODO: failure
+                Platform.runLater(()->{
+                    serverResponseLabel.setVisible(true);
+                    serverResponseLabel.setTextFill(Color.RED);
+                    serverResponseLabel.setText(e.getMessage());
+                });
             }
 
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                 Platform.runLater(()->{
-                    if(response.code() == 200) {
+                    try {
+                        String res = response.body().string();
+                        if(response.code() == 200) {
+                            serverResponseLabel.setVisible(true);
+                            serverResponseLabel.setTextFill(Color.GREEN);
+                            serverResponseLabel.setText("Task created successfully");
+                        }
+                        else{
+                            serverResponseLabel.setVisible(true);
+                            serverResponseLabel.setTextFill(Color.RED);
+                            serverResponseLabel.setText(res);
 
-
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
                     }
                 });
             }
