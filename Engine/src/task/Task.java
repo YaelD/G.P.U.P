@@ -222,12 +222,15 @@ public abstract class Task {
             for(Target childOfTheCurrParent : currParent.getDependsOn()){
                 if (childOfTheCurrParent.getRunStatus().equals(RunStatus.FROZEN)
                 || childOfTheCurrParent.getRunStatus().equals(RunStatus.WAITING)) {
-
-                    currParent.getWaitForThisTargetsToBeFinished().add(childOfTheCurrParent.getName());
+                    synchronized (currParent){
+                        currParent.getWaitForThisTargetsToBeFinished().add(childOfTheCurrParent.getName());
+                    }
                     isOpenedToRun = false;
                 }
                 else{
-                    currParent.getWaitForThisTargetsToBeFinished().remove(childOfTheCurrParent.getName());
+                    synchronized (currParent){
+                        currParent.getWaitForThisTargetsToBeFinished().remove(childOfTheCurrParent.getName());
+                    }
                     isOpenedToRun = true;
                 }
             }
@@ -236,7 +239,9 @@ public abstract class Task {
                     currParent.setRunStatus(RunStatus.WAITING);
                     currParent.setStartWaitingTime(LocalTime.now());
                 }
-                target.getTargetsThatCanBeRun().add(currParent.getName());
+                synchronized (target){
+                    target.getTargetsThatCanBeRun().add(currParent.getName());
+                }
             }
             else{
                 isOpenedToRun = true;

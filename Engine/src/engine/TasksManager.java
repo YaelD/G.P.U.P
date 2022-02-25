@@ -73,9 +73,9 @@ public class TasksManager {
 
         while (!isFinished){
             for(Task currTask : workerTasks){
-                if(currTask.getTaskName().equals("Task2")){
-                    System.out.println("STOP!!");
-                }
+//                if(currTask.getTaskName().equals("Task2")){
+//                    System.out.println("STOP!!");
+//                }
                 if(targetsForWorker.size() < requiredNumOfTargets){
                     TargetDTO targetDTO = currTask.getTargetReadyForRunning();
                     if(targetDTO != null){
@@ -122,7 +122,5 @@ public class TasksManager {
         }
         return priceForTarget;
     }
-
-
 
 }
