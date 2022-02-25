@@ -51,7 +51,7 @@ public class FindCycleServlet extends HttpServlet {
 
             } catch(Exception e){
                 response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-                body.println(e.getMessage());
+                body.print(e.getMessage());
             }
         }
     }

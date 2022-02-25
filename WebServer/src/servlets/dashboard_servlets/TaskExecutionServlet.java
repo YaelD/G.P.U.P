@@ -47,7 +47,7 @@ public class TaskExecutionServlet extends HttpServlet {
                 String taskName = mapParams.get(Constants.TASK_NAME).trim();
                 if (userTasks != null && userTasks.containsKey(taskName)) {
                     response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-                    body.println("The user already registered to the task");
+                    body.print("The user already registered to the task");
                 } else {
                     Task task = tasksManager.workerRegistrationToTask(taskName, usernameFromSession);
                     TaskParamsDTO taskParamsDTO = tasksManager.toTaskParamsDTO(task);
@@ -60,7 +60,7 @@ public class TaskExecutionServlet extends HttpServlet {
                 }
             } catch (Exception e) {
                 response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-                response.getWriter().println(e.getMessage());
+                response.getWriter().print(e.getMessage());
             }
         }
     }
@@ -83,7 +83,7 @@ public class TaskExecutionServlet extends HttpServlet {
                 String numOfTargets = mapParams.get(Constants.NUMBER_OF_TARGETS).trim();
                 if (userTasks == null) {
                     response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-                    body.println(Constants.WORKER_NOT_REGISTER_TASK);
+                    body.print(Constants.WORKER_NOT_REGISTER_TASK);
                 }
                 else {
                     TasksManager tasksManager = ServletUtils.getTasksManager(getServletContext());
@@ -91,14 +91,14 @@ public class TaskExecutionServlet extends HttpServlet {
                     response.setStatus(HttpServletResponse.SC_OK);
                     Gson gson = new Gson();
                     String json = gson.toJson(targetDTOs);
-                    System.out.println("IN GET TARGETS TO RUN===>" + json);
+                    System.out.print("IN GET TARGETS TO RUN===>" + json);
                     body.print(json);
                     body.flush();
 
                 }
             } catch (Exception e) {
                 response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-                response.getWriter().println(e.getMessage());
+                response.getWriter().print(e.getMessage());
             }
         }
     }
@@ -115,7 +115,7 @@ public class TaskExecutionServlet extends HttpServlet {
             response.setStatus(HttpServletResponse.SC_CONFLICT);
         } else if (userTasks == null) {
             response.setStatus(HttpServletResponse.SC_CONFLICT);
-            response.getWriter().println("The user has not registered to any task yet");
+            response.getWriter().print("The user has not registered to any task yet");
         } else {
             String[] paramsNames = {Constants.TASK_NAME};
             try (PrintWriter body = response.getWriter()) {
@@ -125,7 +125,7 @@ public class TaskExecutionServlet extends HttpServlet {
                 String taskName = mapParams.get(Constants.TASK_NAME).trim();
                 if (!userTasks.containsKey(taskName)) {
                     response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-                    body.println("The user has not registered to the task");
+                    body.print("The user has not registered to the task");
                 }
                 String executionTargetDtoStr = ServletUtils.getRequestBody(request);
                 ExecutionTargetDTO executionTargetDTO = new Gson().fromJson(executionTargetDtoStr, ExecutionTargetDTO.class);
@@ -140,7 +140,7 @@ public class TaskExecutionServlet extends HttpServlet {
 
             } catch (Exception e) {
                 response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-                response.getWriter().println(e.getMessage());
+                response.getWriter().print(e.getMessage());
             }
         }
     }

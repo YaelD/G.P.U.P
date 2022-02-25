@@ -53,7 +53,7 @@ public class WhatIfServlet extends HttpServlet {
 
             } catch(Exception e){
                 response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-                response.getWriter().println(e.getMessage());
+                response.getWriter().print(e.getMessage());
             }
         }
     }

@@ -52,7 +52,7 @@ public class TasksInfoServlet extends HttpServlet {
                     taskDTOS.add(taskDTO);
                 }
                 String json = gson.toJson(taskDTOS);
-                System.out.println("IN GET TASK LIST===>" + json);
+                System.out.print("IN GET TASK LIST===>" + json);
                 body.print(json);
                 body.flush();
             }
@@ -96,7 +96,7 @@ public class TasksInfoServlet extends HttpServlet {
                 }
             } catch(Exception e){
                 response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-                response.getWriter().println(e.getMessage());
+                response.getWriter().print(e.getMessage());
             }
         }
 
@@ -125,7 +125,7 @@ public class TasksInfoServlet extends HttpServlet {
                     Task task = tasksManager.updateTaskStatus(taskName, TaskStatus.valueOf(taskStatus.toUpperCase(Locale.ROOT)));
                     if(task == null){
                         response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-                        body.println("Invalid status");
+                        body.print("Invalid status");
                     }
                     else{
                         response.setStatus(HttpServletResponse.SC_OK);
@@ -135,7 +135,7 @@ public class TasksInfoServlet extends HttpServlet {
             }
             catch (Exception e) {
                 response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-                response.getWriter().println(e.getMessage());
+                response.getWriter().print(e.getMessage());
             }
         }
     }
