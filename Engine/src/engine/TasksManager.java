@@ -135,6 +135,7 @@ public class TasksManager {
             Task task = this.tasksInSystem.get(executionTargetDTO.getTaskName());
             Graph taskGraph = task.getGraph();
             Target taskTarget = taskGraph.getTarget(executionTargetDTO.getTargetName());
+            taskTarget.updateTarget(executionTargetDTO);
             priceForTarget = task.updateTargetsRunResult(taskTarget);
             if(taskTarget.getRunStatus().equals(RunStatus.FINISHED)){
                 openDirectoryAndFiles(getTaskTypeByName(task.getTaskName()), taskTarget);
