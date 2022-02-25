@@ -14,6 +14,7 @@ import general_enums.RunStatus;
 import general_enums.TaskStatus;
 import http_utils.HttpUtils;
 import javafx.application.Platform;
+import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
@@ -109,18 +110,22 @@ public class RunWindowController {
 
     private void getTask(List<TaskDTO> taskDTOS){
         for(TaskDTO taskDTO: taskDTOS){
-            System.out.println("IN admin getTask===>" + taskDTO.getTaskName());
             if(taskDTO.getTaskName().equals(taskDTOProperty.get().getTaskName())){
                 taskDTOProperty.set(taskDTO);
                 if(taskDTO.getTaskStatus().equals(TaskStatus.FINISHED) || taskDTO.getTaskStatus().equals(TaskStatus.STOPPED)){
                     runAgainBtn.setDisable(false);
+
                 }
-                finishedTargetsProgress.set(0);
+                double numOfFinishedTargets = 0;
                 for(TargetDTO targetDTO : taskDTO.getGraphDTO().getTargets().values()){
                     if(!targetDTO.getRunStatus().equals(RunStatus.WAITING) && !targetDTO.getRunStatus().equals(RunStatus.FROZEN)){
-                        finishedTargetsProgress.set(finishedTargetsProgress.doubleValue() + (double) (1 / taskDTO.getGraphDTO().getTotalNumOfTargets()));
+                        numOfFinishedTargets++;
                     }
                 }
+                double finalNumOfFinishedTargets = numOfFinishedTargets /(double)taskDTO.getGraphDTO().getTotalNumOfTargets();
+                Platform.runLater(()->{
+                    finishedTargetsProgress.set(finalNumOfFinishedTargets);
+                });
                 return;
             }
         }
@@ -133,6 +138,9 @@ public class RunWindowController {
 
     @FXML
     private void initialize(){
+        playButton.disableProperty().bind(Bindings.not(runAgainBtn.disableProperty()));
+        stopButton.disableProperty().bind(Bindings.not(runAgainBtn.disableProperty()));
+        pauseToggle.disableProperty().bind(Bindings.not(runAgainBtn.disableProperty()));
         pauseToggle.selectedProperty().addListener(new ChangeListener<Boolean>() {
             @Override
             public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
