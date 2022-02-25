@@ -49,6 +49,7 @@ public class RegisterToTaskController {
             taskInfoTextArea.setText("Please choose a task to register to");
             return;
         }
+
         String finalUrl = Objects.requireNonNull(HttpUrl
                 .parse(Constants.TASK_EXECUTION)).newBuilder()
                 .addQueryParameter(Constants.TASK_NAME, taskName.getValue())
@@ -68,6 +69,7 @@ public class RegisterToTaskController {
                 if(response.code() == 200){
                     String taskParams;
                     String jsonOfTaskParamsDTO = response.body().string();
+
                     TaskParamsDTO taskParamsDTOS = new Gson().fromJson(jsonOfTaskParamsDTO, TaskParamsDTO.class);
                     if(taskParamsDTOS.getTaskType().equals(TaskType.COMPILATION_TASK)){
                         CompilationTaskParamsDTO compilationTaskParamsDTO = new Gson().fromJson(jsonOfTaskParamsDTO, CompilationTaskParamsDTO.class);

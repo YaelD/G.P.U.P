@@ -89,28 +89,14 @@ public class RunWindowController {
 
     @FXML
     void onPlay(ActionEvent event) {
-        String finalUrl = Objects.requireNonNull(HttpUrl
-                        .parse(Constants.TASK_LIST)).newBuilder()
-                .addQueryParameter(Constants.TASK_STATUS, TaskStatus.ACTIVE.name())
-                .addQueryParameter(Constants.TASK_NAME, taskDTOProperty.get().getTaskName())
-                .build()
-                .toString();
-        Request  request= new Request.Builder().url(finalUrl).put(RequestBody.create(new byte[0])).build();
-
-        HttpUtils.runAsyncWithRequest(request, new Callback() {
-            @Override
-            public void onFailure(@NotNull Call call, @NotNull IOException e) {
-            }
-
-            @Override
-            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                response.body().close();
-            }
-        });
+        sendStatusToServer(TaskStatus.ACTIVE);
     }
 
     @FXML
     void onStop(ActionEvent event) {
+        sendStatusToServer(TaskStatus.STOPPED);
+        pauseToggle.setDisable(true);
+        playButton.setDisable(true);
 
     }
 
@@ -137,6 +123,17 @@ public class RunWindowController {
 
     @FXML
     private void initialize(){
+        pauseToggle.selectedProperty().addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+                if(newValue == true){
+                    sendStatusToServer(TaskStatus.SUSPENDED);
+                }
+                else{
+                    sendStatusToServer(TaskStatus.ACTIVE);
+                }
+            }
+        });
         progressBar.progressProperty().bind(finishedTargetsProgress);
         taskTableController.setRunWindowController(this);
         taskTableController.setTaskDTO(taskDTOProperty);
@@ -168,136 +165,6 @@ public class RunWindowController {
        this.taskDTOProperty.set(taskDTOProperty);
     }
 
-    private void runTask() {
-//        Map<String, TargetDTO> targetsMap  = this.task.getValue().getGraphDTO().getTargets();
-//        ObservableList<TargetsTableButtonsHandler> data = FXCollections.observableArrayList();
-//        for(TargetDTO currTarget: targetsMap.values()){
-//            TargetsTableButtonsHandler targetDraw = new TargetsTableButtonsHandler(currTarget.getName());
-//            for(Button currButton: targetDraw.getButtonsMap().values()){
-//                currButton.addEventFilter(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
-//                    @Override
-//                    public void handle(MouseEvent event) {
-//                        TargetDTO targetDTO = task.getValue().getGraphDTO().getTargets().get(targetDraw.getName());
-//                        String str = targetDTO.getRunningTargetStatus();
-//                        if(str.equals("")){
-//                            str = createRunResultString(targetDTO);
-//                        }
-//                        targetInfoConsole.setText(str);
-//
-//                    }
-//                });
-//            }
-//        }
-
-
-//        ObservableList<TargetsTableButtonsHandler> data = FXCollections.observableArrayList();
-//        for(String targetName: targetsList){
-//            TargetsTableButtonsHandler targetDraw =  new TargetsTableButtonsHandler(targetName);
-//            for (Button currButton: targetDraw.getButtonsMap().values()) {
-//                currButton.addEventFilter(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
-//                    @Override
-//                    public void handle(MouseEvent event) {
-//                        //TargetDTO targetDTO = engine.getRunningTarget(targetDraw.getName());
-//                        String str = targetDTO.getRunningTargetStatus();
-//                        if(str.equals("")){
-//                            str = createRunResultString(targetDTO);
-//                        }
-//                        targetInfoConsole.setText(str);
-//                    }
-//                });
-//            }
-//            data.add(targetDraw);
-//        }
-//        targetsTable.setItems(data);
-
-        //----------------------------------------------------
-//        Thread statusChangeListener = new Thread(new Runnable() {
-//            @Override
-//            public void run() {
-//                while (progressBar.progressProperty().get() != 1){
-//                    for(TargetsTableButtonsHandler currTargetDraw: data) {
-//                        TargetDTO targetDTO = engine.getRunningTarget(currTargetDraw.getName());
-//                        if(targetDTO != null && targetDTO.getRunStatus()!= null){
-//                            currTargetDraw.setRunStatus(targetDTO.getRunStatus());
-//                            if(targetDTO.getRunStatus().equals(RunStatus.FINISHED)){
-//                                if(targetDTO.getRunResult() != null){
-//                                    currTargetDraw.setRunResults(targetDTO.getRunResult());
-//                                }
-//                            }
-//                        }
-//                    }
-//                }
-//            }
-//        });
-//
-//        statusChangeListener.setDaemon(false);
-
-
-
-
-
-
-////        double targetListSize = targetsList.size();
-//        Consumer<TargetDTO> consoleConsumer = targetDTO ->  {
-//            Platform.runLater(new Runnable() {
-//                @Override
-//                public void run() {
-//                    progressBar.progressProperty().set(progressBar.progressProperty().doubleValue() + (double) (1/targetListSize));
-//                    String currStr = createRunResultString(targetDTO);
-//                    taskRunConsole.setText(taskRunConsole.getText() + currStr);
-//
-//                }
-//            });
-//        };
-
-
-
-//        Consumer<PausableThreadPoolExecutor> threadPoolExecutorConsumer = pausableThreadPoolExecutor -> {
-//            numOfThreadsCB.valueProperty().addListener(new ChangeListener<Integer>() {
-//                @Override
-//                public void changed(ObservableValue<? extends Integer> observable, Integer oldValue, Integer newValue) {
-//                    pausableThreadPoolExecutor.setCorePoolSize(newValue);
-//                    pausableThreadPoolExecutor.setMaximumPoolSize(newValue);
-//                }
-//            });
-//            this.pauseToggle.selectedProperty().addListener(new ChangeListener<Boolean>() {
-//                @Override
-//                public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
-//                    if(newValue == true){
-//                        pausableThreadPoolExecutor.pause();
-//                        pauseToggle.setText("Resume");
-//                        numOfThreadsCB.setDisable(false);
-//                    }
-//                    else{
-//                        pausableThreadPoolExecutor.resume();
-//                        pauseToggle.setText("Pause");
-//                        numOfThreadsCB.setDisable(true);
-//
-//                    }
-//                }
-//            });
-//        };
-//        new Thread(new Runnable() {
-//            @Override
-//            public void run() {
-//                statusChangeListener.start();
-//                GraphDTO taskResult = engine.activateTask(consoleConsumer,threadPoolExecutorConsumer, taskParams,
-//                        taskType, runType.equals(RunType.INCREMENTAL), numOfThreads, targetsList);
-//                Platform.runLater(new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        progressBar.setProgress(1);
-//                        pauseToggle.setDisable(true);
-//                        runResultsPane.setVisible(true);
-//                        numFinishedSuccessLabel.setText(String.valueOf(taskResult.getNumOfTargetsRunResult(RunResults.SUCCESS)));
-//                        numFailureLabel.setText(String.valueOf(taskResult.getNumOfTargetsRunResult(RunResults.FAILURE)));
-//                        numSkippedLabel.setText(String.valueOf(taskResult.getNumOfTargetsRunResult(RunResults.SKIPPED)));
-//                        numFinishedWarningsLabel.setText(String.valueOf(taskResult.getNumOfTargetsRunResult(RunResults.WARNING)));
-//                    }
-//                });
-//            }
-//        }).start();
-    }
 
     private String createRunResultString(TargetDTO targetDTO){
         final String PRINT_LINE = "---------------------------------------------\n";
@@ -327,6 +194,29 @@ public class RunWindowController {
         Platform.runLater(()->{
             this.targetInfoConsole.setText(str);
         });
+    }
+
+
+    private void sendStatusToServer(TaskStatus status){
+        String finalUrl = Objects.requireNonNull(HttpUrl
+                        .parse(Constants.TASK_LIST)).newBuilder()
+                .addQueryParameter(Constants.TASK_STATUS, status.name())
+                .addQueryParameter(Constants.TASK_NAME, taskDTOProperty.get().getTaskName())
+                .build()
+                .toString();
+        Request  request= new Request.Builder().url(finalUrl).put(RequestBody.create(new byte[0])).build();
+
+        HttpUtils.runAsyncWithRequest(request, new Callback() {
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+            }
+
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                response.body().close();
+            }
+        });
+
     }
 
 

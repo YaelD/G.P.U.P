@@ -45,7 +45,7 @@
             <Font size="18.0" />
          </font>
       </Label>
-      <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Wellcome to GPUP Admin" textAlignment="JUSTIFY" GridPane.columnIndex="1" GridPane.columnSpan="5" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER">
+      <Label text="Wellcome to GPUP Admin" textAlignment="JUSTIFY" GridPane.columnIndex="1" GridPane.columnSpan="5" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER">
          <font>
             <Font name="System Bold" size="36.0" />
          </font>

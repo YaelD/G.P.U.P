@@ -9,6 +9,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import okhttp3.*;
@@ -51,8 +52,9 @@ public class LoadFileController {
 
     @FXML
     private void confirmFile(ActionEvent event) {
-        if(file_path_TextFiled.getText().isEmpty()){
-            warning_label.setDisable(false);
+        if(file_path_TextFiled.getText().isEmpty() || file == null){
+
+            warning_label.setVisible(false);
             warning_label.setText("Please enter a file");
             return;
         }
@@ -79,15 +81,24 @@ public class LoadFileController {
 
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                warning_label.setVisible(false);
+                System.out.println("IN LOAD FILE-->" + response.code());
                 if(response.code() != 200){
                     Platform.runLater(()->{
-                        warning_label.setText(response.message());
-                        warning_label.setVisible(true);
+                        try {
+                            warning_label.setText(response.body().string());
+                            warning_label.setTextFill(Color.RED);
+                            warning_label.setVisible(true);
+                            response.body().close();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
                     });
                 }
                 else{
                     Platform.runLater(()->{
                         warning_label.setText("File loaded successfully YAY!!!!!!!");
+                        warning_label.setTextFill(Color.GREEN);
                         warning_label.setVisible(true);
                     });
                 }

@@ -13,9 +13,7 @@ import javafx.scene.control.TableView;
 import javafx.util.Callback;
 import worker_engine.WorkerEngine;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Predicate;
 
 public class TasksInfoTableController {
@@ -103,16 +101,17 @@ public class TasksInfoTableController {
 
     private void updateTasksList(List<TaskDTO> tasks) {
         Platform.runLater(() -> {
-            tasks.stream().filter(new Predicate<TaskDTO>() {
+            List<TaskDTO> taskDTOS = new ArrayList<>(tasks);
+            taskDTOS.stream().filter(new Predicate<TaskDTO>() {
                 @Override
                 public boolean test(TaskDTO taskDTO) {
                     return WorkerEngine.getInstance().getRegisteredTasksParams().keySet().contains(taskDTO.getTaskName());
                 }
             });
-            ObservableList<TaskDTO> taskDTOS = taskInfoTable.getItems();
+            ObservableList<TaskDTO> taskDTOS1 = taskInfoTable.getItems();
 
-            taskDTOS.clear();
-            taskDTOS.addAll(tasks);
+            taskDTOS1.clear();
+            taskDTOS1.addAll(taskDTOS);
         });
     }
 }

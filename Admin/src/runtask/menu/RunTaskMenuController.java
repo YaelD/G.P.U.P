@@ -12,6 +12,7 @@ import javafx.beans.binding.Bindings;
 import javafx.beans.property.*;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -155,6 +156,8 @@ public class RunTaskMenuController {
     @FXML
     private void initialize(){
         TaskListRefresherTimer.getInstance().addConsumer(this::setCurrTasksInSystem);
+        continueButton.disableProperty().bind(Bindings.or(warningChosenTargetsLabel.visibleProperty(),Bindings.or(warningTaskNameLabel.visibleProperty(), warningRunTypeLabel.visibleProperty())));
+
         this.taskName.bind(this.taskNameTextField.textProperty());
         taskNameTextField.textProperty().addListener(new ChangeListener<String>() {
             @Override
@@ -181,17 +184,25 @@ public class RunTaskMenuController {
         selectedTargetsListView.itemsProperty().addListener(new ChangeListener<ObservableList<String>>() {
             @Override
             public void changed(ObservableValue<? extends ObservableList<String>> observable, ObservableList<String> oldValue, ObservableList<String> newValue) {
-                if(newValue.isEmpty()){
+
+            }
+        });
+        selectedTargetsListView.getItems().addListener(new ListChangeListener<String>() {
+            @Override
+            public void onChanged(Change<? extends String> c) {
+                ObservableList<String> items = selectedTargetsListView.getItems();
+                if(items.isEmpty()){
                     warningChosenTargetsLabel.setVisible(true);
                     return;
                 }
                 warningChosenTargetsLabel.setVisible(false);
                 if(taskType.getValue().equals(TaskType.SIMULATION_TASK)){
-                    taskPrice.set(newValue.size()*currGraph.getPriceOfSimulationTask());
+                    taskPrice.set(items.size()*currGraph.getPriceOfSimulationTask());
                 }
                 else{
-                    taskPrice.set(newValue.size()*currGraph.getPriceOfCompilationTask());
+                    taskPrice.set(items.size()*currGraph.getPriceOfCompilationTask());
                 }
+
             }
         });
         simulationTaskTogglesController.setTaskCallBack(new SimulationParamsCallBack() {
