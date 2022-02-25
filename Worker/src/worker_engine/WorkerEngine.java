@@ -1,21 +1,14 @@
 package worker_engine;
 
 import RefreshingItems.TaskListRefresherTimer;
-import constants.Constants;
-import dto.TargetDTO;
 import dto.TaskDTO;
 import dto.TaskParamsDTO;
 import javafx.application.Platform;
 import javafx.beans.property.*;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
-import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
-import javafx.collections.ObservableSet;
 
 import java.util.*;
-import java.util.concurrent.*;
 import java.util.function.Consumer;
 
 public class WorkerEngine {
@@ -71,7 +64,7 @@ public class WorkerEngine {
         });
     }
 
-    public void setSystemTasks(List<TaskDTO> systemTasks) {
+    public synchronized void setSystemTasks(List<TaskDTO> systemTasks) {
         ObservableList<TaskDTO> taskDTOS = FXCollections.observableArrayList(systemTasks);
         this.systemTasks.set(taskDTOS);
     }
@@ -84,15 +77,18 @@ public class WorkerEngine {
         return workerTargets;
     }
 
-    public void addConsumer(Consumer<List<ExecutionTarget>> dtoConsumer){
+    public synchronized void addConsumer(Consumer<List<ExecutionTarget>> dtoConsumer){
         this.targetsConsumer.add(dtoConsumer);
     }
 
-    public void addWorkerTarget(ExecutionTarget targetDTO){
-
+    public synchronized void addWorkerTarget(ExecutionTarget targetDTO){
         workerTargets.add(targetDTO);
+    }
+
+    public void updateCurrTargetsList(){
         List<ExecutionTarget> list = new ArrayList<>(workerTargets);
         targetsConsumer.forEach(listConsumer -> listConsumer.accept(list));
+
     }
 
     public void addTask(Runnable run){

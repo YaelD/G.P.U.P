@@ -9,6 +9,7 @@ import okhttp3.*;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
+import java.time.LocalTime;
 import java.util.*;
 
 public class SendExecutionTargetRefresherTimer extends Timer {
@@ -48,6 +49,7 @@ public class SendExecutionTargetRefresherTimer extends Timer {
 
             @Override
             public void run() {
+                WorkerEngine.getInstance().updateCurrTargetsList();
                 Set<ExecutionTarget> targetsToRemove = new HashSet<>();
                 for(ExecutionTarget target : this.targets){
                     ExecutionTargetDTO dto = target.makeDTO();
@@ -60,6 +62,7 @@ public class SendExecutionTargetRefresherTimer extends Timer {
                     if(dto.getRunStatus().equals(RunStatus.FINISHED)){
                         targetsToRemove.add(target);
                     }
+                    System.out.println(LocalTime.now() + "-in sending execution DTO, Sendning==>"  + targetJson);
                     Request request= new Request.Builder().url(finalUrl).post(RequestBody.create(targetJson.getBytes())).build();
                     HttpUtils.runAsyncWithRequest(request, new Callback() {
                         @Override
@@ -69,13 +72,16 @@ public class SendExecutionTargetRefresherTimer extends Timer {
 
                         @Override
                         public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                            System.out.println("");
                             if(response.code() == 200){
                                 String payment = response.body().string();
+                            System.out.println(LocalTime.now() +"-in sending execution DTO, Received payment==>" + payment);
                                 payment.replace("\"", "");
                                 if(!payment.isEmpty()){
                                     WorkerEngine.getInstance().addCredits(Integer.valueOf(payment));
                                 }
                             }
+
                             response.body().close();
                         }
                     });
