@@ -8,6 +8,7 @@ public class TaskExecution {
 
     public TaskExecution(TargetDTO targetDTO) {
         executionTarget = new ExecutionTarget(targetDTO);
+        WorkerEngine.getInstance().addWorkerTarget(executionTarget);
         SendExecutionTargetRefresherTimer.getInstance().addTarget(executionTarget);
     }
 }

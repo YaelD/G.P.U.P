@@ -332,6 +332,9 @@ public class RunTaskMenuController {
     }
 
     private boolean checkIfNameIsOk() {
+        if(currTasksInSystem == null){
+            return false;
+        }
         for(TaskDTO taskDTO: this.currTasksInSystem){
             if(taskDTO.getTaskName().equals(this.taskName.getValue())){
                 return false;

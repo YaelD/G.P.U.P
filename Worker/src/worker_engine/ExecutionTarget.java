@@ -48,6 +48,29 @@ public class ExecutionTarget {
         this.startProcessTime = startProcessTime;
     }
 
+    public String getTaskName() {
+        return taskName;
+    }
+
+    public RunResults getRunResult() {
+        return runResult;
+    }
+
+    public RunStatus getRunStatus() {
+        return runStatus;
+    }
+
+    public String getTaskLog() {
+        return taskLog;
+    }
+
+    public String getTargetName() {
+        return targetName;
+    }
+
+    public LocalTime getStartProcessTime() {
+        return startProcessTime;
+    }
 
     public String getInfo() {
         return info;

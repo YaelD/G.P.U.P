@@ -11,6 +11,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.util.Callback;
+import worker_engine.ExecutionTarget;
 import worker_engine.WorkerEngine;
 
 import java.util.*;
@@ -49,7 +50,7 @@ public class TasksInfoTableController {
         numOfWorkers_column.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<TaskDTO, String>, ObservableValue<String>>() {
             @Override
             public ObservableValue<String> call(TableColumn.CellDataFeatures<TaskDTO, String> param) {
-                return new SimpleStringProperty(param.getValue().getTaskName());
+                return new SimpleStringProperty(String.valueOf(param.getValue().getNumOfRegisteredWorkers()) );
             }
         });
         taskProgressColumn.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<TaskDTO, String>, ObservableValue<String>>() {
@@ -64,10 +65,10 @@ public class TasksInfoTableController {
         myNumberOfTargets_column.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<TaskDTO, String>, ObservableValue<String>>() {
             @Override
             public ObservableValue<String> call(TableColumn.CellDataFeatures<TaskDTO, String> param) {
-                Set<TargetDTO> tempSet = new HashSet<>(WorkerEngine.getInstance().getWorkerTargets());
-                tempSet.stream().filter(new Predicate<TargetDTO>() {
+                Set<ExecutionTarget> tempSet = new HashSet<>(WorkerEngine.getInstance().getWorkerTargets());
+                tempSet.stream().filter(new Predicate<ExecutionTarget>() {
                     @Override
-                    public boolean test(TargetDTO targetDTO) {
+                    public boolean test(ExecutionTarget targetDTO) {
                         return param.getValue().getTaskName().equals(targetDTO.getTaskName());
                     }
                 });
@@ -78,10 +79,10 @@ public class TasksInfoTableController {
         totalTaskCredits_column.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<TaskDTO, String>, ObservableValue<String>>() {
             @Override
             public ObservableValue<String> call(TableColumn.CellDataFeatures<TaskDTO, String> param) {
-                Set<TargetDTO> tempSet = new HashSet<>(WorkerEngine.getInstance().getWorkerTargets());
-                tempSet.stream().filter(new Predicate<TargetDTO>() {
+                Set<ExecutionTarget> tempSet = new HashSet<>(WorkerEngine.getInstance().getWorkerTargets());
+                tempSet.stream().filter(new Predicate<ExecutionTarget>() {
                     @Override
-                    public boolean test(TargetDTO targetDTO) {
+                    public boolean test(ExecutionTarget targetDTO) {
                         return param.getValue().getTaskName().equals(targetDTO.getTaskName());
                     }
                 });
@@ -101,17 +102,15 @@ public class TasksInfoTableController {
 
     private void updateTasksList(List<TaskDTO> tasks) {
         Platform.runLater(() -> {
-            List<TaskDTO> taskDTOS = new ArrayList<>(tasks);
-            taskDTOS.stream().filter(new Predicate<TaskDTO>() {
-                @Override
-                public boolean test(TaskDTO taskDTO) {
-                    return WorkerEngine.getInstance().getRegisteredTasksParams().keySet().contains(taskDTO.getTaskName());
+            List<TaskDTO> taskList = new ArrayList<>();
+            for(TaskDTO taskDTO : tasks){
+                if(WorkerEngine.getInstance().getRegisteredTasksParams().containsKey(taskDTO.getTaskName())){
+                    taskList.add(taskDTO);
                 }
-            });
-            ObservableList<TaskDTO> taskDTOS1 = taskInfoTable.getItems();
-
-            taskDTOS1.clear();
-            taskDTOS1.addAll(taskDTOS);
+            }
+            ObservableList<TaskDTO> taskDTOObservableList = taskInfoTable.getItems();
+            taskDTOObservableList.clear();
+            taskDTOObservableList.addAll(taskList);
         });
     }
 }

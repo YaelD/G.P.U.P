@@ -68,7 +68,7 @@
                   </Label>
                   <ScrollPane fitToHeight="true" VBox.vgrow="ALWAYS">
                      <content>
-                        <fx:include fx:id="targetInfoTable" source="tasks_info_table.fxml" />
+                        <fx:include fx:id="taskInfoTable" source="tasks_info_table.fxml" />
                      </content>
                   </ScrollPane>
                </children>
@@ -82,7 +82,7 @@
                   </Label>
                   <ScrollPane fitToHeight="true" fitToWidth="true" VBox.vgrow="ALWAYS">
                      <content>
-                        <fx:include fx:id="taskInfoTable" source="target_info_table.fxml" VBox.vgrow="ALWAYS" />
+                        <fx:include fx:id="targetInfoTable" source="target_info_table.fxml" VBox.vgrow="ALWAYS" />
                      </content>
                   </ScrollPane>
                </children>
@@ -94,7 +94,7 @@
                         <Font size="20.0" />
                      </font>
                   </Label>
-                  <TextArea prefHeight="284.0" prefWidth="478.0" />
+                  <TextArea fx:id="targetLogConsole" prefHeight="284.0" prefWidth="478.0" />
                </children>
             </VBox>
          </children>

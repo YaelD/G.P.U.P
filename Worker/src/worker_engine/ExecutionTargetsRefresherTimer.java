@@ -74,7 +74,6 @@ public class ExecutionTargetsRefresherTimer extends Timer {
                         if(!jsonArr.isEmpty()){
                             TargetDTO[] targetDTOS = new Gson().fromJson(jsonArr, TargetDTO[].class);
                             for(TargetDTO targetDTO: targetDTOS){
-                                WorkerEngine.getInstance().addWorkerTarget(targetDTO);
                                 String taskName = targetDTO.getTaskName();
                                 TaskParamsDTO taskParamsDTO = WorkerEngine.getInstance().getRegisteredTasksParams().get(taskName);
                                 if(taskParamsDTO instanceof SimulationTaskParamsDTO){

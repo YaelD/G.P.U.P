@@ -23,20 +23,28 @@ public class WorkerEngine {
     private PausableThreadPoolExecutor pausableThreadPoolExecutor;
     private static WorkerEngine instance;
 
+
+
     private SimpleIntegerProperty totalCredits;
+    private SimpleIntegerProperty numOfFreeThreads;
 
     private SimpleListProperty<TaskDTO> systemTasks;
-    private List<Consumer< List<TargetDTO>>> targetsConsumer;
+    private List<Consumer< List<ExecutionTarget>>> targetsConsumer;
     private Map<String, TaskParamsDTO> registeredTasksParams;
-    private Set<TargetDTO> workerTargets;
+    private Set<ExecutionTarget> workerTargets;
 
     private WorkerEngine(){
         totalCredits = new SimpleIntegerProperty();
+        numOfFreeThreads = new SimpleIntegerProperty();
         this.registeredTasksParams = new HashMap<>();
         workerTargets = new HashSet<>();
         systemTasks = new SimpleListProperty<>();
         targetsConsumer = new ArrayList<>();
         TaskListRefresherTimer.getInstance().addConsumer(this::setSystemTasks);
+    }
+
+    public SimpleIntegerProperty numOfFreeThreadsProperty() {
+        return numOfFreeThreads;
     }
 
     public void setPausableThreadPoolExecutor(PausableThreadPoolExecutor pausableThreadPoolExecutor) {
@@ -72,18 +80,18 @@ public class WorkerEngine {
         return registeredTasksParams;
     }
 
-    public Set<TargetDTO> getWorkerTargets() {
+    public Set<ExecutionTarget> getWorkerTargets() {
         return workerTargets;
     }
 
-    public void addConsumer(Consumer<List<TargetDTO>> dtoConsumer){
+    public void addConsumer(Consumer<List<ExecutionTarget>> dtoConsumer){
         this.targetsConsumer.add(dtoConsumer);
     }
 
-    public void addWorkerTarget(TargetDTO targetDTO){
+    public void addWorkerTarget(ExecutionTarget targetDTO){
 
         workerTargets.add(targetDTO);
-        List<TargetDTO> list = new ArrayList<>(workerTargets);
+        List<ExecutionTarget> list = new ArrayList<>(workerTargets);
         targetsConsumer.forEach(listConsumer -> listConsumer.accept(list));
     }
 
@@ -91,14 +99,21 @@ public class WorkerEngine {
         if(pausableThreadPoolExecutor == null){
             return;
         }
+        Platform.runLater(()->{
+            numOfFreeThreads.set(pausableThreadPoolExecutor.getMaximumPoolSize() - pausableThreadPoolExecutor.getActiveCount());
+        });
         pausableThreadPoolExecutor.execute(run);
+
     }
 
     public int getNumOfFreeThreads(){
         if(pausableThreadPoolExecutor == null){
             return 0;
         }
-        return pausableThreadPoolExecutor.getMaximumPoolSize() - pausableThreadPoolExecutor.getActiveCount();
+        Platform.runLater(()->{
+            numOfFreeThreads.set(pausableThreadPoolExecutor.getMaximumPoolSize() - pausableThreadPoolExecutor.getActiveCount());
+        });
+        return numOfFreeThreads.getValue();
     }
 
     public void closeThreadPool(){
