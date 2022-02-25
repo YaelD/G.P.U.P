@@ -21,21 +21,21 @@ import java.util.*;
 
 public class SystemEngine {
 
-    private final String workingDirectory = "c:\\gpup-working-dir";
-    //private static SystemEngine systemEngine = null;
-
-    //members
-    private Map<String, Task> tasksInSystem = new HashMap<>();
-    private Map<String, Graph> graphsInSystem = new HashMap<>();
-
-
-    //C'tor + creating working dir
-    public SystemEngine() {
-        File directory = new File(this.workingDirectory);
-        if(!directory.exists()){
-            directory.mkdir();
-        }
-    }
+//    private final String workingDirectory = "c:\\gpup-working-dir";
+//    //private static SystemEngine systemEngine = null;
+//
+//    //members
+//    private Map<String, Task> tasksInSystem = new HashMap<>();
+//    private Map<String, Graph> graphsInSystem = new HashMap<>();
+//
+//
+//    //C'tor + creating working dir
+//    public SystemEngine() {
+//        File directory = new File(this.workingDirectory);
+//        if(!directory.exists()){
+//            directory.mkdir();
+//        }
+//    }
 
 
 //    public Map<String, Task> getTasksInSystem() {
@@ -367,21 +367,10 @@ public class SystemEngine {
 
      */
 
-    private String openDirectoryAndFiles(TaskType taskType) {
-        StringBuffer stringBuffer = new StringBuffer();
-        Date now = new Date();
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MM-yyyy HH-mm-ss");
-        simpleDateFormat.format(now, stringBuffer, new FieldPosition(0));
-        String path = this.workingDirectory+ "\\" + taskType.getTaskType() + "-" +
-                simpleDateFormat.format(now);
-        File directory = new File(path);
-        if(!directory.exists()){
-            directory.mkdirs();
-        }
-        return path;
-    }
+
 
 /*
+
     private void writeToFile(TargetDTO targetDTO, String path) {
         Writer out = null;
         try {

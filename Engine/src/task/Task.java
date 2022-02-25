@@ -5,10 +5,7 @@ import dto.TaskDTO;
 import dto.TaskParamsDTO;
 import engine.ExceptionMessages;
 import exceptions.CycleException;
-import general_enums.RunResults;
-import general_enums.RunStatus;
-import general_enums.RunType;
-import general_enums.TaskStatus;
+import general_enums.*;
 import graph.Graph;
 import target.Target;
 

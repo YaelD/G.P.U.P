@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 public class ServletUtils {
 
     private static final String USER_MANAGER_ATTRIBUTE = "userManager";
-    private static final String ENGINE_ATTRIBUTE = "engine";
+    private static final String SYSTEM_ENGINE_ATTRIBUTE = "systemEngine";
     private static final String TASKS_MANAGER_ATTRIBUTE = "taskManager";
     private static final String GRAPHS_MANAGER_ATTRIBUTE = "graphsManager";
 
@@ -40,13 +40,13 @@ public class ServletUtils {
         return (UserManager) servletContext.getAttribute(USER_MANAGER_ATTRIBUTE);
     }
 
-    public static Engine getEngine(ServletContext servletContext) {
+    public static SystemEngine getSystemEngine(ServletContext servletContext) {
         synchronized (engineManagerLock) {
-            if (servletContext.getAttribute(ENGINE_ATTRIBUTE) == null) {
-                servletContext.setAttribute(ENGINE_ATTRIBUTE, new SystemEngine());
+            if (servletContext.getAttribute(SYSTEM_ENGINE_ATTRIBUTE) == null) {
+                servletContext.setAttribute(SYSTEM_ENGINE_ATTRIBUTE, new SystemEngine());
             }
         }
-        return (Engine) servletContext.getAttribute(ENGINE_ATTRIBUTE);
+        return (SystemEngine) servletContext.getAttribute(SYSTEM_ENGINE_ATTRIBUTE);
     }
 
     public static GraphsManager getGraphsManager(ServletContext servletContext) {

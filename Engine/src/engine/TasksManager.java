@@ -1,6 +1,7 @@
 package engine;
 
 import dto.*;
+import general_enums.RunStatus;
 import general_enums.TaskStatus;
 import general_enums.TaskType;
 import graph.Graph;
@@ -9,11 +10,23 @@ import task.CompilationTask;
 import task.SimulationTask;
 import task.Task;
 
+import java.io.*;
+import java.text.FieldPosition;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class TasksManager {
 
+    private final String workingDirectory = "c:\\gpup-working-dir";
+
     private Map<String, Task> tasksInSystem = new HashMap<>();
+
+    public TasksManager() {
+        File directory = new File(this.workingDirectory);
+        if(!directory.exists()){
+            directory.mkdir();
+        }
+    }
 
     public Map<String, Task> getTasksInSystem() {
         return tasksInSystem;
@@ -26,6 +39,15 @@ public class TasksManager {
         tasksInSystem.put(task.getTaskName(), task);
     }
 
+    public TaskType getTaskTypeByName(String taskName){
+        Task task = this.tasksInSystem.get(taskName);
+        if(task instanceof SimulationTask){
+            return TaskType.SIMULATION_TASK;
+        }
+        else{
+            return TaskType.COMPILATION_TASK;
+        }
+    }
 
     public boolean isTaskExistInSystem(String taskName) {
         return this.tasksInSystem.containsKey(taskName);
@@ -66,7 +88,7 @@ public class TasksManager {
         return this.tasksInSystem.get(taskName);
     }
 
-    public Set<TargetDTO> getTaskTargetForExecution(Collection<Task> workerTasks, int requiredNumOfTargets) throws Exception {
+    public synchronized Set<TargetDTO> getTaskTargetForExecution(Collection<Task> workerTasks, int requiredNumOfTargets) throws Exception {
         //TODO: check if all the targets in the collection are exist in the system
 
         Set<TargetDTO> targetsForWorker = new HashSet<>();
@@ -106,19 +128,64 @@ public class TasksManager {
         return taskParamsDTO;
     }
 
+    //TODO: check if target is finished- if so, write the results to a file
     public int updateTargetRunResult(ExecutionTargetDTO executionTargetDTO) throws Exception {
         int priceForTarget = 0;
         if(this.tasksInSystem.containsKey(executionTargetDTO.getTaskName())){
             Task task = this.tasksInSystem.get(executionTargetDTO.getTaskName());
             Graph taskGraph = task.getGraph();
             Target taskTarget = taskGraph.getTarget(executionTargetDTO.getTargetName());
-            taskTarget.updateTarget(executionTargetDTO);
             priceForTarget = task.updateTargetsRunResult(taskTarget);
+            if(taskTarget.getRunStatus().equals(RunStatus.FINISHED)){
+                openDirectoryAndFiles(getTaskTypeByName(task.getTaskName()), taskTarget);
+            }
         }
         else{
             throw new Exception(ExceptionMessages.TASK + executionTargetDTO.getTaskName() +
                     ExceptionMessages.NOT_EXIST);
         }
         return priceForTarget;
+    }
+
+    private Target getTargetFromExecutionTargetDTO(ExecutionTargetDTO executionTargetDTO){
+        Task task = this.tasksInSystem.get(executionTargetDTO.getTaskName());
+        Graph taskGraph = task.getGraph();
+        Target taskTarget = taskGraph.getTarget(executionTargetDTO.getTargetName());
+        return taskTarget;
+    }
+
+    public void openDirectoryAndFiles(TaskType taskType, Target target) {
+        StringBuffer stringBuffer = new StringBuffer();
+        Date now = new Date();
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MM-yyyy HH-mm-ss");
+        simpleDateFormat.format(now, stringBuffer, new FieldPosition(0));
+        String path = this.workingDirectory+ "\\" + taskType.getTaskType() + "-" +
+                simpleDateFormat.format(now);
+        File directory = new File(path);
+        if(!directory.exists()){
+            directory.mkdirs();
+        }
+        writeToFile(path, target);
+    }
+
+
+    private void writeToFile(String path, Target target) {
+        Writer out = null;
+        try {
+            out = new BufferedWriter(
+                    new OutputStreamWriter(
+                            new FileOutputStream(path + "\\" + target.getName() + ".log")));
+            out.write(target.getRunTaskLog());
+        }
+        catch (IOException e) {
+        e.printStackTrace();
+        } finally {
+            if (out != null) {
+                try {
+                    out.close();
+                } catch (IOException ignored) {
+                }
+            }
+        }
     }
 }
