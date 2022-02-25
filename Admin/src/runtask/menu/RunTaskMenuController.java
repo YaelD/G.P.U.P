@@ -205,6 +205,19 @@ public class RunTaskMenuController {
 
             }
         });
+//        simulationTaskTogglesController.setTaskCallBack(new SimulationParamsCallBack() {
+//            @Override
+//            public void sendSimulationTaskParams(int processTime, boolean isRandom, double successRate, double successRateWithWarnings, Label taskCreateLabel) {
+//                RunType currRunType = runType.get();
+//                List<String> currTargetList = targetsList.get();
+//                String creatorName = userName;
+//                String graphName = currGraph.getName();
+//                String currTaskName = taskName.get();
+//                int totalTaskPrice = currGraph.getPriceOfSimulationTask()*currTargetList.size();
+//                sendTaskToServer(new SimulationTaskParamsDTO(currRunType, currTargetList, creatorName, graphName,
+//                        currTaskName, totalTaskPrice, processTime, isRandom, successRate, successRateWithWarnings));
+//            }
+//        });
         simulationTaskTogglesController.setTaskCallBack(new SimulationParamsCallBack() {
             @Override
             public void sendSimulationTaskParams(int processTime, boolean isRandom, double successRate, double successRateWithWarnings) {
@@ -216,8 +229,10 @@ public class RunTaskMenuController {
                 int totalTaskPrice = currGraph.getPriceOfSimulationTask()*currTargetList.size();
                 sendTaskToServer(new SimulationTaskParamsDTO(currRunType, currTargetList, creatorName, graphName,
                         currTaskName, totalTaskPrice, processTime, isRandom, successRate, successRateWithWarnings));
+
             }
         });
+
         simulationTaskTogglesController.setReturnCallBack(new ReturnCallback() {
             @Override
             public void returnToPrev() {
@@ -279,7 +294,7 @@ public class RunTaskMenuController {
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                 Platform.runLater(()->{
                     if(response.code() == 200) {
-                        //TODO: response as needed
+
 
                     }
                 });

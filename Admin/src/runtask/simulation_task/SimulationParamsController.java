@@ -33,6 +33,7 @@ public class SimulationParamsController {
     @FXML private Slider successWithWarningSlider;
     @FXML private Label successWithWarningsLabel;
     @FXML private Button confirmButton;
+    @FXML private Label successLabel;
 
     @FXML
     void returnToPrevWindow(ActionEvent event) {

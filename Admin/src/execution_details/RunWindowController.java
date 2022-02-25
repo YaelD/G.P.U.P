@@ -77,6 +77,9 @@ public class RunWindowController {
     private ProgressBar progressBar;
 
 
+    @FXML
+    private Button runAgainBtn;
+
 
     @FXML
     private Button playButton;
@@ -85,6 +88,10 @@ public class RunWindowController {
     private Button stopButton;
 
 
+    @FXML
+    void onRunAgain(ActionEvent event) {
+
+    }
 
 
     @FXML
@@ -105,6 +112,9 @@ public class RunWindowController {
             System.out.println("IN admin getTask===>" + taskDTO.getTaskName());
             if(taskDTO.getTaskName().equals(taskDTOProperty.get().getTaskName())){
                 taskDTOProperty.set(taskDTO);
+                if(taskDTO.getTaskStatus().equals(TaskStatus.FINISHED) || taskDTO.getTaskStatus().equals(TaskStatus.STOPPED)){
+                    runAgainBtn.setDisable(false);
+                }
                 finishedTargetsProgress.set(0);
                 for(TargetDTO targetDTO : taskDTO.getGraphDTO().getTargets().values()){
                     if(!targetDTO.getRunStatus().equals(RunStatus.WAITING) && !targetDTO.getRunStatus().equals(RunStatus.FROZEN)){
@@ -128,9 +138,11 @@ public class RunWindowController {
             public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
                 if(newValue == true){
                     sendStatusToServer(TaskStatus.SUSPENDED);
+                    pauseToggle.setText("Resume");
                 }
                 else{
                     sendStatusToServer(TaskStatus.ACTIVE);
+                    pauseToggle.setText("Pause");
                 }
             }
         });
