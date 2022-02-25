@@ -48,6 +48,7 @@ public class RunTaskMenuController {
     @FXML private GridPane compilationTaskToggles;
     @FXML private CompilationParamsController compilationTaskTogglesController;
 
+
     private SimpleListProperty<String> targetsList;
     private SimpleObjectProperty<TaskType> taskType;
     private SimpleObjectProperty<RunType> runType;
@@ -57,6 +58,10 @@ public class RunTaskMenuController {
     private SimpleStringProperty creatorName;
 
 
+
+    @FXML private Label warningTaskNameLabel;
+    @FXML private Label warningRunTypeLabel;
+    @FXML private Label warningChosenTargetsLabel;
 
 
     @FXML private TextField taskNameTextField;
@@ -80,7 +85,6 @@ public class RunTaskMenuController {
     @FXML private RadioButton fromScratchRadioButton;
     @FXML private ToggleGroup runTypeToggle;
     @FXML private RadioButton incrementalRadioButton;
-    @FXML private Label warningLabel;
 
 
 
@@ -120,10 +124,7 @@ public class RunTaskMenuController {
 
     @FXML
     void enableNextPanel(ActionEvent event) {
-        warningLabel.setVisible(false);
-        if(!validation()){
-        }
-        else if(simulationRadioButton.isSelected()){
+        if(simulationRadioButton.isSelected()){
             baseHBox.getChildren().remove(compilationTaskToggles);
             try{
                 baseHBox.getChildren().add(simulationTaskToggles);
@@ -155,12 +156,36 @@ public class RunTaskMenuController {
     private void initialize(){
         TaskListRefresherTimer.getInstance().addConsumer(this::setCurrTasksInSystem);
         this.taskName.bind(this.taskNameTextField.textProperty());
+        taskNameTextField.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                if(newValue.isEmpty()){
+                    warningTaskNameLabel.setVisible(true);
+                    warningTaskNameLabel.setText("Please enter task name");
+                    return;
+                }
+                else{
+                    if(!checkIfNameIsOk()){
+                        warningTaskNameLabel.setVisible(true);
+                        warningTaskNameLabel.setText("Name already in use");
+                        return;
+                    }
+                }
+                warningTaskNameLabel.setVisible(false);
+            }
+        });
+
         baseHBox.getChildren().remove(simulationTaskToggles);
         baseHBox.getChildren().remove(compilationTaskToggles);
         targetsList.bind(selectedTargetsListView.itemsProperty());
         selectedTargetsListView.itemsProperty().addListener(new ChangeListener<ObservableList<String>>() {
             @Override
             public void changed(ObservableValue<? extends ObservableList<String>> observable, ObservableList<String> oldValue, ObservableList<String> newValue) {
+                if(newValue.isEmpty()){
+                    warningChosenTargetsLabel.setVisible(true);
+                    return;
+                }
+                warningChosenTargetsLabel.setVisible(false);
                 if(taskType.getValue().equals(TaskType.SIMULATION_TASK)){
                     taskPrice.set(newValue.size()*currGraph.getPriceOfSimulationTask());
                 }
@@ -242,17 +267,8 @@ public class RunTaskMenuController {
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                 Platform.runLater(()->{
-                    if(response.code() == 200){
-                        warningLabel.setVisible(true);
-                        warningLabel.setText("Yayyyyyyyyyyyy");
-                    }
-                    else{
-                        warningLabel.setVisible(true);
-                        try {
-                            warningLabel.setText(response.body().string());
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
+                    if(response.code() == 200) {
+                        //TODO: response as needed
 
                     }
                 });
@@ -264,26 +280,26 @@ public class RunTaskMenuController {
         Set<String> targetSet = new HashSet<>();
         targetSet.addAll(this.targetsList);
         if(taskName.getValue().isEmpty()){
-            warningLabel.setVisible(true);
-            warningLabel.setText("Please enter task name");
+//            warningLabel.setVisible(true);
+//            warningLabel.setText("Please enter task name");
             return false;
         }
         if(!this.checkIfNameIsOk()){
-            warningLabel.setVisible(true);
-            warningLabel.setText("Task name already in use");
+//            warningLabel.setVisible(true);
+//            warningLabel.setText("Task name already in use");
             return false;
         }
         if(!this.incrementalRadioButton.isDisabled()){
-            warningLabel.setVisible(true);
-            warningLabel.setText("The " + taskType.getValue().getTaskType() + " task cannot run incrementally" +
-                    "\nSetting run From Scratch by default");
+//            warningLabel.setVisible(true);
+//            warningLabel.setText("The " + taskType.getValue().getTaskType() + " task cannot run incrementally" +
+//                    "\nSetting run From Scratch by default");
             this.runType.setValue(RunType.FROM_SCRATCH);
             this.runTypeToggle.selectToggle(fromScratchRadioButton);
             return false;
         }
         if(targetSet.isEmpty()){
-            warningLabel.setVisible(true);
-            warningLabel.setText("Please choose targets");
+//            warningLabel.setVisible(true);
+//            warningLabel.setText("Please choose targets");
             return false;
         }
         return true;
@@ -291,7 +307,7 @@ public class RunTaskMenuController {
 
     private boolean checkIfNameIsOk() {
         for(TaskDTO taskDTO: this.currTasksInSystem){
-            if(taskDTO.getTaskName().equals(this.taskName)){
+            if(taskDTO.getTaskName().equals(this.taskName.getValue())){
                 return false;
             }
         }
@@ -340,14 +356,11 @@ public class RunTaskMenuController {
             @Override
             public void changed(ObservableValue<? extends Toggle> observable, Toggle oldValue, Toggle newValue) {
                 if(newValue == simulationRadioButton){
-//                    taskType.set(TaskType.SIMULATION_TASK);
                     baseHBox.getChildren().remove(compilationTaskToggles);
                 }
                 else if(newValue == compilationRadioButton){
-//                    taskType.set(TaskType.COMPILATION_TASK);
                     baseHBox.getChildren().remove(simulationTaskToggles);
                 }
-                warningLabel.setVisible(false);
 
             }
         });
@@ -411,6 +424,7 @@ public class RunTaskMenuController {
 
 
     public void setCurrTasksInSystem(List<TaskDTO> currTasksInSystem) {
+
         this.currTasksInSystem = currTasksInSystem;
     }
 }

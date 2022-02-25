@@ -10,6 +10,7 @@ import constants.Constants;
 import dto.TargetDTO;
 import dto.TaskDTO;
 import general_enums.RunResults;
+import general_enums.RunStatus;
 import general_enums.TaskStatus;
 import http_utils.HttpUtils;
 import javafx.application.Platform;
@@ -84,6 +85,8 @@ public class RunWindowController {
     private Button stopButton;
 
 
+
+
     @FXML
     void onPlay(ActionEvent event) {
         String finalUrl = Objects.requireNonNull(HttpUrl
@@ -97,12 +100,10 @@ public class RunWindowController {
         HttpUtils.runAsyncWithRequest(request, new Callback() {
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                System.out.println(":((((((((((((((((((((((((((");
             }
 
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                System.out.println(":]]]]]]]]]]]]]]]]]]]]]]]]]");
                 response.body().close();
             }
         });
@@ -115,9 +116,15 @@ public class RunWindowController {
 
     private void getTask(List<TaskDTO> taskDTOS){
         for(TaskDTO taskDTO: taskDTOS){
+            System.out.println("IN admin getTask===>" + taskDTO.getTaskName());
             if(taskDTO.getTaskName().equals(taskDTOProperty.get().getTaskName())){
                 taskDTOProperty.set(taskDTO);
-                finishedTargetsProgress.set(1-(Double.valueOf(taskDTO.getNumOfTargetsInQueue()) /Double.valueOf(taskDTO.getGraphDTO().getTotalNumOfTargets())));
+                finishedTargetsProgress.set(0);
+                for(TargetDTO targetDTO : taskDTO.getGraphDTO().getTargets().values()){
+                    if(!targetDTO.getRunStatus().equals(RunStatus.WAITING) && !targetDTO.getRunStatus().equals(RunStatus.FROZEN)){
+                        finishedTargetsProgress.set(finishedTargetsProgress.doubleValue() + (double) (1 / taskDTO.getGraphDTO().getTotalNumOfTargets()));
+                    }
+                }
                 return;
             }
         }
@@ -125,6 +132,7 @@ public class RunWindowController {
 
     public RunWindowController() {
         this.taskDTOProperty = new SimpleObjectProperty<>();
+        this.finishedTargetsProgress = new SimpleDoubleProperty();
     }
 
     @FXML
@@ -133,12 +141,15 @@ public class RunWindowController {
         taskTableController.setRunWindowController(this);
         taskTableController.setTaskDTO(taskDTOProperty);
         TaskListRefresherTimer.getInstance().addConsumer(this::getTask);
+        finishedTargetsProgress.set(0);
 
-        progressBar.setProgress(0);
         progressBar.progressProperty().addListener(new ChangeListener<Number>() {
             @Override
             public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-                percentLabel.setText(String.valueOf(Integer.valueOf((int)(newValue.doubleValue()*100))  + "%"));
+                Platform.runLater(()->{
+                    percentLabel.setText(String.valueOf(Integer.valueOf((int)(newValue.doubleValue()*100))  + "%"));
+
+                });
             }
         });
 
@@ -307,9 +318,6 @@ public class RunWindowController {
                 }
             }
         }
-//        if(targetDTO.getTaskRunResult() != null && !(targetDTO.getTaskRunResult().isEmpty())){
-//            currStr +=("Run result:\n" + targetDTO.getTaskRunResult());
-//        }
 
         currStr +=(PRINT_LINE);
         return currStr;
@@ -320,6 +328,8 @@ public class RunWindowController {
             this.targetInfoConsole.setText(str);
         });
     }
+
+
 
 
 }

@@ -37,6 +37,7 @@ public class Target implements Cloneable {
         this.name = target.getName();
         this.info = target.getGPUPUserData();
         this.taskSpecificLogs = "";
+        this.runStatus = RunStatus.FROZEN;
     }
 
     public String getName() {

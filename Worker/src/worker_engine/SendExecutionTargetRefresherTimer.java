@@ -70,16 +70,12 @@ public class SendExecutionTargetRefresherTimer extends Timer {
                         @Override
                         public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                             if(response.code() == 200){
-                                System.out.println("Got a good response!!==" + response.body().string());
-                            }
-                            else{
-                                System.out.println("Got a Bad response!!==code" + response.code() + "Body: " + response.body().string());
+                                System.out.println("THE The payment==>" + response.body().toString());
+                                //TODO: UPDATE TOTAL INCOME
                             }
                             response.body().close();
-
                         }
                     });
-
                 }
 
                 for(ExecutionTarget target: targetsToRemove){
