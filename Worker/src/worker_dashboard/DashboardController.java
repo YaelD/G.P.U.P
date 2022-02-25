@@ -3,6 +3,7 @@ package worker_dashboard;
 
 import dto.TaskDTO;
 import javafx.application.Platform;
+import javafx.beans.binding.Bindings;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
@@ -10,6 +11,7 @@ import javafx.scene.control.TabPane;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.GridPane;
+import worker_engine.WorkerEngine;
 
 
 public class DashboardController {
@@ -44,6 +46,7 @@ public class DashboardController {
     private void initialize(){
         registerToTaskPaneController.taskNameProperty().bind(taskInfoTableController.selectedTaskNameProperty());
         taskInfoTableController.setDashboardController(this);
+        totalIncomeLabel.textProperty().bind(Bindings.convert(WorkerEngine.getInstance().totalCreditsProperty()));
 
     }
 

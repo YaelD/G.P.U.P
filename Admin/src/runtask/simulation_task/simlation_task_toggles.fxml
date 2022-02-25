@@ -84,7 +84,7 @@
       <Label fx:id="successRateLabel" text="0%" GridPane.columnIndex="3" GridPane.rowIndex="8" />
       <Label fx:id="successWithWarningsLabel" text="0%" GridPane.columnIndex="3" GridPane.rowIndex="11" />
       <Slider fx:id="successWithWarningSlider" majorTickUnit="5.0" minorTickCount="5" showTickLabels="true" GridPane.columnIndex="2" GridPane.rowIndex="11" />
-      <Label fx:id="successLabel" alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Task created successfully" textFill="#03b500" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="15">
+      <Label fx:id="successLabel" alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Task created successfully" textFill="#03b500" visible="false" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="15">
          <font>
             <Font size="16.0" />
          </font>

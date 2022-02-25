@@ -5,9 +5,8 @@ import constants.Constants;
 import dto.TargetDTO;
 import dto.TaskDTO;
 import dto.TaskParamsDTO;
-import javafx.beans.property.SimpleListProperty;
-import javafx.beans.property.SimpleMapProperty;
-import javafx.beans.property.SimpleSetProperty;
+import javafx.application.Platform;
+import javafx.beans.property.*;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -24,12 +23,15 @@ public class WorkerEngine {
     private PausableThreadPoolExecutor pausableThreadPoolExecutor;
     private static WorkerEngine instance;
 
+    private SimpleIntegerProperty totalCredits;
+
     private SimpleListProperty<TaskDTO> systemTasks;
     private List<Consumer< List<TargetDTO>>> targetsConsumer;
     private Map<String, TaskParamsDTO> registeredTasksParams;
     private Set<TargetDTO> workerTargets;
 
     private WorkerEngine(){
+        totalCredits = new SimpleIntegerProperty();
         this.registeredTasksParams = new HashMap<>();
         workerTargets = new HashSet<>();
         systemTasks = new SimpleListProperty<>();
@@ -50,7 +52,16 @@ public class WorkerEngine {
         return instance;
     }
 
+    public SimpleIntegerProperty totalCreditsProperty() {
+        return totalCredits;
+    }
 
+
+    public void addCredits(int credits){
+        Platform.runLater(()->{
+            totalCredits.set(totalCredits.getValue() + credits);
+        });
+    }
 
     public void setSystemTasks(List<TaskDTO> systemTasks) {
         ObservableList<TaskDTO> taskDTOS = FXCollections.observableArrayList(systemTasks);

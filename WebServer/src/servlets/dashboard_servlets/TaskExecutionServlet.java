@@ -135,7 +135,7 @@ public class TaskExecutionServlet extends HttpServlet {
                 }
                 else{
                     response.setStatus(HttpServletResponse.SC_OK);
-                    response.getWriter().println(priceForTarget);
+                    response.getWriter().print(priceForTarget);
                 }
 
             } catch (Exception e) {

@@ -70,8 +70,11 @@ public class SendExecutionTargetRefresherTimer extends Timer {
                         @Override
                         public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                             if(response.code() == 200){
-                                System.out.println("THE The payment==>" + response.body().string());
-                                //TODO: UPDATE TOTAL INCOME
+                                String payment = response.body().string();
+                                payment.replace("\"", "");
+                                if(!payment.isEmpty()){
+                                    WorkerEngine.getInstance().addCredits(Integer.valueOf(payment));
+                                }
                             }
                             response.body().close();
                         }
