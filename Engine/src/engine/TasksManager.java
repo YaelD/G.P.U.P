@@ -66,16 +66,15 @@ public class TasksManager {
         return this.tasksInSystem.get(taskName);
     }
 
-    public Set<TargetDTO> getTaskTargetForExecution(Collection<Task> workerTasks, int requiredNumOfTargets){
+    public Set<TargetDTO> getTaskTargetForExecution(Collection<Task> workerTasks, int requiredNumOfTargets) throws Exception {
+        //TODO: check if all the targets in the collection are exist in the system
+
         Set<TargetDTO> targetsForWorker = new HashSet<>();
         boolean isFinished = false;
         int numOfReadyForRunningTargets = 0;
 
         while (!isFinished){
             for(Task currTask : workerTasks){
-//                if(currTask.getTaskName().equals("Task2")){
-//                    System.out.println("STOP!!");
-//                }
                 if(targetsForWorker.size() < requiredNumOfTargets){
                     TargetDTO targetDTO = currTask.getTargetReadyForRunning();
                     if(targetDTO != null){
@@ -122,5 +121,4 @@ public class TasksManager {
         }
         return priceForTarget;
     }
-
 }

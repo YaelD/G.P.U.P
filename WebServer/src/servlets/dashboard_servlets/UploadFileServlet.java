@@ -26,20 +26,21 @@ public class UploadFileServlet extends HttpServlet {
         GraphsManager graphsManager = ServletUtils.getGraphsManager(getServletContext());
         String usernameFromSession = SessionUtils.getUsername(request);
 
-        if(usernameFromSession != null){
-            Collection<Part> parts = request.getParts();
-            for(Part part :parts){
-                try {
+        try{
+            if(usernameFromSession != null){
+                Collection<Part> parts = request.getParts();
+                for(Part part :parts){
                     graphsManager.loadFile(part.getInputStream(), usernameFromSession);
-                } catch(Exception e){
-                    response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-                    response.getWriter().println(e.getMessage());
                 }
+                response.setStatus(HttpServletResponse.SC_OK);
             }
-            response.setStatus(HttpServletResponse.SC_OK);
+            else{
+                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            }
         }
-        else{
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+        catch(Exception e){
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            response.getWriter().println(e.getMessage());
         }
     }
 }

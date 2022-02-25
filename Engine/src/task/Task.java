@@ -67,6 +67,10 @@ public abstract class Task {
         this.sortedTargets = sortedTargets;
     }
 
+    public TaskStatus getStatus() {
+        return status;
+    }
+
     public static List<Target> topologicalSort(Graph graph) throws CycleException {
         List<Target> sortedTargets = new ArrayList<>();
         Map<String, Integer> targetsInDegree = getTargetsInDegree(graph.getTargetGraph());
@@ -327,16 +331,19 @@ public abstract class Task {
                 break;
             case ACTIVE:
                 if (newStatus.equals(TaskStatus.STOPPED) || (newStatus.equals(TaskStatus.SUSPENDED))) {
+                    this.setStatus(newStatus);
                     isStatusChanged = true;
                 }
                 break;
             case SUSPENDED:
                 if (newStatus.equals(TaskStatus.STOPPED) || (newStatus.equals(TaskStatus.ACTIVE))) {
+                    this.setStatus(newStatus);
                     isStatusChanged = true;
                 }
                 break;
             case STOPPED:
             case FINISHED:
+                this.setStatus(newStatus);
                 isStatusChanged = false;
                 break;
         }
@@ -350,7 +357,7 @@ public abstract class Task {
         this.registeredWorkers.add(workerName);
     }
 
-    public synchronized TargetDTO getTargetReadyForRunning(){
+    public synchronized TargetDTO getTargetReadyForRunning() throws Exception {
         TargetDTO targetDTO = null;
         if(this.status.equals(TaskStatus.ACTIVE)){
             switch (this.sortedTargets.get(0).getRunStatus()){
@@ -366,7 +373,26 @@ public abstract class Task {
                     break;
             }
         }
+        else{
+            checkTaskStatus();
+        }
         return targetDTO;
+    }
+
+    private void checkTaskStatus() throws Exception {
+        switch (this.status){
+            case SUSPENDED:
+                throw new Exception(ExceptionMessages.TASK + this.taskName + ExceptionMessages.TASK_STATUS_SUSPENDED
+                        + "\n" + ExceptionMessages.CAN_NOT_GET_TARGETS + "\n" + ExceptionMessages.TRY_LATER);
+            case STOPPED:
+                throw new Exception(ExceptionMessages.TASK + this.taskName + ExceptionMessages.TASK_STATUS_STOPPED
+                        + "\n" + ExceptionMessages.CAN_NOT_GET_TARGETS);
+            case FINISHED:
+                throw new Exception(ExceptionMessages.TASK + this.taskName + ExceptionMessages.TASK_STATUS_FINISHED
+                        + "\n" + ExceptionMessages.CAN_NOT_GET_TARGETS);
+            case NEW:
+                throw new Exception(ExceptionMessages.TASK + this.taskName + ExceptionMessages.TASK_NOT_ACTIVE);
+        }
     }
 
 
