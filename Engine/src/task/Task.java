@@ -25,7 +25,9 @@ public abstract class Task {
     private CountDownLatch latch;
     protected List<Target> sortedTargets = new ArrayList<>();
     protected List<Target> finishedTargets = new ArrayList<>();
+    private List<Target> targetsForWritingToFile = new ArrayList<>();
     private boolean isTaskFinished = false;
+
 
 
     //public static Object taskDummyLock = new Object();
@@ -66,6 +68,10 @@ public abstract class Task {
 
     public TaskStatus getStatus() {
         return status;
+    }
+
+    public List<Target> getTargetsForWritingToFile() {
+        return targetsForWritingToFile;
     }
 
     public static List<Target> topologicalSort(Graph graph) throws CycleException {
@@ -364,7 +370,9 @@ public abstract class Task {
                     break;
                 case SKIPPED:
                 case FINISHED:
-                    this.finishedTargets.add(this.sortedTargets.remove(0));
+                    Target currTarget = this.sortedTargets.remove(0);
+                    this.finishedTargets.add(currTarget);
+                    //this.targetsForWritingToFile.add(currTarget);
                     break;
                 default:
                     break;

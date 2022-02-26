@@ -97,6 +97,7 @@ public class TasksManager {
 
         while (!isFinished){
             for(Task currTask : workerTasks){
+                //writeTargetRunResultToFile(getTaskTypeByName(currTask.getTaskName()), currTask);
                 if(targetsForWorker.size() < requiredNumOfTargets){
                     TargetDTO targetDTO = currTask.getTargetReadyForRunning();
                     if(targetDTO != null){
@@ -137,9 +138,6 @@ public class TasksManager {
             Target taskTarget = taskGraph.getTarget(executionTargetDTO.getTargetName());
             taskTarget.updateTarget(executionTargetDTO);
             priceForTarget = task.updateTargetsRunResult(taskTarget);
-            if(priceForTarget != 0 ){
-                writeTargetRunResultToFile(getTaskTypeByName(task.getTaskName()), taskGraph, task.getTaskName());
-            }
         }
         else{
             throw new Exception(ExceptionMessages.TASK + executionTargetDTO.getTaskName() +
@@ -148,11 +146,17 @@ public class TasksManager {
         return priceForTarget;
     }
 
-    private void writeTargetRunResultToFile(TaskType taskTypeByName, Graph taskGraph, String taskName) {
-        for(Target currTarget : taskGraph.getTargets()){
-            if(currTarget.getRunStatus().equals(RunStatus.FINISHED) ||
-                    currTarget.getRunStatus().equals(RunStatus.SKIPPED)){
-                openDirectoryAndFiles(taskTypeByName, currTarget, taskName);
+    private void writeTargetRunResultToFile(TaskType taskTypeByName, Task task) {
+        List<Target> targetsForWritingToFile = task.getTargetsForWritingToFile();
+        if(targetsForWritingToFile.isEmpty()){
+            return;
+        }
+        else{
+            synchronized (task){
+                while (!targetsForWritingToFile.isEmpty()){
+                    Target target = targetsForWritingToFile.remove(0);
+                    openDirectoryAndFiles(taskTypeByName, target, task.getTaskName());
+                }
             }
         }
     }
