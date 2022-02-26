@@ -89,7 +89,7 @@ public class TaskExecutionServlet extends HttpServlet {
                 }
                 else {
                     TasksManager tasksManager = ServletUtils.getTasksManager(getServletContext());
-                    Set<String> finishedTaskName = checkTaskStatus(userTasks, usernameFromSession);
+                    Set<String> finishedTaskName = checkTaskStatus(request, userTasks, usernameFromSession);
                     Set<TargetDTO> targetDTOs = new HashSet<>();
                     if(!userTasks.isEmpty()){
                         targetDTOs = tasksManager.getTaskTargetForExecution(userTasks.values(), Integer.parseInt(numOfTargets));
@@ -113,13 +113,13 @@ public class TaskExecutionServlet extends HttpServlet {
     }
 
 
-    private Set<String> checkTaskStatus(Map<String, Task> userTasks, String userName) {
+    private Set<String> checkTaskStatus(HttpServletRequest request, Map<String, Task> userTasks, String userName) {
         Map<String, Task> clonedUserTasks = new HashMap<>(userTasks);
         Set<String> finishedTasksName = new HashSet<>();
         for(Task currTask : clonedUserTasks.values()){
             if(currTask.getStatus().equals(TaskStatus.FINISHED) ||
                     currTask.getStatus().equals(TaskStatus.STOPPED)){
-                Task removedTask = userTasks.remove(currTask.getTaskName());
+                Task removedTask = SessionUtils.setUserTasks(request, currTask, Constants.REMOVE_TASK);
                 removedTask.removeWorkerFromTask(userName);
                 finishedTasksName.add(removedTask.getTaskName());
             }

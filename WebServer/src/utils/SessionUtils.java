@@ -37,10 +37,12 @@ public class SessionUtils {
         if(userTasks == null){
             userTasks = new HashMap<>();
         }
-        if(operation.equals(Constants.ADD_TASK)){
-            userTasks.put(task.getTaskName(),task);
-        }else{
-            userTasks.remove(task.getTaskName());
+        synchronized (userTasks){
+            if(operation.equals(Constants.ADD_TASK)){
+                userTasks.put(task.getTaskName(),task);
+            }else{
+                taskToReturn = userTasks.remove(task.getTaskName());
+            }
         }
         session.setAttribute(Constants.USER_TASKS, userTasks);
         return taskToReturn;
