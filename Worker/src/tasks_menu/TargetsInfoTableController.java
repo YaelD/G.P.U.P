@@ -65,7 +65,7 @@ public class TargetsInfoTableController {
             @Override
             public ObservableValue<String> call(TableColumn.CellDataFeatures<ExecutionTarget, String> param) {
                 TaskType taskType = WorkerEngine.getInstance().getRegisteredTasksParams().get(param.getValue().getTaskName()).getTaskType();
-                return new SimpleStringProperty(taskType.name());
+                return new SimpleStringProperty(taskType != null ? taskType.name() : "" );
             }
         });
         runStatus_Column.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<ExecutionTarget, String>, ObservableValue<String>>() {
@@ -78,8 +78,8 @@ public class TargetsInfoTableController {
             @Override
             public ObservableValue<String> call(TableColumn.CellDataFeatures<ExecutionTarget, String> param) {
                 TaskParamsDTO  task =WorkerEngine.getInstance().getRegisteredTasksParams().get(param.getValue().getTaskName());
-                int price = task.getTotalTaskPrice();
-                return new SimpleStringProperty(String.valueOf(price));
+                int price = task!= null ? task.getTotalTaskPrice() : 0;
+                return new SimpleStringProperty(price!=0? String.valueOf(price): "");
             }
         });
         logs_column.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<ExecutionTarget, Button>, ObservableValue<Button>>() {

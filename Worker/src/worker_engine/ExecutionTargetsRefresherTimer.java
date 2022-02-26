@@ -63,45 +63,47 @@ public class ExecutionTargetsRefresherTimer extends Timer {
             HttpUtils.runAsync(finalUrl, new Callback() {
                 @Override
                 public void onFailure(@NotNull Call call, @NotNull IOException e) {
-
+                    System.out.println("OH NOOOOOOOOOO" + e.getMessage());
                 }
 
                 @Override
                 public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                    //TODO: care bad request(400)=(When the uses is not signed in, and when the tasks not exist) and conflict
                     if(response.code() == 200){
 
                         String jsonArr = response.body().string();
+                        System.out.println("In get targets==>" + jsonArr);
                         response.body().close();
-                        System.out.println("In get targets==>" + response.code());
-                        if(!jsonArr.isEmpty()){
-                            TargetDTO[] targetDTOS = new Gson().fromJson(jsonArr, TargetDTO[].class);
-                            for(TargetDTO targetDTO: targetDTOS){
-                                String taskName = targetDTO.getTaskName();
-                                TaskParamsDTO taskParamsDTO = WorkerEngine.getInstance().getRegisteredTasksParams().get(taskName);
-                                if(taskParamsDTO instanceof SimulationTaskParamsDTO){
-                                    SimulationTaskExecution simulationTaskExecution = new SimulationTaskExecution((SimulationTaskParamsDTO)taskParamsDTO, targetDTO);
-                                    WorkerEngine.getInstance().addTask(simulationTaskExecution);
-                                }
-                                if(taskParamsDTO instanceof CompilationTaskParamsDTO){
-                                    CompilationTaskExecution compilationTaskExecution = new CompilationTaskExecution((CompilationTaskParamsDTO)taskParamsDTO, targetDTO);
-                                    WorkerEngine.getInstance().addTask(compilationTaskExecution);
-
-                                }
+                        Gson gson = new Gson();
+                        String[] res = gson.fromJson(jsonArr, String[].class);
+                        TargetDTO[] targetDTOS = gson.fromJson(res[0], TargetDTO[].class);
+                        String[] taskNameToRemove = gson.fromJson(res[1], String[].class);
+                        for(String taskNames: taskNameToRemove) {
+                            if (WorkerEngine.getInstance().getRegisteredTasksParams().containsKey(taskNames)) {
+                                WorkerEngine.getInstance().getRegisteredTasksParams().remove(taskNames);
+                                System.out.println("UNREGISTER FROM TASK-->" + taskNames);
                             }
-
+                        }
+                        for (TargetDTO targetDTO : targetDTOS) {
+                            System.out.println("Got target: " + targetDTO.getName());
+                            String taskName = targetDTO.getTaskName();
+                            TaskParamsDTO taskParamsDTO = WorkerEngine.getInstance().getRegisteredTasksParams().get(taskName);
+                            if (taskParamsDTO instanceof SimulationTaskParamsDTO) {
+                                SimulationTaskExecution simulationTaskExecution = new SimulationTaskExecution((SimulationTaskParamsDTO) taskParamsDTO, targetDTO);
+                                WorkerEngine.getInstance().addTask(simulationTaskExecution);
+                            }
+                            if (taskParamsDTO instanceof CompilationTaskParamsDTO) {
+                                CompilationTaskExecution compilationTaskExecution = new CompilationTaskExecution((CompilationTaskParamsDTO) taskParamsDTO, targetDTO);
+                                WorkerEngine.getInstance().addTask(compilationTaskExecution);
+                            }
                         }
                     }
                     else{
-                        String responseBody = response.body().string();
-                        System.out.println("IN ExecutionTargetsRefresher-->response code:" + response.code() + "With body" + responseBody);
-                        if(WorkerEngine.getInstance().getRegisteredTasksParams().containsKey(responseBody)){
-                            WorkerEngine.getInstance().getRegisteredTasksParams().remove(responseBody);
-                            System.out.println("UNREGISTER FROM TASK-->" + responseBody);
-                        }
+                        System.out.println("Got response->" + response.code() + " Body " + response.body().string());
+
                     }
                  }
             });
-
 
         }
 

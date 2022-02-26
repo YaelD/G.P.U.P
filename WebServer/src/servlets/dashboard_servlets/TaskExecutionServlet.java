@@ -79,13 +79,14 @@ public class TaskExecutionServlet extends HttpServlet {
             response.setStatus(HttpServletResponse.SC_CONFLICT);
         } else {
             String[] paramsNames = {Constants.NUMBER_OF_TARGETS};
-            try (PrintWriter body = response.getWriter()){
+//            PrintWriter body =
+            try{
                 Map<String, String> mapParams = null;
                 mapParams = ServletUtils.validateRequestQueryParams(request, paramsNames);
                 String numOfTargets = mapParams.get(Constants.NUMBER_OF_TARGETS).trim();
                 if (userTasks == null) {
                     response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-                    body.print(Constants.WORKER_NOT_REGISTER_TASK);
+                    response.getWriter().print(Constants.WORKER_NOT_REGISTER_TASK);
                 }
                 else {
                     TasksManager tasksManager = ServletUtils.getTasksManager(getServletContext());
@@ -102,8 +103,8 @@ public class TaskExecutionServlet extends HttpServlet {
                     responseBody.add(targetJson);
                     responseBody.add(tasksNameJson);
                     String respBody = gson.toJson(responseBody);
-                    body.print(respBody);
-                    body.flush();
+                    response.getWriter().print(respBody);
+//                    body.flush();
                 }
             } catch (Exception e) {
                 response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
@@ -142,7 +143,8 @@ public class TaskExecutionServlet extends HttpServlet {
             response.getWriter().print("The user has not registered to any task yet");
         } else {
             String[] paramsNames = {Constants.TASK_NAME};
-            try (PrintWriter body = response.getWriter()) {
+            PrintWriter body = response.getWriter();
+            try{
                 Map<String, String> mapParams = null;
                 mapParams = ServletUtils.validateRequestQueryParams(request, paramsNames);
                 TasksManager tasksManager = ServletUtils.getTasksManager(getServletContext());

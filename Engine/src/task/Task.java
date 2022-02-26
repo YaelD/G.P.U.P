@@ -376,6 +376,9 @@ public abstract class Task {
 
     public synchronized TargetDTO getTargetReadyForRunning(String workingDirectory) throws Exception {
         TargetDTO targetDTO = null;
+        if(sortedTargets.get(0).getName().equals("E")){
+            System.out.println("STOP");
+        }
         if(this.status.equals(TaskStatus.ACTIVE)){
             switch (this.sortedTargets.get(0).getRunStatus()){
                 case WAITING:

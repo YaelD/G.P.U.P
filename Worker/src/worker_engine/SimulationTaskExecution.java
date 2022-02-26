@@ -46,7 +46,6 @@ public class SimulationTaskExecution extends TaskExecution implements Runnable{
             currTargetProcessTime = getRandomProcessTime();
         }
         try {
-            this.sendTarget();
             executionTarget.setSpecificTaskLog("Simulation task: ");
             startTime = LocalTime.now();
             executionTarget.setSpecificTaskLog("Start time: " + startTime.format(DateTimeFormatter.ofPattern("H:mm:ss")));
