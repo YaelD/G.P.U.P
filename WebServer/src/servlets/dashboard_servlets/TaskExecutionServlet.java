@@ -138,6 +138,7 @@ public class TaskExecutionServlet extends HttpServlet {
                 }
                 else{
                     response.setStatus(HttpServletResponse.SC_OK);
+
                     response.getWriter().print(priceForTarget);
                 }
 

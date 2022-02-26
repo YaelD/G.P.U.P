@@ -1,0 +1,330 @@
+package execution_details.rerun_task_details;
+
+import RefreshingItems.TaskListRefresherTimer;
+import com.google.gson.Gson;
+import constants.Constants;
+import dto.*;
+import general_enums.Dependency;
+import general_enums.RunResults;
+import general_enums.RunType;
+import general_enums.TaskType;
+import http_utils.HttpUtils;
+import javafx.application.Platform;
+import javafx.beans.binding.Bindings;
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleListProperty;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.collections.ListChangeListener;
+import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
+import javafx.scene.control.*;
+import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import okhttp3.*;
+import org.jetbrains.annotations.NotNull;
+import runtask.menu.CompilationParamsCallBack;
+import runtask.menu.ReturnCallback;
+import runtask.menu.SimulationParamsCallBack;
+
+import java.io.IOException;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+public class RerunTaskController {
+
+    private TaskDTO currTask;
+    private SimpleListProperty<String> targetsList;
+    private SimpleObjectProperty<TaskType> taskType;
+    private SimpleObjectProperty<RunType> runType;
+    private SimpleStringProperty taskName;
+    private SimpleStringProperty graphName;
+    private SimpleIntegerProperty taskPrice;
+    private SimpleStringProperty creatorName;
+
+
+    private Set<String> allTaskTargetsList;
+    private Set<String> failedTargetsList;
+
+
+
+
+
+    @FXML
+    private RadioButton simulationRadioButton;
+
+    @FXML
+    private ToggleGroup taskToggleGroup;
+
+    @FXML
+    private RadioButton compilationRadioButton;
+
+    @FXML
+    private RadioButton fromScratchRadioButton;
+
+    @FXML
+    private ToggleGroup runTypeToggle;
+
+    @FXML
+    private RadioButton incrementalRadioButton;
+
+    @FXML
+    private Label warningTaskNameLabel;
+
+    @FXML
+    private TextField taskNameTextField;
+
+    @FXML
+    private Label warningRunTypeLabel;
+
+    @FXML
+    private VBox targetsSubMenu;
+
+    @FXML
+    private CheckBox chooseAllTargetsCheckBox;
+
+    @FXML
+    private ListView<CheckBox> targetsCheckBoxList;
+
+    @FXML
+    private RadioButton chooseTargetsRB;
+
+    @FXML
+    private ToggleGroup chooseTargetsToogleGroup;
+
+    @FXML
+    private RadioButton chooseWhatIfRB;
+
+    @FXML
+    private VBox whatIfSubMenu;
+
+    @FXML
+    private ChoiceBox<String> whatIf_targetsCB;
+
+    @FXML
+    private ChoiceBox<Dependency> whatIf_DependencyCB;
+
+    @FXML
+    private Button WhatIfButton;
+
+    @FXML
+    private ListView<String> selectedTargetsListView;
+
+    @FXML
+    private Button continueButton;
+
+    @FXML
+    private Label warningChosenTargetsLabel;
+
+
+    @FXML
+    void clearAllTargets(ActionEvent event) {
+        for(CheckBox checkBox: targetsCheckBoxList.getItems()){
+            checkBox.setSelected(false);
+        }
+        selectedTargetsListView.getItems().clear();
+        chooseAllTargetsCheckBox.setSelected(false);
+    }
+
+
+    @FXML
+    private void initialize(){
+        whatIf_DependencyCB.getItems().add(Dependency.DEPENDS_ON);
+        whatIf_DependencyCB.getItems().add(Dependency.REQUIRED_FOR);
+        whatIf_DependencyCB.getSelectionModel().select(0);
+        continueButton.disableProperty().bind(Bindings.or(warningChosenTargetsLabel.visibleProperty(),Bindings.or(warningTaskNameLabel.visibleProperty(), warningRunTypeLabel.visibleProperty())));
+        initTargetChoiceControllers();
+
+
+        //TODO: SET TASK NAME
+
+        targetsList.bind(selectedTargetsListView.itemsProperty());
+
+        selectedTargetsListView.getItems().addListener(new ListChangeListener<String>() {
+            @Override
+            public void onChanged(Change<? extends String> c) {
+                ObservableList<String> items = selectedTargetsListView.getItems();
+                if(items.isEmpty()){
+                    warningChosenTargetsLabel.setVisible(true);
+                    return;
+                }
+                warningChosenTargetsLabel.setVisible(false);
+                if(taskType.getValue().equals(TaskType.SIMULATION_TASK)){
+                    taskPrice.set(items.size()*currTask.getGraphDTO().getPriceOfSimulationTask());
+                }
+                else{
+                    taskPrice.set(items.size()*currTask.getGraphDTO().getPriceOfCompilationTask());
+                }
+
+            }
+        });
+
+    }
+
+//    private void sendTaskToServer(TaskParamsDTO taskParamsDTO){
+//
+//        Gson gson = new Gson();
+//        SimulationTaskParamsDTO simulationTaskParamsDTO;
+//        CompilationTaskParamsDTO compilationTaskParamsDTO;
+//        String param = "";
+//        if(taskParamsDTO instanceof SimulationTaskParamsDTO){
+//            simulationTaskParamsDTO = (SimulationTaskParamsDTO) taskParamsDTO;
+//            param = gson.toJson(simulationTaskParamsDTO);
+//        }
+//        else{
+//            compilationTaskParamsDTO = (CompilationTaskParamsDTO) taskParamsDTO;
+//            param = gson.toJson(compilationTaskParamsDTO);
+//        }
+//        Request request = new Request.Builder().url(Constants.TASK_LIST)
+//                .post(RequestBody.create(param.getBytes())).build();
+//        HttpUtils.runAsyncWithRequest(request, new Callback() {
+//            @Override
+//            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+//                Platform.runLater(()->{
+//                    serverResponseLabel.setVisible(true);
+//                    serverResponseLabel.setTextFill(Color.RED);
+//                    serverResponseLabel.setText(e.getMessage());
+//                });
+//            }
+//
+//            @Override
+//            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+//                Platform.runLater(()->{
+//                    try {
+//                        String res = response.body().string();
+//                        if(response.code() == 200) {
+//                            serverResponseLabel.setVisible(true);
+//                            serverResponseLabel.setTextFill(Color.GREEN);
+//                            serverResponseLabel.setText("Task created successfully");
+//                        }
+//                        else{
+//                            serverResponseLabel.setVisible(true);
+//                            serverResponseLabel.setTextFill(Color.RED);
+//                            serverResponseLabel.setText(res);
+//
+//                        }
+//                    } catch (IOException e) {
+//                        e.printStackTrace();
+//                    }
+//                });
+//            }
+//        });
+//    }
+
+
+    private void initTargetChoiceControllers(){
+        whatIfSubMenu.disableProperty().bind(Bindings.not(chooseWhatIfRB.selectedProperty()));
+        targetsSubMenu.disableProperty().bind(Bindings.not(chooseTargetsRB.selectedProperty()));
+        chooseWhatIfRB.selectedProperty().addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+                selectedTargetsListView.getItems().clear();
+            }
+        });
+        chooseTargetsRB.selectedProperty().addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+                selectedTargetsListView.getItems().clear();
+                if(newValue == false){
+                    for(CheckBox currCheckBox: targetsCheckBoxList.getItems()){
+                        currCheckBox.selectedProperty().set(false);
+                    }
+                    chooseAllTargetsCheckBox.selectedProperty().set(false);
+                }
+            }
+        });
+        chooseAllTargetsCheckBox.selectedProperty().addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+                if(newValue.booleanValue() == true){
+                    for(CheckBox checkBox: targetsCheckBoxList.getItems()){
+                        checkBox.setSelected(newValue);
+                    }
+                }
+            }
+        });
+
+    }
+
+    private void initTaskChoiceController() {
+        simulationRadioButton.setDisable(currTask.getTaskType().equals(TaskType.COMPILATION_TASK));
+        compilationRadioButton.setDisable(currTask.getTaskType().equals(TaskType.SIMULATION_TASK));
+
+        runTypeToggle.selectedToggleProperty().addListener(new ChangeListener<Toggle>() {
+            @Override
+            public void changed(ObservableValue<? extends Toggle> observable, Toggle oldValue, Toggle newValue) {
+                if(newValue == incrementalRadioButton){
+                    initLists(failedTargetsList);
+                    runType.set(RunType.INCREMENTAL);
+                }
+                else if(newValue == fromScratchRadioButton){
+                    initLists(allTaskTargetsList);
+                    runType.set(RunType.FROM_SCRATCH);
+                }
+
+                for(CheckBox checkBox: targetsCheckBoxList.getItems()){
+                    checkBox.setSelected(false);
+                }
+                chooseAllTargetsCheckBox.setSelected(false);
+                selectedTargetsListView.getItems().clear();
+
+
+            }
+        });
+    }
+
+    public void setCurrTask(TaskDTO taskDTO) {
+
+        this.graphName.set(taskDTO.getGraphDTO().getName());
+        this.allTaskTargetsList = taskDTO.getGraphDTO().getTargets().keySet();
+        this.failedTargetsList = new HashSet<>();
+        for(String targetName: allTaskTargetsList){
+            RunResults runResults = taskDTO.getGraphDTO().getTargets().get(targetName).getRunResult();
+            if(runResults.equals(RunResults.FAILURE) || runResults.equals(RunResults.SKIPPED)){
+                failedTargetsList.add(targetName);
+            }
+        }
+        incrementalRadioButton.setDisable(failedTargetsList.isEmpty());
+        initLists(allTaskTargetsList);
+        initTaskChoiceController();
+    }
+
+
+    private void initLists(Set<String> targetsName) {
+        targetsCheckBoxList.getItems().clear();
+        whatIf_targetsCB.getItems().clear();
+        for(String target: targetsName){
+            whatIf_targetsCB.getItems().add(target);
+            CheckBox checkBox = new CheckBox(target);
+            checkBox.selectedProperty().addListener(new ChangeListener<Boolean>() {
+                @Override
+                public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+                    if(newValue == true){
+                        selectedTargetsListView.getItems().add(checkBox.getText());
+                    }
+                    else{
+                        selectedTargetsListView.getItems().remove(checkBox.getText());
+                    }
+                }
+            });
+            targetsCheckBoxList.getItems().add(checkBox);
+        }
+        whatIf_targetsCB.setValue(whatIf_targetsCB.getItems().get(0));
+    }
+
+
+
+
+    @FXML
+    void sendTaskTiServer(ActionEvent event) {
+
+    }
+
+    @FXML
+    public void checkTargetsWithWhatIf(ActionEvent actionEvent) {
+    }
+}

@@ -137,7 +137,9 @@ public class TasksManager {
             Target taskTarget = taskGraph.getTarget(executionTargetDTO.getTargetName());
             taskTarget.updateTarget(executionTargetDTO);
             priceForTarget = task.updateTargetsRunResult(taskTarget);
-            writeTargetRunResultToFile(getTaskTypeByName(task.getTaskName()), taskGraph, task.getTaskName());
+            if(priceForTarget != 0 ){
+                writeTargetRunResultToFile(getTaskTypeByName(task.getTaskName()), taskGraph, task.getTaskName());
+            }
         }
         else{
             throw new Exception(ExceptionMessages.TASK + executionTargetDTO.getTaskName() +

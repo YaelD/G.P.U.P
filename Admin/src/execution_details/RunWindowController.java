@@ -9,9 +9,11 @@ import RefreshingItems.TaskListRefresherTimer;
 import constants.Constants;
 import dto.TargetDTO;
 import dto.TaskDTO;
+import execution_details.rerun_task_details.RerunTaskController;
 import general_enums.RunResults;
 import general_enums.RunStatus;
 import general_enums.TaskStatus;
+import header.HeaderController;
 import http_utils.HttpUtils;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
@@ -21,8 +23,13 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 import okhttp3.*;
 import org.jetbrains.annotations.NotNull;
 //import runtask.running_task_window.TargetsTableButtonsHandler;
@@ -33,6 +40,7 @@ import org.jetbrains.annotations.NotNull;
 //import task.TaskType;
 
 import java.io.IOException;
+import java.net.URL;
 import java.util.List;
 import java.util.Objects;
 
@@ -91,6 +99,22 @@ public class RunWindowController {
 
     @FXML
     void onRunAgain(ActionEvent event) {
+        try {
+            URL resource = RerunTaskController.class.getResource("rerun_create_task_menu.fxml");
+            FXMLLoader fxmlLoader = new FXMLLoader();
+            fxmlLoader.setLocation(resource);
+            Parent root = fxmlLoader.load(resource.openStream());
+            Scene scene = new Scene(root,700, 700);
+            Stage secondaryStage = new Stage();
+            RerunTaskController rerunTaskController = fxmlLoader.getController();
+            rerunTaskController.setCurrTask(taskDTOProperty.getValue());
+            secondaryStage.initModality(Modality.APPLICATION_MODAL);
+            secondaryStage.setScene(scene);
+            secondaryStage.setTitle("Rerun Task");
+            secondaryStage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
     }
 
@@ -103,9 +127,7 @@ public class RunWindowController {
     @FXML
     void onStop(ActionEvent event) {
         sendStatusToServer(TaskStatus.STOPPED);
-        pauseToggle.setDisable(true);
-        playButton.setDisable(true);
-
+        runAgainBtn.setDisable(false);
     }
 
     private void getTask(List<TaskDTO> taskDTOS){
