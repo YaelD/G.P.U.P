@@ -89,9 +89,13 @@ public class ExecutionTargetsRefresherTimer extends Timer {
 
                         }
                     }
-
-                    if(response.code() == 400){
-
+                    else{
+                        String responseBody = response.body().string();
+                        System.out.println("IN ExecutionTargetsRefresher-->response code:" + response.code() + "With body" + responseBody);
+                        if(WorkerEngine.getInstance().getRegisteredTasksParams().containsKey(responseBody)){
+                            WorkerEngine.getInstance().getRegisteredTasksParams().remove(responseBody);
+                            System.out.println("UNREGISTER FROM TASK-->" + responseBody);
+                        }
                     }
                  }
             });
