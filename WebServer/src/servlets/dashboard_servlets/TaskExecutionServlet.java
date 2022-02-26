@@ -23,9 +23,7 @@ import utils.SessionUtils;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 @WebServlet(name = "TaskExecution", urlPatterns = {"/task_execution"})
 public class TaskExecutionServlet extends HttpServlet {
@@ -68,6 +66,7 @@ public class TaskExecutionServlet extends HttpServlet {
         }
     }
 
+    //sending targets for execution
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
@@ -90,20 +89,42 @@ public class TaskExecutionServlet extends HttpServlet {
                 }
                 else {
                     TasksManager tasksManager = ServletUtils.getTasksManager(getServletContext());
-                    Set<TargetDTO> targetDTOs  = tasksManager.getTaskTargetForExecution(userTasks.values(), Integer.parseInt(numOfTargets));
+                    Set<String> finishedTaskName = checkTaskStatus(userTasks, usernameFromSession);
+                    Set<TargetDTO> targetDTOs = new HashSet<>();
+                    if(!userTasks.isEmpty()){
+                        targetDTOs = tasksManager.getTaskTargetForExecution(userTasks.values(), Integer.parseInt(numOfTargets));
+                    }
                     response.setStatus(HttpServletResponse.SC_OK);
                     Gson gson = new Gson();
-                    String json = gson.toJson(targetDTOs);
-                    System.out.print("IN GET TARGETS TO RUN===>" + json);
-                    body.print(json);
+                    String targetJson = gson.toJson(targetDTOs);
+                    String tasksNameJson = gson.toJson(finishedTaskName);
+                    List<String> responseBody = new ArrayList<>();
+                    responseBody.add(targetJson);
+                    responseBody.add(tasksNameJson);
+                    String respBody = gson.toJson(responseBody);
+                    body.print(respBody);
                     body.flush();
-
                 }
             } catch (Exception e) {
                 response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
                 response.getWriter().print(e.getMessage());
             }
         }
+    }
+
+
+    private Set<String> checkTaskStatus(Map<String, Task> userTasks, String userName) {
+        Map<String, Task> clonedUserTasks = new HashMap<>(userTasks);
+        Set<String> finishedTasksName = new HashSet<>();
+        for(Task currTask : clonedUserTasks.values()){
+            if(currTask.getStatus().equals(TaskStatus.FINISHED) ||
+                    currTask.getStatus().equals(TaskStatus.STOPPED)){
+                Task removedTask = userTasks.remove(currTask.getTaskName());
+                removedTask.removeWorkerFromTask(userName);
+                finishedTasksName.add(removedTask.getTaskName());
+            }
+        }
+        return finishedTasksName;
     }
 
     //servlet that gets target during their running and update the targets in the system

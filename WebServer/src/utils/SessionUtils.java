@@ -30,9 +30,10 @@ public class SessionUtils {
         return sessionAttribute != null ? (Map<String,Task>)sessionAttribute : null;
     }
 
-    public static void setUserTasks(HttpServletRequest request, Task task, String operation){
+    public static Task setUserTasks(HttpServletRequest request, Task task, String operation){
         Map<String, Task> userTasks = getUserTasks(request);
         HttpSession session = request.getSession(false);
+        Task taskToReturn = null;
         if(userTasks == null){
             userTasks = new HashMap<>();
         }
@@ -41,7 +42,8 @@ public class SessionUtils {
         }else{
             userTasks.remove(task.getTaskName());
         }
-       session.setAttribute(Constants.USER_TASKS, userTasks);
+        session.setAttribute(Constants.USER_TASKS, userTasks);
+        return taskToReturn;
     }
 
 //    public static boolean isTaskExistInSession(HttpServletRequest request, String taskName){

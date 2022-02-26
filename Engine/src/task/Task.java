@@ -361,6 +361,13 @@ public abstract class Task {
         this.registeredWorkers.add(workerName);
     }
 
+    public synchronized void removeWorkerFromTask(String workerName){
+        if(this.status.equals(TaskStatus.STOPPED) || this.status.equals(TaskStatus.FINISHED)){
+            this.registeredWorkers.remove(workerName);
+        }
+    }
+
+
     public synchronized TargetDTO getTargetReadyForRunning() throws Exception {
         TargetDTO targetDTO = null;
         if(this.status.equals(TaskStatus.ACTIVE)){
