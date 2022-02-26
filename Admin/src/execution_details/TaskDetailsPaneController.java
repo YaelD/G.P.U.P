@@ -49,6 +49,9 @@ public class TaskDetailsPaneController {
             this.numOfWorkersLabel.setText(String.valueOf(taskDTO.getNumOfRegisteredWorkers()));
             this.numOfTargetsInQueueLabel.setText(String.valueOf(taskDTO.getNumOfTargetsInQueue()));
         });
+    }
 
+    public TaskDTO getTaskDTO() {
+        return taskDTO;
     }
 }

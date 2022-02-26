@@ -41,6 +41,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 
@@ -128,6 +129,7 @@ public class RunWindowController {
     void onStop(ActionEvent event) {
         sendStatusToServer(TaskStatus.STOPPED);
         runAgainBtn.setDisable(false);
+        runResultsPaneController.setTaskDTO(taskDTOProperty.getValue());
     }
 
     private void getTask(List<TaskDTO> taskDTOS){
@@ -136,7 +138,7 @@ public class RunWindowController {
                 taskDTOProperty.set(taskDTO);
                 if(taskDTO.getTaskStatus().equals(TaskStatus.FINISHED) || taskDTO.getTaskStatus().equals(TaskStatus.STOPPED)){
                     runAgainBtn.setDisable(false);
-
+                    runResultsPaneController.setTaskDTO(taskDTO);
                 }
                 double numOfFinishedTargets = 0;
                 for(TargetDTO targetDTO : taskDTO.getGraphDTO().getTargets().values()){
