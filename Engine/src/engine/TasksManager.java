@@ -102,7 +102,7 @@ public class TasksManager {
         while (!isFinished){
             for(Task currTask : workerTasks){
                 //writeTargetRunResultToFile(getTaskTypeByName(currTask.getTaskName()), currTask);
-                if(targetsForWorker.size() < requiredNumOfTargets){
+                if(targetsForWorker.size() < requiredNumOfTargets && !currTask.getSortedTargets().isEmpty()){
                     TargetDTO targetDTO = currTask.getTargetReadyForRunning(this.workingDirectory);
                     if(targetDTO != null){
                         targetsForWorker.add(targetDTO);

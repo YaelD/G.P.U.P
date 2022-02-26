@@ -373,6 +373,9 @@ public abstract class Task {
         }
     }
 
+    public List<Target> getSortedTargets() {
+        return sortedTargets;
+    }
 
     public synchronized TargetDTO getTargetReadyForRunning(String workingDirectory) throws Exception {
         TargetDTO targetDTO = null;
