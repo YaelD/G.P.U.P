@@ -30,38 +30,6 @@ public class CompilationTaskExecution extends TaskExecution implements Runnable{
         this.destinationDir = taskParamsDTO.getDestinationDir();
     }
 
-//    protected void executeTaskOnTarget() {
-//        LocalTime startTime, endTime;
-//        try {
-//            target.setSpecificTaskLog("Compilation task: ");
-//            startTime = LocalTime.now();
-//            target.setSpecificTaskLog("Start time: " + startTime.format(DateTimeFormatter.ofPattern("H:mm:ss")));
-//            target.setRunStatus(RunStatus.IN_PROCESS);
-//            String localSourceDir = buildPaths(target);
-//            String filePath = "/" + target.getInfo().replace('.', '/');
-//            Process process = CompileTarget(target, localSourceDir, filePath);
-//            String processResult = getProcessResult(process);
-//            int exitCode = process.waitFor();
-//            endTime = LocalTime.now();
-//            target.setSpecificTaskLog("End time: " + endTime.format(DateTimeFormatter.ofPattern("H:mm:ss")));
-//            if(exitCode != 0){    //means that the process has failed
-//                target.setRunResult(RunResults.FAILURE);
-//
-//                target.setSpecificTaskLog("Javac output: " + processResult);
-//            }
-//            else {
-//                target.setRunResult(RunResults.SUCCESS);
-//                target.setSpecificTaskLog( "Compilation run result: "+processResult);
-//            }
-//
-//            target.setSpecificTaskLog("Running time: " + Duration.between(startTime, endTime).toMillis() + "Milliseconds");
-//            target.setRunStatus(RunStatus.FINISHED);
-//
-//        } catch (InterruptedException | IOException e) {
-//            e.printStackTrace();
-//        }
-//    }
-
     private String getProcessResult(Process process) throws IOException {
         BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
         StringBuilder builder = new StringBuilder();

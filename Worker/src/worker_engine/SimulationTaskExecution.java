@@ -46,16 +46,17 @@ public class SimulationTaskExecution extends TaskExecution implements Runnable{
             currTargetProcessTime = getRandomProcessTime();
         }
         try {
-
+            this.sendTarget();
             executionTarget.setSpecificTaskLog("Simulation task: ");
             startTime = LocalTime.now();
             executionTarget.setSpecificTaskLog("Start time: " + startTime.format(DateTimeFormatter.ofPattern("H:mm:ss")));
             executionTarget.setStartProcessTime(startTime);
             executionTarget.setRunStatus(RunStatus.IN_PROCESS);
+            this.sendTarget();
             Thread.sleep(currTargetProcessTime);
             endTime = LocalTime.now();
-
             executionTarget.setSpecificTaskLog("End time: " + endTime.format(DateTimeFormatter.ofPattern("H:mm:ss")));
+            this.sendTarget();
             if(getRandomNumber() <= this.successRate){
                 if(getRandomNumber() <= this.successWithWarningsRate){
                     executionTarget.setRunResult(RunResults.WARNING);
@@ -67,6 +68,7 @@ public class SimulationTaskExecution extends TaskExecution implements Runnable{
             }
             executionTarget.setSpecificTaskLog("Running time: " + Duration.between(startTime, endTime).toMillis() + "Milliseconds");
             executionTarget.setRunStatus(RunStatus.FINISHED);
+            this.sendTarget();
         } catch (InterruptedException e) {
             e.printStackTrace();
         }

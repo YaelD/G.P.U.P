@@ -87,6 +87,12 @@ public class Target implements Cloneable {
     }
 
     public synchronized void setRunStatus(RunStatus runStatus) {
+        if(this.runStatus.equals(RunStatus.FINISHED) && !runStatus.equals(RunStatus.FINISHED)){
+            System.out.println("in set RunStatus Of Target: " + this.name);
+            System.out.println("From " + this.runStatus.name() + "to " + runStatus);
+            System.out.println("The stacktrace" + Thread.currentThread().getStackTrace().toString());
+
+        }
         this.runStatus = runStatus;
     }
 
