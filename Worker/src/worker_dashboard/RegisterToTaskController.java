@@ -8,6 +8,8 @@ import dto.TaskParamsDTO;
 import general_enums.TaskType;
 import http_utils.HttpUtils;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -41,6 +43,12 @@ public class RegisterToTaskController {
     @FXML
     private void initialize() {
         taskNameLabel.textProperty().bind(taskName);
+        taskNameLabel.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                taskInfoTextArea.setText("");
+            }
+        });
     }
 
     @FXML
