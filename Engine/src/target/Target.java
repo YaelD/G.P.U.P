@@ -207,7 +207,7 @@ public class Target implements Cloneable {
         this.getDependsOnAncestors(totalDependsOnNames);
         return new TargetDTO(this.name, this.place, requiredForNames, dependsOnName,
                 this.info, totalRequiredForNames, totalDependsOnNames,
-                this.getRunTaskLog(),taskName, this.runStatus, this.runResult);
+                this.getRunTaskLog(taskName),taskName, this.runStatus, this.runResult);
     }
 
     public static Target createTargetFromTargetDTO(TargetDTO targetDTO){
@@ -228,12 +228,13 @@ public class Target implements Cloneable {
         this.taskSpecificLogs += taskSpecificLogs + "\n";
     }
 
-    public synchronized String getRunTaskLog() {
+    public synchronized String getRunTaskLog(String taskName) {
         if(this.runStatus == null){
             return "";
         }
         StringBuilder stringBuilder = new StringBuilder("");
-        stringBuilder.append("Target: " + this.name);
+        stringBuilder.append("Task name: " + taskName);
+        stringBuilder.append("\nTarget: " + this.name);
         stringBuilder.append(this.info!= null ? "\nInfo: " + this.info : "");
         stringBuilder.append("\nPlace: " + this.place.name());
         stringBuilder.append("\nRun status: " + this.runStatus);

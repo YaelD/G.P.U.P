@@ -137,9 +137,7 @@ public class TasksManager {
             Target taskTarget = taskGraph.getTarget(executionTargetDTO.getTargetName());
             taskTarget.updateTarget(executionTargetDTO);
             priceForTarget = task.updateTargetsRunResult(taskTarget);
-            if(taskTarget.getRunStatus().equals(RunStatus.FINISHED)){
-                openDirectoryAndFiles(getTaskTypeByName(task.getTaskName()), taskTarget);
-            }
+            writeTargetRunResultToFile(getTaskTypeByName(task.getTaskName()), taskGraph, task.getTaskName());
         }
         else{
             throw new Exception(ExceptionMessages.TASK + executionTargetDTO.getTaskName() +
@@ -148,14 +146,17 @@ public class TasksManager {
         return priceForTarget;
     }
 
-    private Target getTargetFromExecutionTargetDTO(ExecutionTargetDTO executionTargetDTO){
-        Task task = this.tasksInSystem.get(executionTargetDTO.getTaskName());
-        Graph taskGraph = task.getGraph();
-        Target taskTarget = taskGraph.getTarget(executionTargetDTO.getTargetName());
-        return taskTarget;
+    private void writeTargetRunResultToFile(TaskType taskTypeByName, Graph taskGraph, String taskName) {
+        for(Target currTarget : taskGraph.getTargets()){
+            if(currTarget.getRunStatus().equals(RunStatus.FINISHED) ||
+                    currTarget.getRunStatus().equals(RunStatus.SKIPPED)){
+                openDirectoryAndFiles(taskTypeByName, currTarget, taskName);
+            }
+        }
     }
 
-    public void openDirectoryAndFiles(TaskType taskType, Target target) {
+
+    public void openDirectoryAndFiles(TaskType taskType, Target target, String taskName) {
         StringBuffer stringBuffer = new StringBuffer();
         Date now = new Date();
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MM-yyyy HH-mm-ss");
@@ -166,17 +167,17 @@ public class TasksManager {
         if(!directory.exists()){
             directory.mkdirs();
         }
-        writeToFile(path, target);
+        writeToFile(path, target, taskName);
     }
 
 
-    private void writeToFile(String path, Target target) {
+    private void writeToFile(String path, Target target, String taskName) {
         Writer out = null;
         try {
             out = new BufferedWriter(
                     new OutputStreamWriter(
                             new FileOutputStream(path + "\\" + target.getName() + ".log")));
-            out.write(target.getRunTaskLog());
+            out.write(target.getRunTaskLog(taskName));
         }
         catch (IOException e) {
         e.printStackTrace();
