@@ -27,8 +27,17 @@ public abstract class Task {
     protected List<Target> sortedTargets = new ArrayList<>();
     protected List<Target> finishedTargets = new ArrayList<>();
     private boolean isTaskFinished = false;
+    private String path;
 
+    public List<Target> getSkippedTargets() {
+        return skippedTargets;
+    }
 
+    private List<Target> skippedTargets = new ArrayList<>();
+
+    public void setPath(String path) {
+        this.path = path;
+    }
 
     //public static Object taskDummyLock = new Object();
 
@@ -70,6 +79,9 @@ public abstract class Task {
         return status;
     }
 
+    public String getPath() {
+        return path;
+    }
 
     public static List<Target> topologicalSort(Graph graph) throws CycleException {
         List<Target> sortedTargets = new ArrayList<>();
@@ -150,6 +162,11 @@ public abstract class Task {
         }
         if(isTaskFinished){
             this.setStatus(TaskStatus.FINISHED);
+            System.out.println("Num of skipped target===> " + this.skippedTargets.size());
+            System.out.println("The skipped targets: " + this.skippedTargets.toString());
+            for(Target target : this.skippedTargets){
+                TasksManager.writeTargetRunResultToFile(target,this);
+            }
         }
     }
 
@@ -320,13 +337,14 @@ public abstract class Task {
     //if suspended-> can be changed to stopped or active
     //if active-> can be changed to stopped or suspended
     //if new-> can be changed to active
-    public boolean updateTaskStatus(TaskStatus newStatus) throws CycleException {
+    public boolean updateTaskStatus(TaskStatus newStatus, String workingDirectory) throws CycleException {
         boolean isStatusChanged = false;
         switch (this.status) {
             case NEW:
                 if (newStatus.equals(TaskStatus.ACTIVE)) {
                     this.setStatus(newStatus);
                     setSortedTargets(topologicalSort(this.graph));
+                    TasksManager.openDirectoryAndFiles(this.getTaskType(), this, workingDirectory);
                     isStatusChanged = true;
                 }
                 break;
@@ -344,7 +362,6 @@ public abstract class Task {
                 break;
             case STOPPED:
             case FINISHED:
-                this.setStatus(newStatus);
                 isStatusChanged = false;
                 break;
         }
@@ -377,22 +394,26 @@ public abstract class Task {
         return sortedTargets;
     }
 
-    public synchronized TargetDTO getTargetReadyForRunning(String workingDirectory) throws Exception {
+    public synchronized TargetDTO getTargetReadyForRunning() throws Exception {
         TargetDTO targetDTO = null;
         if(sortedTargets.get(0).getName().equals("E")){
             System.out.println("STOP");
         }
         if(this.status.equals(TaskStatus.ACTIVE)){
+            if(this.sortedTargets.get(0).getRunStatus().equals(RunStatus.SKIPPED)){
+                System.out.println("Hellllo");
+            }
             switch (this.sortedTargets.get(0).getRunStatus()){
                 case WAITING:
                     Target targetToSend = this.sortedTargets.remove(0);
                     targetDTO = targetToSend.makeDTO(this.taskName);
                     break;
                 case SKIPPED:
+                    this.skippedTargets.add(this.sortedTargets.remove(0));
+                    break;
                 case FINISHED:
-                    Target currTarget = this.sortedTargets.remove(0);
-                    this.finishedTargets.add(currTarget);
-                    TasksManager.writeTargetRunResultToFile(this.getTaskType(), currTarget,this,workingDirectory);
+                    this.finishedTargets.add(this.sortedTargets.remove(0));
+                    //TasksManager.writeTargetRunResultToFile(currTarget,this);
                     break;
                 default:
                     break;

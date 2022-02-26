@@ -78,7 +78,7 @@ public class TasksManager {
         if(!isTaskExistInSystem(taskName)){
             throw new Exception(ExceptionMessages.TASK + taskName + ExceptionMessages.NOT_EXIST);
         }
-        if(this.tasksInSystem.get(taskName).updateTaskStatus(newStatus)){
+        if(this.tasksInSystem.get(taskName).updateTaskStatus(newStatus, this.workingDirectory)){
             task = getTasksInSystem().get(taskName);
         }
         return task;
@@ -93,7 +93,6 @@ public class TasksManager {
     }
 
     public synchronized Set<TargetDTO> getTaskTargetForExecution(Collection<Task> workerTasks, int requiredNumOfTargets) throws Exception {
-        //TODO: check if all the targets in the collection are exist in the system
 
         Set<TargetDTO> targetsForWorker = new HashSet<>();
         boolean isFinished = false;
@@ -101,9 +100,8 @@ public class TasksManager {
 
         while (!isFinished){
             for(Task currTask : workerTasks){
-                //writeTargetRunResultToFile(getTaskTypeByName(currTask.getTaskName()), currTask);
                 if(targetsForWorker.size() < requiredNumOfTargets && !currTask.getSortedTargets().isEmpty()){
-                    TargetDTO targetDTO = currTask.getTargetReadyForRunning(this.workingDirectory);
+                    TargetDTO targetDTO = currTask.getTargetReadyForRunning();
                     if(targetDTO != null){
                         targetsForWorker.add(targetDTO);
                     }
@@ -119,6 +117,7 @@ public class TasksManager {
         }
         return targetsForWorker;
     }
+
 
     public TaskParamsDTO toTaskParamsDTO(Task task){
         TaskParamsDTO taskParamsDTO = null;
@@ -142,8 +141,7 @@ public class TasksManager {
             Target taskTarget = taskGraph.getTarget(executionTargetDTO.getTargetName());
             taskTarget.updateTarget(executionTargetDTO);
             priceForTarget = task.updateTargetsRunResult(taskTarget);
-            writeTargetRunResultToFile(this.getTaskTypeByName(task.getTaskName()),
-                    taskTarget, task, this.workingDirectory);
+            writeTargetRunResultToFile(taskTarget, task);
         }
         else{
             throw new Exception(ExceptionMessages.TASK + executionTargetDTO.getTaskName() +
@@ -152,15 +150,14 @@ public class TasksManager {
         return priceForTarget;
     }
 
-    public static void writeTargetRunResultToFile(TaskType taskTypeByName,Target target,
-                                                  Task task, String workingDirectory) {
+    public static void writeTargetRunResultToFile(Target target, Task task) {
         if(target.getRunStatus().equals(RunStatus.FINISHED) || target.getRunStatus().equals(RunStatus.SKIPPED)){
-            new Thread(()->openDirectoryAndFiles(taskTypeByName, target, task.getTaskName(), workingDirectory)).start();
+            new Thread(()->writeToFile(task.getPath(), target, task.getTaskName())).start();
         }
     }
 
 
-    public static void openDirectoryAndFiles(TaskType taskType, Target target, String taskName, String workingDirectory) {
+    public static void openDirectoryAndFiles(TaskType taskType, Task task, String workingDirectory) {
         StringBuffer stringBuffer = new StringBuffer();
         Date now = new Date();
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MM-yyyy HH-mm-ss");
@@ -168,10 +165,10 @@ public class TasksManager {
         String path = workingDirectory + "\\" + taskType.getTaskType() + "-" +
                 simpleDateFormat.format(now);
         File directory = new File(path);
+        task.setPath(path);
         if(!directory.exists()){
             directory.mkdirs();
         }
-        writeToFile(path, target, taskName);
     }
 
 
