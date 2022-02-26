@@ -26,7 +26,6 @@ public class Main extends Application {
         GraphListRefresherTimer.getInstance().cancel();
         UserListRefresherTimer.getInstance().cancel();
         WorkerEngine.getInstance().closeThreadPool();
-        SendExecutionTargetRefresherTimer.getInstance().cancel();
         ExecutionTargetsRefresherTimer.getInstance().cancel();
     }
 

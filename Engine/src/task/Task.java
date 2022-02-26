@@ -242,7 +242,8 @@ public abstract class Task {
                 }
             }
             if (isOpenedToRun) {
-                if(!currParent.getRunStatus().equals(RunStatus.SKIPPED)){
+//                if(!currParent.getRunStatus().equals(RunStatus.SKIPPED)){
+               if(currParent.getRunStatus().equals(RunStatus.FROZEN)){
                     currParent.setRunStatus(RunStatus.WAITING);
                     currParent.setStartWaitingTime(LocalTime.now());
                 }

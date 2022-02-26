@@ -25,12 +25,14 @@ public class WorkerEngine {
     private List<Consumer< List<ExecutionTarget>>> targetsConsumer;
     private Map<String, TaskParamsDTO> registeredTasksParams;
     private Set<ExecutionTarget> workerTargets;
+    private Set<ExecutionTarget> currentRunningTargets;
 
     private WorkerEngine(){
         totalCredits = new SimpleIntegerProperty();
         numOfFreeThreads = new SimpleIntegerProperty();
         this.registeredTasksParams = new HashMap<>();
         workerTargets = new HashSet<>();
+        currentRunningTargets = new HashSet<>();
         systemTasks = new SimpleListProperty<>();
         targetsConsumer = new ArrayList<>();
         TaskListRefresherTimer.getInstance().addConsumer(this::setSystemTasks);
@@ -83,12 +85,12 @@ public class WorkerEngine {
 
     public synchronized void addWorkerTarget(ExecutionTarget targetDTO){
         workerTargets.add(targetDTO);
+        this.currentRunningTargets.add(targetDTO);
     }
 
     public void updateCurrTargetsList(){
         List<ExecutionTarget> list = new ArrayList<>(workerTargets);
         targetsConsumer.forEach(listConsumer -> listConsumer.accept(list));
-
     }
 
     public void addTask(Runnable run){

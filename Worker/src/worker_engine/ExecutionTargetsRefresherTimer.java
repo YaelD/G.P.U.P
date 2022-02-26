@@ -43,6 +43,7 @@ public class ExecutionTargetsRefresherTimer extends Timer {
 
         @Override
         public void run() {
+            WorkerEngine.getInstance().updateCurrTargetsList();
             int numOfFreeThreads =WorkerEngine.getInstance().getNumOfFreeThreads();
             if(numOfFreeThreads <= 0){
                 return;
@@ -68,9 +69,10 @@ public class ExecutionTargetsRefresherTimer extends Timer {
                 @Override
                 public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                     if(response.code() == 200){
+
                         String jsonArr = response.body().string();
                         response.body().close();
-                        System.out.println("IN GOOD RESPONSE==>" + response);
+                        System.out.println("In get targets==>" + response.code());
                         if(!jsonArr.isEmpty()){
                             TargetDTO[] targetDTOS = new Gson().fromJson(jsonArr, TargetDTO[].class);
                             for(TargetDTO targetDTO: targetDTOS){
