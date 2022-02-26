@@ -155,7 +155,7 @@ public class TasksManager {
     public static void writeTargetRunResultToFile(TaskType taskTypeByName,Target target,
                                                   Task task, String workingDirectory) {
         if(target.getRunStatus().equals(RunStatus.FINISHED) || target.getRunStatus().equals(RunStatus.SKIPPED)){
-            new Thread(()->openDirectoryAndFiles(taskTypeByName, target, task.getTaskName(), workingDirectory));
+            new Thread(()->openDirectoryAndFiles(taskTypeByName, target, task.getTaskName(), workingDirectory)).start();
         }
     }
 
