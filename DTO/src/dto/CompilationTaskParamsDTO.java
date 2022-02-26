@@ -11,7 +11,7 @@ public class CompilationTaskParamsDTO extends TaskParamsDTO{
 
     public CompilationTaskParamsDTO(RunType runType, List<String> targets, String creatorName, String graphName, String taskName, int totalTaskPrice,
                                     String sourceDir, String destinationDir) {
-        super(creatorName,TaskType.SIMULATION_TASK, runType, targets, taskName, graphName, totalTaskPrice);
+        super(creatorName,TaskType.COMPILATION_TASK, runType, targets, taskName, graphName, totalTaskPrice);
         this.sourceDir = sourceDir;
         this.destinationDir = destinationDir;
     }

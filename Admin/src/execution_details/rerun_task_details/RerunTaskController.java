@@ -1,6 +1,5 @@
 package execution_details.rerun_task_details;
 
-import RefreshingItems.TaskListRefresherTimer;
 import admin_engine.Utilities;
 import com.google.gson.Gson;
 import constants.Constants;
@@ -28,13 +27,9 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import okhttp3.*;
 import org.jetbrains.annotations.NotNull;
-import runtask.menu.CompilationParamsCallBack;
-import runtask.menu.ReturnCallback;
-import runtask.menu.SimulationParamsCallBack;
 
 import java.io.IOException;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 public class RerunTaskController {
@@ -78,7 +73,7 @@ public class RerunTaskController {
     private Label taskNameTextField;
 
     @FXML
-    private Label warningRunTypeLabel;
+    private Label serverResponseLabel;
 
     @FXML
     private VBox targetsSubMenu;
@@ -118,6 +113,7 @@ public class RerunTaskController {
 
     @FXML
     private Label warningChosenTargetsLabel;
+    private String originalName;
 
 
     @FXML
@@ -145,7 +141,7 @@ public class RerunTaskController {
         whatIf_DependencyCB.getItems().add(Dependency.DEPENDS_ON);
         whatIf_DependencyCB.getItems().add(Dependency.REQUIRED_FOR);
         whatIf_DependencyCB.getSelectionModel().select(0);
-        continueButton.disableProperty().bind(Bindings.or(warningChosenTargetsLabel.visibleProperty(), warningRunTypeLabel.visibleProperty()));
+        continueButton.disableProperty().bind(warningChosenTargetsLabel.visibleProperty());
         initTargetChoiceControllers();
 
         targetsList.bind(selectedTargetsListView.itemsProperty());
@@ -190,8 +186,7 @@ public class RerunTaskController {
         HttpUtils.runAsyncWithRequest(request, new Callback() {
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                Platform.runLater(()->{
-                });
+
             }
 
             @Override
@@ -200,10 +195,19 @@ public class RerunTaskController {
                     try {
                         String res = response.body().string();
                         if(response.code() == 200) {
+                            serverResponseLabel.setVisible(true);
+                            serverResponseLabel.setTextFill(Color.GREEN);
+                            serverResponseLabel.setText("Task created successfully");
+                            Utilities.TASK_NAME_TO_ORIGINAL.put(taskParamsDTO.getTaskName(), currTask.getTaskName());
+                            int numOfAppearances = Utilities.TASK_APPEARANCE_COUNTER.get(originalName);
+                            Utilities.TASK_APPEARANCE_COUNTER.put(originalName, numOfAppearances+1);
                         }
                         else{
-
+                            serverResponseLabel.setVisible(true);
+                            serverResponseLabel.setTextFill(Color.RED);
+                            serverResponseLabel.setText(res);
                         }
+                        response.body().close();
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -277,6 +281,7 @@ public class RerunTaskController {
 
     public void setCurrTask(TaskDTO taskDTO) {
         this.currTask = taskDTO;
+        this.originalName = Utilities.getOriginalTaskString(currTask.getTaskName());
 
         this.graphName.set(taskDTO.getGraphDTO().getName());
         this.allTaskTargetsList = taskDTO.getGraphDTO().getTargets().keySet();
@@ -287,7 +292,8 @@ public class RerunTaskController {
                 failedTargetsList.add(targetName);
             }
         }
-        taskName.set(taskDTO.getTaskName() + Utilities.TASK_APPEARANCE_COUNTER.get(taskDTO.getTaskName()));
+        this.taskParamsDTO = Utilities.TASK_PARAMS.get(taskDTO.getTaskName());
+        taskName.set(originalName +"(" + Utilities.TASK_APPEARANCE_COUNTER.get(originalName) + ")");
         taskType.set(taskDTO.getTaskType());
         incrementalRadioButton.setDisable(failedTargetsList.isEmpty());
         initLists(allTaskTargetsList);
@@ -320,11 +326,29 @@ public class RerunTaskController {
     }
 
 
-
-
     @FXML
-    void sendTaskTiServer(ActionEvent event) {
+    void onSendTask(ActionEvent event) {
+        TaskParamsDTO newParams = null;
+        switch (taskParamsDTO.getTaskType()){
+            case SIMULATION_TASK:
+                newParams = buildSimulationParams((SimulationTaskParamsDTO) taskParamsDTO);
+                break;
+            case COMPILATION_TASK:
+                newParams = buildCompilationParams((CompilationTaskParamsDTO) taskParamsDTO);
+                break;
+        }
+        sendTaskToServer(newParams);
+    }
 
+
+    private TaskParamsDTO buildSimulationParams(SimulationTaskParamsDTO oldParams){
+        return new SimulationTaskParamsDTO(runType.get(), targetsList.get(), oldParams.getCreatorName(), oldParams.getGraphName(), taskName.getName(),
+                oldParams.getTotalTaskPrice(),  oldParams.getProcessTime(), oldParams.isRandom(), oldParams.getSuccessRate(), oldParams.getSuccessWithWarningsRate());
+    }
+
+    private TaskParamsDTO buildCompilationParams(CompilationTaskParamsDTO oldParams){
+        return new CompilationTaskParamsDTO(runType.get(), targetsList.get(), oldParams.getCreatorName(), oldParams.getGraphName(), taskName.getName(),
+                oldParams.getTotalTaskPrice(), oldParams.getSourceDir(), oldParams.getDestinationDir());
     }
 
     @FXML

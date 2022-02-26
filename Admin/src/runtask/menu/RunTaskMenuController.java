@@ -30,11 +30,7 @@ import runtask.compilation_task.CompilationParamsController;
 import runtask.simulation_task.SimulationParamsController;
 
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
-import java.util.concurrent.Callable;
 
 public class RunTaskMenuController {
 
@@ -340,6 +336,7 @@ public class RunTaskMenuController {
                             serverResponseLabel.setText("Task created successfully");
                             Utilities.TASK_PARAMS.put(taskParamsDTO.getTaskName(), taskParamsDTO);
                             Utilities.TASK_APPEARANCE_COUNTER.put(taskParamsDTO.getTaskName(), 1);
+                            Utilities.TASK_NAME_TO_ORIGINAL.put(taskParamsDTO.getTaskName(), taskParamsDTO.getTaskName());
                         }
                         else{
                             serverResponseLabel.setVisible(true);
