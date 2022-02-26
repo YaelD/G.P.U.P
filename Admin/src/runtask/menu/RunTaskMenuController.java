@@ -13,6 +13,7 @@ import javafx.beans.binding.Bindings;
 import javafx.beans.property.*;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -26,13 +27,13 @@ import okhttp3.*;
 import org.jetbrains.annotations.NotNull;
 import runtask.compilation_task.CompilationParamsController;
 import runtask.simulation_task.SimulationParamsController;
-import whatif.WhatIfCallback;
 
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.Callable;
 
 public class RunTaskMenuController {
 
@@ -116,7 +117,45 @@ public class RunTaskMenuController {
 
     @FXML
     void checkTargetsWithWhatIf(ActionEvent event) {
+        selectedTargetsListView.getItems().clear();
+        String finalUrl = HttpUrl
+                .parse(Constants.WHAT_IF)
+                .newBuilder()
+                .addQueryParameter(Constants.SOURCE_TARGET, whatIf_targetsCB.getValue())
+                .addQueryParameter(Constants.DEPENDENCY, whatIf_DependencyCB.getValue().name())
+                .addQueryParameter(Constants.GRAPH_NAME, graphName.getValue())
+                .build()
+                .toString();
+        HttpUtils.runAsync(finalUrl, new Callback() {
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
 
+            }
+
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                String responseBody = response.body().string();
+                Platform.runLater(()->{
+                    if (response.code() != 200) {
+                        warningChosenTargetsLabel.setVisible(true);
+                        warningChosenTargetsLabel.setText(responseBody);
+                    } else {
+                        String[] targets = new Gson().fromJson(responseBody, String[].class);
+                        if (targets.length == 0) {
+                            warningChosenTargetsLabel.setVisible(true);
+                        } else {
+                            warningChosenTargetsLabel.setVisible(false);
+                            ObservableList<String> data = FXCollections.observableArrayList();
+                            data.addAll(targets);
+                            selectedTargetsListView.setItems(data);
+
+                        }
+                    }
+
+                });
+
+            }
+        });
     }
 
 
@@ -186,16 +225,9 @@ public class RunTaskMenuController {
                 warningTaskNameLabel.setVisible(false);
             }
         });
-
         baseHBox.getChildren().remove(simulationTaskToggles);
         baseHBox.getChildren().remove(compilationTaskToggles);
         targetsList.bind(selectedTargetsListView.itemsProperty());
-        selectedTargetsListView.itemsProperty().addListener(new ChangeListener<ObservableList<String>>() {
-            @Override
-            public void changed(ObservableValue<? extends ObservableList<String>> observable, ObservableList<String> oldValue, ObservableList<String> newValue) {
-
-            }
-        });
         selectedTargetsListView.getItems().addListener(new ListChangeListener<String>() {
             @Override
             public void onChanged(Change<? extends String> c) {
@@ -338,12 +370,14 @@ public class RunTaskMenuController {
             @Override
             public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
                 selectedTargetsListView.getItems().clear();
+                warningChosenTargetsLabel.setVisible(true);
             }
         });
         chooseTargetsRB.selectedProperty().addListener(new ChangeListener<Boolean>() {
             @Override
             public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
                 selectedTargetsListView.getItems().clear();
+                warningChosenTargetsLabel.setVisible(true);
                 if(newValue == false){
                     for(CheckBox currCheckBox: targetsCheckBoxList.getItems()){
                         currCheckBox.selectedProperty().set(false);
@@ -359,6 +393,7 @@ public class RunTaskMenuController {
                     for(CheckBox checkBox: targetsCheckBoxList.getItems()){
                         checkBox.setSelected(newValue);
                     }
+                    warningChosenTargetsLabel.setVisible(false);
                 }
             }
         });
@@ -428,6 +463,7 @@ public class RunTaskMenuController {
                 public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
                     if(newValue == true){
                         selectedTargetsListView.getItems().add(checkBox.getText());
+                        warningChosenTargetsLabel.setVisible(false);
                     }
                     else{
                         selectedTargetsListView.getItems().remove(checkBox.getText());
