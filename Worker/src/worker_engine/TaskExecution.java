@@ -46,7 +46,9 @@ public class TaskExecution {
                     System.out.println(LocalTime.now() +"-in sending execution DTO, Received payment==>" + payment);
                     payment.replace("\"", "");
                     if(!payment.isEmpty()){
-                        WorkerEngine.getInstance().addCredits(Integer.valueOf(payment));
+                        int thePay = Integer.valueOf(payment);
+                        executionTarget.setTargetPrice(thePay);
+                        WorkerEngine.getInstance().addCredits(thePay);
                     }
                 }
 

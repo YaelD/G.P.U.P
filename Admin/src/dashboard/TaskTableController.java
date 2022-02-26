@@ -153,6 +153,7 @@ public class TaskTableController {
             root = fxmlLoader.load(resource.openStream());
             RunWindowController runWindowController = fxmlLoader.getController();
             runWindowController.setTaskDTOProperty(task);
+
         } catch (IOException e) {
             e.printStackTrace();
         }

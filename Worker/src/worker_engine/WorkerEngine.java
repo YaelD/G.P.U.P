@@ -115,7 +115,9 @@ public class WorkerEngine {
     }
 
     public void closeThreadPool(){
-        pausableThreadPoolExecutor.shutdown();
+        if(pausableThreadPoolExecutor != null){
+            pausableThreadPoolExecutor.shutdown();
+        }
     }
 
 }

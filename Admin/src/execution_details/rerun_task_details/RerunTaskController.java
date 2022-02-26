@@ -1,6 +1,7 @@
 package execution_details.rerun_task_details;
 
 import RefreshingItems.TaskListRefresherTimer;
+import admin_engine.Utilities;
 import com.google.gson.Gson;
 import constants.Constants;
 import dto.*;
@@ -17,6 +18,7 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -49,7 +51,7 @@ public class RerunTaskController {
 
     private Set<String> allTaskTargetsList;
     private Set<String> failedTargetsList;
-
+    private TaskParamsDTO taskParamsDTO;
 
 
 
@@ -73,10 +75,7 @@ public class RerunTaskController {
     private RadioButton incrementalRadioButton;
 
     @FXML
-    private Label warningTaskNameLabel;
-
-    @FXML
-    private TextField taskNameTextField;
+    private Label taskNameTextField;
 
     @FXML
     private Label warningRunTypeLabel;
@@ -130,17 +129,24 @@ public class RerunTaskController {
         chooseAllTargetsCheckBox.setSelected(false);
     }
 
+    public RerunTaskController() {
+        targetsList = new SimpleListProperty<>();
+        taskType = new SimpleObjectProperty<>();
+        runType = new SimpleObjectProperty<>();
+        taskName = new SimpleStringProperty();
+        graphName = new SimpleStringProperty();
+        taskPrice = new SimpleIntegerProperty();
+        creatorName = new SimpleStringProperty();
+    }
 
     @FXML
     private void initialize(){
+        taskNameTextField.textProperty().bind(taskName);
         whatIf_DependencyCB.getItems().add(Dependency.DEPENDS_ON);
         whatIf_DependencyCB.getItems().add(Dependency.REQUIRED_FOR);
         whatIf_DependencyCB.getSelectionModel().select(0);
-        continueButton.disableProperty().bind(Bindings.or(warningChosenTargetsLabel.visibleProperty(),Bindings.or(warningTaskNameLabel.visibleProperty(), warningRunTypeLabel.visibleProperty())));
+        continueButton.disableProperty().bind(Bindings.or(warningChosenTargetsLabel.visibleProperty(), warningRunTypeLabel.visibleProperty()));
         initTargetChoiceControllers();
-
-
-        //TODO: SET TASK NAME
 
         targetsList.bind(selectedTargetsListView.itemsProperty());
 
@@ -165,55 +171,46 @@ public class RerunTaskController {
 
     }
 
-//    private void sendTaskToServer(TaskParamsDTO taskParamsDTO){
-//
-//        Gson gson = new Gson();
-//        SimulationTaskParamsDTO simulationTaskParamsDTO;
-//        CompilationTaskParamsDTO compilationTaskParamsDTO;
-//        String param = "";
-//        if(taskParamsDTO instanceof SimulationTaskParamsDTO){
-//            simulationTaskParamsDTO = (SimulationTaskParamsDTO) taskParamsDTO;
-//            param = gson.toJson(simulationTaskParamsDTO);
-//        }
-//        else{
-//            compilationTaskParamsDTO = (CompilationTaskParamsDTO) taskParamsDTO;
-//            param = gson.toJson(compilationTaskParamsDTO);
-//        }
-//        Request request = new Request.Builder().url(Constants.TASK_LIST)
-//                .post(RequestBody.create(param.getBytes())).build();
-//        HttpUtils.runAsyncWithRequest(request, new Callback() {
-//            @Override
-//            public void onFailure(@NotNull Call call, @NotNull IOException e) {
-//                Platform.runLater(()->{
-//                    serverResponseLabel.setVisible(true);
-//                    serverResponseLabel.setTextFill(Color.RED);
-//                    serverResponseLabel.setText(e.getMessage());
-//                });
-//            }
-//
-//            @Override
-//            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-//                Platform.runLater(()->{
-//                    try {
-//                        String res = response.body().string();
-//                        if(response.code() == 200) {
-//                            serverResponseLabel.setVisible(true);
-//                            serverResponseLabel.setTextFill(Color.GREEN);
-//                            serverResponseLabel.setText("Task created successfully");
-//                        }
-//                        else{
-//                            serverResponseLabel.setVisible(true);
-//                            serverResponseLabel.setTextFill(Color.RED);
-//                            serverResponseLabel.setText(res);
-//
-//                        }
-//                    } catch (IOException e) {
-//                        e.printStackTrace();
-//                    }
-//                });
-//            }
-//        });
-//    }
+    private void sendTaskToServer(TaskParamsDTO taskParamsDTO){
+
+        Gson gson = new Gson();
+        SimulationTaskParamsDTO simulationTaskParamsDTO;
+        CompilationTaskParamsDTO compilationTaskParamsDTO;
+        String param = "";
+        if(taskParamsDTO instanceof SimulationTaskParamsDTO){
+            simulationTaskParamsDTO = (SimulationTaskParamsDTO) taskParamsDTO;
+            param = gson.toJson(simulationTaskParamsDTO);
+        }
+        else{
+            compilationTaskParamsDTO = (CompilationTaskParamsDTO) taskParamsDTO;
+            param = gson.toJson(compilationTaskParamsDTO);
+        }
+        Request request = new Request.Builder().url(Constants.TASK_LIST)
+                .post(RequestBody.create(param.getBytes())).build();
+        HttpUtils.runAsyncWithRequest(request, new Callback() {
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                Platform.runLater(()->{
+                });
+            }
+
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                Platform.runLater(()->{
+                    try {
+                        String res = response.body().string();
+                        if(response.code() == 200) {
+                        }
+                        else{
+
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                });
+            }
+        });
+    }
 
 
     private void initTargetChoiceControllers(){
@@ -244,6 +241,7 @@ public class RerunTaskController {
                     for(CheckBox checkBox: targetsCheckBoxList.getItems()){
                         checkBox.setSelected(newValue);
                     }
+                    warningChosenTargetsLabel.setVisible(true);
                 }
             }
         });
@@ -278,6 +276,7 @@ public class RerunTaskController {
     }
 
     public void setCurrTask(TaskDTO taskDTO) {
+        this.currTask = taskDTO;
 
         this.graphName.set(taskDTO.getGraphDTO().getName());
         this.allTaskTargetsList = taskDTO.getGraphDTO().getTargets().keySet();
@@ -288,9 +287,12 @@ public class RerunTaskController {
                 failedTargetsList.add(targetName);
             }
         }
+        taskName.set(taskDTO.getTaskName() + Utilities.TASK_APPEARANCE_COUNTER.get(taskDTO.getTaskName()));
+        taskType.set(taskDTO.getTaskType());
         incrementalRadioButton.setDisable(failedTargetsList.isEmpty());
         initLists(allTaskTargetsList);
         initTaskChoiceController();
+
     }
 
 
@@ -305,6 +307,7 @@ public class RerunTaskController {
                 public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
                     if(newValue == true){
                         selectedTargetsListView.getItems().add(checkBox.getText());
+                        warningChosenTargetsLabel.setVisible(false);
                     }
                     else{
                         selectedTargetsListView.getItems().remove(checkBox.getText());
@@ -325,6 +328,57 @@ public class RerunTaskController {
     }
 
     @FXML
-    public void checkTargetsWithWhatIf(ActionEvent actionEvent) {
+    void checkTargetsWithWhatIf(ActionEvent event) {
+        selectedTargetsListView.getItems().clear();
+        String finalUrl = HttpUrl
+                .parse(Constants.WHAT_IF)
+                .newBuilder()
+                .addQueryParameter(Constants.SOURCE_TARGET, whatIf_targetsCB.getValue())
+                .addQueryParameter(Constants.DEPENDENCY, whatIf_DependencyCB.getValue().name())
+                .addQueryParameter(Constants.GRAPH_NAME, graphName.getValue())
+                .build()
+                .toString();
+        HttpUtils.runAsync(finalUrl, new Callback() {
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+            }
+
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                String responseBody = response.body().string();
+                Platform.runLater(()->{
+                    if (response.code() != 200) {
+                        warningChosenTargetsLabel.setVisible(true);
+                        warningChosenTargetsLabel.setText(responseBody);
+                    } else {
+                        String[] targets = new Gson().fromJson(responseBody, String[].class);
+                        if (targets.length == 0) {
+                            warningChosenTargetsLabel.setVisible(true);
+                        } else {
+                            warningChosenTargetsLabel.setVisible(false);
+                            ObservableList<String> data = FXCollections.observableArrayList();
+                            if(incrementalRadioButton.isSelected()){
+                                for(String name: targets) {
+                                    if (failedTargetsList.contains(name)) {
+                                        data.add(name);
+                                    }
+                                }
+                            }
+                            else{
+                                for(String name: targets) {
+                                    if (allTaskTargetsList.contains(name)) {
+                                        data.add(name);
+                                    }
+                                }
+                            }
+                            selectedTargetsListView.setItems(data);
+
+                        }
+                    }
+
+                });
+
+            }
+        });
     }
 }

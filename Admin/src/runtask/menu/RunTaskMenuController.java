@@ -1,6 +1,7 @@
 package runtask.menu;
 
 import RefreshingItems.TaskListRefresherTimer;
+import admin_engine.Utilities;
 import com.google.gson.Gson;
 import constants.Constants;
 import dto.*;
@@ -302,6 +303,7 @@ public class RunTaskMenuController {
     }
 
     private void sendTaskToServer(TaskParamsDTO taskParamsDTO){
+        Utilities.TASK_PARAMS.put(taskParamsDTO.getTaskName(), taskParamsDTO);
 
         Gson gson = new Gson();
         SimulationTaskParamsDTO simulationTaskParamsDTO;
@@ -336,12 +338,13 @@ public class RunTaskMenuController {
                             serverResponseLabel.setVisible(true);
                             serverResponseLabel.setTextFill(Color.GREEN);
                             serverResponseLabel.setText("Task created successfully");
+                            Utilities.TASK_PARAMS.put(taskParamsDTO.getTaskName(), taskParamsDTO);
+                            Utilities.TASK_APPEARANCE_COUNTER.put(taskParamsDTO.getTaskName(), 1);
                         }
                         else{
                             serverResponseLabel.setVisible(true);
                             serverResponseLabel.setTextFill(Color.RED);
                             serverResponseLabel.setText(res);
-
                         }
                     } catch (IOException e) {
                         e.printStackTrace();

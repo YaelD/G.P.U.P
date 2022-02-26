@@ -20,7 +20,9 @@
             <ColumnConstraints hgrow="NEVER" maxWidth="230.0" minWidth="219.0" prefWidth="230.0" />
             <ColumnConstraints hgrow="NEVER" maxWidth="85.0" minWidth="10.0" prefWidth="74.0" />
             <ColumnConstraints hgrow="NEVER" />
-            <ColumnConstraints hgrow="NEVER" minWidth="10.0" prefWidth="100.0" />
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="1.7976931348623157E308" minWidth="10.0" prefWidth="100.0" />
+            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
             <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
           <ColumnConstraints hgrow="SOMETIMES" maxWidth="10.0" minWidth="10.0" prefWidth="10.0" />
         </columnConstraints>
@@ -45,7 +47,7 @@
                   <Font size="23.0" />
                </font>
             </Label>
-            <Label fx:id="totalIncomeLabel" layoutX="20.0" layoutY="18.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="34.0" prefWidth="0.0" text="0" GridPane.columnIndex="4" GridPane.rowIndex="1">
+            <Label fx:id="totalIncomeLabel" layoutX="20.0" layoutY="18.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="34.0" prefWidth="182.0" text="0" GridPane.columnIndex="4" GridPane.rowIndex="1">
                <font>
                   <Font size="23.0" />
                </font>

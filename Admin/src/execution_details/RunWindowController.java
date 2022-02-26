@@ -41,16 +41,15 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.Collection;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 
 public class RunWindowController {
 
-    SimpleObjectProperty<TaskDTO> taskDTOProperty;
-    SimpleDoubleProperty finishedTargetsProgress;
-
+    private SimpleObjectProperty<TaskDTO> taskDTOProperty;
+    private SimpleDoubleProperty finishedTargetsProgress;
+    private Set<String> finishedTargets;
+    final private String NEW_LINE = "\n------------------------------------\n";
 
     @FXML
     private GridPane runResultsPane;
@@ -145,6 +144,12 @@ public class RunWindowController {
                     if(!targetDTO.getRunStatus().equals(RunStatus.WAITING) && !targetDTO.getRunStatus().equals(RunStatus.FROZEN)){
                         numOfFinishedTargets++;
                     }
+                    if(targetDTO.getRunStatus().equals(RunStatus.FINISHED) || targetDTO.getRunStatus().equals(RunStatus.SKIPPED)){
+                        if(!finishedTargets.contains(targetDTO.getName())){
+                            finishedTargets.add(targetDTO.getName());
+                            writeTargetToRunConsole(targetDTO);
+                        }
+                    }
                 }
                 double finalNumOfFinishedTargets = numOfFinishedTargets /(double)taskDTO.getGraphDTO().getTotalNumOfTargets();
                 Platform.runLater(()->{
@@ -155,9 +160,17 @@ public class RunWindowController {
         }
     }
 
+
+    private void writeTargetToRunConsole(TargetDTO targetDTO){
+        Platform.runLater(()->{
+            taskRunConsole.setText(targetDTO.getTaskLog() + NEW_LINE + taskRunConsole.getText());
+        });
+    }
+
     public RunWindowController() {
         this.taskDTOProperty = new SimpleObjectProperty<>();
         this.finishedTargetsProgress = new SimpleDoubleProperty();
+        this.finishedTargets = new HashSet<>();
     }
 
     @FXML
@@ -209,30 +222,6 @@ public class RunWindowController {
        this.taskDTOProperty.set(taskDTOProperty);
     }
 
-
-    private String createRunResultString(TargetDTO targetDTO){
-        final String PRINT_LINE = "---------------------------------------------\n";
-        String currStr = "";
-        currStr += (PRINT_LINE);
-        currStr +=("Target name: " + targetDTO.getName()+ "\n") ;
-        currStr +=("Process result: " + targetDTO.getRunResult().getStatus() + "\n");
-        if(targetDTO.getInfo() != null){
-            currStr +=("Target info:" + targetDTO.getInfo() + "\n");
-        }
-        if(!targetDTO.getRunResult().equals(RunResults.SKIPPED)){
-            if(!targetDTO.getTargetsThatCanBeRun().isEmpty()){
-                currStr +=("The dependent Targets that were opened:\n" + targetDTO.getTargetsThatCanBeRun() + "\n");
-            }
-            if(targetDTO.getRunResult().equals(RunResults.FAILURE)){
-                if(!targetDTO.getSkippedFathers().isEmpty()){
-                    currStr +=("The targets that won't be able to process are: \n" + targetDTO.getSkippedFathers() + "\n");
-                }
-            }
-        }
-
-        currStr +=(PRINT_LINE);
-        return currStr;
-    }
 
     public void writeToTargetDetails(String str){
         Platform.runLater(()->{
