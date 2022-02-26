@@ -28,6 +28,10 @@ public class TasksManager {
         }
     }
 
+    public String getWorkingDirectory() {
+        return workingDirectory;
+    }
+
     public Map<String, Task> getTasksInSystem() {
         return tasksInSystem;
     }
@@ -99,7 +103,7 @@ public class TasksManager {
             for(Task currTask : workerTasks){
                 //writeTargetRunResultToFile(getTaskTypeByName(currTask.getTaskName()), currTask);
                 if(targetsForWorker.size() < requiredNumOfTargets){
-                    TargetDTO targetDTO = currTask.getTargetReadyForRunning();
+                    TargetDTO targetDTO = currTask.getTargetReadyForRunning(this.workingDirectory);
                     if(targetDTO != null){
                         targetsForWorker.add(targetDTO);
                     }
@@ -138,6 +142,8 @@ public class TasksManager {
             Target taskTarget = taskGraph.getTarget(executionTargetDTO.getTargetName());
             taskTarget.updateTarget(executionTargetDTO);
             priceForTarget = task.updateTargetsRunResult(taskTarget);
+            writeTargetRunResultToFile(this.getTaskTypeByName(task.getTaskName()),
+                    taskTarget, task, this.workingDirectory);
         }
         else{
             throw new Exception(ExceptionMessages.TASK + executionTargetDTO.getTaskName() +
@@ -146,28 +152,20 @@ public class TasksManager {
         return priceForTarget;
     }
 
-    private void writeTargetRunResultToFile(TaskType taskTypeByName, Task task) {
-        List<Target> targetsForWritingToFile = task.getTargetsForWritingToFile();
-        if(targetsForWritingToFile.isEmpty()){
-            return;
-        }
-        else{
-            synchronized (task){
-                while (!targetsForWritingToFile.isEmpty()){
-                    Target target = targetsForWritingToFile.remove(0);
-                    openDirectoryAndFiles(taskTypeByName, target, task.getTaskName());
-                }
-            }
+    public static void writeTargetRunResultToFile(TaskType taskTypeByName,Target target,
+                                                  Task task, String workingDirectory) {
+        if(target.getRunStatus().equals(RunStatus.FINISHED) || target.getRunStatus().equals(RunStatus.SKIPPED)){
+            new Thread(()->openDirectoryAndFiles(taskTypeByName, target, task.getTaskName(), workingDirectory));
         }
     }
 
 
-    public void openDirectoryAndFiles(TaskType taskType, Target target, String taskName) {
+    public static void openDirectoryAndFiles(TaskType taskType, Target target, String taskName, String workingDirectory) {
         StringBuffer stringBuffer = new StringBuffer();
         Date now = new Date();
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MM-yyyy HH-mm-ss");
         simpleDateFormat.format(now, stringBuffer, new FieldPosition(0));
-        String path = this.workingDirectory+ "\\" + taskType.getTaskType() + "-" +
+        String path = workingDirectory + "\\" + taskType.getTaskType() + "-" +
                 simpleDateFormat.format(now);
         File directory = new File(path);
         if(!directory.exists()){
@@ -177,7 +175,7 @@ public class TasksManager {
     }
 
 
-    private void writeToFile(String path, Target target, String taskName) {
+    public static void writeToFile(String path, Target target, String taskName) {
         Writer out = null;
         try {
             out = new BufferedWriter(

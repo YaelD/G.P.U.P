@@ -4,6 +4,7 @@ import dto.TargetDTO;
 import dto.TaskDTO;
 import dto.TaskParamsDTO;
 import engine.ExceptionMessages;
+import engine.TasksManager;
 import exceptions.CycleException;
 import general_enums.*;
 import graph.Graph;
@@ -25,7 +26,6 @@ public abstract class Task {
     private CountDownLatch latch;
     protected List<Target> sortedTargets = new ArrayList<>();
     protected List<Target> finishedTargets = new ArrayList<>();
-    private List<Target> targetsForWritingToFile = new ArrayList<>();
     private boolean isTaskFinished = false;
 
 
@@ -70,9 +70,6 @@ public abstract class Task {
         return status;
     }
 
-    public List<Target> getTargetsForWritingToFile() {
-        return targetsForWritingToFile;
-    }
 
     public static List<Target> topologicalSort(Graph graph) throws CycleException {
         List<Target> sortedTargets = new ArrayList<>();
@@ -367,8 +364,17 @@ public abstract class Task {
         }
     }
 
+    public TaskType getTaskType(){
+        if(this instanceof SimulationTask){
+            return TaskType.SIMULATION_TASK;
+        }
+        else{
+            return TaskType.COMPILATION_TASK;
+        }
+    }
 
-    public synchronized TargetDTO getTargetReadyForRunning() throws Exception {
+
+    public synchronized TargetDTO getTargetReadyForRunning(String workingDirectory) throws Exception {
         TargetDTO targetDTO = null;
         if(this.status.equals(TaskStatus.ACTIVE)){
             switch (this.sortedTargets.get(0).getRunStatus()){
@@ -380,15 +386,15 @@ public abstract class Task {
                 case FINISHED:
                     Target currTarget = this.sortedTargets.remove(0);
                     this.finishedTargets.add(currTarget);
-                    //this.targetsForWritingToFile.add(currTarget);
+                    TasksManager.writeTargetRunResultToFile(this.getTaskType(), currTarget,this,workingDirectory);
                     break;
                 default:
                     break;
             }
         }
-        else{
-            checkTaskStatus();
-        }
+//        else{
+//            checkTaskStatus();
+//        }
         return targetDTO;
     }
 
