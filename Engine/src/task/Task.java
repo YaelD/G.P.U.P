@@ -178,11 +178,11 @@ public abstract class Task {
         }
         if(isTaskFinished){
             this.setStatus(TaskStatus.FINISHED);
-            System.out.println("Num of skipped target===> " + this.skippedTargets.size());
-            System.out.println("The skipped targets: " + this.skippedTargets.toString());
-            for(Target target : this.skippedTargets){
-                TasksManager.writeTargetRunResultToFile(target,this);
-            }
+//            System.out.println("Num of skipped target===> " + this.skippedTargets.size());
+//            System.out.println("The skipped targets: " + this.skippedTargets.toString());
+//            for(Target target : this.skippedTargets){
+//                TasksManager.writeTargetRunResultToFile(target,this);
+//            }
         }
     }
 
@@ -441,21 +441,21 @@ public abstract class Task {
         return targetDTO;
     }
 
-    private void checkTaskStatus() throws Exception {
-        switch (this.status){
-            case SUSPENDED:
-                throw new Exception(ExceptionMessages.TASK + this.taskName + ExceptionMessages.TASK_STATUS_SUSPENDED
-                        + "\n" + ExceptionMessages.CAN_NOT_GET_TARGETS + "\n" + ExceptionMessages.TRY_LATER);
-            case STOPPED:
-                throw new Exception(ExceptionMessages.TASK + this.taskName + ExceptionMessages.TASK_STATUS_STOPPED
-                        + "\n" + ExceptionMessages.CAN_NOT_GET_TARGETS);
-            case FINISHED:
-                throw new Exception(ExceptionMessages.TASK + this.taskName + ExceptionMessages.TASK_STATUS_FINISHED
-                        + "\n" + ExceptionMessages.CAN_NOT_GET_TARGETS);
-            case NEW:
-                throw new Exception(ExceptionMessages.TASK + this.taskName + ExceptionMessages.TASK_NOT_ACTIVE);
-        }
-    }
+//    private void checkTaskStatus() throws Exception {
+//        switch (this.status){
+//            case SUSPENDED:
+//                throw new Exception(ExceptionMessages.TASK + this.taskName + ExceptionMessages.TASK_STATUS_SUSPENDED
+//                        + "\n" + ExceptionMessages.CAN_NOT_GET_TARGETS + "\n" + ExceptionMessages.TRY_LATER);
+//            case STOPPED:
+//                throw new Exception(ExceptionMessages.TASK + this.taskName + ExceptionMessages.TASK_STATUS_STOPPED
+//                        + "\n" + ExceptionMessages.CAN_NOT_GET_TARGETS);
+//            case FINISHED:
+//                throw new Exception(ExceptionMessages.TASK + this.taskName + ExceptionMessages.TASK_STATUS_FINISHED
+//                        + "\n" + ExceptionMessages.CAN_NOT_GET_TARGETS);
+//            case NEW:
+//                throw new Exception(ExceptionMessages.TASK + this.taskName + ExceptionMessages.TASK_NOT_ACTIVE);
+//        }
+//    }
 
 
 }
