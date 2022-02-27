@@ -53,7 +53,7 @@ public class CompilationTaskExecution extends TaskExecution implements Runnable{
     private Process CompileTarget(ExecutionTarget target, String localSourceDir, String filePath) throws IOException {
         target.setSpecificTaskLog("Start compilation time: " + LocalTime.now().format(DateTimeFormatter.ofPattern("H:mm:ss")));
         Process process = new ProcessBuilder(JAVA_COMPILER, DESTINATION_DIR_REF_PARAM, this.destinationDir,
-                SOURCE_DIR_REF_PARAM ,localSourceDir, filePath)
+                SOURCE_DIR_REF_PARAM ,this.destinationDir, filePath)
                 .directory(new File(this.sourceDir))
                 .redirectErrorStream(true)
                 .start();
