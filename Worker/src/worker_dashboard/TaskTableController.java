@@ -2,6 +2,7 @@ package worker_dashboard;
 
 import RefreshingItems.TaskListRefresherTimer;
 import dto.TaskDTO;
+import general_enums.TaskStatus;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableValue;
@@ -16,6 +17,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 import javafx.util.Callback;
+import worker_engine.WorkerEngine;
 
 import java.io.IOException;
 import java.net.URL;
@@ -129,6 +131,12 @@ public class TaskTableController {
     }
 
     private void updateTasksList(List<TaskDTO> tasks) {
+        for(TaskDTO taskDTO : tasks){
+            if(taskDTO.getTaskStatus().equals(TaskStatus.FINISHED) || taskDTO.getTaskStatus().equals(TaskStatus.STOPPED)){
+                WorkerEngine.getInstance().getRegisteredTasksParams().remove(taskDTO.getTaskName());
+                WorkerEngine.getInstance().getPausedTasks().remove(taskDTO.getTaskName());
+            }
+        }
         Platform.runLater(() -> {
             ObservableList<TaskDTO> taskDTOS = tasksInSystemTableView.getItems();
             taskDTOS.clear();

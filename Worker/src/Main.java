@@ -8,11 +8,8 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import worker_engine.ExecutionTarget;
 import worker_engine.ExecutionTargetsRefresherTimer;
-import worker_engine.SendExecutionTargetRefresherTimer;
 import worker_engine.WorkerEngine;
-import worker_login.LoginWindowController;
 
 import java.net.URL;
 

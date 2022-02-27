@@ -115,7 +115,8 @@ public class TasksInfoServlet extends HttpServlet {
         }
         else{
             String[] paramsNames = {Constants.TASK_NAME, Constants.TASK_STATUS};
-            try(PrintWriter body = response.getWriter()){
+            try{
+                PrintWriter body = response.getWriter();
                 Map<String, String> mapParams = null;
                 mapParams = ServletUtils.validateRequestQueryParams(request, paramsNames);
                 TasksManager tasksManager = ServletUtils.getTasksManager(getServletContext());
