@@ -93,6 +93,14 @@ public class TasksManager {
         return this.tasksInSystem.get(taskName);
     }
 
+    public Task removeWorkerFromTask(String taskName, String workerName) throws Exception {
+        if(!isTaskExistInSystem(taskName)){
+            throw new Exception(ExceptionMessages.TASK + taskName + ExceptionMessages.NOT_EXIST);
+        }
+        this.tasksInSystem.get(taskName).removeWorkerFromTask(workerName);
+        return this.tasksInSystem.get(taskName);
+    }
+
     public synchronized Set<TargetDTO> getTaskTargetForExecution(Collection<Task> workerTasks, int requiredNumOfTargets) throws Exception {
 
         Set<TargetDTO> targetsForWorker = new HashSet<>();

@@ -17,6 +17,7 @@ public class Constants {
     public final static String FIND_CYCLE = FULL_SERVER_PATH + "/find_cycle";
     public final static String TASK_EXECUTION = FULL_SERVER_PATH + "/task_execution";
     public final static String UPDATE_TARGET_RUN_STATUS = FULL_SERVER_PATH + "/target";
+    public final static String UNREGISTER_EXECUTION = FULL_SERVER_PATH + "/unregister_execution";
 
     //QUERY PARAMS:
     public static final String USERNAME = "username";

@@ -41,7 +41,8 @@ public class TaskExecutionServlet extends HttpServlet {
             response.setStatus(HttpServletResponse.SC_CONFLICT);
         } else {
             String[] paramsNames = {Constants.TASK_NAME};
-            try (PrintWriter body = response.getWriter()){
+            PrintWriter body = response.getWriter();
+            try {
                 Map<String, String> mapParams = null;
                 mapParams = ServletUtils.validateRequestQueryParams(request, paramsNames);
                 TasksManager tasksManager = ServletUtils.getTasksManager(getServletContext());
