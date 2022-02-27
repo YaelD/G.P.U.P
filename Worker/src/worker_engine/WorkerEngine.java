@@ -27,6 +27,8 @@ public class WorkerEngine {
     private Set<ExecutionTarget> workerTargets;
     private Set<ExecutionTarget> currentRunningTargets;
 
+    private Map< String, TaskParamsDTO> pausedTasks;
+
     private WorkerEngine(){
         totalCredits = new SimpleIntegerProperty();
         numOfFreeThreads = new SimpleIntegerProperty();
@@ -35,7 +37,12 @@ public class WorkerEngine {
         currentRunningTargets = new HashSet<>();
         systemTasks = new SimpleListProperty<>();
         targetsConsumer = new ArrayList<>();
+        pausedTasks = new HashMap<>();
         TaskListRefresherTimer.getInstance().addConsumer(this::setSystemTasks);
+    }
+
+    public Map< String, TaskParamsDTO> getPausedTasks() {
+        return pausedTasks;
     }
 
     public SimpleIntegerProperty numOfFreeThreadsProperty() {

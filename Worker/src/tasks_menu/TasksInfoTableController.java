@@ -8,9 +8,12 @@ import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
+import javafx.scene.input.MouseEvent;
 import javafx.util.Callback;
 import worker_engine.ExecutionTarget;
 import worker_engine.WorkerEngine;
@@ -38,10 +41,24 @@ public class TasksInfoTableController {
     @FXML
     private TableColumn<TaskDTO, String> totalTaskCredits_column;
 
+    private TaskMenuController taskMenuController;
+
     @FXML
     private void initialize(){
         TaskListRefresherTimer.getInstance().addConsumer(this::updateTasksList);
+        taskInfoTable.setRowFactory(new Callback<TableView<TaskDTO>, TableRow<TaskDTO>>() {
+            @Override
+            public TableRow<TaskDTO> call(TableView<TaskDTO> param) {
+                TableRow<TaskDTO> row = new TableRow<>();
+                row.setOnMouseClicked(event -> {
+                    if (event.getClickCount() == 2 && (! row.isEmpty()) ) {
+                        taskMenuController.setTaskNameLabel(row.getItem().getTaskName());
+                    }
+                });
 
+                return row;
+            }
+        });
         taskName_column.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<TaskDTO, String>, ObservableValue<String>>() {
             @Override
             public ObservableValue<String> call(TableColumn.CellDataFeatures<TaskDTO, String> param) {
@@ -106,7 +123,8 @@ public class TasksInfoTableController {
         Platform.runLater(() -> {
             List<TaskDTO> taskList = new ArrayList<>();
             for(TaskDTO taskDTO : tasks){
-                if(WorkerEngine.getInstance().getRegisteredTasksParams().containsKey(taskDTO.getTaskName())){
+                if(WorkerEngine.getInstance().getRegisteredTasksParams().containsKey(taskDTO.getTaskName()) ||
+                WorkerEngine.getInstance().getPausedTasks().containsKey(taskDTO.getTaskName())){
                     taskList.add(taskDTO);
                 }
             }
@@ -115,4 +133,10 @@ public class TasksInfoTableController {
             taskDTOObservableList.addAll(taskList);
         });
     }
+
+    public void setTaskMenuController(TaskMenuController taskMenuController) {
+        this.taskMenuController = taskMenuController;
+    }
+
+
 }
