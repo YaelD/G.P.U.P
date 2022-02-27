@@ -137,7 +137,8 @@ public abstract class Task {
     }
 
     //this function will be called when a worker sends the run result of a target.
-    public int updateTargetsRunResult(Target target){
+    public synchronized int updateTargetsRunResult(Target target){
+        System.out.println(LocalTime.now() + "-IN (Task)updateTargetRunResult- start updating: " + target.getName());
         int priceForTarget = 0;
         if(target.getRunResult().equals(RunResults.FAILURE)){
             target.updateParentsStatus(target.getSkippedFathers(), target.getName()); //כל מי שסגרתי לריצה בגללי
@@ -146,8 +147,19 @@ public abstract class Task {
             priceForTarget = this.totalTaskPrice/this.graph.getTargets().size();
             getOpenedTargetsToRun(target);
         }
+        printTargets();
+        System.out.println(LocalTime.now() + "-IN (Task)updateTargetRunResult- stop updating: " + target.getName());
         checkIfTaskIsFinished();
+
         return priceForTarget;
+    }
+
+    private void printTargets(){
+        for(Target t: this.graph.getTargets()){
+            String rr = t.getRunResult() != null? t.getRunResult().name() : "";
+            String rs = t.getRunStatus() != null? t.getRunStatus().name() : "";
+            System.out.println("Target: " + t.getName() + "RunStatus: " + rs + "RunResult: " +  rr);
+        }
     }
 
     //The function over on all the targets in the task and check if they finished-
