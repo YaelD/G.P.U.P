@@ -366,22 +366,31 @@ public abstract class Task {
                 break;
             case ACTIVE:
                 if (newStatus.equals(TaskStatus.STOPPED) || (newStatus.equals(TaskStatus.SUSPENDED))) {
+                    if(newStatus.equals(TaskStatus.STOPPED)){
+                        for(Target target : this.graph.getTargets()){
+                            if(target.getRunResult() == null){
+                                target.setRunResult(RunResults.SKIPPED);
+                            }
+                        }
+                    }
                     this.setStatus(newStatus);
                     isStatusChanged = true;
                 }
                 break;
             case SUSPENDED:
                 if (newStatus.equals(TaskStatus.STOPPED) || (newStatus.equals(TaskStatus.ACTIVE))) {
+                    if(newStatus.equals(TaskStatus.STOPPED)){
+                        for(Target target : this.graph.getTargets()){
+                            if(target.getRunResult() == null){
+                                target.setRunResult(RunResults.SKIPPED);
+                            }
+                        }
+                    }
                     this.setStatus(newStatus);
                     isStatusChanged = true;
                 }
                 break;
             case STOPPED:
-                for(Target target : this.graph.getTargets()){
-                    if(target.getRunResult() == null){
-                        target.setRunResult(RunResults.SKIPPED);
-                    }
-                }
             case FINISHED:
                 isStatusChanged = false;
                 break;
