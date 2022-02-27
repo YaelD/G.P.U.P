@@ -383,6 +383,7 @@ public abstract class Task {
                         for(Target target : this.graph.getTargets()){
                             if(target.getRunResult() == null){
                                 target.setRunResult(RunResults.SKIPPED);
+                                target.setRunStatus(RunStatus.SKIPPED);
                             }
                         }
                     }
