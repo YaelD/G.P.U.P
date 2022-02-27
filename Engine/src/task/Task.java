@@ -377,6 +377,11 @@ public abstract class Task {
                 }
                 break;
             case STOPPED:
+                for(Target target : this.graph.getTargets()){
+                    if(target.getRunResult() == null){
+                        target.setRunResult(RunResults.SKIPPED);
+                    }
+                }
             case FINISHED:
                 isStatusChanged = false;
                 break;
