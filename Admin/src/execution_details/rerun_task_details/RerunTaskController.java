@@ -245,7 +245,7 @@ public class RerunTaskController {
                     for(CheckBox checkBox: targetsCheckBoxList.getItems()){
                         checkBox.setSelected(newValue);
                     }
-                    warningChosenTargetsLabel.setVisible(true);
+                    warningChosenTargetsLabel.setVisible(false);
                 }
             }
         });
@@ -342,12 +342,12 @@ public class RerunTaskController {
 
 
     private TaskParamsDTO buildSimulationParams(SimulationTaskParamsDTO oldParams){
-        return new SimulationTaskParamsDTO(runType.get(), targetsList.get(), oldParams.getCreatorName(), oldParams.getGraphName(), taskName.getName(),
+        return new SimulationTaskParamsDTO(runType.get(), targetsList.get(), oldParams.getCreatorName(), oldParams.getGraphName(), taskName.getValue(),
                 oldParams.getTotalTaskPrice(),  oldParams.getProcessTime(), oldParams.isRandom(), oldParams.getSuccessRate(), oldParams.getSuccessWithWarningsRate());
     }
 
     private TaskParamsDTO buildCompilationParams(CompilationTaskParamsDTO oldParams){
-        return new CompilationTaskParamsDTO(runType.get(), targetsList.get(), oldParams.getCreatorName(), oldParams.getGraphName(), taskName.getName(),
+        return new CompilationTaskParamsDTO(runType.get(), targetsList.get(), oldParams.getCreatorName(), oldParams.getGraphName(), taskName.getValue(),
                 oldParams.getTotalTaskPrice(), oldParams.getSourceDir(), oldParams.getDestinationDir());
     }
 

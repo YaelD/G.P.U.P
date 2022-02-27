@@ -52,6 +52,10 @@ public class ExecutionTargetsRefresherTimer extends Timer {
             if(WorkerEngine.getInstance().getRegisteredTasksParams().isEmpty()){
                 return;
             }
+            System.out.println("Registerd task: ");
+            for(String str : WorkerEngine.getInstance().getRegisteredTasksParams().keySet()){
+                System.out.println(str);
+            }
 
             String finalUrl = Objects.requireNonNull(HttpUrl
                             .parse(Constants.TASK_EXECUTION)).newBuilder()
