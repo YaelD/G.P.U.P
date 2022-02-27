@@ -215,13 +215,45 @@ public class Target implements Cloneable {
         return null;
     }
 
-    public synchronized void updateTarget(ExecutionTargetDTO targetDTO){
-        this.runStatus = targetDTO.getRunStatus();
-        this.runResult = targetDTO.getRunResults();
-        this.taskSpecificLogs = targetDTO.getTaskLog();
-        this.startingProcessTime = targetDTO.getStartProcessTime();
+    public synchronized boolean updateTarget(ExecutionTargetDTO targetDTO){
+        if(checkTargetStatus(targetDTO)){
+            this.runStatus = targetDTO.getRunStatus();
+            this.runResult = targetDTO.getRunResults();
+            this.taskSpecificLogs = targetDTO.getTaskLog();
+            this.startingProcessTime = targetDTO.getStartProcessTime();
+            return true;
+        }
+        return false;
+    }
 
-
+    private boolean checkTargetStatus(ExecutionTargetDTO targetDTO) {
+        boolean isValid = true;
+        switch (targetDTO.getRunStatus()){
+            case WAITING:
+                if(!this.runStatus.equals(RunStatus.WAITING) && !this.runStatus.equals(RunStatus.FROZEN)){
+                    isValid = false;
+                }
+                break;
+            case IN_PROCESS:
+                if(!this.runStatus.equals(RunStatus.WAITING) && !this.runStatus.equals(RunStatus.FROZEN)
+                        && !this.runStatus.equals(RunStatus.IN_PROCESS)){
+                    isValid = false;
+                }
+                break;
+            case FROZEN:
+                break;
+            case SKIPPED:
+                if(!this.runStatus.equals(RunStatus.FROZEN)){
+                    isValid = false;
+                }
+                break;
+            case FINISHED:
+                if(this.runStatus.equals(RunStatus.SKIPPED)){
+                    isValid = false;
+                }
+                break;
+        }
+        return isValid;
     }
 
     public synchronized void setTaskSpecificLogs(String taskSpecificLogs){

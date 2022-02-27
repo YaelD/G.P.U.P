@@ -1,5 +1,6 @@
 package task;
 
+import dto.ExecutionTargetDTO;
 import dto.TargetDTO;
 import dto.TaskDTO;
 import dto.TaskParamsDTO;
@@ -137,7 +138,10 @@ public abstract class Task {
     }
 
     //this function will be called when a worker sends the run result of a target.
-    public synchronized int updateTargetsRunResult(Target target){
+    public synchronized int updateTargetsRunResult(Target target, ExecutionTargetDTO executionTargetDTO){
+        if(!target.updateTarget(executionTargetDTO)){
+            return 0;
+        }
         System.out.println(LocalTime.now() + "-IN (Task)updateTargetRunResult- start updating: " + target.getName());
         int priceForTarget = 0;
         if(target.getRunResult().equals(RunResults.FAILURE)){

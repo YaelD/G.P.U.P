@@ -152,8 +152,8 @@ public class TasksManager {
             Task task = this.tasksInSystem.get(executionTargetDTO.getTaskName());
             Graph taskGraph = task.getGraph();
             Target taskTarget = taskGraph.getTarget(executionTargetDTO.getTargetName());
-            taskTarget.updateTarget(executionTargetDTO);
-            priceForTarget = task.updateTargetsRunResult(taskTarget);
+            //taskTarget.updateTarget(executionTargetDTO);
+            priceForTarget = task.updateTargetsRunResult(taskTarget, executionTargetDTO);
             System.out.println(LocalTime.now() + "-IN (TM)updateTargetRunResult-" +executionTargetDTO.getTaskName()+ " - after updating the target: " + taskTarget.getName() + "RunStatus: " + taskTarget.getRunStatus() +
                     "RunResult: " + taskTarget.getRunResult());
             writeTargetRunResultToFile(taskTarget, task);
