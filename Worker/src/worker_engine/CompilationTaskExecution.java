@@ -21,7 +21,7 @@ public class CompilationTaskExecution extends TaskExecution implements Runnable{
 
     private String sourceDir;
     private String destinationDir;
-    private ExecutionTarget executionTarget;
+    //private ExecutionTarget executionTarget;
 
 
     public CompilationTaskExecution(CompilationTaskParamsDTO taskParamsDTO, TargetDTO targetDTO){
@@ -69,10 +69,11 @@ public class CompilationTaskExecution extends TaskExecution implements Runnable{
         try {
             executionTarget.setSpecificTaskLog("Compilation task: ");
             startTime = LocalTime.now();
+            this.sendTarget();
             executionTarget.setSpecificTaskLog("Start time: " + startTime.format(DateTimeFormatter.ofPattern("H:mm:ss")));
             executionTarget.setRunStatus(RunStatus.IN_PROCESS);
             String localSourceDir = buildPaths(executionTarget);
-            String filePath = "/" + executionTarget.getInfo().replace('.', '/');
+            String filePath = this.sourceDir+"/" + executionTarget.getInfo().replace('.', '/') +".java";
             Process process = CompileTarget(executionTarget, localSourceDir, filePath);
             String processResult = getProcessResult(process);
             int exitCode = process.waitFor();
@@ -80,7 +81,6 @@ public class CompilationTaskExecution extends TaskExecution implements Runnable{
             executionTarget.setSpecificTaskLog("End time: " + endTime.format(DateTimeFormatter.ofPattern("H:mm:ss")));
             if(exitCode != 0){    //means that the process has failed
                 executionTarget.setRunResult(RunResults.FAILURE);
-
                 executionTarget.setSpecificTaskLog("Javac output: " + processResult);
             }
             else {
@@ -90,7 +90,7 @@ public class CompilationTaskExecution extends TaskExecution implements Runnable{
 
             executionTarget.setSpecificTaskLog("Running time: " + Duration.between(startTime, endTime).toMillis() + "Milliseconds");
             executionTarget.setRunStatus(RunStatus.FINISHED);
-
+            this.sendTarget();
         } catch (InterruptedException | IOException e) {
             e.printStackTrace();
         }
