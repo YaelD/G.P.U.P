@@ -1,10 +1,13 @@
 package worker_dashboard;
 
+import RefreshingItems.TaskListRefresherTimer;
 import com.google.gson.Gson;
 import constants.Constants;
 import dto.CompilationTaskParamsDTO;
 import dto.SimulationTaskParamsDTO;
+import dto.TaskDTO;
 import dto.TaskParamsDTO;
+import general_enums.TaskStatus;
 import general_enums.TaskType;
 import http_utils.HttpUtils;
 import javafx.beans.property.SimpleStringProperty;
@@ -21,10 +24,15 @@ import worker_engine.ExecutionTargetsRefresherTimer;
 import worker_engine.WorkerEngine;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 public class RegisterToTaskController {
+
     private SimpleStringProperty taskName;
+
+    List<TaskDTO> taskDTOS;
 
     @FXML
     private Label taskNameLabel;
@@ -36,12 +44,15 @@ public class RegisterToTaskController {
     private Button registerToTaskBtn;
 
 
+
     public RegisterToTaskController() {
-        taskName = new SimpleStringProperty();
+        taskName = new SimpleStringProperty("");
+        taskDTOS = new ArrayList<>();
     }
 
     @FXML
     private void initialize() {
+        TaskListRefresherTimer.getInstance().addConsumer(this::updateTasks);
         taskNameLabel.textProperty().bind(taskName);
         taskNameLabel.textProperty().addListener(new ChangeListener<String>() {
             @Override
@@ -53,10 +64,19 @@ public class RegisterToTaskController {
 
     @FXML
     void OnClickRegisterButton(ActionEvent event) {
-        if(taskName.getValue().isEmpty()){
+        for(TaskDTO taskDTO : taskDTOS){
+            if(taskDTO.getTaskName().equals(taskName.getValueSafe())){
+                if(taskDTO.getTaskStatus().equals(TaskStatus.FINISHED) || taskDTO.getTaskStatus().equals(TaskStatus.STOPPED)){
+                    taskInfoTextArea.setText("This task is " + taskDTO.getTaskStatus().name() + ". can't register to task");
+                    return;
+                }
+            }
+        }
+        if(taskName.getValueSafe().isEmpty()){
             taskInfoTextArea.setText("Please choose a task to register to");
             return;
         }
+
 
         String finalUrl = Objects.requireNonNull(HttpUrl
                 .parse(Constants.TASK_EXECUTION)).newBuilder()
@@ -95,6 +115,10 @@ public class RegisterToTaskController {
                 }
             }
         });
+    }
+
+    private void updateTasks(List<TaskDTO> taskDTOList){
+        this.taskDTOS = new ArrayList<>(taskDTOList);
     }
 
     public SimpleStringProperty taskNameProperty() {

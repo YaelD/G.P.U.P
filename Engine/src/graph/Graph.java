@@ -2,7 +2,10 @@ package graph;
 
 import dto.GraphDTO;
 import dto.TargetDTO;
+import engine.Engine;
 import engine.ExceptionMessages;
+import engine.GraphsManager;
+import exceptions.CycleException;
 import general_enums.Dependency;
 import schema.generated.GPUPTarget;
 import schema.generated.GPUPTargetDependencies;
@@ -10,6 +13,7 @@ import schema.generated.GPUPTargets;
 import general_enums.PlaceInGraph;
 import target.Target;
 import general_enums.TaskType;
+import task.Task;
 
 import java.util.*;
 
@@ -185,6 +189,13 @@ public class Graph implements Cloneable {
 
 
     public synchronized GraphDTO makeDTO(String taskName){
+        boolean isCycle = false;
+        try {
+            Task.topologicalSort(this);
+        } catch (CycleException e) {
+            isCycle = true;
+        }
+
         Map<String, TargetDTO> targetsDTOMap = new HashMap<>();
         int numOfTargets = this.getTargets().size();
         int numOfIndependents = 0, numOfRoots = 0, numOfMiddles = 0, numOfLeaves = 0;
@@ -209,7 +220,7 @@ public class Graph implements Cloneable {
         int priceCompilation = this.taskPricePerTarget.containsKey(TaskType.COMPILATION_TASK) ? this.taskPricePerTarget.get(TaskType.COMPILATION_TASK) : 0;
 
         return new GraphDTO(this.name, targetsDTOMap, this.creatorName, numOfTargets, numOfLeaves, numOfRoots,
-                numOfIndependents, numOfMiddles, priceSimulation, priceCompilation);
+                numOfIndependents, numOfMiddles, priceSimulation, priceCompilation, isCycle);
 
 
     }

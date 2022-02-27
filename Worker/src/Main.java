@@ -17,7 +17,6 @@ public class Main extends Application {
 
     public static void main(String[] args) {
         launch();
-        System.out.println("Got back to main!!");
         HttpUtils.ShutDown();
         TaskListRefresherTimer.getInstance().cancel();
         GraphListRefresherTimer.getInstance().cancel();

@@ -129,6 +129,7 @@ public class RunWindowController {
         sendStatusToServer(TaskStatus.STOPPED);
         runAgainBtn.setDisable(false);
         runResultsPaneController.setTaskDTO(taskDTOProperty.getValue());
+        runResultsPane.setVisible(true);
     }
 
     private void getTask(List<TaskDTO> taskDTOS){
@@ -202,7 +203,9 @@ public class RunWindowController {
             public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
                 Platform.runLater(()->{
                     percentLabel.setText(String.valueOf(Integer.valueOf((int)(newValue.doubleValue()*100))  + "%"));
-
+                    if(newValue.intValue() == 1){
+                        runResultsPane.setVisible(true);
+                    }
                 });
             }
         });

@@ -292,7 +292,7 @@ public class RerunTaskController {
                 failedTargetsList.add(targetName);
             }
         }
-        this.taskParamsDTO = Utilities.TASK_PARAMS.get(taskDTO.getTaskName());
+        this.taskParamsDTO = Utilities.TASK_PARAMS.get(originalName);
         taskName.set(originalName +"(" + Utilities.TASK_APPEARANCE_COUNTER.get(originalName) + ")");
         taskType.set(taskDTO.getTaskType());
         incrementalRadioButton.setDisable(failedTargetsList.isEmpty());

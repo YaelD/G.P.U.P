@@ -76,7 +76,6 @@ public class FindCyclesController {
                         });
                     }
                     else{
-                        System.out.println("Opps==>" + response.body().string());
                     }
 
                 }

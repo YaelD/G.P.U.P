@@ -142,7 +142,7 @@ public abstract class Task {
         if(!target.updateTarget(executionTargetDTO)){
             return 0;
         }
-        System.out.println(LocalTime.now() + "-IN (Task)updateTargetRunResult- start updating: " + target.getName());
+//        System.out.println(LocalTime.now() + "-IN (Task)updateTargetRunResult- start updating: " + target.getName());
         int priceForTarget = 0;
         if(target.getRunResult().equals(RunResults.FAILURE)){
             target.updateParentsStatus(target.getSkippedFathers(), target.getName()); //כל מי שסגרתי לריצה בגללי
@@ -152,7 +152,7 @@ public abstract class Task {
             getOpenedTargetsToRun(target);
         }
         printTargets();
-        System.out.println(LocalTime.now() + "-IN (Task)updateTargetRunResult- stop updating: " + target.getName());
+//        System.out.println(LocalTime.now() + "-IN (Task)updateTargetRunResult- stop updating: " + target.getName());
         checkIfTaskIsFinished();
 
         return priceForTarget;
@@ -162,7 +162,7 @@ public abstract class Task {
         for(Target t: this.graph.getTargets()){
             String rr = t.getRunResult() != null? t.getRunResult().name() : "";
             String rs = t.getRunStatus() != null? t.getRunStatus().name() : "";
-            System.out.println("Target: " + t.getName() + "RunStatus: " + rs + "RunResult: " +  rr);
+//            System.out.println("Target: " + t.getName() + "RunStatus: " + rs + "RunResult: " +  rr);
         }
     }
 
@@ -428,11 +428,11 @@ public abstract class Task {
     public synchronized TargetDTO getTargetReadyForRunning() throws Exception {
         TargetDTO targetDTO = null;
         if(sortedTargets.get(0).getName().equals("E")){
-            System.out.println("STOP");
+//            System.out.println("STOP");
         }
         if(this.status.equals(TaskStatus.ACTIVE)){
             if(this.sortedTargets.get(0).getRunStatus().equals(RunStatus.SKIPPED)){
-                System.out.println("Hellllo");
+//                System.out.println("Hellllo");
             }
             switch (this.sortedTargets.get(0).getRunStatus()){
                 case WAITING:

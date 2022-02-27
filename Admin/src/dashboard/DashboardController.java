@@ -81,7 +81,7 @@ public class DashboardController {
             FXMLLoader fxmlLoader = new FXMLLoader();
             fxmlLoader.setLocation(resource);
             Parent root = fxmlLoader.load(resource.openStream());
-            Scene scene = new Scene(root,700, 700);
+            Scene scene = new Scene(root,800, 680);
             Stage secondaryStage = new Stage();
             HeaderController headerController = fxmlLoader.getController();
             headerController.setPrimaryStage(secondaryStage);

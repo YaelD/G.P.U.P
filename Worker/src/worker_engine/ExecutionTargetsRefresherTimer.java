@@ -52,10 +52,10 @@ public class ExecutionTargetsRefresherTimer extends Timer {
             if(WorkerEngine.getInstance().getRegisteredTasksParams().isEmpty()){
                 return;
             }
-            System.out.println("Registerd task: ");
-            for(String str : WorkerEngine.getInstance().getRegisteredTasksParams().keySet()){
-                System.out.println(str);
-            }
+//            System.out.println("Registerd task: ");
+//            for(String str : WorkerEngine.getInstance().getRegisteredTasksParams().keySet()){
+//                System.out.println(str);
+//            }
 
             String finalUrl = Objects.requireNonNull(HttpUrl
                             .parse(Constants.TASK_EXECUTION)).newBuilder()
@@ -67,7 +67,7 @@ public class ExecutionTargetsRefresherTimer extends Timer {
             HttpUtils.runAsync(finalUrl, new Callback() {
                 @Override
                 public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                    System.out.println("OH NOOOOOOOOOO" + e.getMessage());
+//                    System.out.println("OH NOOOOOOOOOO" + e.getMessage());
                 }
 
                 @Override
@@ -76,7 +76,7 @@ public class ExecutionTargetsRefresherTimer extends Timer {
                     if(response.code() == 200){
 
                         String jsonArr = response.body().string();
-                        System.out.println("In get targets==>" + jsonArr);
+//                        System.out.println("In get targets==>" + jsonArr);
                         response.body().close();
                         Gson gson = new Gson();
                         String[] res = gson.fromJson(jsonArr, String[].class);
@@ -85,11 +85,11 @@ public class ExecutionTargetsRefresherTimer extends Timer {
                         for(String taskNames: taskNameToRemove) {
                             if (WorkerEngine.getInstance().getRegisteredTasksParams().containsKey(taskNames)) {
                                 WorkerEngine.getInstance().getRegisteredTasksParams().remove(taskNames);
-                                System.out.println("UNREGISTER FROM TASK-->" + taskNames);
+//                                System.out.println("UNREGISTER FROM TASK-->" + taskNames);
                             }
                         }
                         for (TargetDTO targetDTO : targetDTOS) {
-                            System.out.println("Got target: " + targetDTO.getName());
+//                            System.out.println("Got target: " + targetDTO.getName());
                             String taskName = targetDTO.getTaskName();
                             TaskParamsDTO taskParamsDTO = WorkerEngine.getInstance().getRegisteredTasksParams().get(taskName);
                             if (taskParamsDTO instanceof SimulationTaskParamsDTO) {
@@ -103,7 +103,7 @@ public class ExecutionTargetsRefresherTimer extends Timer {
                         }
                     }
                     else{
-                        System.out.println("Got response->" + response.code() + " Body " + response.body().string());
+//                        System.out.println("Got response->" + response.code() + " Body " + response.body().string());
 
                     }
                  }

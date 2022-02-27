@@ -146,16 +146,16 @@ public class TasksManager {
     public int updateTargetRunResult(ExecutionTargetDTO executionTargetDTO) throws Exception {
         int priceForTarget = 0;
         if(this.tasksInSystem.containsKey(executionTargetDTO.getTaskName())){
-            System.out.println(LocalTime.now() + "-IN (TM)updateTargetRunResult-" +executionTargetDTO.getTaskName()+ " - the target execution: " + executionTargetDTO.getTargetName() + "RunStatus: " +
-                    executionTargetDTO.getRunStatus() +
-                    "RunResult: " + executionTargetDTO.getRunResults());
+//            System.out.println(LocalTime.now() + "-IN (TM)updateTargetRunResult-" +executionTargetDTO.getTaskName()+ " - the target execution: " + executionTargetDTO.getTargetName() + "RunStatus: " +
+//                    executionTargetDTO.getRunStatus() +
+//                    "RunResult: " + executionTargetDTO.getRunResults());
             Task task = this.tasksInSystem.get(executionTargetDTO.getTaskName());
             Graph taskGraph = task.getGraph();
             Target taskTarget = taskGraph.getTarget(executionTargetDTO.getTargetName());
             //taskTarget.updateTarget(executionTargetDTO);
             priceForTarget = task.updateTargetsRunResult(taskTarget, executionTargetDTO);
-            System.out.println(LocalTime.now() + "-IN (TM)updateTargetRunResult-" +executionTargetDTO.getTaskName()+ " - after updating the target: " + taskTarget.getName() + "RunStatus: " + taskTarget.getRunStatus() +
-                    "RunResult: " + taskTarget.getRunResult());
+//            System.out.println(LocalTime.now() + "-IN (TM)updateTargetRunResult-" +executionTargetDTO.getTaskName()+ " - after updating the target: " + taskTarget.getName() + "RunStatus: " + taskTarget.getRunStatus() +
+//                    "RunResult: " + taskTarget.getRunResult());
             writeTargetRunResultToFile(taskTarget, task);
         }
         else{

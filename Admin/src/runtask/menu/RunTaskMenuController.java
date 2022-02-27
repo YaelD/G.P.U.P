@@ -137,16 +137,12 @@ public class RunTaskMenuController {
                         warningChosenTargetsLabel.setVisible(true);
                         warningChosenTargetsLabel.setText(responseBody);
                     } else {
+                        warningChosenTargetsLabel.setVisible(false);
                         String[] targets = new Gson().fromJson(responseBody, String[].class);
-                        if (targets.length == 0) {
-                            warningChosenTargetsLabel.setVisible(true);
-                        } else {
-                            warningChosenTargetsLabel.setVisible(false);
-                            ObservableList<String> data = FXCollections.observableArrayList();
-                            data.addAll(targets);
-                            selectedTargetsListView.setItems(data);
-
-                        }
+                        ObservableList<String> data = FXCollections.observableArrayList();
+                        data.add(whatIf_targetsCB.getValue());
+                        data.addAll(targets);
+                        selectedTargetsListView.setItems(data);
                     }
 
                 });
@@ -299,7 +295,6 @@ public class RunTaskMenuController {
     }
 
     private void sendTaskToServer(TaskParamsDTO taskParamsDTO){
-        Utilities.TASK_PARAMS.put(taskParamsDTO.getTaskName(), taskParamsDTO);
 
         Gson gson = new Gson();
         SimulationTaskParamsDTO simulationTaskParamsDTO;

@@ -152,7 +152,7 @@ public class TaskMenuController {
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                 Platform.runLater(()->{
                     if(response.code() == 200){
-                        System.out.println("IN RETURN GOOD RESPONSE->" +taskNameLabel.textProperty().getValue());
+//                        System.out.println("IN RETURN GOOD RESPONSE->" +taskNameLabel.textProperty().getValue());
 
                         WorkerEngine.getInstance().getRegisteredTasksParams().remove(taskNameLabel.textProperty().getValue());
                         WorkerEngine.getInstance().getPausedTasks().remove(taskNameLabel.textProperty().getValue());

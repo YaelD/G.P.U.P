@@ -133,10 +133,10 @@ public class HeaderController {
     @FXML
     void createTask(ActionEvent event) {
         //TODO: Check for cycle
-//        if(true){
-//            base_BorderPane.setCenter(new Label("There is cycle in the graph, cannot run task"));
-//            return;
-//        }
+        if(graphDTO.isCycleInGraph()){
+            base_BorderPane.setCenter(new Label("There is cycle in the graph, cannot run task"));
+            return;
+        }
         URL resource = RunTaskMenuController.class.getResource("run_task_menu.fxml");
         FXMLLoader fxmlLoader = new FXMLLoader();
         fxmlLoader.setLocation(resource);
@@ -165,6 +165,7 @@ public class HeaderController {
 
     public void setGraphDTO(GraphDTO graphDTO) {
         this.graphDTO = graphDTO;
+
     }
 
 }

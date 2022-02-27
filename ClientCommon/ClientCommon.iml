@@ -11,24 +11,50 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="file://$MODULE_DIR$/../3rd party Dependencies/okHttp" />
+          <root url="jar://$MODULE_DIR$/../3rd party Dependencies/GSON/gson-2.1.jar!/" />
         </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-        <jarDirectory url="file://$MODULE_DIR$/../3rd party Dependencies/okHttp" recursive="false" />
+        <JAVADOC>
+          <root url="jar://$MODULE_DIR$/../3rd party Dependencies/GSON/gson-2.1-javadoc.jar!/" />
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar://$MODULE_DIR$/../3rd party Dependencies/GSON/gson-2.1-sources.jar!/" />
+        </SOURCES>
       </library>
     </orderEntry>
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="file://$MODULE_DIR$/../3rd party Dependencies/GSON" />
+          <root url="jar://$MODULE_DIR$/../3rd party Dependencies/okHttp/annotations-13.0.jar!/" />
         </CLASSES>
         <JAVADOC />
-        <SOURCES>
-          <root url="file://$MODULE_DIR$/../3rd party Dependencies/GSON" />
-        </SOURCES>
-        <jarDirectory url="file://$MODULE_DIR$/../3rd party Dependencies/GSON" recursive="false" />
-        <jarDirectory url="file://$MODULE_DIR$/../3rd party Dependencies/GSON" recursive="false" type="SOURCES" />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/../3rd party Dependencies/okHttp/kotlin-stdlib-1.4.10.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/../3rd party Dependencies/okHttp/okhttp-4.9.1.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/../3rd party Dependencies/okHttp/okio-2.8.0.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
       </library>
     </orderEntry>
   </component>

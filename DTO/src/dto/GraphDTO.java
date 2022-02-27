@@ -23,6 +23,8 @@ public class GraphDTO {
     private int priceOfSimulationTask;
     private int priceOfCompilationTask;
 
+    boolean isCycleInGraph;
+
     public String getCreatorName() {
         return creatorName;
     }
@@ -39,7 +41,7 @@ public class GraphDTO {
     public GraphDTO(String name, Map<String, TargetDTO> targets, String creatorName, int totalNumOfTargets,
                     int numOfLeaves, int numOfRoots, int numOfIndependents,
                     int numOfMiddles, int priceOfSimulationTask,
-                    int priceOfCompilationTask) {
+                    int priceOfCompilationTask, boolean isCycleInGraph) {
         this.name = name;
         this.targets = targets;
         this.creatorName = creatorName;
@@ -50,8 +52,12 @@ public class GraphDTO {
         this.numOfMiddles = numOfMiddles;
         this.priceOfSimulationTask = priceOfSimulationTask;
         this.priceOfCompilationTask = priceOfCompilationTask;
+        this.isCycleInGraph = isCycleInGraph;
     }
 
+    public boolean isCycleInGraph() {
+        return isCycleInGraph;
+    }
 
     public int getTotalNumOfTargets() {
         return totalNumOfTargets;

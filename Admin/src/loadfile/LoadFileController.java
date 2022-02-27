@@ -82,7 +82,6 @@ public class LoadFileController {
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                 warning_label.setVisible(false);
-                System.out.println("IN LOAD FILE-->" + response.code());
                 if(response.code() != 200){
                     Platform.runLater(()->{
                         try {

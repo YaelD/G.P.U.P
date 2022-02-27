@@ -15,7 +15,7 @@ public class Utilities {
 
     public static String getOriginalTaskString(String currName){
         String res = currName;
-        while (res != TASK_NAME_TO_ORIGINAL.get(currName)){
+        while (res != TASK_NAME_TO_ORIGINAL.get(res)){
             res = TASK_NAME_TO_ORIGINAL.get(res);
         }
         return res;
