@@ -191,7 +191,7 @@ public class Graph implements Cloneable {
     public synchronized GraphDTO makeDTO(String taskName){
         boolean isCycle = false;
         try {
-            Task.topologicalSort(this);
+            Task.topologicalSort(this.clone());
         } catch (CycleException e) {
             isCycle = true;
         }

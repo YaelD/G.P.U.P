@@ -31,6 +31,7 @@ import java.util.Objects;
 public class RegisterToTaskController {
 
     private SimpleStringProperty taskName;
+    private String userName;
 
     List<TaskDTO> taskDTOS;
 
@@ -64,8 +65,14 @@ public class RegisterToTaskController {
 
     @FXML
     void OnClickRegisterButton(ActionEvent event) {
+        registerToTaskBtn.setDisable(false);
         for(TaskDTO taskDTO : taskDTOS){
             if(taskDTO.getTaskName().equals(taskName.getValueSafe())){
+                if(taskDTO.getRegisteredWorkers().contains(this.userName)){
+                    taskInfoTextArea.setText("You are already registered to the task");
+                    return;
+                }
+
                 if(taskDTO.getTaskStatus().equals(TaskStatus.FINISHED) || taskDTO.getTaskStatus().equals(TaskStatus.STOPPED)){
                     taskInfoTextArea.setText("This task is " + taskDTO.getTaskStatus().name() + ". can't register to task");
                     return;
@@ -125,6 +132,8 @@ public class RegisterToTaskController {
         return taskName;
     }
 
-
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
 }
 

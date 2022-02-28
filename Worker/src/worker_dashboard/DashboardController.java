@@ -69,6 +69,7 @@ public class DashboardController {
 
     public void setUserName(String userName) {
         this.userName = userName;
+        registerToTaskPaneController.setUserName(this.userName);
     }
 }
 

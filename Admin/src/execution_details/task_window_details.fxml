@@ -74,15 +74,15 @@
             <HBox alignment="CENTER" maxWidth="1.7976931348623157E308" prefHeight="51.0" prefWidth="600.0" spacing="10.0">
                <children>
                   <Button fx:id="playButton" layoutX="221.0" layoutY="18.0" mnemonicParsing="false" onAction="#onPlay" prefHeight="35.0" prefWidth="95.0" text="Play" />
-                  <Button fx:id="stopButton" layoutX="843.0" layoutY="18.0" mnemonicParsing="false" onAction="#onStop" prefHeight="35.0" prefWidth="95.0" text="Stop" />
-                  <ToggleButton fx:id="pauseToggle" mnemonicParsing="false" prefHeight="35.0" prefWidth="95.0" text="Pause" />
+                  <Button fx:id="stopButton" disable="true" layoutX="843.0" layoutY="18.0" mnemonicParsing="false" onAction="#onStop" prefHeight="35.0" prefWidth="95.0" text="Stop" />
+                  <ToggleButton fx:id="pauseToggle" disable="true" mnemonicParsing="false" prefHeight="35.0" prefWidth="95.0" text="Pause" />
                   <HBox alignment="CENTER" spacing="10.0">
                      <children>
                         <Label fx:id="percentLabel" prefHeight="17.0" prefWidth="47.0" text="\%" textAlignment="RIGHT" />
                         <ProgressBar fx:id="progressBar" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" prefHeight="18.0" prefWidth="398.0" progress="0.0" />
                      </children>
                   </HBox>
-                  <Button fx:id="runAgainBtn" disable="true" layoutX="356.0" layoutY="18.0" mnemonicParsing="false" onAction="#onRunAgain" prefHeight="35.0" prefWidth="95.0" text="Run again" />
+                  <Button fx:id="runAgainBtn" layoutX="356.0" layoutY="18.0" mnemonicParsing="false" onAction="#onRunAgain" prefHeight="35.0" prefWidth="95.0" text="Run again" visible="false" />
                </children>
             </HBox>
             <Separator prefWidth="200.0" />

@@ -122,11 +122,13 @@ public class RunWindowController {
     @FXML
     void onPlay(ActionEvent event) {
         sendStatusToServer(TaskStatus.ACTIVE);
+        playButton.setDisable(true);
     }
 
     @FXML
     void onStop(ActionEvent event) {
         sendStatusToServer(TaskStatus.STOPPED);
+        playButton.setDisable(true);
         runAgainBtn.setDisable(false);
         runResultsPaneController.setTaskDTO(taskDTOProperty.getValue());
         runResultsPane.setVisible(true);
@@ -154,7 +156,11 @@ public class RunWindowController {
                 }
                 double finalNumOfFinishedTargets = numOfFinishedTargets /(double)taskDTO.getGraphDTO().getTotalNumOfTargets();
                 Platform.runLater(()->{
-                    finishedTargetsProgress.set(finalNumOfFinishedTargets);
+                    if(taskDTO.getTaskStatus().equals(TaskStatus.STOPPED) || taskDTO.getTaskStatus().equals(TaskStatus.FINISHED))
+                        finishedTargetsProgress.set(1);
+                    else{
+                        finishedTargetsProgress.set(finalNumOfFinishedTargets);
+                    }
                 });
                 return;
             }
@@ -176,9 +182,13 @@ public class RunWindowController {
 
     @FXML
     private void initialize(){
-        playButton.disableProperty().bind(Bindings.not(runAgainBtn.disableProperty()));
-        stopButton.disableProperty().bind(Bindings.not(runAgainBtn.disableProperty()));
-        pauseToggle.disableProperty().bind(Bindings.not(runAgainBtn.disableProperty()));
+        playButton.visibleProperty().bind(Bindings.not(runAgainBtn.visibleProperty()));
+        stopButton.visibleProperty().bind(Bindings.not(runAgainBtn.visibleProperty()));
+        pauseToggle.visibleProperty().bind(Bindings.not(runAgainBtn.visibleProperty()));
+        pauseToggle.disableProperty().bind(Bindings.not(playButton.disableProperty()));
+        stopButton.disableProperty().bind(Bindings.not(playButton.disableProperty()));
+
+
         pauseToggle.selectedProperty().addListener(new ChangeListener<Boolean>() {
             @Override
             public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
@@ -205,6 +215,7 @@ public class RunWindowController {
                     percentLabel.setText(String.valueOf(Integer.valueOf((int)(newValue.doubleValue()*100))  + "%"));
                     if(newValue.intValue() == 1){
                         runResultsPane.setVisible(true);
+                        runAgainBtn.setVisible(true);
                     }
                 });
             }
@@ -234,6 +245,7 @@ public class RunWindowController {
 
 
     private void sendStatusToServer(TaskStatus status){
+
         String finalUrl = Objects.requireNonNull(HttpUrl
                         .parse(Constants.TASK_LIST)).newBuilder()
                 .addQueryParameter(Constants.TASK_STATUS, status.name())

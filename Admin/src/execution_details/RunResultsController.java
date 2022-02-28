@@ -2,6 +2,7 @@ package execution_details;
 
 import dto.TargetDTO;
 import dto.TaskDTO;
+import general_enums.TaskStatus;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
@@ -28,6 +29,9 @@ public class RunResultsController {
 
     public void setTaskDTO(TaskDTO taskDTO) {
         int numFinishedSuccess = 0, numFinishedWarning = 0, numSkipped = 0, numFailure = 0;
+        if(!taskDTO.getTaskStatus().equals(TaskStatus.FINISHED) && !taskDTO.getTaskStatus().equals(TaskStatus.STOPPED)){
+            return;
+        }
         for (TargetDTO targetDTO : taskDTO.getGraphDTO().getTargets().values()) {
             switch (targetDTO.getRunResult()) {
                 case FAILURE:
